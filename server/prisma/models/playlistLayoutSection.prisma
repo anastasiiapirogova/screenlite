@@ -1,0 +1,13 @@
+model PlaylistLayoutSection {
+    id               String @id @default(uuid())
+    playlistLayoutId String
+    name             String
+    top              Int
+    left             Int
+    width            Int
+    height           Int
+    zIndex           Int
+
+    playlistLayout PlaylistLayout @relation(fields: [playlistLayoutId], references: [id], onDelete: Cascade)
+    playlistItems  PlaylistItem[]
+}

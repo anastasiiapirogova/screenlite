@@ -1,0 +1,16 @@
+model PlaylistLayout {
+    id               String   @id @default(uuid())
+    workspaceId      String
+    name             String
+    resolutionWidth  Int
+    resolutionHeight Int
+    createdAt        DateTime @default(now())
+    updatedAt        DateTime @updatedAt
+
+    workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+    playlists Playlist[]
+    sections  PlaylistLayoutSection[]
+
+    @@index([name])
+}

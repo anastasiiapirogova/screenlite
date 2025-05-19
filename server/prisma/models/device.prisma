@@ -1,0 +1,17 @@
+model Device {
+    id             String   @id @default(uuid())
+    screenId       String?  @unique
+    token          String   @unique
+    connectionCode String   @unique
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+    isOnline       Boolean  @default(false)
+
+    screen    Screen?           @relation(fields: [screenId], references: [id], onDelete: SetNull)
+    telemetry DeviceTelemetry[]
+    statusLog DeviceStatus[]
+
+    @@index([token])
+    @@index([connectionCode])
+    @@index([screenId])
+}

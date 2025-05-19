@@ -1,0 +1,16 @@
+model WorkspaceUserInvitation {
+    id          String   @id @default(uuid())
+    email       String
+    status      String   @default("pending")
+    workspaceId String
+    invitorId   String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    invitor   User?     @relation(fields: [invitorId], references: [id], onDelete: SetNull)
+
+    members UserWorkspace[]
+
+    @@index([email])
+}

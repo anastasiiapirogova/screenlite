@@ -1,0 +1,38 @@
+{
+    "jsc": {
+        "parser": {
+            "syntax": "typescript",
+            "tsx": false,
+            "dynamicImport": true,
+            "decorators": false
+        },
+        "target": "es2020",
+        "loose": false,
+        "externalHelpers": false,
+        "keepClassNames": false,
+        "baseUrl": "./",
+        "paths": {
+            "@config/*": [
+                "src/config/*"
+            ],
+            "@modules/*": [
+                "src/modules/*"
+            ],
+            "@utils/*": [
+                "src/utils/*"
+            ],
+            "*": [
+                "node_modules",
+                "src/*"
+            ]
+        }
+    },
+    "module": {
+        "type": "nodenext",
+        "strict": false,
+        "strictMode": false,
+        "noInterop": false,
+        "lazy": false
+    },
+    "minify": true
+}

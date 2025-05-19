@@ -1,0 +1,27 @@
+enum LayoutRotation {
+    R0
+    R90
+    R180
+    R270
+}
+
+model Screen {
+    id               String         @id @default(uuid())
+    workspaceId      String
+    groupId          String?
+    name             String
+    layoutRotation   LayoutRotation @default(R0)
+    resolutionWidth  Int
+    resolutionHeight Int
+    type             String
+    createdAt        DateTime       @default(now())
+    updatedAt        DateTime       @updatedAt
+
+    workspace Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    device    Device?
+    playlists PlaylistScreen[]
+    group     ScreenGroup? @relation(fields: [groupId], references: [id], onDelete: SetNull)
+
+    @@index([workspaceId])
+    @@index([groupId])
+}

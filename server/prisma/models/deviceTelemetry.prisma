@@ -1,0 +1,21 @@
+model DeviceTelemetry {
+    id                     String   @id @default(uuid())
+    deviceId               String
+    localIpAddress         String?
+    publicIpAddress        String?
+    macAddress             String?
+    softwareVersion        String?
+    platform               String?
+    osRelease              String?
+    screenResolutionWidth  Int?
+    screenResolutionHeight Int?
+    hostname               String?
+    timezone               String?
+    totalMemory            BigInt?
+    freeMemory             BigInt?
+    createdAt              DateTime @default(now())
+
+    device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+    @@index([deviceId])
+}

@@ -1,0 +1,22 @@
+model Playlist {
+    id               String    @id @default(uuid())
+    workspaceId      String
+    playlistLayoutId String?
+    name             String
+    description      String    @default("")
+    size             BigInt    @default(0)
+    type             String    @default("standard")
+    isPublished      Boolean   @default(false)
+    priority         Int       @default(0)
+    createdAt        DateTime  @default(now())
+    updatedAt        DateTime  @updatedAt
+    deletedAt        DateTime?
+
+    workspace Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    layout    PlaylistLayout? @relation(fields: [playlistLayoutId], references: [id], onDelete: SetNull)
+
+    items       PlaylistItem[]
+    parentItems PlaylistItem[]     @relation("PlaylistAsNestedPlaylist")
+    screens     PlaylistScreen[]
+    schedules   PlaylistSchedule[]
+}

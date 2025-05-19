@@ -1,0 +1,19 @@
+model Workspace {
+    id        String   @id @default(uuid())
+    name      String
+    slug      String   @unique
+    status    String
+    picture   String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    members            UserWorkspace[]
+    screens            Screen[]
+    playlists          Playlist[]
+    layouts            PlaylistLayout[]
+    files              File[]
+    folders            Folder[]
+    fileUploadSessions FileUploadSession[]
+    userInvitations    WorkspaceUserInvitation[]
+    screenGroups       ScreenGroup[]
+}

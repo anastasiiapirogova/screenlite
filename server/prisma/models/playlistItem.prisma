@@ -1,0 +1,25 @@
+enum PlaylistItemType {
+    File
+    NestedPlaylist
+}
+
+model PlaylistItem {
+    id                      String           @id @default(uuid())
+    playlistId              String
+    type                    PlaylistItemType
+    duration                Int?
+    playlistLayoutSectionId String
+    fileId                  String?
+    nestedPlaylistId        String?
+    order                   Int
+    createdAt               DateTime         @default(now())
+    updatedAt               DateTime         @updatedAt
+
+    playlist              Playlist              @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+    file                  File?                 @relation(fields: [fileId], references: [id], onDelete: Cascade)
+    nestedPlaylist        Playlist?             @relation("PlaylistAsNestedPlaylist", fields: [nestedPlaylistId], references: [id], onDelete: Cascade)
+    playlistLayoutSection PlaylistLayoutSection @relation(fields: [playlistLayoutSectionId], references: [id], onDelete: Cascade)
+
+    @@index([playlistId])
+    @@index([fileId])
+}

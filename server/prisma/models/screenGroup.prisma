@@ -1,0 +1,13 @@
+model ScreenGroup { 
+    id          String    @id @default(uuid())
+    name        String
+    workspaceId String
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    deletedAt   DateTime?
+
+    workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    screens Screen[]
+
+    @@index([workspaceId])
+}

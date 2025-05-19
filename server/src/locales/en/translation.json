@@ -1,0 +1,22 @@
+{
+	"USER_NOT_FOUND": "User with this email not found.",
+	"INCORRECT_PASSWORD": "Incorrect password.",
+	"EMAIL_IS_INVALID": "Please enter a valid email address.",
+	"EMAIL_IS_REQUIRED": "Email is required.",
+	"PASSWORD_IS_REQUIRED": "Password is required.",
+	"PASSWORD_TOO_SHORT": "Password must be at least 8 characters long.",
+	"PASSWORD_UPPERCASE_REQUIRED": "Password must contain at least one uppercase letter.",
+	"PASSWORD_LOWERCASE_REQUIRED": "Password must contain at least one lowercase letter.",
+	"PASSWORD_NUMBER_REQUIRED": "Password must contain at least one number.",
+	"PASSWORD_SYMBOL_REQUIRED": "Password must contain at least one symbol.",
+	"WORKSPACE_NAME_IS_INVALID": "The workspace name must be a valid text.",
+	"WORKSPACE_NAME_IS_REQUIRED": "Workspace name is required.",
+	"SLUG_IS_INVALID": "The slug must be a valid text.",
+	"SLUG_IS_REQUIRED": "Slug is required.",
+	"SLUG_IS_TOO_SHORT": "The slug must be at least 3 characters long.",
+	"SLUG_ALREADY_EXISTS": "This slug is already taken. Please choose a different one.",
+	"SCREEN_NAME_IS_INVALID": "The screen name must be a valid text.",
+	"WORKSPACE_ID_IS_REQUIRED": "Workspace ID is required.",
+	"SCREEN_NAME_IS_REQUIRED": "Screen name is required.",
+	"SCREENS_NOT_IN_SAME_WORKSPACE_AS_PLAYLIST": "Some screens do not belong to the same workspace as the playlist."
+}

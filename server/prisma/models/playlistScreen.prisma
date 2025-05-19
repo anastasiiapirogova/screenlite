@@ -1,0 +1,8 @@
+model PlaylistScreen {
+    playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+    playlistId String
+    screen     Screen   @relation(fields: [screenId], references: [id], onDelete: Cascade)
+    screenId   String
+
+    @@id([playlistId, screenId])
+}

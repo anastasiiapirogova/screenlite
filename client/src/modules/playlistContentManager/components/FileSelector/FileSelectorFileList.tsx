@@ -1,0 +1,30 @@
+import { workspaceFilesQuery } from '@modules/file/api/queries/workspaceFilesQuery'
+import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { FileSelectorFileCard } from './FileSelectorFileCard'
+
+type Props = {
+    search: string
+}
+
+export const FileSelectorFileList = ({ search }: Props) => {
+    const { slug } = useWorkspace()
+    const { data } = useSuspenseQuery(workspaceFilesQuery({
+        slug,
+        search,
+    }))
+    const files = data.data
+    const meta = data.meta
+
+    return (
+        <ul className='w-full flex flex-col divide-y'>
+            { meta.total === 0 && <li>No files found</li> }
+            { files.map(file => (
+                <FileSelectorFileCard
+                    file={ file }
+                    key={ file.id }
+                />
+            )) }
+        </ul>
+    )
+}
