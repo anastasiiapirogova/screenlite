@@ -10,7 +10,11 @@ export const generateConnectionCode = (): string => {
     const bytes = crypto.randomBytes(6)
 
     for (let i = 0; i < 6; i++) {
-        result += characters.charAt(bytes[i] % characters.length)
+        let byte;
+        do {
+            byte = crypto.randomBytes(1)[0];
+        } while (byte >= 256 - (256 % characters.length));
+        result += characters.charAt(byte % characters.length);
     }
 
     return result
