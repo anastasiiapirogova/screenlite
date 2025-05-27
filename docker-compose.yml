@@ -1,19 +1,47 @@
 services:
-  devcontainer:
-    image: node:lts-alpine
+  # Node.js Backend Service
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
     volumes:
-      - ./:/workspace:cached
-      - /workspace/client/node_modules
-      - /workspace/server/node_modules
-    working_dir: /workspace
-    command: tail -f /dev/null  # keep container running
+      - ./server:/app
+      - /app/node_modules
+      - /app/src/generated/prisma
+    environment:
+      - NODE_ENV=development
+      - BACKEND_VERSION=0.0.1
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/screenlite
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - S3_PORT=9000
+      - S3_ACCESS_KEY=screenlite
+      - S3_SECRET_KEY=screenlite
+      - S3_ENDPOINT=http://minio
+      - S3_REGION=us-east-1
+      - CORS_ORIGINS=http://localhost:3001,http://screenlite.org
     depends_on:
       - postgres
       - redis
       - minio
+
+  # React Frontend Service
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
       - "3001:3001"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:3000/api
+    depends_on:
+      - server
 
   # PostgreSQL Database
   postgres:
