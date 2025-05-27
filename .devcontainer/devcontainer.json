@@ -1,31 +1,24 @@
 {
-	"name": "screenlite-devcontainer",
+	"name": "Monorepo Devcontainer",
 	"dockerComposeFile": "../docker-compose.yml",
-	"service": "server",
-	"workspaceFolder": "/app",
+	"service": "devcontainer",
+	"workspaceFolder": "/workspace",
 	"shutdownAction": "stopCompose",
-	"forwardPorts": [
-		3000,
-		3001,
-		5432,
-		6379,
-		9000,
-		9001
-	],
 	"customizations": {
 		"vscode": {
-			"settings": {
-				"terminal.integrated.defaultProfile.linux": "bash"
-			},
 			"extensions": [
 				"dbaeumer.vscode-eslint",
 				"esbenp.prettier-vscode",
 				"ms-azuretools.vscode-docker"
 			]
+		},
+		"settings": {
+			"terminal.integrated.defaultProfile.linux": "bash"
 		}
 	},
-	"postCreateCommand": "npm install",
-	"remoteEnv": {
-		"NODE_ENV": "development"
-	}
+	"postCreateCommand": "cd client && npm install && cd ../server && npm install",
+	"forwardPorts": [
+		3000,
+		3001
+	]
 }
