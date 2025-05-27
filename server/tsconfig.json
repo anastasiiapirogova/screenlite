@@ -23,6 +23,12 @@
 				"node_modules",
 				"src/*"
 			],
-		},
-	}
+		}
+	},
+	"watchOptions": {
+		"excludeDirectories": [
+			"**/node_modules",
+			"dist"
+		]
+	},
 }
