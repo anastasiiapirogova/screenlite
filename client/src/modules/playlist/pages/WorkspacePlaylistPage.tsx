@@ -6,6 +6,10 @@ import { DeletePlaylistButton } from '../components/buttons/DeletePlaylistButton
 import { prettySize } from '@shared/helpers/prettySize'
 import pluralize from 'pluralize'
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
+import { PlaylistPageLayoutCard } from '../components/cards/PlaylistPageLayoutCard'
+import { EntityPageCard } from '@shared/components/EntityPageCard'
+import { twMerge } from 'tailwind-merge'
+import { SwitchPlaylistStatusButton } from '../components/buttons/SwitchPlaylistStatusButton'
 
 const Items = () => {
     const { _count, id } = usePlaylist()
@@ -54,6 +58,29 @@ const Size = () => {
     )
 }
 
+const Status = () => {
+    const { isPublished } = usePlaylist()
+
+    return (
+        <EntityPageCard title="Status">
+            <div className={
+                twMerge(
+                    'flex h-16 items-center',
+                    isPublished ? 'text-blue-500' : 'text-neutral-500'
+                )
+            }
+            >
+                {
+                    isPublished ? 'Published' : 'Draft'
+                }
+            </div>
+            <div>
+                <SwitchPlaylistStatusButton />
+            </div>
+        </EntityPageCard>
+    )
+}
+
 export const WorkspacePlaylistPage = () => {
     return (
         <div>
@@ -84,8 +111,10 @@ export const WorkspacePlaylistPage = () => {
                 </DeletePlaylistButton>
             </div>
             <div className='flex gap-5 mt-5'>
+				<PlaylistPageLayoutCard />
                 <div className='w-1/2'>
                     <Items />
+					<Status />
                 </div>
                 <div className='w-1/2'>
                     <Size />
