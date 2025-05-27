@@ -16,7 +16,7 @@ export const createScreen = async (req: Request, res: Response) => {
 
     const { workspaceId, name, type } = validation.data
 
-    const workspace = await WorkspaceRepository.getWithUser(workspaceId, user.id)
+    const workspace = await WorkspaceRepository.getWithMember(workspaceId, user.id)
 
     if (!workspace) {
         return ResponseHandler.notFound(res)
