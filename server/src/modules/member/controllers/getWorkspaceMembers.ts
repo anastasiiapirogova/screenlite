@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Prisma } from '@prisma/client'
+import { Prisma } from 'generated/prisma/client.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { workspaceMembersSchema } from '../schemas/memberSchemas.js'
 import { prisma } from '@config/prisma.js'

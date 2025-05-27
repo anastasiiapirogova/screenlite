@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from 'generated/prisma/client.js'
 import { prisma } from '../../../config/prisma.js'
 
 export const setDeviceOnlineStatus = async (token: string, status: boolean, createdAt?: Date) => {

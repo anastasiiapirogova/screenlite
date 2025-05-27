@@ -7,3 +7,4 @@ dist
 prisma/dev.db
 .swc
 .tmp
+/src/generated/prisma

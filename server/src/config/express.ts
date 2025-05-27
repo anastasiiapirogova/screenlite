@@ -3,7 +3,7 @@ import { createServer } from 'node:http'
 import bodyParser from 'body-parser'
 import path from 'path'
 import * as i18nextMiddleware from 'i18next-http-middleware'
-import { User } from '@prisma/client'
+import { User } from 'generated/prisma/client.js'
 import { corsMiddleware } from '../middlewares/corsMiddleware.js'
 import { i18n } from './i18n.js'
 import { guestRoutes } from '../routes/guest.js'
@@ -48,15 +48,15 @@ app.use('/api/static', staticRoutes)
 app.use('/api', guestRoutes)
 app.use('/api', authRoutes)
 
-app.use(express.static(path.join(__dirname, '../../../client/dist/')))
+// app.use(express.static(path.join(__dirname, '../../../client/dist/')))
 
 app.use('/api/*', (_req: Request, res: Response) => {
     ResponseHandler.notFound(res)
 })
 
-app.get(/^((?!\/socket\.io).)*$/, (_req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../../../client/dist/index.html'))
-})
+// app.get(/^((?!\/socket\.io).)*$/, (_req: Request, res: Response) => {
+//     res.sendFile(path.join(__dirname, '../../../client/dist/index.html'))
+// })
 
 app.use(errorHandler)
 

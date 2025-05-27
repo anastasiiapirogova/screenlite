@@ -1,5 +1,5 @@
 import { prisma } from '@config/prisma.js'
-import { FileUploadSession } from '@prisma/client'
+import { FileUploadSession } from 'generated/prisma/client.js'
 
 export const updateFileUploadSession = async (fileUploadSession: FileUploadSession, receivedBytes: number) => {
     return await prisma.fileUploadSession.update({

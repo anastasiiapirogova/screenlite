@@ -1,4 +1,4 @@
-import { FileUploadSession } from '@prisma/client'
+import { FileUploadSession } from 'generated/prisma/client.js'
 import { prisma } from '../../../config/prisma.js'
 import { sanitizeFileName } from './sanitizeFileName.js'
 

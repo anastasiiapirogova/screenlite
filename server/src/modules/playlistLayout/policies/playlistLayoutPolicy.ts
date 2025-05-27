@@ -1,5 +1,5 @@
 import { getUserWorkspacePermissions } from '@modules/workspace/utils/getUserWorkspacePermissions.js'
-import { PlaylistLayout } from '@prisma/client'
+import { PlaylistLayout } from 'generated/prisma/client.js'
 import { SafeUser } from 'types.js'
 
 export const playlistLayoutPolicy = {

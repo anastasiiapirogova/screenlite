@@ -1,4 +1,4 @@
-import { FileUploadSession } from '@prisma/client'
+import { FileUploadSession } from 'generated/prisma/client.js'
 import { Request, Response } from 'express'
 import { Buckets, s3Client } from '../../../../config/s3Client.js'
 import { UploadPartCommand } from '@aws-sdk/client-s3'

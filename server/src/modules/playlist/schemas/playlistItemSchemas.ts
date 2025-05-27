@@ -1,4 +1,4 @@
-import { $Enums } from '@prisma/client'
+import { $Enums } from 'generated/prisma/client.js'
 import { z } from 'zod'
 
 export const playlistItemSchema = z.object({

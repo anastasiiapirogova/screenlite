@@ -1,5 +1,5 @@
 import { prisma } from '@config/prisma.js'
-import { Playlist, Prisma } from '@prisma/client'
+import { Playlist, Prisma } from 'generated/prisma/client.js'
 import { excludeFromArray } from '@utils/exclude.js'
 import { ComparablePlaylistItem } from 'types.js'
 import { CreatePlaylistData } from '../types.js'

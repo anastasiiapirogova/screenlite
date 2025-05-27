@@ -7,7 +7,12 @@ datasource db {
 }
 
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["strictUndefinedChecks", "driverAdapters"]
-    output          = "../generated/client"
+    provider               = "prisma-client"
+    previewFeatures        = ["strictUndefinedChecks", "driverAdapters"]
+    output                 = "../src/generated/prisma"
+    runtime                = "nodejs"
+    moduleFormat           = "esm"
+    generatedFileExtension = "ts"
+    importFileExtension    = "ts"
+    binaryTargets          = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
 }

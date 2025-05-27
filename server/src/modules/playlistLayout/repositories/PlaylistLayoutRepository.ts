@@ -1,5 +1,5 @@
 import { prisma } from '@config/prisma.js'
-import { Prisma } from '@prisma/client'
+import { Prisma } from 'generated/prisma/client.js'
 
 type CreateLayoutData = {
     workspaceId: string

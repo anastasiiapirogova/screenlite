@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { User } from 'generated/prisma/client.js'
 import { authEventEmitter } from '../events/eventEmitter.js'
 import { createEmailVerificationToken, getPendingEmailVerificationToken } from '../modules/user/utils/emailVerificationToken.js'
 import { sendVerificationEmail } from '../modules/user/utils/sendVerificationEmail.js'

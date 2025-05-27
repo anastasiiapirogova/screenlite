@@ -1,6 +1,6 @@
 import { ffmpeg } from '@config/ffmpeg.js'
 import { prisma } from '@config/prisma.js'
-import { File } from '@prisma/client'
+import { File } from 'generated/prisma/client.js'
 import crypto from 'crypto'
 import fs from 'fs'
 

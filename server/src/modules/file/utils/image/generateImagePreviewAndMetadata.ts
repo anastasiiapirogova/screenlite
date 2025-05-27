@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { File } from '@prisma/client'
+import { File } from 'generated/prisma/client.js'
 import { storeFileLocallyFromS3 } from '../storeFileLocallyFromS3.js'
 import { generateImageMetadata } from './generateImageMetadata.js'
 

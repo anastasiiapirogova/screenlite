@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { z } from 'zod'
-import { FileUploadSession } from '@prisma/client'
+import { FileUploadSession } from 'generated/prisma/client.js'
 import { completeFilePartUpload } from '../utils/filePartUploading/completeFilePartUpload.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { filePolicy } from '../policies/filePolicy.js'

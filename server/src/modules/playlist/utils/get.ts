@@ -1,4 +1,4 @@
-import { Playlist } from '@prisma/client'
+import { Playlist } from 'generated/prisma/client.js'
 import { getProperty } from '@utils/getProperty.js'
 
 export const getModifiedPlaylistFields = (playlist: Playlist, updatedFields: Record<string, unknown>) => {

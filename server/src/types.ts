@@ -1,4 +1,4 @@
-import { $Enums, User } from '@prisma/client'
+import { $Enums, User } from 'generated/prisma/client.js'
 
 export type SafeUser = Omit<User, 'password'>
 

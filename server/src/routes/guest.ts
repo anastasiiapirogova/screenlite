@@ -3,6 +3,7 @@ import { login } from '@modules/auth/login.js'
 import { signup } from '@modules/auth/signup.js'
 import { verifyEmail } from '@modules/user/verifyEmail.js'
 import { asyncHandler } from '@utils/asyncHandler.js'
+import { health } from '@modules/health/health.js'
 
 const router = express.Router()
 
@@ -19,5 +20,6 @@ const createRoute = (method: HttpMethod, path: string, handler: any) => {
 createRoute(HttpMethod.POST, '/auth/signup', signup)
 createRoute(HttpMethod.POST, '/auth/login', login)
 createRoute(HttpMethod.POST, '/user/verifyEmail', verifyEmail)
+createRoute(HttpMethod.GET, '/health', health)
 
 export { router as guestRoutes }

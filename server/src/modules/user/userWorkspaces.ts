@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { z } from 'zod'
-import { Prisma } from '@prisma/client'
+import { Prisma } from 'generated/prisma/client.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { SafeUser } from 'types.js'
 import { prisma } from '@config/prisma.js'

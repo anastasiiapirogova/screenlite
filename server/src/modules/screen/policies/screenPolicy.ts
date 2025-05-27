@@ -1,5 +1,5 @@
 import { getUserWorkspacePermissions, getUserWorkspacePermissionsEager } from '@modules/workspace/utils/getUserWorkspacePermissions.js'
-import { Screen, UserWorkspace } from '@prisma/client'
+import { Screen, UserWorkspace } from 'generated/prisma/client.js'
 import { SafeUser } from 'types.js'
 
 export const screenPolicy = {

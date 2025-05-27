@@ -1,7 +1,7 @@
 import { Buckets, s3Client } from '@config/s3Client.js'
 import fs from 'fs'
 import path from 'path'
-import { File } from '@prisma/client'
+import { File } from 'generated/prisma/client.js'
 import { GetObjectCommand } from '@aws-sdk/client-s3'
 
 export const storeFileLocallyFromS3 = async (file: File, localFilePath: string) => {

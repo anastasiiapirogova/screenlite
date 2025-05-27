@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { prisma } from '../../../config/prisma.js'
 import { z } from 'zod'
-import { Prisma } from '@prisma/client'
+import { Prisma } from 'generated/prisma/client.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { filePolicy } from '../policies/filePolicy.js'
 

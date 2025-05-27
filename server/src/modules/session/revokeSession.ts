@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Session } from '@prisma/client'
+import { Session } from 'generated/prisma/client.js'
 import { SafeUser } from '../../types.js'
 import { z } from 'zod'
 import { ResponseHandler } from '@utils/ResponseHandler.js'

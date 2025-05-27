@@ -1,5 +1,5 @@
 import { getUserWorkspacePermissions } from '@modules/workspace/utils/getUserWorkspacePermissions.js'
-import { WorkspaceUserInvitation } from '@prisma/client'
+import { WorkspaceUserInvitation } from 'generated/prisma/client.js'
 import { SafeUser } from 'types.js'
 
 export class WorkspaceUserInvitationPolicy {

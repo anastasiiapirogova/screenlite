@@ -1,4 +1,4 @@
-import { UserWorkspace } from '@prisma/client'
+import { UserWorkspace } from 'generated/prisma/client.js'
 import { SafeUser } from 'types.js'
 import { getUserWorkspacePermissionsEager } from '../utils/getUserWorkspacePermissions.js'
 

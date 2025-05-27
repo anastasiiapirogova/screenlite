@@ -1,7 +1,7 @@
 import { SafeUser } from 'types.js'
 import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
 import { isUserMemberOfWorkspace } from './isUserMemberOfWorkspace.js'
-import { UserWorkspace } from '@prisma/client'
+import { UserWorkspace } from 'generated/prisma/client.js'
 
 /**
  * Determines if a user has permissions in a specified workspace.

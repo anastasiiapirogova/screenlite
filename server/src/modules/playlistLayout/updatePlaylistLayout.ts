@@ -5,7 +5,7 @@ import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { PlaylistLayoutRepository } from './repositories/PlaylistLayoutRepository.js'
 import { updatePlaylistLayoutSchema } from './schemas/playlistLayoutSchemas.js'
 import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
-import { PlaylistLayoutSection } from '@prisma/client'
+import { PlaylistLayoutSection } from 'generated/prisma/client.js'
 import { prisma } from '@config/prisma.js'
 import { playlistLayoutEventEmitter } from 'events/eventEmitter.js'
 
