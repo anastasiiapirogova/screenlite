@@ -13,6 +13,7 @@ export const fileQueueWorker = new Worker(
         if (job.name === 'fileUpdated') {
             await handleFileUpdatedJob(job.data.fileId)
         }
+        
     },
     {
         connection: bullmqConnection,

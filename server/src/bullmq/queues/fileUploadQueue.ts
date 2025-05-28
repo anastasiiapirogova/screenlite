@@ -8,3 +8,16 @@ export const fileUploadQueue = new Queue('fileUploadQueue', {
         removeOnFail: 1000
     }
 })
+
+await fileUploadQueue.upsertJobScheduler(
+    'tmp-folder-cleanup',
+    { pattern: '0 0 0 * * *' },
+    {
+        name: 'cleanupTmpFolder',
+        opts: {
+            backoff: 3,
+            attempts: 5,
+            removeOnFail: 1000,
+        },
+    },
+)
