@@ -7,7 +7,6 @@ const getDeviceConnectionClause = (isConnected?: boolean, isNotConnected?: boole
 const getIsOnlineClause = (isOnline?: boolean, isOffline?: boolean) => {
     if (isOnline && !isOffline) return { isOnline: true }
     if (isOffline && !isOnline) return { isOnline: false }
-    if (isOnline && isOffline) return {}
     return false
 }
 

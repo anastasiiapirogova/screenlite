@@ -1,9 +1,8 @@
 import express from 'express'
-import { login } from '@modules/auth/login.js'
-import { signup } from '@modules/auth/signup.js'
-import { verifyEmail } from '@modules/user/verifyEmail.js'
+import { verifyEmail } from '@modules/user/controllers/verifyEmail.js'
 import { asyncHandler } from '@utils/asyncHandler.js'
 import { health } from '@modules/health/health.js'
+import { login, signup } from '@modules/auth/controllers/index.js'
 
 const router = express.Router()
 

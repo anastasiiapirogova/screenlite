@@ -1,10 +1,15 @@
 import { SafeUser } from 'types.js'
 
-export const userPolicy = {
-    canChangePassword: (user: SafeUser, targetUserId: string) => {
+export class UserPolicy {
+    static canChangePassword(user: SafeUser, targetUserId: string) {
         return user.id === targetUserId
-    },
-    canDeleteUser: (user: SafeUser, targetUserId: string) => {
+    }
+    
+    static canDeleteUser(user: SafeUser, targetUserId: string) {
         return user.id === targetUserId
-    },
+    }
+
+    static canUpdateUser(user: SafeUser, targetUserId: string) {
+        return user.id === targetUserId
+    }
 }

@@ -1,59 +1,76 @@
 import express from 'express'
+import {
+    userUpdateMulterMiddleware,
+    workspaceUpdateMulterMiddleware
+} from '@config/multer.js'
 import { isAuthenticated } from '../middlewares/authMiddleware.js'
 import { asyncHandler } from '@utils/asyncHandler.js'
-import { me } from '@modules/auth/me.js'
-import { logout } from '@modules/auth/logout.js'
 import { activeSessions } from '@modules/session/activeSessions.js'
 import { revokeSession } from '@modules/session/revokeSession.js'
-import { changePassword } from '@modules/user/changePassword.js'
-import { deleteUser } from '@modules/user/deleteUser.js'
-import { userWorkspaces } from '@modules/user/userWorkspaces.js'
-import { createWorkspace } from '@modules/workspace/createWorkspace.js'
-import { getWorkspace } from '@modules/workspace/getWorkspace.js'
-import { updateWorkspace } from '@modules/workspace/updateWorkspace.js'
-import { getWorkspaceScreens } from '@modules/screen/getWorkspaceScreens.js'
-import { getWorkspacePlaylists } from '@modules/playlist/getWorkspacePlaylists.js'
-import { getWorkspacePlaylistLayouts } from '@modules/playlistLayout/getWorkspacePlaylistLayouts.js'
-import { createScreen } from '@modules/screen/createScreen.js'
-import { getScreen } from '@modules/screen/getScreen.js'
-import { connectDevice } from '@modules/screen/connectDevice.js'
-import { disconnectDevice } from '@modules/screen/disconnectDevice.js'
-import { getScreenPlaylists } from '@modules/screen/getScreenPlaylists.js'
-import { deleteScreens } from '@modules/screen/deleteScreens.js'
-import { createPlaylist } from '@modules/playlist/createPlaylist.js'
-import { getPlaylist } from '@modules/playlist/getPlaylist.js'
-import { addScreensToPlaylist } from '@modules/playlist/addScreensToPlaylist.js'
-import { removeScreensFromPlaylist } from '@modules/playlist/removeScreensFromPlaylist.js'
-import { getPlaylistScreens } from '@modules/playlist/getPlaylistScreens.js'
-import { deletePlaylists } from '@modules/playlist/deletePlaylists.js'
-import { getPlaylistItems } from '@modules/playlist/getPlaylistItems.js'
-import { getPlaylistLayout } from '@modules/playlistLayout/getPlaylistLayout.js'
-import { getPlaylistLayoutPlaylists } from '@modules/playlistLayout/getPlaylistLayoutPlaylists.js'
 import { createPlaylistSchedule } from '@modules/playlistSchedule/createPlaylistSchedule.js'
 import { updatePlaylistSchedule } from '@modules/playlistSchedule/updatePlaylistSchedule.js'
 import { deletePlaylistSchedule } from '@modules/playlistSchedule/deletePlaylistSchedule.js'
-import { updatePlaylistItems } from '@modules/playlist/updatePlaylistItems.js'
-import { createPlaylistLayout } from '@modules/playlistLayout/createPlaylistLayout.js'
-import { restorePlaylists } from '@modules/playlist/restorePlaylists.js'
-import { workspaceUpdateMulterMiddleware } from '@config/multer.js'
-import { copyPlaylist } from '@modules/playlist/copyPlaylist.js'
-import { updatePlaylist } from '@modules/playlist/updatePlaylist.js'
-import { changePlaylistLayout } from '@modules/playlist/changePlaylistLayout.js'
-import { updatePlaylistLayout } from '@modules/playlistLayout/updatePlaylistLayout.js'
-import { deletePlaylistLayout } from '@modules/playlistLayout/deletePlaylistLayout.js'
-import { getWorkspaceEntityCounts } from '@modules/workspace/getWorkspaceEntityCounts.js'
-import { getWorkspaceUserInvitations } from '@modules/workspaceUserInvitation/getWorkspaceUserInvitations.js'
+import {
+    getPlaylistLayout,
+    getPlaylistLayoutPlaylists,
+    createPlaylistLayout,
+    updatePlaylistLayout,
+    deletePlaylistLayout,
+    getWorkspacePlaylistLayouts
+} from '@modules/playlistLayout/controllers/index.js'
+import {
+    addScreensToPlaylist,
+    changePlaylistLayout,
+    copyPlaylist,
+    createPlaylist,
+    deletePlaylists,
+    getPlaylist,
+    getPlaylistItems,
+    getPlaylistScreens,
+    getWorkspacePlaylists,
+    removeScreensFromPlaylist,
+    restorePlaylists,
+    updatePlaylist,
+    updatePlaylistItems
+} from '@modules/playlist/controllers/index.js'
+import {
+    me,
+    logout
+} from '@modules/auth/controllers/index.js'
+import {
+    connectDevice,
+    createScreen,
+    deleteScreens,
+    disconnectDevice,
+    getScreen,
+    getScreenPlaylists,
+    getWorkspaceScreens
+} from '@modules/screen/controllers/index.js'
 import {
     cancelFileUploading,
     createFileUploadSession,
     createFolder,
-    softDeleteFolders,
-    getWorkspaceFiles,
     getFolder,
+    getWorkspaceFiles,
     getWorkspaceFolders,
-    uploadFilePart,
-    moveToFolder
+    moveToFolder,
+    softDeleteFolders,
+    uploadFilePart
 } from '@modules/file/controllers/index.js'
+import {
+    changePassword,
+    deleteUser,
+    updateUser,
+    userWorkspaces,
+} from '@modules/user/controllers/index.js'
+import {
+    createWorkspace,
+    getWorkspace,
+    getWorkspaceEntityCounts,
+    updateWorkspace,
+} from '@modules/workspace/controllers/index.js'
+
+import { getWorkspaceUserInvitations } from '@modules/workspaceUserInvitation/getWorkspaceUserInvitations.js'
 import { getUserInvitations } from '@modules/workspaceUserInvitation/getUserInvitations.js'
 import { getWorkspaceMembers } from '@modules/member/controllers/getWorkspaceMembers.js'
 
@@ -81,6 +98,9 @@ createRoute(HttpMethod.GET, '/users/:id/invitations', getUserInvitations)
 createRoute(HttpMethod.POST, '/users/revokeSession', revokeSession)
 createRoute(HttpMethod.POST, '/users/changePassword', changePassword)
 createRoute(HttpMethod.POST, '/users/delete', deleteUser)
+createRoute(HttpMethod.POST, '/users/update', updateUser, [
+    userUpdateMulterMiddleware
+])
 
 // Workspace
 createRoute(HttpMethod.POST, '/workspaces/create', createWorkspace)

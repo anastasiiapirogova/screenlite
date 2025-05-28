@@ -1,0 +1,5 @@
+export { changePassword } from '@modules/user/controllers/changePassword.js'
+export { updateUser } from '@modules/user/controllers/updateUser.js'
+export { userWorkspaces } from '@modules/user/controllers/userWorkspaces.js'
+export { verifyEmail } from '@modules/user/controllers/verifyEmail.js'
+export { deleteUser } from '@modules/user/controllers/deleteUser.js'

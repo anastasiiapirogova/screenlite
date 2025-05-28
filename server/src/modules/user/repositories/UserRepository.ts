@@ -10,6 +10,26 @@ export class UserRepository {
         })
     }
 
+    static async createUser(email: string, name: string, password: string) {
+        const hashedPassword = await hashPassword(password)
+
+        return await prisma.user.create({
+            data: {
+                email,
+                name,
+                password: hashedPassword,
+            },
+        })
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static async updateUser(userId: string, data: Record<string, any>) {
+        return await prisma.workspace.update({
+            where: { id: userId },
+            data,
+        })
+    }
+
     static async updateUserPassword(userId: string, newPassword: string) {
         const hashedPassword = await hashPassword(newPassword)
 

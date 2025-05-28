@@ -1,8 +1,28 @@
 import { z } from 'zod'
 import { passwordZodSchema } from './passwordSchema.js'
 
+export const userNameSchema = z.string().min(1, 'NAME_IS_REQUIRED').max(100, 'NAME_TOO_LONG')
+
 export const changePasswordSchema = z.object({
     userId: z.string().uuid('Invalid userId format. It must be a valid UUID.'),
     currentPassword: z.string(),
     newPassword: passwordZodSchema
+})
+
+export const userIdSchema = z.object({
+    userId: z.string().nonempty('USER_ID_IS_REQUIRED')
+})
+
+export const updateUserSchema = z.object({
+    name: userNameSchema.optional(),
+    profilePhoto: z.string().optional()
+})
+
+export const userProfilePhotoSchema = z.object({
+    picture: z.object({
+        mimetype: z.string().refine((mimetype) => {
+            return ['image/jpeg', 'image/png'].includes(mimetype)
+        }, 'PICTURE_MUST_BE_JPG_JPEG_PNG'),
+        size: z.number().max(5 * 1024 * 1024, 'PICTURE_SIZE_TOO_LARGE')
+    })
 })
