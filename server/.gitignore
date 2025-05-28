@@ -6,5 +6,5 @@ dist
 .idea
 prisma/dev.db
 .swc
-.tmp
+tmp
 /src/generated/prisma
