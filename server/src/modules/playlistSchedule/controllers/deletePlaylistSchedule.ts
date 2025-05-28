@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { prisma } from '../../config/prisma.js'
+import { prisma } from '../../../config/prisma.js'
 import { z } from 'zod'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { addPlaylistUpdatedJob } from '@modules/playlist/utils/addPlaylistUpdatedJob.js'

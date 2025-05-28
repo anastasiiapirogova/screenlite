@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { passwordZodSchema } from './passwordSchema.js'
+import { paginationSchema } from 'schemas/paginationSchema.js'
 
 export const userNameSchema = z.string().min(1, 'NAME_IS_REQUIRED').max(100, 'NAME_TOO_LONG')
 
@@ -25,4 +26,16 @@ export const userProfilePhotoSchema = z.object({
         }, 'PICTURE_MUST_BE_JPG_JPEG_PNG'),
         size: z.number().max(5 * 1024 * 1024, 'PICTURE_SIZE_TOO_LARGE')
     })
+})
+
+export const verifyEmailSchema = z.object({
+    token: z.string().nonempty('TOKEN_IS_REQUIRED')
+})
+
+export const userWorkspacesSchema = paginationSchema.extend({
+    search: z.string().optional(),
+})
+
+export const deleteUserSchema = z.object({
+    userId: z.string().uuid('User ID must be a valid UUID')
 })

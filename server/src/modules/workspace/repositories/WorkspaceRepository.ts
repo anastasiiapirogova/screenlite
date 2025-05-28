@@ -1,6 +1,7 @@
 import { prisma } from '@config/prisma.js'
 import { getRedisClient, redisKeys } from '@config/redis.js'
 import { WorkspaceUserInvitationPolicy } from '@modules/workspaceUserInvitation/policies/WorkspaceUserInvitationPolicy.js'
+import { UpdateWorkspaceData } from '../types.js'
 
 export type ScreenStatusCount = { online: number, offline: number, notConnected: number }
 
@@ -32,6 +33,13 @@ export class WorkspaceRepository {
                     }
                 }
             },
+        })
+    }
+
+    static async update(workspaceId: string, data: UpdateWorkspaceData) {
+        return await prisma.workspace.update({
+            where: { id: workspaceId },
+            data,
         })
     }
 

@@ -1,5 +1,6 @@
 import { prisma } from '@config/prisma.js'
 import { hashPassword } from '../utils/hashPassword.js'
+import { EmailVerificationTokenRepository } from '@modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.js'
 
 export class UserRepository {
     static async findByEmail(email: string) {
@@ -24,10 +25,29 @@ export class UserRepository {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static async updateUser(userId: string, data: Record<string, any>) {
-        return await prisma.workspace.update({
+        return await prisma.user.update({
             where: { id: userId },
             data,
         })
+    }
+
+    static updateUserEmail(userId: string, email: string | undefined) {
+        return prisma.user.update({
+            where: { id: userId },
+            data: {
+                email,
+                emailVerifiedAt: new Date()
+            },
+        })
+    }
+	
+    static async updateUserEmailTransaction(userId: string, email: string | undefined) {
+        const [user] = await prisma.$transaction([
+            UserRepository.updateUserEmail(userId, email),
+            EmailVerificationTokenRepository.deleteVerificationTokens(userId),
+        ])
+
+        return user
     }
 
     static async updateUserPassword(userId: string, newPassword: string) {

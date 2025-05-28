@@ -1,15 +1,19 @@
 import express from 'express'
+import { asyncHandler } from '@utils/asyncHandler.js'
 import {
     userUpdateMulterMiddleware,
     workspaceUpdateMulterMiddleware
 } from '@config/multer.js'
-import { isAuthenticated } from '../middlewares/authMiddleware.js'
-import { asyncHandler } from '@utils/asyncHandler.js'
+import {
+    authMiddleware
+} from 'middlewares/index.js'
 import { activeSessions } from '@modules/session/activeSessions.js'
 import { revokeSession } from '@modules/session/revokeSession.js'
-import { createPlaylistSchedule } from '@modules/playlistSchedule/createPlaylistSchedule.js'
-import { updatePlaylistSchedule } from '@modules/playlistSchedule/updatePlaylistSchedule.js'
-import { deletePlaylistSchedule } from '@modules/playlistSchedule/deletePlaylistSchedule.js'
+import {
+    createPlaylistSchedule,
+    updatePlaylistSchedule,
+    deletePlaylistSchedule
+} from '@modules/playlistSchedule/controllers/index.js'
 import {
     getPlaylistLayout,
     getPlaylistLayoutPlaylists,
@@ -69,10 +73,11 @@ import {
     getWorkspaceEntityCounts,
     updateWorkspace,
 } from '@modules/workspace/controllers/index.js'
-
-import { getWorkspaceUserInvitations } from '@modules/workspaceUserInvitation/getWorkspaceUserInvitations.js'
-import { getUserInvitations } from '@modules/workspaceUserInvitation/getUserInvitations.js'
 import { getWorkspaceMembers } from '@modules/member/controllers/getWorkspaceMembers.js'
+import {
+    getUserInvitations,
+    getWorkspaceUserInvitations
+} from '@modules/workspaceUserInvitation/controllers/index.js'
 
 const router = express.Router()
 
@@ -84,7 +89,7 @@ enum HttpMethod {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createRoute = (method: HttpMethod, path: string, handler: (req: express.Request, res: express.Response) => Promise<void>, ...middlewares: any[]) => {
-    router[method](path, isAuthenticated, ...middlewares, asyncHandler(handler))
+    router[method](path, authMiddleware, ...middlewares, asyncHandler(handler))
 }
 
 // Auth

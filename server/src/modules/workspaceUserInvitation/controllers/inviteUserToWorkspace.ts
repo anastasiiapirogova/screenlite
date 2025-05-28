@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { WorkspaceUserInvitationPolicy } from './policies/WorkspaceUserInvitationPolicy.js'
-import { inviteUserToWorkspaceSchema } from './schemas/workspaceUserInvitationSchemas.js'
-import { WorkspaceUserInvitationRepository } from './repositories/WorkspaceUserInvitationRepository.js'
+import { WorkspaceUserInvitationPolicy } from '../policies/WorkspaceUserInvitationPolicy.js'
+import { inviteUserToWorkspaceSchema } from '../schemas/workspaceUserInvitationSchemas.js'
+import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.js'
 import { WorkspaceRepository } from '@modules/workspace/repositories/WorkspaceRepository.js'
 import { UserRepository } from '@modules/user/repositories/UserRepository.js'
 

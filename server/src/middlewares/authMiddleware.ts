@@ -2,7 +2,7 @@ import { SessionRepository } from '@modules/session/repositories/SessionReposito
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { Request, Response, NextFunction } from 'express'
 
-export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const authHeader = req.headers['authorization']
 
@@ -24,7 +24,7 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
 
         next()
     } catch (error) {
-        console.error('isAuthenticated middleware error:', error)
+        console.error('authMiddleware middleware error:', error)
 
         return ResponseHandler.serverError(res)
     }

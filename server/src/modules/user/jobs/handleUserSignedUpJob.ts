@@ -1,17 +1,17 @@
-import { createEmailVerificationToken, getPendingEmailVerificationToken } from '@modules/user/utils/emailVerificationToken.js'
+import { EmailVerificationTokenRepository } from '@modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.js'
 import { sendVerificationEmail } from '@modules/user/utils/sendVerificationEmail.js'
 import { User } from 'generated/prisma/client.js'
 
 export const handleUserSignedUpJob = async (user: User) => {
     try {
-        const pendingToken = await getPendingEmailVerificationToken(user.id)
+        const pendingToken = await EmailVerificationTokenRepository.getPendingEmailVerificationToken(user.id)
 
         let token
 
         if (pendingToken) {
             token = pendingToken.token
         } else {
-            const newToken = await createEmailVerificationToken(user.id, user.email)
+            const newToken = await EmailVerificationTokenRepository.createEmailVerificationToken(user.id, user.email)
 
             token = newToken.token
         }

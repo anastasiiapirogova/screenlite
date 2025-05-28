@@ -1,29 +1,21 @@
 import { Request, Response } from 'express'
-import { z } from 'zod'
 import { Prisma } from 'generated/prisma/client.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { SafeUser } from 'types.js'
 import { prisma } from '@config/prisma.js'
-
-const hasPermission = (user: SafeUser, userId: string): boolean => {
-    return user.id === userId
-}
-
-const paginationSchema = z.object({
-    page: z.preprocess((val) => isNaN(Number(val)) ? 1 : Number(val), z.number().min(1)),
-    limit: z.preprocess((val) => isNaN(Number(val)) ? 10 : Number(val), z.number().min(1).max(100)),
-    search: z.string().optional()
-})
+import { userWorkspacesSchema } from '../schemas/userSchemas.js'
+import { UserPolicy } from '../policies/userPolicy.js'
 
 export const userWorkspaces = async (req: Request, res: Response) => {
     const userId = req.params.id
     const user = req.user!
 
-    if (!hasPermission(user, userId)) {
+    const allowed = UserPolicy.canViewUserWorkspaces(user, userId)
+
+    if (!allowed) {
         return ResponseHandler.forbidden(res)
     }
 
-    const parsedData = paginationSchema.safeParse(req.query)
+    const parsedData = userWorkspacesSchema.safeParse(req.query)
 
     if (!parsedData.success) {
         return ResponseHandler.zodError(req, res, parsedData.error.errors)

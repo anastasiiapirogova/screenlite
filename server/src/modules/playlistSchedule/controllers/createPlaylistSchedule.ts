@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { createScheduleValidationSchema } from './validationSchemas/scheduleValidationSchemas.js'
+import { createScheduleValidationSchema } from '../validationSchemas/scheduleValidationSchemas.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { PlaylistRepository } from '@modules/playlist/repositories/PlaylistRepository.js'
 import { addPlaylistUpdatedJob } from '@modules/playlist/utils/addPlaylistUpdatedJob.js'

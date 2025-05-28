@@ -12,4 +12,8 @@ export class UserPolicy {
     static canUpdateUser(user: SafeUser, targetUserId: string) {
         return user.id === targetUserId
     }
+
+    static canViewUserWorkspaces(user: SafeUser, targetUserId: string) {
+        return user.id === targetUserId
+    }
 }

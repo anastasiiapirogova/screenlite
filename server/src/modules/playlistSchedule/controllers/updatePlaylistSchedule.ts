@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { prisma } from '../../config/prisma.js'
-import { updateScheduleValidationSchema } from './validationSchemas/scheduleValidationSchemas.js'
+import { prisma } from '../../../config/prisma.js'
+import { updateScheduleValidationSchema } from '../validationSchemas/scheduleValidationSchemas.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { addPlaylistUpdatedJob } from '@modules/playlist/utils/addPlaylistUpdatedJob.js'
 import { playlistPolicy } from '@modules/playlist/policies/playlistPolicy.js'
