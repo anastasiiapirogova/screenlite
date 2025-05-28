@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { z } from 'zod'
 import { prisma } from '../../config/prisma.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { findUserById } from './utils/findUserById.js'
+import { UserRepository } from './repositories/UserRepository.js'
 
 const validation = z.object({
     userId: z.string().uuid('User ID must be a valid UUID')
@@ -17,7 +17,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 
     const { userId } = parsedData.data
 
-    const user = await findUserById(userId)
+    const user = await UserRepository.findUserById(userId)
 
     if (!user) {
         return ResponseHandler.notFound(res)

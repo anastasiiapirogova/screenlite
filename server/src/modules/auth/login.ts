@@ -4,8 +4,8 @@ import { exclude } from '../../utils/exclude.js'
 import { validatePassword } from '../user/utils/validatePassword.js'
 import { getIpAndUserAgent } from '../user/utils/getIpAndUserAgent.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { findUserByEmail } from '@modules/user/utils/findUserByEmail.js'
 import { SessionRepository } from '@modules/session/repositories/SessionRepository.js'
+import { UserRepository } from '@modules/user/repositories/UserRepository.js'
 
 const loginSchema = z.object({
     email: z.string({
@@ -19,24 +19,21 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const parsedData = loginSchema.safeParse(req.body)
 
     if (!parsedData.success) {
-        ResponseHandler.zodError(req, res, parsedData.error.errors)
-        return
+        return ResponseHandler.zodError(req, res, parsedData.error.errors)
     }
 
     const { email, password } = parsedData.data
 
-    const user = await findUserByEmail(email)
+    const user = await UserRepository.findUserByEmail(email)
 
     if (!user) {
-        ResponseHandler.validationError(req, res, { email: 'USER_NOT_FOUND' })
-        return
+        return ResponseHandler.validationError(req, res, { email: 'USER_NOT_FOUND' })
     }
 
     const isPasswordValid = await validatePassword(password, user.password)
 
     if (!isPasswordValid) {
-        ResponseHandler.validationError(req, res, { password: 'INCORRECT_PASSWORD' })
-        return
+        return ResponseHandler.validationError(req, res, { password: 'INCORRECT_PASSWORD' })
     }
 
     const { ipAddress, userAgent } = getIpAndUserAgent(req)

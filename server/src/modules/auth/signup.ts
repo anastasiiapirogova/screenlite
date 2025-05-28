@@ -5,16 +5,16 @@ import { authEventEmitter } from '../../events/eventEmitter.js'
 import { exclude } from '../../utils/exclude.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { prisma } from '@config/prisma.js'
-import { findUserByEmail } from '@modules/user/utils/findUserByEmail.js'
 import { SessionRepository } from '@modules/session/repositories/SessionRepository.js'
 import { passwordZodSchema } from '@modules/user/schemas/passwordSchema.js'
 import { getIpAndUserAgent } from '@modules/user/utils/getIpAndUserAgent.js'
+import { UserRepository } from '@modules/user/repositories/UserRepository.js'
 
 const userSchema = z.object({
     email: z.string()
         .email('Invalid email address')
         .refine(async (email) => {
-            const doesUserExist = await findUserByEmail(email)
+            const doesUserExist = await UserRepository.findUserByEmail(email)
 
             return !doesUserExist
         }, 'This email is already in our database'),

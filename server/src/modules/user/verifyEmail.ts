@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 import { z } from 'zod'
 import { checkEmailVerificationToken } from './utils/emailVerificationToken.js'
-import { exclude } from '../../utils/exclude.js'
-import { prisma } from '../../config/prisma.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { findUserByEmail } from './utils/findUserByEmail.js'
+import { UserRepository } from './repositories/UserRepository.js'
+import { prisma } from '@config/prisma.js'
+import { exclude } from '@utils/exclude.js'
 
 const validateToken = z.object({
     token: z.string().min(1, 'Token is required'),
@@ -29,7 +29,7 @@ const deleteVerificationTokens = (userId: string) => {
 }
 
 const isNewEmailTaken = async (newEmail: string) => {
-    const user = await findUserByEmail(newEmail)
+    const user = await UserRepository.findUserByEmail(newEmail)
 
     return !!user
 }
@@ -38,8 +38,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     const validation = await validateToken.safeParseAsync(req.body)
 
     if (!validation.success) {
-        ResponseHandler.zodError(req, res, validation.error.errors)
-        return
+        return ResponseHandler.zodError(req, res, validation.error.errors)
     }
 
     const { token } = validation.data
@@ -47,16 +46,14 @@ export const verifyEmail = async (req: Request, res: Response) => {
     const tokenRecord = await checkEmailVerificationToken(token)
 
     if (!tokenRecord) {
-        ResponseHandler.validationError(req, res, { token: 'Token not found' })
-        return
+        return ResponseHandler.validationError(req, res, { token: 'Token not found' })
     }
 
     const newEmail = tokenRecord.newEmail || undefined
 
     if (newEmail && await isNewEmailTaken(newEmail)) {
         await deleteVerificationTokens(tokenRecord.userId)
-        ResponseHandler.validationError(req, res, { email: 'Email is already taken' })
-        return
+        return ResponseHandler.validationError(req, res, { email: 'Email is already taken' })
     }
 
     const [user] = await prisma.$transaction([
