@@ -13,7 +13,7 @@ export const generateVideoPreviewAndMetadata = async (file: File) => {
     const tempPreviewPath = path.join(process.cwd(), 'tmp', previewPath)
     const localFilePath = path.join(process.cwd(), 'tmp', file.path)
 
-	try {
+    try {
         await storeFileLocallyFromS3(file, localFilePath)
         await generateVideoPreview(localFilePath, tempPreviewPath)
 
