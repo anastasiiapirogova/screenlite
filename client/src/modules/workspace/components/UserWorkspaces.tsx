@@ -5,7 +5,7 @@ import { userWorkspacesQuery } from '../api/queries/userWorkspacesQuery'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Link } from 'react-router'
 import { WorkspacePicture } from '../../../shared/components/WorkspacePicture'
-import { TbMailSpark, TbPlus } from 'react-icons/tb'
+import { TbPlus } from 'react-icons/tb'
 
 const WorkspacesListLoadingState = () => {
     return (
@@ -26,6 +26,9 @@ const WorkspacesList = () => {
 	
     return (
         <div className='w-full max-w-[400px] flex flex-col gap-4'>
+            <div>
+                Your workspaces { data.total }
+            </div>
             <div className='bg-white p-2 border rounded-md flex flex-col gap-2'>
                 {
                     workspaces.map(workspace => (
@@ -51,15 +54,6 @@ const WorkspacesList = () => {
                     )
                 }
                 <Link
-                    to={ '/invitations' }
-                    className='flex gap-3 items-center p-2 hover:bg-gray-100 rounded-md cursor-default'
-                >
-                    <TbMailSpark className='w-5 h-5'/>
-                    <div className=''>
-                        Invitations
-                    </div>
-                </Link>
-                <Link
                     to={ '/workspaces/create' }
                     className='flex gap-3 items-center p-2 hover:bg-gray-100 rounded-md cursor-default'
                 >
@@ -73,7 +67,7 @@ const WorkspacesList = () => {
     )
 }
 
-export const UserWorkspacesPage = () => {
+export const UserWorkspaces = () => {
     return (
         <QueryErrorResetBoundary>
             <ErrorBoundary fallbackRender={ () => (

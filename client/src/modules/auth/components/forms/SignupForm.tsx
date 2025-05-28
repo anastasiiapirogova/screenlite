@@ -166,6 +166,7 @@ export const SignupForm = () => {
                     size='large'
                     disabled={ isPending }
                     icon={ isPending ? ButtonSpinner : TbChevronRight }
+					iconPosition='right'
                     
                 >
                     <span>Continue</span>

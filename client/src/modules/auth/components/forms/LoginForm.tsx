@@ -102,6 +102,7 @@ export const LoginForm = () => {
                     size='large'
                     disabled={ isPending }
                     icon={ isPending ? ButtonSpinner : TbChevronRight }
+                    iconPosition='right'
                 >
                     <span>Continue</span>
                 </Button>

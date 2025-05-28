@@ -7,7 +7,7 @@ export type User = {
 	name: string
 	profilePhoto: string | null
 	updatedAt: string
-};
+}
 
 export type UserSession = {
 	id: string

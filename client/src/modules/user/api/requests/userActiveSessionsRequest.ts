@@ -1,4 +1,4 @@
-import axios from '../../../../config/axios'
+import axios from '@config/axios'
 import { UserSession } from '../../types'
 
 type UserActiveSessionsRequestResponse = {

@@ -1,11 +1,15 @@
 import { MainLayout } from '../../shared/layouts/MainLayout'
 import { UserSettingsLayout } from './layouts/UserSettingsLayout'
-import { CurrentUserSessionsPage } from './pages/CurrentUserSessionsPage'
-import { UserSettingsPage } from './pages/UserSettingsPage'
+import { CurrentUserSessionsPage, HomePage, UserSettingsPage } from './pages'
+
 
 export const userRoutes = {
     element: <MainLayout />,
     children: [
+        {
+            path: '',
+            element: <HomePage />
+        },
         {
             path: 'settings',
             element: <UserSettingsLayout />,

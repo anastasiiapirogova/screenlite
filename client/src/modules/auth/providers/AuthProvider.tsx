@@ -6,6 +6,7 @@ import { AuthContext } from '../contexts/AuthContext'
 import { Outlet } from 'react-router'
 import { LoginRequestResponse } from '../api/requests/loginRequest'
 import { AppPreloader } from '../../../shared/components/AppPreloader'
+import { logoutRequest } from '../api/requests/logoutRequest'
 
 export const AuthProvider = () => {
     const queryClient = useQueryClient()
@@ -19,9 +20,12 @@ export const AuthProvider = () => {
     }
 
     const handleLogout = () => {
-        removeAuthToken()
-
-        queryClient.setQueryData(currentUserQuery().queryKey, null)
+        logoutRequest().then(() => {
+            removeAuthToken()
+        	queryClient.setQueryData(currentUserQuery().queryKey, null)
+        }).catch((error) => {
+            console.error('Logout failed:', error)
+        })
     }
 
     if (user === undefined) {
