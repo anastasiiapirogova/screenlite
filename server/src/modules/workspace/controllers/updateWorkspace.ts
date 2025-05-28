@@ -6,7 +6,6 @@ import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
 import { updateWorkspaceSchema, workspaceIdSchema, workspacePictureSchema } from '../schemas/workspaceSchemas.js'
 import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
 import { uploadWorkspacePictureToS3 } from '../utils/uploadWorkspacePictureToS3.js'
-import { prisma } from '@config/prisma.js'
 
 export const updateWorkspace = async (req: Request, res: Response) => {
     const user = req.user!
@@ -48,10 +47,15 @@ export const updateWorkspace = async (req: Request, res: Response) => {
             result.picture = picturePath
         }
 
-        const updatedWorkspace = await prisma.workspace.update({
-            where: { id: workspaceId },
-            data: removeUndefinedFromObject(result),
-        })
+        const data = removeUndefinedFromObject(result)
+		
+        if (Object.keys(data).length === 0) {
+            return ResponseHandler.json(res, {
+                workspace,
+            })
+        }
+
+        const updatedWorkspace = await WorkspaceRepository.update(workspaceId, data)
 
         return ResponseHandler.json(res, {
             workspace: updatedWorkspace,
@@ -60,5 +64,7 @@ export const updateWorkspace = async (req: Request, res: Response) => {
         if (error instanceof z.ZodError) {
             return ResponseHandler.zodError(req, res, error.errors)
         }
+
+        throw error
     }
 }

@@ -21,7 +21,7 @@ export const updateUser = async (req: Request, res: Response) => {
             return ResponseHandler.notFound(res)
         }
 
-        const allowed = await UserPolicy.canUpdateUser(user, userId)
+        const allowed = UserPolicy.canUpdateUser(user, userId)
 
         if (!allowed) {
             return ResponseHandler.forbidden(res)
@@ -40,7 +40,7 @@ export const updateUser = async (req: Request, res: Response) => {
             const profilePhotoPath = await uploadProfilePhotoToS3(userId, profilePhoto)
 
             if (!profilePhotoPath) {
-                return ResponseHandler.validationError(req, res, { picture: 'PICTURE_UPLOAD_FAILED' })
+                return ResponseHandler.validationError(req, res, { profilePhoto: 'PROFILE_PHOTO_UPLOAD_FAILED' })
             }
 
             if(userToUpdate.profilePhoto !== profilePhotoPath ) {
@@ -65,5 +65,7 @@ export const updateUser = async (req: Request, res: Response) => {
         if (error instanceof z.ZodError) {
             return ResponseHandler.zodError(req, res, error.errors)
         }
+
+        throw error
     }
 }
