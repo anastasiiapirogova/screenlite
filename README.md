@@ -1,5 +1,8 @@
-> ⚠️ **Important Note:**  
+⚠️ **Development notes:**  
+
 > Screenlite is currently **in public development** and **not ready for production use**. It’s not feature-complete yet.
+
+> Database migrations may not be incremental at this stage. Sometimes migrations will be cleared and recreated, requiring you to reset your database to run newer versions of the app.
 
 # Screenlite
 Screenlite is an open-source digital signage solution, providing an alternative to costly proprietary software.
