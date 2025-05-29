@@ -1,8 +1,15 @@
 import { MainLayout } from '../../shared/layouts/MainLayout'
 import { UserFullWidthSettingsPagesLayout } from './layouts/UserFullWidthSettingsPagesLayout'
 import { UserPagesLayout } from './layouts/UserPagesLayout'
-import { CurrentUserSessionsPage, HomePage, UserInvitationsPage, UserSettingsPage } from './pages'
-import { EditProfilePage } from './pages/EditProfilePage'
+import {
+    AccountSecurityPage,
+    ChangeEmailPage,
+    CurrentUserSessionsPage,
+    EditProfilePage,
+    HomePage,
+    UserInvitationsPage,
+    UserSettingsPage
+} from './pages'
 
 export const userRoutes = {
     element: <MainLayout />,
@@ -21,6 +28,10 @@ export const userRoutes = {
                 {
                     path: 'settings',
                     element: <UserSettingsPage />
+                },
+                {
+                    path: 'security',
+                    element: <AccountSecurityPage />
                 }
             ]
         },
@@ -32,6 +43,16 @@ export const userRoutes = {
                     path: 'profile',
                     element: <EditProfilePage />
                 },
+                {
+                    path: 'email',
+                    element: <ChangeEmailPage />
+                }
+            ]
+        },
+        {
+            path: 'security',
+            element: <UserFullWidthSettingsPagesLayout />,
+            children: [
                 {
                     path: 'sessions',
                     element: <CurrentUserSessionsPage />

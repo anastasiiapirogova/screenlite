@@ -13,7 +13,7 @@ export const CurrentUserSessionsPage = () => {
 
     return (
         <div>
-            <FullWidthSettingsPageHeader backLink='/settings'>
+            <FullWidthSettingsPageHeader backLink='/security'>
                 Sessions
             </FullWidthSettingsPageHeader>
             <ul>

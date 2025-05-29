@@ -1,26 +1,14 @@
 import { Request, Response } from 'express'
-import { Session } from 'generated/prisma/client.js'
-import { SafeUser } from '../../types.js'
-import { z } from 'zod'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { deleteSessionByToken } from '../user/utils/deleteSessionByToken.js'
 import { SessionRepository } from './repositories/SessionRepository.js'
-
-const revokeSessionSchema = z.object({
-    sessionId: z.string().uuid('Invalid sessionId format. It must be a valid UUID.')
-})
-
-const hasPermission = (user: SafeUser, session: Session): boolean => {
-    return user.id === session.userId
-}
+import { SessionPolicy } from './policies/sessionPolicy.js'
+import { revokeSessionSchema } from './schemas/sessionSchema.js'
 
 export const revokeSession = async (req: Request, res: Response) => {
     const parsedData = revokeSessionSchema.safeParse(req.body)
 
     if (!parsedData.success) {
-        ResponseHandler.zodError(req, res, parsedData.error.errors)
-
-        return
+        return ResponseHandler.zodError(req, res, parsedData.error.errors)
     }
 
     const { sessionId } = parsedData.data
@@ -30,16 +18,16 @@ export const revokeSession = async (req: Request, res: Response) => {
     const session = await SessionRepository.getSession(sessionId)
 
     if (!session) {
-        ResponseHandler.notFound(res)
-        return
+        return ResponseHandler.notFound(res)
     }
 
-    if (!hasPermission(user, session)) {
-        ResponseHandler.forbidden(res)
-        return
+    const allowed = SessionPolicy.canRevokeSession(user, session.userId)
+
+    if (!allowed) {
+        return ResponseHandler.forbidden(res)
     }
 
-    await deleteSessionByToken(session.token)
+    await SessionRepository.revokeSessionByToken(session.token)
 
-    res.status(200).send()
+    ResponseHandler.ok(res)
 }

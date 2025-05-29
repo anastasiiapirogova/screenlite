@@ -66,6 +66,7 @@ import {
     deleteUser,
     updateUser,
     userWorkspaces,
+    forceChangeEmail
 } from '@modules/user/controllers/index.js'
 import {
     createWorkspace,
@@ -102,6 +103,11 @@ createRoute(HttpMethod.GET, '/users/:id/workspaces', userWorkspaces)
 createRoute(HttpMethod.GET, '/users/:id/invitations', getUserInvitations)
 createRoute(HttpMethod.POST, '/users/revokeSession', revokeSession)
 createRoute(HttpMethod.POST, '/users/changePassword', changePassword)
+/**
+ * TODO: Replace forceChangeEmail controller with an implementation that includes
+ * email verification and requires the user's current password before changing the email.
+ */
+createRoute(HttpMethod.POST, '/users/changeEmail', forceChangeEmail)
 createRoute(HttpMethod.POST, '/users/delete', deleteUser)
 createRoute(HttpMethod.POST, '/users/update', updateUser, [
     userUpdateMulterMiddleware

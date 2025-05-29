@@ -10,6 +10,11 @@ export const changePasswordSchema = z.object({
     newPassword: passwordZodSchema
 })
 
+export const changeEmailSchema = z.object({
+    userId: z.string().uuid('Invalid userId format. It must be a valid UUID.'),
+    email: z.string().email('Invalid email format')
+})
+
 export const userIdSchema = z.object({
     userId: z.string().nonempty('USER_ID_IS_REQUIRED')
 })

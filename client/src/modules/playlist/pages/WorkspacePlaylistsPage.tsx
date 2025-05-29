@@ -1,15 +1,30 @@
-import { InnerSidebarLayout } from '@shared/layouts/InnerSidebarLayout'
 import { WorkspacePlaylistsPageSidebar } from '../components/WorkspacePlaylistsPageSidebar'
 import { WorkspacePlaylistsPageHeader } from '../components/workspacePlaylistsPage/WorkspacePlaylistsPageHeader'
 import { WorkspacePlaylistsPageContent } from '../components/workspacePlaylistsPage/WorkspacePlaylistsPageContent'
+import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
+import { ScrollArea } from '@shared/ui/ScrollArea'
 
 export const WorkspacePlaylistsPage = () => {
     return (
-        <div>
-            <WorkspacePlaylistsPageHeader />
-            <InnerSidebarLayout sidebar={ <WorkspacePlaylistsPageSidebar /> }>
-                <WorkspacePlaylistsPageContent />
-            </InnerSidebarLayout>
+        <div className='flex gap-2 grow'>
+            <div className='w-[325px] shrink-0'>
+                <LayoutBodyContainer>
+                    <ScrollArea>
+                        <div className='p-7'>
+                            <WorkspacePlaylistsPageSidebar />
+                        </div>
+                    </ScrollArea>
+                </LayoutBodyContainer>
+            </div>
+            
+            <LayoutBodyContainer>
+                <ScrollArea>
+                    <div className='p-7'>
+                        <WorkspacePlaylistsPageHeader />
+                        <WorkspacePlaylistsPageContent />
+                    </div>
+                </ScrollArea>
+            </LayoutBodyContainer>
         </div>
     )
 }

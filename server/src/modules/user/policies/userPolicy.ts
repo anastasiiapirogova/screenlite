@@ -5,6 +5,10 @@ export class UserPolicy {
         return user.id === targetUserId
     }
     
+    static canChangeEmail(user: SafeUser, targetUserId: string) {
+        return user.id === targetUserId
+    }
+
     static canDeleteUser(user: SafeUser, targetUserId: string) {
         return user.id === targetUserId
     }

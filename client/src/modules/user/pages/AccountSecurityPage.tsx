@@ -1,14 +1,13 @@
-import { EmailSettingsCard, ProfileSettingsCard } from '../components'
+import { SessionsSecurityCard } from '../components'
 
-export const UserSettingsPage = () => {
+export const AccountSecurityPage = () => {
     return (
         <div className='max-w-screen-md mx-auto'>
             <div className='text-3xl mb-4'>
-                Settings
+                Security
             </div>
             <div className='flex flex-col gap-2 mb-4'>
-                <ProfileSettingsCard />
-                <EmailSettingsCard />
+                <SessionsSecurityCard />
             </div>
         </div>
     )

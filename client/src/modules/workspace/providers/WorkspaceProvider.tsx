@@ -7,6 +7,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { WorkspaceErrorHandler } from '../components/WorkspaceErrorHandler'
 import { FileUploader } from '@modules/file/components/FileUploader'
 import { workspaceEntityCountsQuery } from '../api/queries/workspaceEntityCountsQuery'
+import { WorkspaceLoadingState } from '../pages/WorkspaceLoadingState'
 
 const WorkspaceProviderContent = () => {
     const params = useParams<{ workspaceSlug: string }>()
@@ -27,7 +28,7 @@ export const WorkspaceProvider = () => {
     return (
         <QueryErrorResetBoundary>
             <ErrorBoundary fallbackRender={ ({ error }) => <WorkspaceErrorHandler error={ error }/> }>
-                <Suspense fallback={ <div>loading</div> }>
+                <Suspense fallback={ <WorkspaceLoadingState /> }>
                     <WorkspaceProviderContent />
                 </Suspense>
             </ErrorBoundary>

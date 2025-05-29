@@ -4,6 +4,7 @@ model Session {
     token          String    @unique
     userAgent      String
     ipAddress      String
+	location	   String?
     createdAt      DateTime  @default(now())
     revokedAt      DateTime?
     lastActivityAt DateTime  @default(now())

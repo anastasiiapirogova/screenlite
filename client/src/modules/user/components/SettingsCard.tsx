@@ -21,9 +21,11 @@ export const SettingsCard = ({
 	children: ReactNode
 }) => {
     return (
-        <div className='p-7 border border-neutral-200 rounded-xl'>
-            <SettingsCardTitle>{ title }</SettingsCardTitle>
-            <SettingsCardDescription>{ description }</SettingsCardDescription>
+        <div className='border border-neutral-200 rounded-xl overflow-hidden'>
+            <div className='m-5'>
+                <SettingsCardTitle>{ title }</SettingsCardTitle>
+                <SettingsCardDescription>{ description }</SettingsCardDescription>
+            </div>
             { children }
         </div>
     )

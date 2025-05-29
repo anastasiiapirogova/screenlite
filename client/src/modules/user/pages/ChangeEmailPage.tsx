@@ -1,17 +1,16 @@
 import { Input } from '@shared/ui/input/Input'
 import { FullWidthSettingsPageHeader } from '../components/FullWidthSettingsPageHeader'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { UpdateUserData, updateUserRequest } from '../api/requests/updateUserRequest'
 import { useCurrentUser } from '@modules/auth/hooks/useCurrentUser'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { currentUserQuery } from '@modules/auth/api/queries/currentUser'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { InputError } from '@shared/ui/input/InputError'
-import { UserAvatarUploadComponent } from '@shared/components/UserAvatarUploadComponent'
 import { Button } from '@shared/ui/buttons/Button'
+import { ChangeEmailData, changeEmailRequest } from '../api/requests/changeEmailRequest'
 
-export const EditProfilePage = () => {
+export const ChangeEmailPage = () => {
     const user = useCurrentUser()
     const queryClient = useQueryClient()
 
@@ -19,67 +18,56 @@ export const EditProfilePage = () => {
         control,
         handleSubmit,
         setError,
-        setValue,
-        formState: { errors },
-        watch
-    } = useForm<UpdateUserData>({
+        getValues,
+        formState: { errors, isDirty },
+        reset
+    } = useForm<ChangeEmailData>({
         defaultValues: {
             userId: user.id,
-            name: user.name,
-            profilePhoto: undefined
+            email: user.email,
         }
     })
-
-    const isDirty = watch('name') !== user.name || watch('profilePhoto') !== undefined
 
     const { mutate, isPending } = useMutation({
-        mutationFn: (data: UpdateUserData) => updateUserRequest(data),
+        mutationFn: (data: ChangeEmailData) => changeEmailRequest(data),
         onSuccess: async (screen) => {
             queryClient.setQueryData(currentUserQuery().queryKey, screen)
+            reset(getValues())
         },
         onError: (error) => {
-            handleAxiosFieldErrors<UpdateUserData>(error, setError)
+            handleAxiosFieldErrors<ChangeEmailData>(error, setError)
         }
     })
 
-    const onSubmit: SubmitHandler<UpdateUserData> = (data) => {
+    const onSubmit: SubmitHandler<ChangeEmailData> = (data) => {
         mutate(data)
     }
 
     return (
         <div>
             <FullWidthSettingsPageHeader backLink='/settings'>
-                Profile information
+                Email
             </FullWidthSettingsPageHeader>
             <div className='max-w-screen-sm mx-auto p-5'>
                 <form
                     onSubmit={ handleSubmit(onSubmit) }
                     className='w-full flex flex-col gap-2'
                 >
-                    <div className='text-neutral-500'>
-                        Profile photo
-                    </div>
-                    <UserAvatarUploadComponent
-                        name={ watch().name! }
-                        profilePhoto={ user.profilePhoto }
-                        preview={ watch().profilePhoto }
-                        onChange={ (file) => { setValue('profilePhoto', file) } }
-                    />
-                    <div className='text-sm text-gray-500 mb-5'>
-                        Supported formats: JPG, PNG. Max size: 5MB. Recommended size is 512x512 pixels.
-                    </div>
                     <InputLabelGroup
-                        label='Name'
-                        name='name'
+                        label='Email'
+                        name='email'
                     >
                         <Controller
-                            name='name'
+                            name='email'
                             control={ control }
                             render={ ({ field }) => (
-                                <Input { ...field }/>
+                                <Input
+                                    { ...field }
+                                    type='email'
+                                />
                             ) }
                         />
-                        <InputError error={ errors.name?.message }/>
+                        <InputError error={ errors.email?.message }/>
                     </InputLabelGroup>
                     <div className='flex justify-end items-center gap-2 mt-5'>
                         <Button

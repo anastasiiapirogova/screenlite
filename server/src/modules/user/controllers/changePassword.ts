@@ -22,7 +22,7 @@ export const changePassword = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(res)
     }
 
-    if (!UserPolicy.canDeleteUser(user, userId)) {
+    if (!UserPolicy.canChangePassword(user, userId)) {
         return ResponseHandler.forbidden(res)
     }
 

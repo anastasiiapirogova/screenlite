@@ -1,8 +1,11 @@
 import { SafeUser } from 'types.js'
 
-export const sessionPolicy = {
-    canAccessUserSessions: (user: SafeUser, userId: string): boolean => {
+export class SessionPolicy{
+    static canAccessUserSessions(user: SafeUser, userId: string): boolean {
         return user.id === userId
-    },
+    }
 
+    static canRevokeSession(user: SafeUser, sessionUserId: string): boolean {
+        return user.id === sessionUserId
+    }
 }
