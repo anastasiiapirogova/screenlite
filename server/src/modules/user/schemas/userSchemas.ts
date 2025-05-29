@@ -20,7 +20,7 @@ export const updateUserSchema = z.object({
 })
 
 export const userProfilePhotoSchema = z.object({
-    picture: z.object({
+    profilePhoto: z.object({
         mimetype: z.string().refine((mimetype) => {
             return ['image/jpeg', 'image/png'].includes(mimetype)
         }, 'PICTURE_MUST_BE_JPG_JPEG_PNG'),

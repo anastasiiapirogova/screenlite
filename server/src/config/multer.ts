@@ -6,4 +6,4 @@ const upload = multer({
 
 export const workspaceUpdateMulterMiddleware = upload.single('picture')
 
-export const userUpdateMulterMiddleware = upload.single('profilePicture')
+export const userUpdateMulterMiddleware = upload.single('profilePhoto')
