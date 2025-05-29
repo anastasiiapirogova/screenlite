@@ -1,21 +1,15 @@
 import { MainLayout } from '@/shared/layouts/MainLayout'
 import { Navigate } from 'react-router'
-import { WorkspaceSidebarLayout } from './layouts/WorkspaceSidebarLayout'
-import { UserWorkspacesLayout } from './layouts/UserWorkspacesLayout'
 import { WorkspaceProvider } from './providers/WorkspaceProvider'
-import { CreateWorkspacePage, UserInvitationsPage, WorkspacePage, WorkspaceSettingsPage } from './pages'
+import { CreateWorkspacePage, WorkspacePage, WorkspaceSettingsPage } from './pages'
 import { workspaceFileRoutes, workspaceMemberRoutes, workspacePlaylistContentManagerRoutes, workspacePlaylistLayoutEditorRoutes, workspacePlaylistLayoutRoutes, workspacePlaylistRoutes, workspaceScreenRoutes } from '@/routes'
+import { WorkspacePagesLayout } from './layouts/WorkspacePagesLayout'
 
 export const workspaceRoutes = {
     element: <MainLayout />,
     children: [
         {
-            element: <UserWorkspacesLayout />,
             children: [
-                {
-                    path: 'invitations',
-                    element: <UserInvitationsPage />
-                },
                 {
                     path: 'workspaces/create',
                     element: <CreateWorkspacePage />
@@ -41,7 +35,7 @@ export const workspaceRoutes = {
             element: <WorkspaceProvider />,
             children: [
                 {
-                    element: <WorkspaceSidebarLayout />,
+                    element: <WorkspacePagesLayout />,
                     children: [
                         {
                             path: '',

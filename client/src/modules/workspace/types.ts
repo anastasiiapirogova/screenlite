@@ -28,11 +28,3 @@ export type UserWorkspace = Workspace & {
 }
 
 export type WorkspaceWithEntityCounts = Workspace & { _count: WorkspaceEntityCounts } 
-
-export type UserInvitation = {
-	id: string
-    email: string
-    status: string
-    createdAt: string
-    workspace: Workspace
-}

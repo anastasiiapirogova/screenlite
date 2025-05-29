@@ -1,3 +1,5 @@
+import { Workspace } from '@modules/workspace/types'
+
 export type User = {
 	createdAt: string
 	deletedAt: string | null
@@ -17,4 +19,12 @@ export type UserSession = {
 	userId: string
 	revokedAt: string | null
 	lastActivityAt: string
+}
+
+export type UserInvitation = {
+	id: string
+    email: string
+    status: string
+    createdAt: string
+    workspace: Workspace
 }

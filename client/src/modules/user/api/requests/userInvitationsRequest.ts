@@ -1,5 +1,5 @@
 import axios from '@/config/axios'
-import { UserInvitation } from '../../types'
+import { UserInvitation } from '@modules/user/types'
 
 type UserInvitaionsRequestResponse = {
 	invitations: UserInvitation[]

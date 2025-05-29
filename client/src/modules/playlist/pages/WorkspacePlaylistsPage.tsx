@@ -5,7 +5,7 @@ import { WorkspacePlaylistsPageContent } from '../components/workspacePlaylistsP
 
 export const WorkspacePlaylistsPage = () => {
     return (
-        <div className='flex flex-col grow w-full overflow-hidden'>
+        <div>
             <WorkspacePlaylistsPageHeader />
             <InnerSidebarLayout sidebar={ <WorkspacePlaylistsPageSidebar /> }>
                 <WorkspacePlaylistsPageContent />

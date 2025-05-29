@@ -1,3 +1,4 @@
+import { getFileThumbnailSrc } from '@modules/file/utils/getFileThumbnailSrc'
 import React from 'react'
 
 type UserAvatarProps = {
@@ -42,7 +43,7 @@ export const UserAvatar = ({
         >
             { profilePhoto ? (
                 <img
-                    src={ profilePhoto }
+                    src={ getFileThumbnailSrc(profilePhoto) }
                     alt={ `${name}'s avatar` }
                     className="w-full h-full object-cover rounded-full block"
                 />

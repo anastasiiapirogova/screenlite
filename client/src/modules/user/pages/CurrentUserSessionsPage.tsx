@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useCurrentUser } from '../../auth/hooks/useCurrentUser'
 import { userActiveSessionsQuery } from '../api/queries/userActiveSessionsQuery'
-import { ListPageHeader } from '@shared/components/ListPageHeader'
+import { FullWidthSettingsPageHeader } from '../components/FullWidthSettingsPageHeader'
 
 export const CurrentUserSessionsPage = () => {
     const user = useCurrentUser()
@@ -13,10 +13,9 @@ export const CurrentUserSessionsPage = () => {
 
     return (
         <div>
-            <ListPageHeader
-                title='Your active sessions'
-                count={ sessions!.length }
-            />
+            <FullWidthSettingsPageHeader backLink='/settings'>
+                Sessions
+            </FullWidthSettingsPageHeader>
             <ul>
                 { sessions!.map((session) => (
                     <li key={ session.id }>

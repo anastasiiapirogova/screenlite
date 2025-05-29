@@ -175,7 +175,7 @@ export const WorkspaceSidebar = () => {
     ], [routes])
         
     return (
-        <div className="w-[250px] border-r bg-white flex flex-col justify-between sticky h-screen top-0">
+        <div>
             <div>
                 <div className="flex items-center h-14 bg-white">
                     <div className='flex gap-4 items-center p-3 cursor-default'>

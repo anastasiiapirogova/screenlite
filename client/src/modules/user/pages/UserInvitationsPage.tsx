@@ -2,12 +2,10 @@ import { Suspense } from 'react'
 import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
 import { useCurrentUser } from '../../auth/hooks/useCurrentUser'
 import { ErrorBoundary } from 'react-error-boundary'
-import { Link } from 'react-router'
 import { WorkspacePicture } from '../../../shared/components/WorkspacePicture'
 import { userInvitationsQuery } from '../api/queries/userInvitationsQuery'
-import { TbChevronLeft } from 'react-icons/tb'
 
-const WorkspacesListLoadingState = () => {
+const InvitationsListLoadingState = () => {
     return (
         <div className='grow flex flex-col'>
             <div className='flex flex-col grow items-center justify-center'>
@@ -17,7 +15,7 @@ const WorkspacesListLoadingState = () => {
     )
 }
 
-const WorkspacesList = () => {
+const InvitationsList = () => {
     const user = useCurrentUser()
     
     const { data: invitations } = useSuspenseQuery(userInvitationsQuery(user.id))
@@ -25,15 +23,6 @@ const WorkspacesList = () => {
     return (
         <div className='w-full max-w-[400px] flex flex-col gap-4'>
             <div className='bg-white p-2 border rounded-md flex flex-col gap-2'>
-                <Link
-                    to={ '/' }
-                    className='flex gap-3 items-center p-2 hover:bg-neutral-100 rounded-md cursor-default'
-                >
-                    <TbChevronLeft className='w-5 h-5'/>
-                    <div className=''>
-                        Back to workspaces
-                    </div>
-                </Link>
                 { 
                     invitations.length > 0 && (
                         <hr />
@@ -67,8 +56,8 @@ export const UserInvitationsPage = () => {
                 </div>
             ) }
             >
-                <Suspense fallback={ <WorkspacesListLoadingState /> }>
-                    <WorkspacesList />
+                <Suspense fallback={ <InvitationsListLoadingState /> }>
+                    <InvitationsList />
                 </Suspense>
             </ErrorBoundary>
         </QueryErrorResetBoundary>

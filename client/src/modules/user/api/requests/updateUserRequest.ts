@@ -4,7 +4,7 @@ import { User } from '@modules/user/types'
 export type UpdateUserData = {
 	userId: string
 	name?: string
-	profilePhoto?: string
+	profilePhoto?: File | null
 }
 
 type UpdateUserResponse = {
@@ -12,7 +12,29 @@ type UpdateUserResponse = {
 }
 
 export const updateUserRequest = async (data: UpdateUserData) => {
-    const response = await axios.post<UpdateUserResponse>('/users/update', data)
+    const formData = new FormData()
+
+    formData.append('userId', data.userId)
+    if (data.name !== undefined) {
+        formData.append('name', data.name)
+    }
+    if (data.profilePhoto !== undefined) {
+        if (data.profilePhoto === null) {
+            formData.append('profilePhoto', 'null')
+        } else {
+            formData.append('profilePhoto', data.profilePhoto)
+        }
+    }
+
+    const response = await axios.post<UpdateUserResponse>(
+        '/users/update',
+        formData,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+    )
 
     return response.data.user
 }
