@@ -29,7 +29,7 @@ export const userProfilePhotoSchema = z.object({
         mimetype: z.string().refine((mimetype) => {
             return ['image/jpeg', 'image/png'].includes(mimetype)
         }, 'PICTURE_MUST_BE_JPG_JPEG_PNG'),
-        size: z.number().max(5 * 1024 * 1024, 'PICTURE_SIZE_TOO_LARGE')
+        size: z.number().max(5 * 1024 * 1024, 'LIMIT_FILE_SIZE')
     })
 })
 

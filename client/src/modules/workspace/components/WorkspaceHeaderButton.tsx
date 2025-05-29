@@ -4,7 +4,7 @@ import { useWorkspace } from '../hooks/useWorkspace'
 export const WorkspaceHeaderButton = () => {
     const workspace = useWorkspace(true)
 
-    if(!workspace) return null
+    if(!workspace) return <div></div>
 
     return (
         <div className="flex items-center h-14">

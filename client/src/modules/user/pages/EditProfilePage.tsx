@@ -68,6 +68,7 @@ export const EditProfilePage = () => {
                     <div className='text-sm text-gray-500 mb-5'>
                         Supported formats: JPG, PNG. Max size: 5MB. Recommended size is 512x512 pixels.
                     </div>
+                    <InputError error={ errors.profilePhoto?.message }/>
                     <InputLabelGroup
                         label='Name'
                         name='name'

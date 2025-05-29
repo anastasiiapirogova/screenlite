@@ -1,6 +1,7 @@
 import express from 'express'
 import { asyncHandler } from '@utils/asyncHandler.js'
 import {
+    multerErrorHandler,
     userUpdateMulterMiddleware,
     workspaceUpdateMulterMiddleware
 } from '@config/multer.js'
@@ -110,7 +111,8 @@ createRoute(HttpMethod.POST, '/users/changePassword', changePassword)
 createRoute(HttpMethod.POST, '/users/changeEmail', forceChangeEmail)
 createRoute(HttpMethod.POST, '/users/delete', deleteUser)
 createRoute(HttpMethod.POST, '/users/update', updateUser, [
-    userUpdateMulterMiddleware
+    userUpdateMulterMiddleware,
+    multerErrorHandler
 ])
 
 // Workspace

@@ -47,7 +47,7 @@ const SidebarGroupItem = ({ title, icon, children }: SidebarItem) => {
                     'overflow-hidden data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown',
                 ) }
                 >
-                    <div className='border-l-2 ml-5 pl-3 my-1 border-gray-300'>
+                    <div className='border-l-2 ml-5 pl-3 my-1 border-gray-300 flex flex-col gap-1'>
                         {
                             children?.map((item => {
                                 const { title, to } = item

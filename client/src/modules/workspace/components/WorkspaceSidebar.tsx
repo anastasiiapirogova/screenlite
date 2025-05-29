@@ -1,7 +1,7 @@
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
 import { SidebarItems } from '@shared/components/SidebarItems'
 import { useMemo } from 'react'
-import { TbApps, TbFolder, TbLayoutDashboard, TbListDetails, TbSettings, TbSmartHome, TbUsers, TbUserScreen } from 'react-icons/tb'
+import { TbFolder, TbLayoutDashboard, TbListDetails, TbSettings, TbSmartHome, TbUsers, TbUserScreen } from 'react-icons/tb'
 import { useParams } from 'react-router'
 
 export const WorkspaceSidebar = () => {
@@ -28,16 +28,16 @@ export const WorkspaceSidebar = () => {
             title: 'Content', 
             icon: TbFolder, 
             children: [
-                { title: 'Uploadings', to: routes.filesUpload },
+                { title: 'Upload', to: routes.filesUpload },
                 { title: 'Files', to: routes.files },
-                { title: 'Links', to: routes.files },
+                // { title: 'Links', to: routes.files },
             ]
         },
-        { 
-            title: 'Apps', 
-            to: routes.files,
-            icon: TbApps 
-        },
+        // { 
+        //     title: 'Apps', 
+        //     to: routes.files,
+        //     icon: TbApps 
+        // },
         { 
             title: 'Layouts', 
             to: routes.playlistLayouts, 

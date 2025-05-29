@@ -6,6 +6,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { Link } from 'react-router'
 import { WorkspacePicture } from '../../../shared/components/WorkspacePicture'
 import { TbPlus } from 'react-icons/tb'
+import { Button } from '@shared/ui/buttons/Button'
 
 const WorkspacesListLoadingState = () => {
     return (
@@ -25,22 +26,32 @@ const WorkspacesList = () => {
     const { workspaces } = data
 	
     return (
-        <div className='w-full max-w-[400px] flex flex-col gap-4'>
-            <div>
-                Your workspaces { data.total }
+        <div className=''>
+            <div className='flex items-center justify-between mb-4'>
+                <div className='text-3xl'>
+                    Your workspaces
+                </div>
+                <Button
+                    to={ '/workspaces/create' }
+                    icon={ TbPlus }
+                >
+                    <div className=''>
+                        Create workspace
+                    </div>
+                </Button>
             </div>
-            <div className='bg-white p-2 border rounded-md flex flex-col gap-2'>
+            <div className='flex flex-col gap-2'>
                 {
                     workspaces.map(workspace => (
                         <Link
                             to={ `/workspaces/${workspace.slug}` }
                             key={ workspace.id }
-                            className='flex gap-4 items-center p-2 hover:bg-gray-100 rounded-md cursor-default'
+                            className='flex gap-4 items-center p-5 hover:bg-gray-100 rounded-md border border-gray-200 transition-colors'
                         >
                             <WorkspacePicture
                                 name={ workspace.name }
                                 picture={ workspace.picture }
-                                size={ 40 }
+                                size={ 48 }
                             />
                             <div className=''>
                                 { workspace.name }
@@ -48,20 +59,6 @@ const WorkspacesList = () => {
                         </Link>
                     ))
                 }
-                { 
-                    workspaces.length > 0 && (
-                        <hr />
-                    )
-                }
-                <Link
-                    to={ '/workspaces/create' }
-                    className='flex gap-3 items-center p-2 hover:bg-gray-100 rounded-md cursor-default'
-                >
-                    <TbPlus className='w-5 h-5'/>
-                    <div className=''>
-                        Create workspace
-                    </div>
-                </Link>
             </div>
         </div>
     )

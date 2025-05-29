@@ -9,7 +9,7 @@ export const WorkspacePlaylistsPage = () => {
         <div className='flex gap-2 grow'>
             <div className='w-[325px] shrink-0'>
                 <LayoutBodyContainer>
-                    <ScrollArea>
+                    <ScrollArea verticalMargin={ 24 }>
                         <div className='p-7'>
                             <WorkspacePlaylistsPageSidebar />
                         </div>
@@ -18,7 +18,7 @@ export const WorkspacePlaylistsPage = () => {
             </div>
             
             <LayoutBodyContainer>
-                <ScrollArea>
+                <ScrollArea verticalMargin={ 24 }>
                     <div className='p-7'>
                         <WorkspacePlaylistsPageHeader />
                         <WorkspacePlaylistsPageContent />

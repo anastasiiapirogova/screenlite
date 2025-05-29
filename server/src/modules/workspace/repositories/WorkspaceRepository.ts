@@ -17,7 +17,7 @@ export class WorkspaceRepository {
     }
 
     static async create(name: string, slug: string, userId: string) {
-        await prisma.workspace.create({
+        return await prisma.workspace.create({
             data: {
                 name,
                 slug,

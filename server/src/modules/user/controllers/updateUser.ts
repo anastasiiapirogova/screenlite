@@ -35,7 +35,13 @@ export const updateUser = async (req: Request, res: Response) => {
         const result = await updateUserSchema.parseAsync(updatedUserData)
 
         if (profilePhoto) {
-            userProfilePhotoSchema.parse({ profilePhoto })
+            const validation = userProfilePhotoSchema.safeParse({ profilePhoto })
+
+            if(!validation.success) {
+                const firstError = validation.error.errors[0]
+
+                return ResponseHandler.validationError(req, res, { profilePhoto: firstError.message})
+            }
 
             const profilePhotoPath = await uploadProfilePhotoToS3(userId, profilePhoto)
 

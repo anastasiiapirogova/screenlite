@@ -4,11 +4,13 @@ import { WorkspaceProvider } from './providers/WorkspaceProvider'
 import { CreateWorkspacePage, WorkspacePage, WorkspaceSettingsPage } from './pages'
 import { workspaceFileRoutes, workspaceMemberRoutes, workspacePlaylistContentManagerRoutes, workspacePlaylistLayoutEditorRoutes, workspacePlaylistLayoutRoutes, workspacePlaylistRoutes, workspaceScreenRoutes } from '@/routes'
 import { WorkspacePagesLayout } from './layouts/WorkspacePagesLayout'
+import { WorkspaceFullWidthLayout } from './layouts/WorkspaceFullWidthLayout'
 
 export const workspaceRoutes = {
     element: <MainLayout />,
     children: [
         {
+            element: <WorkspaceFullWidthLayout />,
             children: [
                 {
                     path: 'workspaces/create',

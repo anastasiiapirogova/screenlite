@@ -26,13 +26,13 @@ export class SessionRepository {
     }
 
     static async getSessionUser(token: string) {
-        const session = await prisma.session.update({
+        const session = await prisma.session.findFirst({
             where: {
                 token,
                 revokedAt: null
             },
-            data: { lastActivityAt: new Date() },
             select: {
+                id: true,
                 userId: true,
             },
         })
@@ -40,6 +40,11 @@ export class SessionRepository {
         if (!session) {
             return null
         }
+
+        await prisma.session.update({
+            where: { id: session.id },
+            data: { lastActivityAt: new Date() },
+        })
 
         const user = await prisma.user.findUnique({
             where: {
