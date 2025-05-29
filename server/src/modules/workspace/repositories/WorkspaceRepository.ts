@@ -8,7 +8,6 @@ export type ScreenStatusCount = { online: number, offline: number, notConnected:
 export class WorkspaceRepository {
     static STATUS = {
         ACTIVE: 'active',
-        INACTIVE: 'inactive',
     }
 
     static DEFAULT_STATUS = WorkspaceRepository.STATUS.ACTIVE

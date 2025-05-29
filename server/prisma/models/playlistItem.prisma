@@ -1,12 +1,7 @@
-enum PlaylistItemType {
-    File
-    NestedPlaylist
-}
-
 model PlaylistItem {
     id                      String           @id @default(uuid())
     playlistId              String
-    type                    PlaylistItemType
+    type                    String
     duration                Int?
     playlistLayoutSectionId String
     fileId                  String?

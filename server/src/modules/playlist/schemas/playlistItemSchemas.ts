@@ -1,9 +1,16 @@
-import { $Enums } from 'generated/prisma/client.js'
 import { z } from 'zod'
+import { PlaylistItemRepository } from '../repositories/PlaylistItemRepository.js'
+
+export const playlistItemTypeSchema = z.enum(
+    [
+        PlaylistItemRepository.TYPE.FILE,
+        PlaylistItemRepository.TYPE.NESTED_PLAYLIST,
+    ]
+)
 
 export const playlistItemSchema = z.object({
     id: z.string(),
-    type: z.nativeEnum($Enums.PlaylistItemType),
+    type: playlistItemTypeSchema,
     duration: z.number().nullable(),
     playlistLayoutSectionId: z.string(),
     order: z.number(),

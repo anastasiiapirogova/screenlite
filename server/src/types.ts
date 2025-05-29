@@ -1,4 +1,4 @@
-import { $Enums, User } from 'generated/prisma/client.js'
+import { User } from 'generated/prisma/client.js'
 
 export type SafeUser = Omit<User, 'password'>
 
@@ -8,7 +8,7 @@ export type GracefulShutdown = {
 
 export type ComparablePlaylistItem = {
 	id: string
-	type: $Enums.PlaylistItemType
+	type: string
 	duration: number | null
 	playlistLayoutSectionId: string
 	fileId: string | null

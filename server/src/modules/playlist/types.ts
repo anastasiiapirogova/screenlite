@@ -9,3 +9,5 @@ export enum PlaylistStatus {
     draft = 'draft',
     deleted = 'deleted',
 }
+
+export type PlaylistItemType = 'file' | 'nested_playlist'

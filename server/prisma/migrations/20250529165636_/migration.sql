@@ -1,7 +1,4 @@
 -- CreateEnum
-CREATE TYPE "PlaylistItemType" AS ENUM ('File', 'NestedPlaylist');
-
--- CreateEnum
 CREATE TYPE "Weekday" AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY');
 
 -- CreateEnum
@@ -143,7 +140,7 @@ CREATE TABLE "Playlist" (
 CREATE TABLE "PlaylistItem" (
     "id" TEXT NOT NULL,
     "playlistId" TEXT NOT NULL,
-    "type" "PlaylistItemType" NOT NULL,
+    "type" TEXT NOT NULL,
     "duration" INTEGER,
     "playlistLayoutSectionId" TEXT NOT NULL,
     "fileId" TEXT,
@@ -240,6 +237,7 @@ CREATE TABLE "Session" (
     "token" TEXT NOT NULL,
     "userAgent" TEXT NOT NULL,
     "ipAddress" TEXT NOT NULL,
+    "location" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "revokedAt" TIMESTAMP(3),
     "lastActivityAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
