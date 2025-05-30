@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { exclude } from '@utils/exclude.js'
 import { EmailVerificationTokenRepository } from '@modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { verifyEmailSchema } from '../schemas/userSchemas.js'
@@ -36,6 +35,6 @@ export const verifyEmail = async (req: Request, res: Response) => {
     const user = await UserRepository.updateUserEmailTransaction(tokenRecord.userId, newEmail)
 
     return ResponseHandler.json(res, {
-        user: exclude(user, ['password'])
+        user
     })
 }

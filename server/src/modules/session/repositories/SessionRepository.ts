@@ -1,6 +1,5 @@
 import { prisma } from '@config/prisma.js'
 import { generateOpaqueToken } from '@modules/user/utils/generateOpaqueToken.js'
-import { exclude } from '@utils/exclude.js'
 import { Prisma } from 'generated/prisma/client.js'
 import { lookup } from 'ip-location-api'
 
@@ -52,7 +51,7 @@ export class SessionRepository {
             },
         })
 
-        return user ? exclude(user, ['password']) : null
+        return user
     }
 
     static async getUserSessions(userId: string, revoked: boolean = false) {

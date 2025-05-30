@@ -3,7 +3,6 @@ import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { UserPolicy } from '../policies/userPolicy.js'
 import { changeEmailSchema } from '../schemas/userSchemas.js'
-import { exclude } from '@utils/exclude.js'
 
 export const forceChangeEmail = async (req: Request, res: Response) => {
     const user = req.user!
@@ -28,7 +27,7 @@ export const forceChangeEmail = async (req: Request, res: Response) => {
 
     if (userToUpdate.email === email) {
         return ResponseHandler.json(res, {
-            user: exclude(userToUpdate, ['password'])
+            user: userToUpdate
         })
     }
 

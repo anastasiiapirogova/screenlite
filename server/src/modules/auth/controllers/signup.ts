@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import { exclude } from '../../../utils/exclude.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { SessionRepository } from '@modules/session/repositories/SessionRepository.js'
 import { getIpAndUserAgent } from '@modules/user/utils/getIpAndUserAgent.js'
@@ -22,7 +21,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     const session = await SessionRepository.createSession(user.id, userAgent, ipAddress || '')
 
     return ResponseHandler.created(res, {
-        user: exclude(user, ['password']),
+        user,
         token: session.token,
     })
 }

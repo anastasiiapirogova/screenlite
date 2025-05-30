@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { z } from 'zod'
-import { exclude } from '../../../utils/exclude.js'
 import { validatePassword } from '../../user/utils/validatePassword.js'
 import { getIpAndUserAgent } from '../../user/utils/getIpAndUserAgent.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
@@ -24,7 +23,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const { email, password } = parsedData.data
 
-    const user = await UserRepository.findUserByEmail(email)
+    const user = await UserRepository.findUserToAuthenticate(email)
 
     if (!user) {
         return ResponseHandler.validationError(req, res, { email: 'USER_NOT_FOUND' })
@@ -41,7 +40,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const session = await SessionRepository.createSession(user.id, userAgent, ipAddress || '')
 
     return ResponseHandler.json(res, {
-        user: exclude(user, ['password']),
+        user,
         token: session.token,
     })
 }

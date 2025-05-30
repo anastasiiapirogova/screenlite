@@ -86,6 +86,20 @@ export class UserRepository {
                     equals: email,
                     mode: 'insensitive',
                 },
+            }
+        })
+    }
+
+    static async findUserToAuthenticate(email: string) {
+        return await prisma.user.findFirst({
+            where: {
+                email: {
+                    equals: email,
+                    mode: 'insensitive',
+                },
+            },
+            omit: {
+                password: false
             },
         })
     }

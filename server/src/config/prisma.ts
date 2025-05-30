@@ -8,7 +8,13 @@ const adapter = new PrismaPg({
 })
 
 export const prisma = new PrismaClient({
-    adapter
+    adapter,
+    omit: {
+        user: {
+            totpSecret: true,
+            password: true
+        }
+    }
 }).$extends({
     result: {
         screen: {
