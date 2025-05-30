@@ -61,8 +61,7 @@ export const completeFilePartUpload = async (req: Request, res: Response, fileUp
         const part = await uploadPartToS3(fileUploadSession, data)
 
         if (!part.ETag) {
-            res.status(500).json({ error: 'Error during file part upload' })
-            return
+            return ResponseHandler.serverError(res, 'Error during file part upload')
         }
 
         await storePartETagInRedis(fileUploadSession, part.ETag)
@@ -75,7 +74,7 @@ export const completeFilePartUpload = async (req: Request, res: Response, fileUp
 
         updatedSession = await updateFileUploadSession(fileUploadSession, data.length)
 
-        res.status(201).json({
+        return ResponseHandler.created(res, {
             fileUploadSession: updatedSession || fileUploadSession,
         })
     } catch (error) {
@@ -83,6 +82,6 @@ export const completeFilePartUpload = async (req: Request, res: Response, fileUp
 
         await revertUpdates(fileUploadSession)
 
-        res.status(500).json({ error: 'Error during file part upload' })
+        return ResponseHandler.serverError(res, 'Error during file part upload')
     }
 }
