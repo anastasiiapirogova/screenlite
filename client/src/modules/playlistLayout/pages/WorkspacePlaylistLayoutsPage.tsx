@@ -14,6 +14,7 @@ import { WorkspacePlaylistLayoutsPageSidebar } from '../components/WorkspacePlay
 import { useRouterPlaylistLayoutFilter } from '../hooks/useRouterPlaylistLayoutFilter'
 import { useShallow } from 'zustand/react/shallow'
 import { EmptyState } from '@shared/ui/EmptyState'
+import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
 
 const PlaylistLayoutsList = () => {
     const routes = useWorkspaceRoutes()
@@ -57,17 +58,21 @@ export const WorkspacePlaylistLayoutsPage = () => {
     
     if(workspace._count.layouts === 0) {
         return (
-            <EmptyState
-                description='Create a layout to display your playlists.'
-                header='No layouts'
-                primaryAction={
-                    <CreatePlaylistLayoutButton>
-                        <Button>
-                            Create layout
-                        </Button>
-                    </CreatePlaylistLayoutButton>
-                }
-            />
+            <LayoutBodyContainer>
+                <div className='flex grow'>
+                    <EmptyState
+                        description='Create a layout to display your playlists.'
+                        header='No layouts'
+                        primaryAction={
+                            <CreatePlaylistLayoutButton>
+                                <Button>
+                                    Create layout
+                                </Button>
+                            </CreatePlaylistLayoutButton>
+                        }
+                    />
+                </div>
+            </LayoutBodyContainer>
         )
     }
     

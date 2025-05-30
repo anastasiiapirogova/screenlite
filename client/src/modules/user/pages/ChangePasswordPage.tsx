@@ -10,7 +10,7 @@ import { InputError } from '@shared/ui/input/InputError'
 import { Button } from '@shared/ui/buttons/Button'
 import { ChangeEmailData, changeEmailRequest } from '../api/requests/changeEmailRequest'
 
-export const ChangeEmailPage = () => {
+export const ChangePasswordPage = () => {
     const user = useCurrentUser()
     const queryClient = useQueryClient()
 
@@ -46,7 +46,7 @@ export const ChangeEmailPage = () => {
     return (
         <div>
             <FullWidthSettingsPageHeader backLink='/settings'>
-                Change email
+                Change password
             </FullWidthSettingsPageHeader>
             <div className='max-w-screen-sm mx-auto p-5'>
                 <form

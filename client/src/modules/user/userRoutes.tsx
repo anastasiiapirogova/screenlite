@@ -4,11 +4,12 @@ import { UserPagesLayout } from './layouts/UserPagesLayout'
 import {
     AccountSecurityPage,
     ChangeEmailPage,
-    CurrentUserSessionsPage,
+    UserSessionsPage,
     EditProfilePage,
     HomePage,
     UserInvitationsPage,
-    UserSettingsPage
+    UserSettingsPage,
+    ChangePasswordPage
 } from './pages'
 
 export const userRoutes = {
@@ -44,7 +45,7 @@ export const userRoutes = {
                     element: <EditProfilePage />
                 },
                 {
-                    path: 'email',
+                    path: 'email/change',
                     element: <ChangeEmailPage />
                 }
             ]
@@ -55,7 +56,11 @@ export const userRoutes = {
             children: [
                 {
                     path: 'sessions',
-                    element: <CurrentUserSessionsPage />
+                    element: <UserSessionsPage />
+                },
+                {
+                    path: 'password/change',
+                    element: <ChangePasswordPage />
                 }
             ]
         }

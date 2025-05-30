@@ -3,7 +3,7 @@ import { useCurrentUser } from '../../auth/hooks/useCurrentUser'
 import { userActiveSessionsQuery } from '../api/queries/userActiveSessionsQuery'
 import { FullWidthSettingsPageHeader } from '../components/FullWidthSettingsPageHeader'
 
-export const CurrentUserSessionsPage = () => {
+export const UserSessionsPage = () => {
     const user = useCurrentUser()
 	
     const { data: sessions, isLoading, error } = useQuery(userActiveSessionsQuery(user.id))

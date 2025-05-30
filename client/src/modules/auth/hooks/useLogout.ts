@@ -7,7 +7,9 @@ export const useLogout = () => {
 
     const { mutate, isPending } = useMutation({
         mutationFn: logoutRequest,
-        onSuccess: auth.onLogout,
+        onSuccess: () => {
+            auth.onLogout()
+        },
         onError: (error) => {
             console.error(error)
         }

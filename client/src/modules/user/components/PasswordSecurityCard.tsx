@@ -1,26 +1,20 @@
-import { useCurrentUser } from '@modules/auth/hooks/useCurrentUser'
 import { SettingsCard } from './SettingsCard'
 import { Button } from '@shared/ui/buttons/Button'
 
-export const EmailSettingsCard = () => {
-    const user = useCurrentUser()
-
+export const PasswordSecurityCard = () => {
     return (
         <SettingsCard
-            title='Email'
-            description='Email is used for authentication, invitations to workspaces and for password recovery.'
+            title='Password'
+            description='Your password is used to authenticate your account. Make sure it is strong and unique.'
         >
             <div className='m-5'>
-                <div>
-                    { user.email }
-                </div>
                 <div className='flex justify-end'>
                     <Button
-                        to="/settings/email/change"
+                        to="/security/password/change"
                         color='secondary'
                         variant="soft"
                     >
-                        Change email
+                        Change password
                     </Button>
                 </div>
             </div>

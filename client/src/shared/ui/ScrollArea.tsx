@@ -4,7 +4,7 @@ import { ScrollArea as ScrollAreaPrimitive } from 'radix-ui'
 export const ScrollArea = ({ children, verticalMargin }: { children: ReactNode, verticalMargin?: number }) => {
     return (
         <ScrollAreaPrimitive.Root className="grow rounded overflow-hidden bg-white min-h-0">
-            <ScrollAreaPrimitive.Viewport className="w-full h-full">
+            <ScrollAreaPrimitive.Viewport className="flex flex-col w-full h-full">
                 { children }
             </ScrollAreaPrimitive.Viewport>
 

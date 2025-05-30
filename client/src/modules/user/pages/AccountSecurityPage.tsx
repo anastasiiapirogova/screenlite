@@ -1,4 +1,5 @@
 import { SessionsSecurityCard } from '../components'
+import { PasswordSecurityCard } from '../components/PasswordSecurityCard'
 
 export const AccountSecurityPage = () => {
     return (
@@ -7,6 +8,7 @@ export const AccountSecurityPage = () => {
                 Security
             </div>
             <div className='flex flex-col gap-2 mb-4'>
+                <PasswordSecurityCard />
                 <SessionsSecurityCard />
             </div>
         </div>

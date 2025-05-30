@@ -6,23 +6,28 @@ import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { EmptyState } from '@shared/ui/EmptyState'
 import { CreateScreenButton } from '../components/CreateScreenButton'
 import { Button } from '@shared/ui/buttons/Button'
+import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
 
 export const WorkspaceScreensPage = () => {
     const workspace = useWorkspace()
 
     if(workspace._count.screens === 0) {
         return (
-            <EmptyState
-                description='Create a screen to get started'
-                header='No screens found'
-                primaryAction={
-                    <CreateScreenButton>
-                        <Button>
-                            Create screen
-                        </Button>
-                    </CreateScreenButton>
-                }
-            />
+            <LayoutBodyContainer>
+                <div className='flex grow'>
+                    <EmptyState
+                        description='Create a screen to get started'
+                        header='No screens found'
+                        primaryAction={
+                            <CreateScreenButton>
+                                <Button>
+                                    Create screen
+                                </Button>
+                            </CreateScreenButton>
+                        }
+                    />
+                </div>
+            </LayoutBodyContainer>
         )
     }
 

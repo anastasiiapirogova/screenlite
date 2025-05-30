@@ -1,11 +1,12 @@
-import { useWorkspace } from '../hooks/useWorkspace'
+import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
+import { ScrollArea } from '@shared/ui/ScrollArea'
 
 export const WorkspacePage = () => {
-    const workspace = useWorkspace()
-
     return (
-        <div>
-            { workspace?.name }
-        </div>
+        <LayoutBodyContainer>
+            <ScrollArea verticalMargin={ 24 }>
+                <div className='p-7'></div>
+            </ScrollArea>
+        </LayoutBodyContainer>
     )
 }
