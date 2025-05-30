@@ -16,7 +16,7 @@ export const changePassword = async (req: Request, res: Response) => {
 
     const { userId, currentPassword, newPassword } = validation.data
 
-    const userToUpdate = await UserRepository.findUserById(userId)
+    const userToUpdate = await UserRepository.findUserByIdToChangePassword(userId)
 
     if (!userToUpdate) {
         return ResponseHandler.notFound(res)

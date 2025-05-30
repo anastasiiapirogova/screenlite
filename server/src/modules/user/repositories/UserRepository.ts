@@ -103,4 +103,13 @@ export class UserRepository {
             },
         })
     }
+
+    static async findUserByIdToChangePassword(id: string) {
+        return await prisma.user.findUnique({
+            where: { id },
+            omit: {
+                password: false
+            }
+        })
+    }
 }
