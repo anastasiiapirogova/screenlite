@@ -38,7 +38,8 @@ export const NavbarUserMenu = () => {
     const user = useCurrentUser()
     const navigate = useNavigate()
     const { logout, isPending } = useLogout()
-
+    const appVersion = import.meta.env.VITE_APP_VERSION
+	
     return (
         <DropdownMenu.Root modal={ false }>
             <DropdownMenu.Trigger className="focus:outline-none rounded-full cursor-pointer">
@@ -81,6 +82,9 @@ export const NavbarUserMenu = () => {
                     >
                         Logout
                     </MenuItem>
+                    <div className='p-3 text-sm text-center text-neutral-400'>
+                        Screenlite { appVersion }
+                    </div>
                 </DropdownMenu.Content>
             </DropdownMenu.Portal>
         </DropdownMenu.Root>
