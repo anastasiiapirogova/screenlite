@@ -30,10 +30,10 @@ services:
       minio:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 10
 
   # React Frontend Service
   client:
@@ -52,7 +52,7 @@ services:
       server:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001"]
       interval: 10s
       timeout: 5s
       retries: 5
