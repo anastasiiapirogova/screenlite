@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { RequestHandler } from 'express'
 import { verifyEmail } from '@modules/user/controllers/verifyEmail.js'
 import { asyncHandler } from '@utils/asyncHandler.js'
 import { health } from '@modules/health/health.js'
@@ -11,9 +11,8 @@ enum HttpMethod {
     POST = 'post'
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createRoute = (method: HttpMethod, path: string, handler: any) => {
-    router[method](path, asyncHandler(handler))
+const createRoute = (method: HttpMethod, path: string, handler: (req: express.Request, res: express.Response) => Promise<void>, ...middlewares: RequestHandler[]) => {
+    router[method](path, ...middlewares, asyncHandler(handler))
 }
 
 createRoute(HttpMethod.POST, '/auth/signup', signup)
