@@ -4,7 +4,16 @@ import { useWorkspace } from '../hooks/useWorkspace'
 export const WorkspaceHeaderButton = () => {
     const workspace = useWorkspace(true)
 
-    if(!workspace) return <div></div>
+    if (!workspace) {
+        return (
+            <div className="flex items-center h-14">
+                <div className="flex gap-4 items-center cursor-default">
+                    <div className="w-10 h-10 rounded-lg bg-slate-300 animate-pulse" />
+                    <div className="w-24 h-5 bg-slate-300 rounded animate-pulse" />
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="flex items-center h-14">
@@ -14,7 +23,7 @@ export const WorkspaceHeaderButton = () => {
                     picture={ workspace.picture }
                     size={ 40 }
                 />
-                <div className=''>
+                <div>
                     { workspace.name }
                 </div>
             </div>
