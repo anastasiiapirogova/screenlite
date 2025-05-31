@@ -40,7 +40,35 @@ export class UserRepository {
             },
         })
     }
-	
+
+    static async getUserWithTotpSecret(userId: string) {
+        return await prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                totpSecret: true,
+            }
+        })
+    }
+
+    static async updateUserTotpSecret(userId: string, totpSecret: string | null) {
+        return await prisma.user.update({
+            where: { id: userId },
+            data: {
+                totpSecret,
+            }
+        })
+    }
+
+    static async disableUserTwoFactorAuth(userId: string) {
+        return await prisma.user.update({
+            where: { id: userId },
+            data: {
+                totpSecret: null,
+                twoFactorEnabled: false,
+            }
+        })
+    }
+
     static async updateUserEmailTransaction(userId: string, email: string | undefined) {
         const [user] = await prisma.$transaction([
             UserRepository.updateUserEmail(userId, email),

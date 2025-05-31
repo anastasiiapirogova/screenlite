@@ -1,7 +1,6 @@
-import express from 'express'
+import express, { RequestHandler } from 'express'
 import { asyncHandler } from '@utils/asyncHandler.js'
 import {
-    multerErrorHandler,
     userUpdateMulterMiddleware,
     workspaceUpdateMulterMiddleware
 } from '@config/multer.js'
@@ -67,7 +66,8 @@ import {
     deleteUser,
     updateUser,
     userWorkspaces,
-    forceChangeEmail
+    forceChangeEmail,
+    getTotpSetupData
 } from '@modules/user/controllers/index.js'
 import {
     createWorkspace,
@@ -80,6 +80,7 @@ import {
     getUserInvitations,
     getWorkspaceUserInvitations
 } from '@modules/workspaceUserInvitation/controllers/index.js'
+import { twoFactorAuthMiddleware } from 'middlewares/twoFactorAuthMiddleware.js'
 
 const router = express.Router()
 
@@ -89,19 +90,23 @@ enum HttpMethod {
     PUT = 'put',
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createRoute = (method: HttpMethod, path: string, handler: (req: express.Request, res: express.Response) => Promise<void>, ...middlewares: any[]) => {
+const createRoute = (method: HttpMethod, path: string, handler: (req: express.Request, res: express.Response) => Promise<void>, ...middlewares: RequestHandler[]) => {
+    router[method](path, authMiddleware, twoFactorAuthMiddleware, ...middlewares, asyncHandler(handler))
+}
+ 
+const createUnprotectedRoute = (method: HttpMethod, path: string, handler: (req: express.Request, res: express.Response) => Promise<void>, ...middlewares: RequestHandler[]) => {
     router[method](path, authMiddleware, ...middlewares, asyncHandler(handler))
 }
 
 // Auth
-createRoute(HttpMethod.GET, '/auth/me', me)
-createRoute(HttpMethod.POST, '/auth/logout', logout)
+createUnprotectedRoute(HttpMethod.GET, '/auth/me', me)
+createUnprotectedRoute(HttpMethod.POST, '/auth/logout', logout)
 
 // User & Security
 createRoute(HttpMethod.GET, '/users/:id/activeSessions', activeSessions)
 createRoute(HttpMethod.GET, '/users/:id/workspaces', userWorkspaces)
 createRoute(HttpMethod.GET, '/users/:id/invitations', getUserInvitations)
+createRoute(HttpMethod.GET, '/users/getTotpSetupData', getTotpSetupData)
 createRoute(HttpMethod.POST, '/users/revokeSession', revokeSession)
 createRoute(HttpMethod.POST, '/users/changePassword', changePassword)
 /**
@@ -110,16 +115,11 @@ createRoute(HttpMethod.POST, '/users/changePassword', changePassword)
  */
 createRoute(HttpMethod.POST, '/users/changeEmail', forceChangeEmail)
 createRoute(HttpMethod.POST, '/users/delete', deleteUser)
-createRoute(HttpMethod.POST, '/users/update', updateUser, [
-    userUpdateMulterMiddleware,
-    multerErrorHandler
-])
+createRoute(HttpMethod.POST, '/users/update', updateUser, userUpdateMulterMiddleware)
 
 // Workspace
 createRoute(HttpMethod.POST, '/workspaces/create', createWorkspace)
-createRoute(HttpMethod.POST, '/workspaces/update', updateWorkspace, [
-    workspaceUpdateMulterMiddleware
-])
+createRoute(HttpMethod.POST, '/workspaces/update', updateWorkspace, workspaceUpdateMulterMiddleware)
 createRoute(HttpMethod.GET, '/workspaces/:slug', getWorkspace)
 createRoute(HttpMethod.GET, '/workspaces/:slug/entityCounts', getWorkspaceEntityCounts)
 createRoute(HttpMethod.GET, '/workspaces/:slug/screens', getWorkspaceScreens)

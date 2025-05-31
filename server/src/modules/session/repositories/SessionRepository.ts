@@ -24,7 +24,7 @@ export class SessionRepository {
         return session
     }
 
-    static async getSessionUser(token: string) {
+    static async getSessionData(token: string) {
         const session = await prisma.session.findFirst({
             where: {
                 token,
@@ -33,6 +33,7 @@ export class SessionRepository {
             select: {
                 id: true,
                 userId: true,
+                totpVerifiedAt: true
             },
         })
 
@@ -49,9 +50,19 @@ export class SessionRepository {
             where: {
                 id: session.userId,
             },
+            omit: {
+                totpSecret: false
+            }
         })
 
-        return user
+        if(!user) {
+            return null
+        }
+
+        return {
+            user,
+            session
+        }
     }
 
     static async getUserSessions(userId: string, revoked: boolean = false) {

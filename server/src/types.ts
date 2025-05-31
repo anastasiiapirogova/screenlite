@@ -2,6 +2,14 @@ import { User } from 'generated/prisma/client.js'
 
 export type SafeUser = Omit<User, 'password'>
 
+export type AuthUser = SafeUser & {
+	hasPassedTwoFactorAuth: boolean
+}
+
+export interface AuthRequest extends Request {
+	user: AuthUser
+}
+
 export type GracefulShutdown = {
 	(signal: string): Promise<void>
 }

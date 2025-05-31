@@ -27,8 +27,8 @@ export class ResponseHandler {
         ResponseHandler.json(res, data, 201)
     }
 
-    static forbidden(res: Response) {
-        res.status(403).send('Forbidden')
+    static forbidden(res: Response, message?: string) {
+        res.status(403).send(message || 'Forbidden')
     }
 
     static notFound(res: Response) {

@@ -1,9 +1,9 @@
-import { User } from 'generated/prisma/client.js'
+import { AuthUser } from 'types.ts'
 
 declare global {
 	namespace Express {
 		interface Request {
-			user?: Omit<User, 'password'>
+			user?: AuthUser
 			token?: string
 		}
 	}

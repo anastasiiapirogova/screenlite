@@ -1,6 +1,7 @@
 import { SessionRepository } from '@modules/session/repositories/SessionRepository.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { Request, Response, NextFunction } from 'express'
+import { AuthUser } from 'types.js'
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -12,13 +13,20 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
         const token = authHeader.split(' ')[1]
 
-        const user = await SessionRepository.getSessionUser(token)
+        const sessionData = await SessionRepository.getSessionData(token)
 
-        if (!user) {
+        if (!sessionData) {
             return ResponseHandler.unauthorized(res)
         }
 
-        req.user = user
+        const { user, session } = sessionData
+
+        const hasPassedTwoFactorAuth = user.twoFactorEnabled && Boolean(session.totpVerifiedAt)
+
+        req.user = {
+            ...user,
+            hasPassedTwoFactorAuth,
+        } as AuthUser
 
         req.token = token
 
