@@ -1,8 +1,18 @@
+# Screenlite
+Screenlite is an open-source digital signage solution, providing an alternative to costly proprietary software.
+
+Get in early, use it now, and help shape what comes next. Your feedback, insights, and contributions will directly influence the future of Screenlite. Together, we’ll create a solution that’s simple, powerful, and truly free.
+
 ⚠️ **Development notes:**  
 
 > Screenlite is currently **in public development** and **not ready for production use**. It’s not feature-complete yet.
 
 > Database migrations may not be incremental at this stage. Sometimes migrations will be cleared and recreated, requiring you to reset your database to run newer versions of the app.
+
+## Community
+Join our Discord community for quick support, connect with other users, and share ideas.
+
+[Join our Discord](https://discord.gg/2wW8zDjAjr)
 
 ## Running with Docker (Development Only)
 
@@ -24,13 +34,6 @@ You can run Screenlite in a development environment using Docker. This is the re
 
 > **Note:** Only development mode is currently supported. Production-ready Docker deployment will be available in a future release.
 
-# Screenlite
-Screenlite is an open-source digital signage solution, providing an alternative to costly proprietary software.
-
-Get in early, use it now, and help shape what comes next. Your feedback, insights, and contributions will directly influence the future of Screenlite. Together, we’ll create a solution that’s simple, powerful, and truly free.
-
-[Getting started docs link]
-
 ## Spotted a bug? Want to suggest a feature?
 Let us know by opening an issue on GitHub.
 
@@ -45,8 +48,3 @@ Let’s build something great together.
 Screenlite is simple to set up and deploy. You can quickly configure and get it running with minimal effort.
 
 [Deployment docs link]
-
-## Need help?
-Join our Discord community for quick support, connect with other users, and share ideas.
-
-[Discord invite link]
