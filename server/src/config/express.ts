@@ -12,6 +12,7 @@ import { staticRoutes } from '../routes/static.js'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { multerErrorHandler } from './multer.js'
 
 const __filename = fileURLToPath(import.meta.url)
 
@@ -57,6 +58,8 @@ app.use('/api/*', (_req: Request, res: Response) => {
 // app.get(/^((?!\/socket\.io).)*$/, (_req: Request, res: Response) => {
 //     res.sendFile(path.join(__dirname, '../../../client/dist/index.html'))
 // })
+
+app.use(multerErrorHandler)
 
 app.use(errorHandler)
 
