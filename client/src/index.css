@@ -65,12 +65,7 @@
 }
 
 body {
-    width: 100vw;
-    overflow-x: hidden;
-}
-
-body {
-    @apply min-w-[1280px]
+    @apply w-screen min-w-[1280px]
 }
 
 .w-trigger {

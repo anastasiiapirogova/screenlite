@@ -23,7 +23,7 @@
 				"node_modules",
 				"src/*"
 			],
-		}
+		},
 	},
 	"watchOptions": {
 		"excludeDirectories": [

@@ -59,7 +59,16 @@ export class UserRepository {
         })
     }
 
-    static async disableUserTwoFactorAuth(userId: string) {
+    static async enableTwoFactor(userId: string) {
+        return await prisma.user.update({
+            where: { id: userId },
+            data: {
+                twoFactorEnabled: true,
+            }
+        })
+    }
+
+    static async disableTwoFactor(userId: string) {
         return await prisma.user.update({
             where: { id: userId },
             data: {
@@ -78,23 +87,35 @@ export class UserRepository {
         return user
     }
 
-    static async updateUserPassword(userId: string, newPassword: string) {
+    static async updateUserPassword(userId: string, newPassword: string, token?: string) {
         const hashedPassword = await hashPassword(newPassword)
 
         await prisma.user.update({
             where: { id: userId },
             data: {
                 password: hashedPassword,
-                sessions: {
-                    updateMany: {
-                        where: {
-                            revokedAt: null,
-                        },
-                        data: {
-                            revokedAt: new Date()
+                sessions: token
+                    ? {
+                        updateMany: {
+                            where: {
+                                revokedAt: null,
+                                NOT: { token },
+                            },
+                            data: {
+                                revokedAt: new Date()
+                            }
+                        }
+                    }
+                    : {
+                        updateMany: {
+                            where: {
+                                revokedAt: null,
+                            },
+                            data: {
+                                revokedAt: new Date()
+                            }
                         }
                     },
-                },
             },
         })
 

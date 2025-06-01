@@ -1,29 +1,14 @@
 import express, { NextFunction, Request, Response } from 'express'
 import { createServer } from 'node:http'
 import bodyParser from 'body-parser'
-import path from 'path'
 import * as i18nextMiddleware from 'i18next-http-middleware'
-import { User } from 'generated/prisma/client.js'
 import { corsMiddleware } from '../middlewares/corsMiddleware.js'
 import { i18n } from './i18n.js'
 import { guestRoutes } from '../routes/guest.js'
 import { authRoutes } from '../routes/auth.js'
 import { staticRoutes } from '../routes/static.js'
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { multerErrorHandler } from './multer.js'
-
-const __filename = fileURLToPath(import.meta.url)
-
-const __dirname = dirname(__filename)
-
-declare module 'express-serve-static-core' {
-    interface Request {
-        user?: Omit<User, 'password'>
-        token?: string
-    }
-}
 
 const errorHandler = (error: Error, _req: Request, res: Response, next: NextFunction) => {
     if (res.headersSent) {

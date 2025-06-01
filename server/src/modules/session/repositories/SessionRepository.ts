@@ -33,7 +33,7 @@ export class SessionRepository {
             select: {
                 id: true,
                 userId: true,
-                totpVerifiedAt: true
+                twoFaVerifiedAt: true
             },
         })
 
@@ -110,5 +110,27 @@ export class SessionRepository {
         })
 
         return true
-    } 
+    }
+
+    static async setTwoFaVerified(token: string) {
+        await prisma.session.update({
+            where: {
+                token,
+            },
+            data: {
+                twoFaVerifiedAt: new Date(),
+            },
+        })
+    }
+
+    static async clearTwoFaVerified(userId: string) {
+        await prisma.session.updateMany({
+            where: {
+                userId,
+            },
+            data: {
+                twoFaVerifiedAt: null,
+            },
+        })
+    }
 }

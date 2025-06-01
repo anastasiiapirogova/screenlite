@@ -34,6 +34,9 @@ export const forceChangeEmail = async (req: Request, res: Response) => {
     const updatedUser = await UserRepository.updateUserEmail(userId, email)
 
     ResponseHandler.json(res, {
-        user: updatedUser
+        user: {
+            ...updatedUser,
+            hasPassedTwoFactorAuth: user.hasPassedTwoFactorAuth
+        }
     })
 }

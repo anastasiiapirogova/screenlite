@@ -1,6 +1,6 @@
 import { User } from 'generated/prisma/client.js'
 
-export type SafeUser = Omit<User, 'password'>
+export type SafeUser = Omit<User, 'password' | 'totpSecret'>
 
 export type AuthUser = SafeUser & {
 	hasPassedTwoFactorAuth: boolean

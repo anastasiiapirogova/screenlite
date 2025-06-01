@@ -32,7 +32,7 @@ export const changePassword = async (req: Request, res: Response) => {
         return ResponseHandler.validationError(req, res, { currentPassword: 'INCORRECT_PASSWORD' })
     }
 
-    await UserRepository.updateUserPassword(userId, newPassword)
+    await UserRepository.updateUserPassword(userId, newPassword, req.token)
 
     ResponseHandler.json(res, {
         message: 'PASSWORD_CHANGED'

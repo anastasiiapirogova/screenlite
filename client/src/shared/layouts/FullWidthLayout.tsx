@@ -2,8 +2,9 @@ import { Outlet } from 'react-router'
 import { Header } from '@shared/components/Header'
 import { NavbarUserMenu } from '@shared/components/NavbarUserMenu'
 import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
+import { ReactNode } from 'react'
 
-export const UserFullWidthSettingsPagesLayout = () => {
+export const FullWidthLayout = ({ children }: { children: ReactNode }) => {
     return (
         <div className="flex flex-col grow w-full bg-slate-100">
             <Header>
@@ -13,7 +14,7 @@ export const UserFullWidthSettingsPagesLayout = () => {
             </Header>
             <div className="flex grow px-3">
                 <LayoutBodyContainer>
-                    <Outlet />
+                    { children || <Outlet /> }
                 </LayoutBodyContainer>
             </div>
         </div>

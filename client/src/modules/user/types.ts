@@ -1,14 +1,16 @@
 import { Workspace } from '@modules/workspace/types'
 
 export type User = {
-	createdAt: string
-	deletedAt: string | null
-	email: string
-	emailVerifiedAt: string | null
-	id: string
 	name: string
-	profilePhoto: string | null
-	updatedAt: string
+    id: string
+    email: string
+    emailVerifiedAt: Date | null
+    profilePhoto: string | null
+    twoFactorEnabled: boolean
+	hasPassedTwoFactorAuth?: boolean
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
 }
 
 export type UserSession = {

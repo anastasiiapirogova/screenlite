@@ -1,4 +1,3 @@
-import { useCurrentUser } from '@modules/auth/hooks/useCurrentUser'
 import { UserAvatar } from './UserAvatar'
 import { DropdownMenu } from 'radix-ui'
 import { IconType } from 'react-icons/lib'
@@ -6,6 +5,7 @@ import { cloneElement, createElement } from 'react'
 import { TbLogout, TbSettings, TbSmartHome } from 'react-icons/tb'
 import { useNavigate } from 'react-router'
 import { useLogout } from '@modules/auth/hooks/useLogout'
+import { useAuth } from '@modules/auth/hooks/useAuth'
 
 const MenuItem = ({
     children,
@@ -35,9 +35,14 @@ const MenuItem = ({
 }
 
 export const NavbarUserMenu = () => {
-    const user = useCurrentUser()
+    const { user } = useAuth()
     const navigate = useNavigate()
     const { logout, isPending } = useLogout()
+
+    if (!user) {
+        return null
+    }
+
     const appVersion = import.meta.env.VITE_APP_VERSION
 	
     return (

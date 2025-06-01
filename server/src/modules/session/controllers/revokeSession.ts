@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { SessionRepository } from './repositories/SessionRepository.js'
-import { SessionPolicy } from './policies/sessionPolicy.js'
-import { revokeSessionSchema } from './schemas/sessionSchema.js'
+import { SessionRepository } from '../repositories/SessionRepository.js'
+import { SessionPolicy } from '../policies/sessionPolicy.js'
+import { revokeSessionSchema } from '../schemas/sessionSchema.js'
 
 export const revokeSession = async (req: Request, res: Response) => {
     const parsedData = revokeSessionSchema.safeParse(req.body)

@@ -44,3 +44,11 @@ export const userWorkspacesSchema = paginationSchema.extend({
 export const deleteUserSchema = z.object({
     userId: z.string().uuid('User ID must be a valid UUID')
 })
+
+export const enableTwoFaSchema = z.object({
+    token: z.string().length(6)
+})
+
+export const verifyTwoFaSchema = z.object({
+    token: z.string().length(6)
+})

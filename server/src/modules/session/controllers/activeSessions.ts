@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { exclude } from '../../utils/exclude.js'
+import { exclude } from '../../../utils/exclude.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { SessionRepository } from './repositories/SessionRepository.js'
-import { SessionPolicy } from './policies/sessionPolicy.js'
+import { SessionRepository } from '../repositories/SessionRepository.js'
+import { SessionPolicy } from '../policies/sessionPolicy.js'
 
 export const activeSessions = async (req: Request, res: Response) => {
     const userId = req.params.id

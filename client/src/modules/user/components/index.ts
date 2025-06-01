@@ -1,3 +1,5 @@
 export * from './SessionsSecurityCard'
 export * from './ProfileSettingsCard'
 export * from './EmailSettingsCard'
+export * from './PasswordSecurityCard'
+export * from './TwoFactorAuthSecurityCard'

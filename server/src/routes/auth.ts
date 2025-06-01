@@ -7,8 +7,10 @@ import {
 import {
     authMiddleware
 } from 'middlewares/index.js'
-import { activeSessions } from '@modules/session/activeSessions.js'
-import { revokeSession } from '@modules/session/revokeSession.js'
+import {
+    revokeSession,
+    activeSessions
+} from '@modules/session/controllers/index.js'
 import {
     createPlaylistSchedule,
     updatePlaylistSchedule,
@@ -67,7 +69,10 @@ import {
     updateUser,
     userWorkspaces,
     forceChangeEmail,
-    getTotpSetupData
+    getTotpSetupData,
+    enableTwoFa,
+    disableTwoFa,
+    verifyTwoFa
 } from '@modules/user/controllers/index.js'
 import {
     createWorkspace,
@@ -98,9 +103,20 @@ const createUnprotectedRoute = (method: HttpMethod, path: string, handler: (req:
     router[method](path, authMiddleware, ...middlewares, asyncHandler(handler))
 }
 
-// Auth
+// =======================
+// Unprotected Routes
+// =======================
+
+// Authentication
 createUnprotectedRoute(HttpMethod.GET, '/auth/me', me)
 createUnprotectedRoute(HttpMethod.POST, '/auth/logout', logout)
+
+// Two-Factor Authentication
+createUnprotectedRoute(HttpMethod.POST, '/users/2fa/verify', verifyTwoFa)
+
+// =======================
+// Protected Routes
+// =======================
 
 // User & Security
 createRoute(HttpMethod.GET, '/users/:id/activeSessions', activeSessions)
@@ -116,6 +132,11 @@ createRoute(HttpMethod.POST, '/users/changePassword', changePassword)
 createRoute(HttpMethod.POST, '/users/changeEmail', forceChangeEmail)
 createRoute(HttpMethod.POST, '/users/delete', deleteUser)
 createRoute(HttpMethod.POST, '/users/update', updateUser, userUpdateMulterMiddleware)
+createRoute(HttpMethod.POST, '/users/2fa/enable', enableTwoFa)
+createRoute(HttpMethod.POST, '/users/2fa/disable', disableTwoFa)
+
+// Session
+createRoute(HttpMethod.POST, '/sessions/revoke', revokeSession)
 
 // Workspace
 createRoute(HttpMethod.POST, '/workspaces/create', createWorkspace)
@@ -169,7 +190,7 @@ createRoute(HttpMethod.POST, '/files/createUploadSession', createFileUploadSessi
 createRoute(HttpMethod.POST, '/files/cancelFileUploading', cancelFileUploading)
 createRoute(HttpMethod.PUT, '/files/upload', uploadFilePart)
 
-// Folder
+// File folder
 createRoute(HttpMethod.GET, '/files/folders/:id', getFolder)
 createRoute(HttpMethod.POST, '/files/createFolder', createFolder)
 createRoute(HttpMethod.POST, '/files/moveToFolder', moveToFolder)

@@ -4,7 +4,8 @@ import {
     useLocation,
 } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
-import { guestRoutes } from '../../../shared/routes/guestRoutes'
+import { TwoFaMiddleware } from './TwoFaMiddleware'
+import { guestRoutes } from '@shared/routes/guestRoutes'
 
 export const PrivateRouteMiddleware = () => {
     const { user } = useAuth()
@@ -22,5 +23,9 @@ export const PrivateRouteMiddleware = () => {
         )
     }
 
-    return <Outlet />
+    return (
+        <TwoFaMiddleware>
+            <Outlet />
+        </TwoFaMiddleware>
+    )
 }

@@ -9,7 +9,8 @@ import {
     HomePage,
     UserInvitationsPage,
     UserSettingsPage,
-    ChangePasswordPage
+    ChangePasswordPage,
+    TwoFactorAuthPage
 } from './pages'
 
 export const userRoutes = {
@@ -61,6 +62,10 @@ export const userRoutes = {
                 {
                     path: 'password/change',
                     element: <ChangePasswordPage />
+                },
+                {
+                    path: '2fa',
+                    element: <TwoFactorAuthPage />
                 }
             ]
         }

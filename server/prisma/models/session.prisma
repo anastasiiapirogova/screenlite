@@ -1,17 +1,17 @@
 model Session {
-    id             String    @id @default(uuid())
-    userId         String
-    token          String    @unique
-    userAgent      String
-    ipAddress      String
-    location       String?
-    createdAt      DateTime  @default(now())
-    revokedAt      DateTime?
-    lastActivityAt DateTime  @default(now())
-    totpVerifiedAt DateTime?
+	id              String    @id @default(uuid())
+	userId          String
+	token           String    @unique
+	userAgent       String
+	ipAddress       String
+	location        String?
+	createdAt       DateTime  @default(now())
+	revokedAt       DateTime?
+	lastActivityAt  DateTime  @default(now())
+	twoFaVerifiedAt DateTime?
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+	user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@index([userId])
-    @@index([revokedAt])
+	@@index([userId])
+	@@index([revokedAt])
 }
