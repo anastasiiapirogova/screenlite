@@ -26,3 +26,9 @@ To stop all Docker containers, remove all volumes, and start fresh:
 docker compose down -v
 docker compose up -d
 ```
+
+## Rebuilding Docker Images
+
+```sh
+docker-compose up -d --build
+```
