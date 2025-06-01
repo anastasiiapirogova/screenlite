@@ -6,10 +6,10 @@ RUN apk add --no-cache ffmpeg
 
 COPY package*.json ./
 COPY prisma ./prisma
-RUN npm install
+RUN npm ci
 
 COPY . .
 
 EXPOSE 3000
 
-CMD npm run db:deploy && npm run dev
+CMD ["sh", "-c", "npm run db:deploy && npm run dev"]
