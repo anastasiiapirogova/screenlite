@@ -45,10 +45,13 @@ export const ChangePasswordPage = () => {
 
     return (
         <div>
-            <FullWidthSettingsPageHeader backLink='/settings'>
+            <FullWidthSettingsPageHeader backLink='/security'>
                 Change password
             </FullWidthSettingsPageHeader>
             <div className='max-w-screen-sm mx-auto p-5'>
+                <div className='mb-5'>
+                    After updating your password, all other sessions will be logged out except the current one.
+                </div>
                 <form
                     onSubmit={ handleSubmit(onSubmit) }
                     className='w-full flex flex-col gap-2'
