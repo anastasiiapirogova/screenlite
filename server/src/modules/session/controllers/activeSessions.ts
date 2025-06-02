@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { exclude } from '../../../utils/exclude.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { SessionRepository } from '../repositories/SessionRepository.js'
 import { SessionPolicy } from '../policies/sessionPolicy.js'
+import { parseUserAgent } from '../utils/parseUserAgent.js'
 
 export const activeSessions = async (req: Request, res: Response) => {
     const userId = req.params.id
@@ -18,11 +18,11 @@ export const activeSessions = async (req: Request, res: Response) => {
     const sessions = await SessionRepository.getUserSessions(userId)
 
     const safeSessions = sessions.map(session => {
-        if (session.token !== token) {
-            return exclude(session, ['token'])
+        return {
+            ...session,
+            token: session.token === token ? session.token : undefined,
+            userAgent: parseUserAgent(session.userAgent)
         }
-
-        return session
     })
 
     ResponseHandler.json(res, {
