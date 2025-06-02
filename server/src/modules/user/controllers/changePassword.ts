@@ -32,6 +32,10 @@ export const changePassword = async (req: Request, res: Response) => {
         return ResponseHandler.validationError(req, res, { currentPassword: 'INCORRECT_PASSWORD' })
     }
 
+    if (newPassword === currentPassword) {
+        return ResponseHandler.validationError(req, res, { newPassword: 'NEW_PASSWORD_CANNOT_BE_SAME_AS_CURRENT' })
+    }
+
     await UserRepository.updateUserPassword(userId, newPassword, req.token)
 
     ResponseHandler.json(res, {
