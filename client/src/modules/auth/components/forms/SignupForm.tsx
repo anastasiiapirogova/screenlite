@@ -3,16 +3,14 @@ import { TbChevronRight } from 'react-icons/tb'
 import { Link } from 'react-router'
 import { useMutation } from '@tanstack/react-query'
 import { useAuth } from '../../hooks/useAuth'
-import { isAxiosError } from 'axios'
-import { usePasswordStrength } from '@shared/hooks/usePasswordStrength'
 import { signupRequest, SignupRequestData } from '@modules/auth/api/requests/signupRequest'
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { Input } from '@shared/ui/input/Input'
 import { InputError } from '@shared/ui/input/InputError'
-import { PasswordStrengthBar } from '@shared/utils/password/PasswordStrengthBar'
-import { PasswordRuleCheck } from '@shared/utils/password/PasswordRuleCheck'
 import { Button } from '@shared/ui/buttons/Button'
 import { ButtonSpinner } from '@shared/ui/buttons/ButtonSpinner'
+import { PasswordStrength } from '@shared/utils/password/PasswordStrength'
+import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 
 export const SignupForm = () => {
     const auth = useAuth()
@@ -31,7 +29,6 @@ export const SignupForm = () => {
         }
     })
 
-    const { strength, hasLower, hasUpper, hasNumber, hasSpecial, hasSufficientLength } = usePasswordStrength(watch().password)
 
     const { mutate, isPending } = useMutation({
         mutationFn: (data: SignupRequestData) => signupRequest(data),
@@ -39,49 +36,12 @@ export const SignupForm = () => {
             auth.onLogin(response)
         },
         onError: (error) => {
-            if (isAxiosError(error) && error.response) {
-
-                if (error.response.data && error.response.data.errors) {
-				  const errors = error.response.data.errors
-		
-				  for (const [field, message] of Object.entries(errors)) {
-                        const messageString = String(message)
-
-                        setError(field as keyof SignupRequestData, {
-                            type: 'custom',
-                            message: messageString
-                        })
-				  }
-                }
-            }
+            handleAxiosFieldErrors<SignupRequestData>(error, setError)
         }
     })
 
     const onSubmit: SubmitHandler<SignupRequestData> = (data) => mutate(data)
 
-    const passwordRules = [
-        {
-            condition: hasSufficientLength,
-            message: '8 characters minimum'
-        },
-        {
-            condition: hasUpper,
-            message: 'an uppercase letter'
-        },
-        {
-            condition: hasLower,
-            message: 'a lowercase letter'
-        },
-        {
-            condition: hasNumber,
-            message: 'a number'
-        },
-        {
-            condition: hasSpecial,
-            message: 'a symbol'
-        }
-    ]
-	  
     return (
         <div className='w-full flex flex-col max-w-xl bg-white p-20 rounded-3xl gap-10'>
             <h1 className='text-3xl font-semibold'>
@@ -143,22 +103,7 @@ export const SignupForm = () => {
                     <InputError error={ errors.password?.message }/>
                 </InputLabelGroup>
                 <div className="mb-5">
-                    <PasswordStrengthBar strength={ strength } />
-
-                    <div className="mt-4 text-sm text-neutral-600">
-                        <div>
-                            Your password must contain at least:
-                        </div> 
-                        {
-                            passwordRules.map(({ condition, message }) => (
-                                <PasswordRuleCheck
-                                    key={ message }
-                                    condition={ condition }
-                                    message={ message }
-                                />
-                            ))
-                        }
-                    </div>
+                    <PasswordStrength password={ watch().password } />
                 </div>
                 <Button
                     variant='solid'
@@ -166,8 +111,7 @@ export const SignupForm = () => {
                     size='large'
                     disabled={ isPending }
                     icon={ isPending ? ButtonSpinner : TbChevronRight }
-					iconPosition='right'
-                    
+                    iconPosition='right'
                 >
                     <span>Continue</span>
                 </Button>

@@ -65,7 +65,7 @@
 }
 
 body {
-    @apply w-screen min-w-[1280px]
+    @apply w-full min-w-[1280px]
 }
 
 .w-trigger {

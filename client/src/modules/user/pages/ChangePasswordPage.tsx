@@ -2,44 +2,44 @@ import { Input } from '@shared/ui/input/Input'
 import { FullWidthSettingsPageHeader } from '../components/FullWidthSettingsPageHeader'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useCurrentUser } from '@modules/auth/hooks/useCurrentUser'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { currentUserQuery } from '@modules/auth/api/queries/currentUser'
+import { useMutation } from '@tanstack/react-query'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { InputError } from '@shared/ui/input/InputError'
 import { Button } from '@shared/ui/buttons/Button'
-import { ChangeEmailData, changeEmailRequest } from '../api/requests/changeEmailRequest'
+import { ChangePasswordData, changePasswordRequest } from '../api/requests/changePasswordRequest'
+import { PasswordStrength } from '@shared/utils/password/PasswordStrength'
 
+// TODO: Add success message
 export const ChangePasswordPage = () => {
     const user = useCurrentUser()
-    const queryClient = useQueryClient()
 
     const {
         control,
         handleSubmit,
         setError,
-        getValues,
         formState: { errors, isDirty },
-        reset
-    } = useForm<ChangeEmailData>({
+        reset,
+        watch
+    } = useForm<ChangePasswordData>({
         defaultValues: {
             userId: user.id,
-            email: user.email,
+            currentPassword: '',
+            newPassword: ''
         }
     })
 
     const { mutate, isPending } = useMutation({
-        mutationFn: (data: ChangeEmailData) => changeEmailRequest(data),
-        onSuccess: async (screen) => {
-            queryClient.setQueryData(currentUserQuery().queryKey, screen)
-            reset(getValues())
+        mutationFn: (data: ChangePasswordData) => changePasswordRequest(data),
+        onSuccess: async () => {
+            reset()
         },
         onError: (error) => {
-            handleAxiosFieldErrors<ChangeEmailData>(error, setError)
+            handleAxiosFieldErrors<ChangePasswordData>(error, setError)
         }
     })
 
-    const onSubmit: SubmitHandler<ChangeEmailData> = (data) => {
+    const onSubmit: SubmitHandler<ChangePasswordData> = (data) => {
         mutate(data)
     }
 
@@ -54,24 +54,46 @@ export const ChangePasswordPage = () => {
                     className='w-full flex flex-col gap-2'
                 >
                     <InputLabelGroup
-                        label='Email'
-                        name='email'
+                        label='Current password'
+                        name='currentPassword'
                     >
                         <Controller
-                            name='email'
+                            name='currentPassword'
                             control={ control }
                             render={ ({ field }) => (
                                 <Input
                                     { ...field }
-                                    type='email'
+                                    type='password'
                                 />
                             ) }
                         />
-                        <InputError error={ errors.email?.message }/>
+                        <InputError error={ errors.currentPassword?.message }/>
                     </InputLabelGroup>
+
+                    <InputLabelGroup
+                        label='New password'
+                        name='newPassword'
+                    >
+                        <Controller
+                            name='newPassword'
+                            control={ control }
+                            render={ ({ field }) => (
+                                <Input
+                                    { ...field }
+                                    type='password'
+                                />
+                            ) }
+                        />
+                        <InputError error={ errors.newPassword?.message }/>
+                    </InputLabelGroup>
+
+                    <div className='mt-5'>
+                        <PasswordStrength password={ watch().newPassword } />
+                    </div>
+
                     <div className='flex justify-end items-center gap-2 mt-5'>
                         <Button
-                            to='/settings'
+                            to='/security'
                             color='secondary'
                             variant='soft'
                             type="button"
@@ -83,7 +105,7 @@ export const ChangePasswordPage = () => {
                             disabled={ isPending || isDirty === false }
                             variant='solid'
                         >
-                            Save
+                            Change
                         </Button>
                     </div>
                 </form>
