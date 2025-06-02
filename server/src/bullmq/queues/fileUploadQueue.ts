@@ -10,7 +10,7 @@ export const fileUploadQueue = new Queue('fileUploadQueue', {
 })
 
 await fileUploadQueue.upsertJobScheduler(
-    'tmp-folder-cleanup',
+    'tmpFolderCleanup',
     { pattern: '0 0 0 * * *' },
     {
         name: 'cleanupTmpFolder',

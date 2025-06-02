@@ -1,10 +1,18 @@
 import fs from 'fs/promises'
 import path from 'path'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000
 
 export const cleanupTmpFolder = async () => {
-    const tmpDir = path.join(__dirname, '../../tmp')
+    let tmpDir: string
+
+    try {
+        tmpDir = path.join(__dirname, '../../tmp')
+    } catch (err) {
+        console.error('Error resolving tmp directory:', err)
+        return
+    }
 
     try {
         await fs.access(tmpDir)

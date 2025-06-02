@@ -7,7 +7,7 @@ import { updatePlaylistLayoutSchema } from '../schemas/playlistLayoutSchemas.js'
 import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
 import { PlaylistLayoutSection } from 'generated/prisma/client.js'
 import { prisma } from '@config/prisma.js'
-import { playlistLayoutEventEmitter } from 'events/eventEmitter.js'
+import { addPlaylistUpdatedJobs } from '@modules/playlist/utils/addPlaylistUpdatedJobs.js'
 
 type SectionData = Omit<PlaylistLayoutSection, 'playlistLayoutId'>
 
@@ -107,7 +107,18 @@ export const updatePlaylistLayout = async (req: Request, res: Response) => {
     const layoutResolutionChanged = updatedData.resolutionHeight || updatedData.resolutionWidth
 
     if(layoutResolutionChanged || doesUpdateAffectScreens(sectionsToDelete.length + sectionsToCreate.length, sectionsToUpdate)) {
-        playlistLayoutEventEmitter.emit('playlistLayoutUpdated', playlistLayoutId)
+        const playlists = await prisma.playlist.findMany({
+            where: {
+                playlistLayoutId,
+                deletedAt: null,
+                isPublished: true
+            },
+            select: {
+                id: true
+            }
+        })
+
+        addPlaylistUpdatedJobs(playlists.map(playlist => playlist.id))
     }
 
     ResponseHandler.json(res, {
