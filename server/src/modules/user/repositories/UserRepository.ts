@@ -95,6 +95,7 @@ export class UserRepository {
             where: { id: userId },
             data: {
                 password: hashedPassword,
+                passwordUpdatedAt: new Date(),
                 sessions: token ? {
                     updateMany: {
                         where: {

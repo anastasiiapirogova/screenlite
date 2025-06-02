@@ -4,13 +4,14 @@ export type User = {
 	name: string
     id: string
     email: string
-    emailVerifiedAt: Date | null
+    emailVerifiedAt: string | null
     profilePhoto: string | null
     twoFactorEnabled: boolean
 	hasPassedTwoFactorAuth?: boolean
-    createdAt: Date
-    updatedAt: Date
-    deletedAt: Date | null
+	passwordUpdatedAt?: string
+    createdAt: string
+    updatedAt: string
+    deletedAt: string | null
 }
 
 export type UserSession = {
