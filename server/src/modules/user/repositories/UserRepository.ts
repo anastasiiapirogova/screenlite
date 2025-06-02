@@ -1,6 +1,8 @@
 import { prisma } from '@config/prisma.js'
 import { hashPassword } from '../utils/hashPassword.js'
 import { EmailVerificationTokenRepository } from '@modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.js'
+import { Prisma } from 'generated/prisma/client.js'
+import { SafeUser } from 'types.js'
 
 export class UserRepository {
     static async findByEmail(email: string) {
@@ -23,8 +25,7 @@ export class UserRepository {
         })
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static async updateUser(userId: string, data: Record<string, any>) {
+    static async updateUser(userId: string, data: Prisma.UserUpdateInput): Promise<SafeUser> {
         return await prisma.user.update({
             where: { id: userId },
             data,
@@ -94,28 +95,26 @@ export class UserRepository {
             where: { id: userId },
             data: {
                 password: hashedPassword,
-                sessions: token
-                    ? {
-                        updateMany: {
-                            where: {
-                                revokedAt: null,
-                                NOT: { token },
-                            },
-                            data: {
-                                revokedAt: new Date()
-                            }
+                sessions: token ? {
+                    updateMany: {
+                        where: {
+                            revokedAt: null,
+                            NOT: { token },
+                        },
+                        data: {
+                            revokedAt: new Date()
                         }
                     }
-                    : {
-                        updateMany: {
-                            where: {
-                                revokedAt: null,
-                            },
-                            data: {
-                                revokedAt: new Date()
-                            }
+                } : {
+                    updateMany: {
+                        where: {
+                            revokedAt: null,
+                        },
+                        data: {
+                            revokedAt: new Date()
                         }
-                    },
+                    }
+                },
             },
         })
 
