@@ -14,6 +14,22 @@ Join our Discord community for quick support, connect with other users, and shar
 
 [Join our Discord](https://discord.gg/2wW8zDjAjr)
 
+## How it works?
+
+Screenlite consists of two main components:
+- **Screenlite CMS**: The backend that manages content, schedules, and devices.
+- **Screenlite Player**: The client app that displays content on screens.
+
+This repository contains the Screenlite CMS, which is the core of the system. It provides a web interface for managing your digital signage content and devices.
+
+It is centralized, meaning you can manage all your screens from a single place.
+
+## Available players
+### Web player
+[screenlite/web-player](https://github.com/screenlite/web-player)
+
+A web-based player that can run on any device with a modern browser.
+
 ## Deployment
 Screenlite is simple to set up and deploy. You can quickly configure and get it running with minimal effort.
 
