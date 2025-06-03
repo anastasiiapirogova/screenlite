@@ -5,8 +5,6 @@
 		"build": "rimraf dist && mkdir dist && npx swc src -d dist --strip-leading-paths",
 		"start": "[ -f .env ] && env-cmd -f .env --no-override node dist/screenlite.js || node dist/screenlite.js",
 		"dev": "[ -f .env ] && env-cmd -f .env --no-override tsx watch src/screenlite.ts || tsx watch src/screenlite.ts",
-		"client:dev": "npm run dev -w client",
-		"client:build": "npm run build -w client",
 		"lint": "eslint --fix",
 		"db:deploy": "npx prisma migrate deploy && npx prisma generate"
 	},
