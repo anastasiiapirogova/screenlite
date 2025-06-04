@@ -1,4 +1,3 @@
-export * from './UserSessionsPage'
 export * from './HomePage'
 export * from './UserSettingsPage'
 export * from './UserInvitationsPage'

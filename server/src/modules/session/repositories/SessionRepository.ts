@@ -55,16 +55,6 @@ export class SessionRepository {
         }
     }
 
-    static async getUserSessions(userId: string, revoked: boolean = false) {
-        return await prisma.session.findMany({
-            where: {
-                userId,
-                revokedAt: revoked ? { not: null } : null,
-            },
-            orderBy: { lastActivityAt: 'desc' },
-        })
-    }
-
     static async getSession(id: string) {
         const session = await prisma.session.findUnique({
             where: {

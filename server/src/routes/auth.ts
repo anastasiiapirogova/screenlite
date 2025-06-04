@@ -9,7 +9,7 @@ import {
 } from 'middlewares/index.js'
 import {
     revokeSession,
-    activeSessions
+    getUserSessions
 } from '@modules/session/controllers/index.js'
 import {
     createPlaylistSchedule,
@@ -119,7 +119,7 @@ createUnprotectedRoute(HttpMethod.POST, '/users/2fa/verify', verifyTwoFa)
 // =======================
 
 // User & Security
-createRoute(HttpMethod.GET, '/users/:id/activeSessions', activeSessions)
+createRoute(HttpMethod.GET, '/users/:id/sessions', getUserSessions)
 createRoute(HttpMethod.GET, '/users/:id/workspaces', userWorkspaces)
 createRoute(HttpMethod.GET, '/users/:id/invitations', getUserInvitations)
 createRoute(HttpMethod.GET, '/users/getTotpSetupData', getTotpSetupData)

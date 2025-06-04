@@ -1,9 +1,9 @@
 import { SettingsCard } from './SettingsCard'
 import { useQuery } from '@tanstack/react-query'
-import { userActiveSessionsQuery } from '../api/queries/userActiveSessionsQuery'
 import { useCurrentUser } from '@modules/auth/hooks/useCurrentUser'
 import { UserSession } from '../types'
 import { Button } from '@shared/ui/buttons/Button'
+import { userSessionsQuery } from '@modules/session/queries/userSessionsQuery'
 
 const SESSION_ITEM_HEIGHT = 'h-24'
 const SESSION_LIST_HEIGHT = 'min-h-24'
@@ -20,12 +20,18 @@ const SessionCard = ({ session }: { session: UserSession }) => {
 
 export const SessionsSecurityCard = () => {
     const user = useCurrentUser()
-    const { data: sessions, isLoading } = useQuery(userActiveSessionsQuery(user.id))
+    const { data: sessions, isLoading } = useQuery(userSessionsQuery({
+        userId: user.id,
+        filters: {
+            page: 1,
+            limit: 3,
+            status: 'active'
+        }
+    }))
 
     const latestSessions = sessions
-        ? [...sessions]
+        ? [...sessions.data]
             .sort((a, b) => new Date(b.lastActivityAt).getTime() - new Date(a.lastActivityAt).getTime())
-            .slice(0, 3)
         : []
 
     return (

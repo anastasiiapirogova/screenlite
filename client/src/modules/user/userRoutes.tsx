@@ -1,10 +1,10 @@
+import { sessionRoutes } from '@modules/session/sessionRoutes'
 import { MainLayout } from '../../shared/layouts/MainLayout'
 import { UserFullWidthSettingsPagesLayout } from './layouts/UserFullWidthSettingsPagesLayout'
 import { UserPagesLayout } from './layouts/UserPagesLayout'
 import {
     AccountSecurityPage,
     ChangeEmailPage,
-    UserSessionsPage,
     EditProfilePage,
     HomePage,
     UserInvitationsPage,
@@ -55,10 +55,7 @@ export const userRoutes = {
             path: 'security',
             element: <UserFullWidthSettingsPagesLayout />,
             children: [
-                {
-                    path: 'sessions',
-                    element: <UserSessionsPage />
-                },
+                sessionRoutes,
                 {
                     path: 'password/change',
                     element: <ChangePasswordPage />

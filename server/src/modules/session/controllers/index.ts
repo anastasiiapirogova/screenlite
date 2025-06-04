@@ -1,2 +1,2 @@
-export * from './activeSessions.js'
+export * from './getUserSessions.js'
 export * from './revokeSession.js'
