@@ -9,15 +9,24 @@ import { guestRoutes } from '@shared/routes/guestRoutes'
 
 export const PrivateRouteMiddleware = () => {
     const { user } = useAuth()
-
     const location = useLocation()
 
     if (!user) {
-        const redirectPath = location.pathname + location.search
+        const path = location.pathname + location.search
+
+        const shouldRedirect =
+			path &&
+			path !== '/' &&
+			path !== '/?' &&
+			path !== '?'
+
+        const to = shouldRedirect
+            ? `${guestRoutes.login}?redirect=${encodeURIComponent(path)}`
+            : guestRoutes.login
 
         return (
             <Navigate
-                to={ `${guestRoutes.login}?redirect=${encodeURIComponent(redirectPath)}` }
+                to={ to }
                 replace
             />
         )
