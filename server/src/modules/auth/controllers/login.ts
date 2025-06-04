@@ -7,6 +7,7 @@ import { rateLimiter } from '@config/rateLimiter.js'
 import { setRateLimitHeaders } from '@utils/setRateLimiterHeaders.js'
 import { getIpAndUserAgent } from '@modules/user/utils/getIpAndUserAgent.js'
 import { UserService } from '@modules/user/utils/UserService.js'
+import { generateOpaqueToken } from '@modules/user/utils/generateOpaqueToken.js'
 
 const RATE_LIMIT_KEY = 'login_attempt'
 
@@ -43,7 +44,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const { ipAddress, userAgent } = getIpAndUserAgent(req)
 
-    const session = await SessionRepository.createSession(user.id, userAgent, ipAddress || '')
+    const token = generateOpaqueToken()
+
+    const session = await SessionRepository.createSession(user.id, token, userAgent, ipAddress || '')
 
     return ResponseHandler.json(res, {
         user,

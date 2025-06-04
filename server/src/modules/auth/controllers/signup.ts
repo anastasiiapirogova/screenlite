@@ -6,6 +6,7 @@ import { signupSchema } from '../schemas/authSchemas.js'
 import { UserRepository } from '@modules/user/repositories/UserRepository.js'
 import { rateLimiter } from '@config/rateLimiter.js'
 import { setRateLimitHeaders } from '@utils/setRateLimiterHeaders.js'
+import { generateOpaqueToken } from '@modules/user/utils/generateOpaqueToken.js'
 
 const RATE_LIMIT_KEY = 'signup_attempt'
 
@@ -30,7 +31,9 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 	
     const { ipAddress, userAgent } = getIpAndUserAgent(req)
 
-    const session = await SessionRepository.createSession(user.id, userAgent, ipAddress || '')
+    const token = generateOpaqueToken()
+
+    const session = await SessionRepository.createSession(user.id, token, userAgent, ipAddress || '')
 
     return ResponseHandler.created(res, {
         user,

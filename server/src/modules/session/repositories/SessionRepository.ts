@@ -1,23 +1,13 @@
 import { prisma } from '@config/prisma.js'
-import { generateOpaqueToken } from '@modules/user/utils/generateOpaqueToken.js'
-import { Prisma } from 'generated/prisma/client.js'
-import { lookup } from 'ip-location-api'
 
 export class SessionRepository {
-    static async createSession(userId: string, userAgent: string, ipAddress: string) {
-        const token = generateOpaqueToken()
-
-        const locationResult = await lookup(ipAddress)
-
-        const location = locationResult && locationResult.city ? `${locationResult.city}, ${locationResult.country_name}` : null
-
+    static async createSession(userId: string, token: string, userAgent: string, ipAddress: string) {
         const session = await prisma.session.create({
             data: {
                 userId,
                 token,
                 userAgent,
-                ipAddress,
-                location: location || Prisma.skip
+                ipAddress
             },
         })
 
