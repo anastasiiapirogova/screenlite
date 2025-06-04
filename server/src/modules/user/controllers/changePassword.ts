@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { validatePassword } from '../utils/validatePassword.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { changePasswordSchema } from '../schemas/userSchemas.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { UserPolicy } from '../policies/userPolicy.js'
+import { UserService } from '../utils/UserService.js'
 
 export const changePassword = async (req: Request, res: Response) => {
     const user = req.user!
@@ -26,7 +26,7 @@ export const changePassword = async (req: Request, res: Response) => {
         return ResponseHandler.forbidden(res)
     }
 
-    const isCurrentPasswordMatched = await validatePassword(currentPassword, userToUpdate.password)
+    const isCurrentPasswordMatched = await UserService.validatePassword(currentPassword, userToUpdate.password)
 
     if (!isCurrentPasswordMatched) {
         return ResponseHandler.validationError(req, res, { currentPassword: 'INCORRECT_PASSWORD' })
