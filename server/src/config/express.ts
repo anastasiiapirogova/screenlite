@@ -48,6 +48,8 @@ app.use(multerErrorHandler)
 
 app.use(errorHandler)
 
+app.disable('x-powered-by')
+
 server.listen(3000, () => {
     console.log('Screenlite: Server running on port 3000')
 })
