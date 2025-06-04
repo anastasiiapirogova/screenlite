@@ -1,8 +1,8 @@
 import { prisma } from '@config/prisma.js'
-import { hashPassword } from '../utils/hashPassword.js'
 import { EmailVerificationTokenRepository } from '@modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.js'
 import { Prisma } from 'generated/prisma/client.js'
 import { SafeUser } from 'types.js'
+import { UserService } from '../utils/UserService.js'
 
 export class UserRepository {
     static async findByEmail(email: string) {
@@ -14,7 +14,7 @@ export class UserRepository {
     }
 
     static async createUser(email: string, name: string, password: string) {
-        const hashedPassword = await hashPassword(password)
+        const hashedPassword = await UserService.hashPassword(password)
 
         return await prisma.user.create({
             data: {
@@ -89,7 +89,7 @@ export class UserRepository {
     }
 
     static async updateUserPassword(userId: string, newPassword: string, token?: string) {
-        const hashedPassword = await hashPassword(newPassword)
+        const hashedPassword = await await UserService.hashPassword(newPassword)
 
         await prisma.user.update({
             where: { id: userId },
