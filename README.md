@@ -44,3 +44,8 @@ If you have coding skills, feel free to explore the code, suggest improvements, 
 UI/UX designers are also welcome. Your ideas and expertise can help make Screenlite more intuitive and user-friendly.
 
 Let’s build something great together.
+
+## Tech stack
+
+- **Backend:** Express.js, TypeScript, Prisma ORM, BullMQ, Socket.IO, PostgreSQL, Redis, S3-compatible storage
+- **Frontend:** React, Tanstack Query, Tailwind CSS, dnd kit, Zod
