@@ -47,5 +47,5 @@ Let’s build something great together.
 
 ## Tech stack
 
-- **Backend:** Express.js, TypeScript, Prisma ORM, BullMQ, Socket.IO, PostgreSQL, Redis, S3-compatible storage
-- **Frontend:** React, Tanstack Query, Tailwind CSS, dnd kit, Zod
+- **Backend:** Express.js, TypeScript, Zod, Prisma ORM, BullMQ, Socket.IO, PostgreSQL, Redis, S3-compatible storage
+- **Frontend:** React, Tanstack Query, Tailwind CSS, dnd kit, Zustand
