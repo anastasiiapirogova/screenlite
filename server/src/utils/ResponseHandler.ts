@@ -15,6 +15,10 @@ export class ResponseHandler {
         ResponseHandler.json(res, data)
     }
 
+    static tooManyRequests(res: Response) {
+        res.status(429).send('Too Many Requests')
+    }
+
     static serverError(res: Response, message?: string) {
         res.status(500).send(message || 'Internal Server Error')
     }

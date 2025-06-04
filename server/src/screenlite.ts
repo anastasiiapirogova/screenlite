@@ -5,6 +5,7 @@ import { server } from './config/express.js'
 import { registerListeners } from './listeners/registerListeners.js'
 import { initSocketIo } from './controllers/socket.js'
 import { closeWorkers } from 'bullmq/workers.js'
+import './config/rateLimiter.js'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {

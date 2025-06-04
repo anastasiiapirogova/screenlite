@@ -4,12 +4,24 @@ import { SessionRepository } from '@modules/session/repositories/SessionReposito
 import { getIpAndUserAgent } from '@modules/user/utils/getIpAndUserAgent.js'
 import { signupSchema } from '../schemas/authSchemas.js'
 import { UserRepository } from '@modules/user/repositories/UserRepository.js'
+import { rateLimiter } from '@config/rateLimiter.js'
+import { setRateLimitHeaders } from '@utils/setRateLimiterHeaders.js'
+
+const RATE_LIMIT_KEY = 'signup_attempt'
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
     const validation = await signupSchema.safeParseAsync(req.body)
 
     if (!validation.success) {
         return ResponseHandler.zodError(req, res, validation.error.errors)
+    }
+
+    const rateLimiterResponse = await rateLimiter.check(RATE_LIMIT_KEY, req)
+
+    setRateLimitHeaders(res, rateLimiterResponse)
+
+    if (!rateLimiterResponse.allowed) {
+        return ResponseHandler.tooManyRequests(res)
     }
 
     const { email, name, password } = validation.data
