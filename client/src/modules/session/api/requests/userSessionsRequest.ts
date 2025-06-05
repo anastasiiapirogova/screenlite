@@ -1,6 +1,7 @@
 import { PaginatedResponse } from '@/types'
 import axios from '@config/axios'
-import { UserSession } from '@modules/user/types'
+import { UserSessionStatus } from '@modules/session/sessionRoutes'
+import { UserSession } from '@modules/session/types'
 
 export type UserSessionsRequestResponse = PaginatedResponse<
 	UserSession
@@ -9,7 +10,7 @@ export type UserSessionsRequestResponse = PaginatedResponse<
 export type UserSessionsRequestFilters = {
     page: number
     limit: number
-    status?: 'active' | 'revoked'
+    status?: UserSessionStatus
 }
 
 export const userSessionsRequest = async (userId: string, filters: UserSessionsRequestFilters) => {

@@ -1,4 +1,5 @@
 import { prisma } from '@config/prisma.js'
+import { Prisma } from 'generated/prisma/client.js'
 
 export class SessionRepository {
     static async createSession(userId: string, token: string, userAgent: string, ipAddress: string) {
@@ -18,7 +19,7 @@ export class SessionRepository {
         const session = await prisma.session.findFirst({
             where: {
                 token,
-                revokedAt: null
+                terminatedAt: null
             },
             select: {
                 id: true,
@@ -69,14 +70,14 @@ export class SessionRepository {
         return session
     }
 
-    static async revokeSessionByToken(token: string) {
+    static async terminateSessionByToken(token: string) {
         const session = await prisma.session.findUnique({
             where: {
                 token,
             },
         })
 
-        if (!session) {
+        if (!session || session.terminatedAt) {
             return true
         }
 
@@ -85,11 +86,26 @@ export class SessionRepository {
                 token,
             },
             data: {
-                revokedAt: new Date(),
+                terminatedAt: new Date(),
             },
         })
 
         return true
+    }
+
+    static async terminateSessionsByUserId(userId: string, excludeSessionId?: string) {
+        const whereClause: Prisma.SessionWhereInput = {
+            userId,
+            terminatedAt: null,
+            ...(excludeSessionId && { id: { not: excludeSessionId } }),
+        }
+
+        await prisma.session.updateMany({
+            where: whereClause,
+            data: {
+                terminatedAt: new Date(),
+            },
+        })
     }
 
     static async setTwoFaVerified(token: string) {

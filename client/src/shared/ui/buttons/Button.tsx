@@ -30,8 +30,8 @@ const sizeStyles = {
         icon: 'w-5 h-5',
     },
     small: {
-        button: 'px-2.5 h-8 text-sm',
-        icon: 'w-4 h-4',
+        button: 'px-2.5 h-8 text-sm leading-4',
+        icon: 'w-5 h-5',
     },
     xsmall: {
         button: 'px-2.5 h-6 text-sm',

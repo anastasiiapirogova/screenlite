@@ -99,20 +99,20 @@ export class UserRepository {
                 sessions: token ? {
                     updateMany: {
                         where: {
-                            revokedAt: null,
+                            terminatedAt: null,
                             NOT: { token },
                         },
                         data: {
-                            revokedAt: new Date()
+                            terminatedAt: new Date()
                         }
                     }
                 } : {
                     updateMany: {
                         where: {
-                            revokedAt: null,
+                            terminatedAt: null,
                         },
                         data: {
-                            revokedAt: new Date()
+                            terminatedAt: new Date()
                         }
                     }
                 },

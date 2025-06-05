@@ -14,16 +14,6 @@ export type User = {
     deletedAt: string | null
 }
 
-export type UserSession = {
-	id: string
-	createdAt: string
-	ipAddress: string
-	userAgent: string
-	userId: string
-	revokedAt: string | null
-	lastActivityAt: string
-}
-
 export type UserInvitation = {
 	id: string
     email: string

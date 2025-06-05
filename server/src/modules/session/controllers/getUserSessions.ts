@@ -19,12 +19,20 @@ export const getUserSessions = async (req: Request, res: Response) => {
 
     const { page, limit, status } = validation.data
 	
-    const sessionWhereClause: Prisma.SessionFindManyArgs = {
-        where: {
-            revokedAt: status === 'active' ? null : {
-                not: null,
+    let sessionWhereClause: Prisma.SessionFindManyArgs = {}
+
+    if (status) {
+        sessionWhereClause = {
+            where: {
+                terminatedAt: status === 'active' ? null : {
+                    not: null,
+                },
             },
-        },
+        }
+    } else {
+        sessionWhereClause = {
+            skip: Prisma.skip,
+        }
     }
 	
     const user = await prisma.user.findUnique({
@@ -34,7 +42,10 @@ export const getUserSessions = async (req: Request, res: Response) => {
         select: {
             id: true,
             sessions: {
-                ...sessionWhereClause
+                ...sessionWhereClause,
+                orderBy: {
+                    lastActivityAt: 'desc',
+                }
             },
             _count: {
                 select: {

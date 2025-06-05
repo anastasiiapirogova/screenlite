@@ -5,7 +5,7 @@ export class SessionPolicy{
         return user.id === userId
     }
 
-    static canRevokeSession(user: SafeUser, sessionUserId: string): boolean {
+    static canTerminateSession(user: SafeUser, sessionUserId: string): boolean {
         return user.id === sessionUserId
     }
 }

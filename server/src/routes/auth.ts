@@ -8,8 +8,9 @@ import {
     authMiddleware
 } from 'middlewares/index.js'
 import {
-    revokeSession,
-    getUserSessions
+    getUserSessions,
+    terminateSession,
+    terminateAllSessions
 } from '@modules/session/controllers/index.js'
 import {
     createPlaylistSchedule,
@@ -123,7 +124,6 @@ createRoute(HttpMethod.GET, '/users/:id/sessions', getUserSessions)
 createRoute(HttpMethod.GET, '/users/:id/workspaces', userWorkspaces)
 createRoute(HttpMethod.GET, '/users/:id/invitations', getUserInvitations)
 createRoute(HttpMethod.GET, '/users/getTotpSetupData', getTotpSetupData)
-createRoute(HttpMethod.POST, '/users/revokeSession', revokeSession)
 createRoute(HttpMethod.POST, '/users/changePassword', changePassword)
 /**
  * TODO: Replace forceChangeEmail controller with an implementation that includes
@@ -136,7 +136,8 @@ createRoute(HttpMethod.POST, '/users/2fa/enable', enableTwoFa)
 createRoute(HttpMethod.POST, '/users/2fa/disable', disableTwoFa)
 
 // Session
-createRoute(HttpMethod.POST, '/sessions/revoke', revokeSession)
+createRoute(HttpMethod.POST, '/sessions/terminate', terminateSession)
+createRoute(HttpMethod.POST, '/sessions/terminateAll', terminateAllSessions)
 
 // Workspace
 createRoute(HttpMethod.POST, '/workspaces/create', createWorkspace)

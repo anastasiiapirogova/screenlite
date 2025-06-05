@@ -1,2 +1,3 @@
 export * from './getUserSessions.js'
-export * from './revokeSession.js'
+export * from './terminateSession.js'
+export * from './terminateAllSessions.js'
