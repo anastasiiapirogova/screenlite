@@ -1,45 +1,54 @@
-# Screenlite features
+# Screenlite Features
 
-## Authentication & security
+## Authentication & Security
 
-| Feature                  | Status        |
-|--------------------------|---------------|
-| Sign in                  | Done          |
-| Sign up                  | Done          |
-| Terminate session        | Done          |
-| Terminate all sessions   | Done          |
-| Change email             | Done          |
-| Change password          | Done          |
-| Set 2FA                  | Done          |
-| Disable 2FA              | Done          |
-| Verify 2FA               | Done          |
-| List active sessions     | Done          |
-| Email verification       | In Progress   |
-| Password reset           | In Progress   |
+| Feature                | Status       |
+|------------------------|--------------|
+| Sign in                | Done         |
+| Sign up                | Done         |
+| Terminate session      | Done         |
+| Terminate all sessions | Done         |
+| Change email           | Done         |
+| Change password        | Done         |
+| Set 2FA                | Done         |
+| Disable 2FA            | Done         |
+| Verify 2FA             | Done         |
+| List active sessions   | Done         |
+| Email verification     | In Progress  |
+| Password reset         | In Progress  |
 
-## User profile
+## User Profile
 
-| Feature                  | Status |
-|--------------------------|--------|
-| Set profile picture      | Done   |
-| Set profile name         | Done   |
+| Feature             | Status |
+|---------------------|--------|
+| Set profile picture | Done   |
+| Set profile name    | Done   |
 
 ## Workspace
 
-| Feature                  | Status |
-|--------------------------|--------|
-| Create workspace         | Done   |
+| Feature          | Status |
+|------------------|--------|
+| Create workspace | Done   |
 
 ## Files
 
-| Feature                  | Status        |
-|--------------------------|---------------|
-| Upload files backend     | Done          |
-| Upload files UI          | In Progress   |
-| Generate thumbnails      | Done          |
+| Feature            | Status |
+|--------------------|--------|
+| Upload files       | UI     |
+| Generate thumbnails| Done   |
+
+## Screens
+
+| Feature        | Status |
+|----------------|--------|
+| List screens   | UI     |
+| Create screen  | Done   |
+| Connect device | UI     |
 
 ## Playlists
 
-| Feature                  | Status        |
-|--------------------------|---------------|
-| Create playlist          | Done          |
+| Feature        | Status |
+|----------------|--------|
+| Create playlist| Done   |
+| List playlists | UI     |
+| Edit playlist  | UI     |
