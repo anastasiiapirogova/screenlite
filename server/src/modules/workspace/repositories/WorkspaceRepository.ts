@@ -5,6 +5,8 @@ import { UpdateWorkspaceData } from '../types.js'
 
 export type ScreenStatusCount = { online: number, offline: number, notConnected: number }
 
+type ScreenStatusCountRawQueryReturn = { online: string, offline: string, notConnected: string }
+
 export class WorkspaceRepository {
     static STATUS = {
         ACTIVE: 'active',
@@ -103,20 +105,36 @@ export class WorkspaceRepository {
         const cachedResult = await redis.get(cacheKey)
 
         if (cachedResult) {
-            return JSON.parse(cachedResult) as ScreenStatusCount
+            const parsed = JSON.parse(cachedResult)
+
+            return {
+                online: Number(parsed.online),
+                offline: Number(parsed.offline),
+                notConnected: Number(parsed.notConnected),
+            } as ScreenStatusCount
         }
 
-        const screenStatusCount = await prisma.$queryRaw<ScreenStatusCount[]>`
-            SELECT 
-                COUNT(CASE WHEN d."isOnline" = true THEN 1 END) AS "online",
-                COUNT(CASE WHEN d."isOnline" = false THEN 1 END) AS "offline",
-                COUNT(CASE WHEN d."screenId" IS NULL THEN 1 END) AS "notConnected"
-            FROM "Screen" s
-            LEFT JOIN "Device" d ON s."id" = d."screenId"
-            WHERE s."workspaceId" = ${workspaceId}
-        `
+        const screenStatusCount = await prisma.$queryRaw<ScreenStatusCountRawQueryReturn[]>`
+			SELECT 
+				COUNT(CASE WHEN d."isOnline" = true THEN 1 END) AS "online",
+				COUNT(CASE WHEN d."isOnline" = false THEN 1 END) AS "offline",
+				COUNT(CASE WHEN d."screenId" IS NULL THEN 1 END) AS "notConnected"
+			FROM "Screen" s
+			LEFT JOIN "Device" d ON s."id" = d."screenId"
+			WHERE s."workspaceId" = ${workspaceId}
+		`
 
-        const result = screenStatusCount.length === 0 ? { online: 0, offline: 0, notConnected: 0 } : screenStatusCount[0]
+        let result: ScreenStatusCount
+
+        if (screenStatusCount.length === 0) {
+            result = { online: 0, offline: 0, notConnected: 0 }
+        } else {
+            result = {
+                online: Number(screenStatusCount[0].online),
+                offline: Number(screenStatusCount[0].offline),
+                notConnected: Number(screenStatusCount[0].notConnected),
+            }
+        }
 
         redis.setex(cacheKey, 30, JSON.stringify(result))
 
