@@ -22,5 +22,5 @@ export function multerErrorHandler(
         return
     }
 
-    next()
+    next(err)
 }

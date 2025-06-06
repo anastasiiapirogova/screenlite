@@ -8,7 +8,7 @@ import { rateLimiter } from '@config/rateLimiter.js'
 import { setRateLimitHeaders } from '@utils/setRateLimiterHeaders.js'
 import { generateOpaqueToken } from '@modules/user/utils/generateOpaqueToken.js'
 
-const RATE_LIMIT_KEY = 'signup_attempt'
+const RATE_LIMIT_KEY = 'signup'
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
     const validation = await signupSchema.safeParseAsync(req.body)

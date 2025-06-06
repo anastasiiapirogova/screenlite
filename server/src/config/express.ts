@@ -28,7 +28,9 @@ app.use(i18nextMiddleware.handle(i18n))
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ extended: true }))
+
 app.enable('etag')
+app.disable('x-powered-by')
 
 app.use('/api/static', staticRoutes)
 app.use('/api', guestRoutes)
@@ -47,8 +49,6 @@ app.use('/api/*', (_req: Request, res: Response) => {
 app.use(multerErrorHandler)
 
 app.use(errorHandler)
-
-app.disable('x-powered-by')
 
 server.listen(3000, () => {
     console.log('Screenlite: Server running on port 3000')
