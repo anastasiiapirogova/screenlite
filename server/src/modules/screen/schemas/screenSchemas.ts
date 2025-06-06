@@ -1,3 +1,4 @@
+import { CONNECTION_CODE_CHARACTERS } from '@modules/device/helpers/generateConnectionCode.js'
 import { paginationSchema } from 'schemas/paginationSchema.js'
 import { z } from 'zod'
 
@@ -31,7 +32,10 @@ export const createScreenSchema = z.object({
 
 export const connectDeviceSchema = z.object({
     screenId,
-    connectionCode: z.string()
+    connectionCode: z.string().regex(
+        new RegExp(`^[${CONNECTION_CODE_CHARACTERS}]+$`, 'i'),
+        'CONNECTION_CODE_IS_INVALID'
+    )
 })
 
 export const disconnectDeviceSchema = z.object({
