@@ -44,6 +44,8 @@
 		<tr><td>Language preference</td><td>Planned</td></tr>
 		<tr><td>Delete profile picture</td><td>Planned</td></tr>
 		<tr><td>Delete account</td><td>In Progress</td></tr>
+		<tr><td>List user workspaces</td><td>UI</td></tr>
+		<tr><td>List user invitations</td><td>UI</td></tr>
 	</tbody>
 </table>
 

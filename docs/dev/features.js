@@ -40,6 +40,10 @@ export const features = [
 			],
 			[STATUS.IN_PROGRESS]: [
 				"Delete account"
+			],
+			[STATUS.UI]: [
+				"List user workspaces",
+				"List user invitations",
 			]
 		}
 	},
