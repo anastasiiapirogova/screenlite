@@ -9,6 +9,7 @@ export type Workspace = {
 }
 
 export type WorkspaceEntityCounts = {
+	members: number
 	playlists: number
 	screens: number
 	layouts: number
@@ -17,6 +18,10 @@ export type WorkspaceEntityCounts = {
 		online: number
 		offline: number
 		notConnected: number
+	}
+	invitations: {
+		all: number
+		pending: number
 	}
 }
 

@@ -5,6 +5,16 @@ import { UpdateWorkspaceData } from '../types.js'
 
 export type ScreenStatusCount = { online: number, offline: number, notConnected: number }
 
+type WorkspaceWithCounts = {
+	membersCount: number
+	playlistsCount: number
+	screensCount: number
+	layoutsCount: number
+	filesCount: number
+	userInvitationsAll: number
+	userInvitationsPending: number
+};
+
 type ScreenStatusCountRawQueryReturn = { online: string, offline: string, notConnected: string }
 
 export class WorkspaceRepository {
@@ -95,6 +105,57 @@ export class WorkspaceRepository {
                 } : {})
             }
         })
+    }
+
+    static async getEntityCounts(workspaceId: string) {
+        const workspaceEntityCounts: WorkspaceWithCounts[] = await prisma.$queryRaw`
+			SELECT
+				(
+					SELECT COUNT(*) FROM "UserWorkspace" m WHERE m."workspaceId" = w.id
+				) AS "membersCount",
+				(
+					SELECT COUNT(*) FROM "Playlist" p WHERE p."workspaceId" = w.id
+				) AS "playlistsCount",
+				(
+					SELECT COUNT(*) FROM "Screen" s WHERE s."workspaceId" = w.id
+				) AS "screensCount",
+				(
+					SELECT COUNT(*) FROM "PlaylistLayout" l WHERE l."workspaceId" = w.id
+				) AS "layoutsCount",
+				(
+					SELECT COUNT(*) FROM "File" f WHERE f."workspaceId" = w.id
+				) AS "filesCount",
+				(
+					SELECT COUNT(*) FROM "WorkspaceUserInvitation" ui WHERE ui."workspaceId" = w.id
+				) AS "userInvitationsAll",
+				(
+					SELECT COUNT(*) FROM "WorkspaceUserInvitation" ui WHERE ui."workspaceId" = w.id AND ui.status = 'pending'
+				) AS "userInvitationsPending"
+			FROM "Workspace" w
+			WHERE w.id = ${workspaceId}
+		`
+
+        const counts = workspaceEntityCounts[0] || {
+            membersCount: 0,
+            playlistsCount: 0,
+            screensCount: 0,
+            layoutsCount: 0,
+            filesCount: 0,
+            userInvitationsAll: 0,
+            userInvitationsPending: 0,
+        }
+
+        return {
+            members: Number(counts.membersCount),
+            playlists: Number(counts.playlistsCount),
+            screens: Number(counts.screensCount),
+            layouts: Number(counts.layoutsCount),
+            files: Number(counts.filesCount),
+            invitations: {
+                all: Number(counts.userInvitationsAll),
+                pending: Number(counts.userInvitationsPending),
+            },
+        }
     }
 
     static async getScreenStatusCount(workspaceId: string) {
