@@ -1,4 +1,4 @@
-import { SettingsCard } from './SettingsCard'
+import { SettingsCard } from '../../../shared/components/SettingsCard'
 import { useCurrentUser } from '@modules/auth/hooks/useCurrentUser'
 import { Button } from '@shared/ui/buttons/Button'
 
