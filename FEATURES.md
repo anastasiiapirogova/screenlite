@@ -65,6 +65,7 @@
 		<tr><td>List invitations</td><td>UI</td></tr>
 		<tr><td>List folders</td><td>UI</td></tr>
 		<tr><td>Update workspace</td><td>UI</td></tr>
+		<tr><td>Dashboard</td><td>UI</td></tr>
 	</tbody>
 </table>
 

@@ -56,7 +56,8 @@ export const features = [
 				"View entity counts",
 				"List invitations",
 				"List folders",
-				"Update workspace"
+				"Update workspace",
+				"Dashboard"
 			]
 		}
 	},
