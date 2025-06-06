@@ -57,6 +57,8 @@ export const features = [
 				"List invitations",
 				"List folders",
 				"Update workspace",
+			],
+			[STATUS.DONE]: [
 				"Dashboard"
 			]
 		}
