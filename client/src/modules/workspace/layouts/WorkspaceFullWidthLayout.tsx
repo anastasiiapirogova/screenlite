@@ -6,7 +6,7 @@ import { NavbarUserMenu } from '@shared/components/NavbarUserMenu'
 export const WorkspaceFullWidthLayout = () => {
     return (
         <div className="flex flex-col grow w-full bg-slate-100">
-            <Header>
+            <Header hasSidenav={ false }>
                 <div className='flex grow justify-between items-center gap-2'>
                     <WorkspaceHeaderButton />
                     <NavbarUserMenu />

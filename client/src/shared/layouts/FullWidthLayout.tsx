@@ -4,7 +4,7 @@ import { NavbarUserMenu } from '@shared/components/NavbarUserMenu'
 import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
 import { ReactNode } from 'react'
 
-export const FullWidthLayout = ({ children }: { children: ReactNode }) => {
+export const FullWidthLayout = ({ children }: { children?: ReactNode }) => {
     return (
         <div className="flex flex-col grow w-full bg-slate-100">
             <Header>
