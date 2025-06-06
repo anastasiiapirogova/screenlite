@@ -34,7 +34,8 @@ ${tableRows}
 
 function generateHTMLContent(featureSections) {
 	let content = '# Screenlite Features\n';
-	content += '> **Note:** Several features are partially implemented on the backend but are not listed here.\n\n';
+	content += '**Note:** This document tracks the progress of key features. Some backend work may be underway before UI or design is started.\n\n';
+	content += '**Progress steps:** Planned → In Progress (Backend & Architecture) → UI (Design & Frontend Logic) → Done\n\n';
 	for (const { section, features } of featureSections) {
 		const rows = flattenFeatures(features);
 		content += generateTableSection(section, rows) + '\n';

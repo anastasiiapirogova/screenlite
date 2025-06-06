@@ -1,5 +1,7 @@
 # Screenlite Features
-> **Note:** Several features are partially implemented on the backend but are not listed here.
+**Note:** This document tracks the progress of key features. Some backend work may be underway before UI or design is started.
+
+**Progress steps:** Planned → In Progress (Backend & Architecture) → UI (Design & Frontend Logic) → Done
 
 
 ## Authentication & Security
