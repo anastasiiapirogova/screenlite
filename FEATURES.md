@@ -1,4 +1,6 @@
 # Screenlite Features
+> **Note:** Several features are partially implemented on the backend but are not listed here.
+
 
 ## Authentication & Security
 
