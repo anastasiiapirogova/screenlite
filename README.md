@@ -7,6 +7,8 @@ Get in early, use it now, and help shape what comes next. Your feedback, insight
 
 Screenlite is currently **in public development** and **not ready for production use**. It’s not feature-complete yet.
 
+[Check progress in the feature list](FEATURES.md)
+
 Database migrations may not be incremental at this stage. Sometimes migrations will be cleared and recreated, requiring you to reset your database to run newer versions of the app.
 
 ## Community

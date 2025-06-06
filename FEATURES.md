@@ -2,53 +2,104 @@
 
 ## Authentication & Security
 
-| Feature                | Status       |
-|------------------------|--------------|
-| Sign in                | Done         |
-| Sign up                | Done         |
-| Terminate session      | Done         |
-| Terminate all sessions | Done         |
-| Change email           | Done         |
-| Change password        | Done         |
-| Set 2FA                | Done         |
-| Disable 2FA            | Done         |
-| Verify 2FA             | Done         |
-| List active sessions   | Done         |
-| Email verification     | In Progress  |
-| Password reset         | In Progress  |
+<table width="100%">
+	<thead>
+		<tr>
+			<th align="left" width="500px">Feature</th>
+			<th align="left" width="500px">Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Sign in</td><td>Done</td></tr>
+		<tr><td>Sign up</td><td>Done</td></tr>
+		<tr><td>Terminate session</td><td>Done</td></tr>
+		<tr><td>Terminate all sessions</td><td>Done</td></tr>
+		<tr><td>Change email</td><td>Done</td></tr>
+		<tr><td>Change password</td><td>Done</td></tr>
+		<tr><td>Set 2FA</td><td>Done</td></tr>
+		<tr><td>Disable 2FA</td><td>Done</td></tr>
+		<tr><td>Verify 2FA</td><td>Done</td></tr>
+		<tr><td>List active sessions</td><td>Done</td></tr>
+		<tr><td>Email verification</td><td>In Progress</td></tr>
+		<tr><td>Password reset</td><td>In Progress</td></tr>
+	</tbody>
+</table>
 
 ## User Profile
 
-| Feature             | Status |
-|---------------------|--------|
-| Set profile picture | Done   |
-| Set profile name    | Done   |
+<table width="100%">
+	<thead>
+		<tr>
+			<th align="left" width="500px">Feature</th>
+			<th align="left" width="500px">Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Set profile picture</td><td>Done</td></tr>
+		<tr><td>Set profile name</td><td>Done</td></tr>
+		<tr><td>Language preference</td><td>Planned</td></tr>
+		<tr><td>Delete profile picture</td><td>Planned</td></tr>
+		<tr><td>Delete account</td><td>In Progress</td></tr>
+	</tbody>
+</table>
 
 ## Workspace
 
-| Feature          | Status |
-|------------------|--------|
-| Create workspace | Done   |
+<table width="100%">
+	<thead>
+		<tr>
+			<th align="left" width="500px">Feature</th>
+			<th align="left" width="500px">Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Create workspace</td><td>Done</td></tr>
+	</tbody>
+</table>
 
 ## Files
 
-| Feature            | Status |
-|--------------------|--------|
-| Upload files       | UI     |
-| Generate thumbnails| Done   |
+<table width="100%">
+	<thead>
+		<tr>
+			<th align="left" width="500px">Feature</th>
+			<th align="left" width="500px">Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Upload files</td><td>UI</td></tr>
+		<tr><td>Generate thumbnails</td><td>Done</td></tr>
+	</tbody>
+</table>
 
 ## Screens
 
-| Feature        | Status |
-|----------------|--------|
-| List screens   | UI     |
-| Create screen  | Done   |
-| Connect device | UI     |
+<table width="100%">
+	<thead>
+		<tr>
+			<th align="left" width="500px">Feature</th>
+			<th align="left" width="500px">Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>List screens</td><td>UI</td></tr>
+		<tr><td>Connect device</td><td>UI</td></tr>
+		<tr><td>Create screen</td><td>Done</td></tr>
+	</tbody>
+</table>
 
 ## Playlists
 
-| Feature        | Status |
-|----------------|--------|
-| Create playlist| Done   |
-| List playlists | UI     |
-| Edit playlist  | UI     |
+<table width="100%">
+	<thead>
+		<tr>
+			<th align="left" width="500px">Feature</th>
+			<th align="left" width="500px">Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Create playlist</td><td>Done</td></tr>
+		<tr><td>List playlists</td><td>UI</td></tr>
+		<tr><td>Edit playlist</td><td>UI</td></tr>
+	</tbody>
+</table>
