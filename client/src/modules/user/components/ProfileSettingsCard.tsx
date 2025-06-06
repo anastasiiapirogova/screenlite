@@ -1,5 +1,5 @@
 import { useCurrentUser } from '@modules/auth/hooks/useCurrentUser'
-import { SettingsCard } from './SettingsCard'
+import { SettingsCard } from '../../../shared/components/SettingsCard'
 import { UserAvatar } from '@shared/components/UserAvatar'
 import { Button } from '@shared/ui/buttons/Button'
 
