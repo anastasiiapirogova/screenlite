@@ -65,7 +65,10 @@ export const updateUser = async (req: Request, res: Response) => {
         const updatedUser = await UserRepository.updateUser(userId, data)
 
         return ResponseHandler.json(res, {
-            user: updatedUser,
+            user: {
+                ...user,
+                ...updatedUser
+            },
         })
     } catch (error) {
         if (error instanceof z.ZodError) {
