@@ -13,6 +13,7 @@ model File {
     duration            Int?
     // TODO: Implement defaultDuration
     defaultDuration     Int?
+    processingStatus    String    @default("pending")
     md5                 String?
     folderId            String?
     availabilityStartAt DateTime?

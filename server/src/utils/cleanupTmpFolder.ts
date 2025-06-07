@@ -5,45 +5,53 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname)
 const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000
 
 export const cleanupTmpFolder = async () => {
-    let tmpDir: string
-
-    try {
-        tmpDir = path.join(__dirname, '../../tmp')
-    } catch (err) {
-        console.error('Error resolving tmp directory:', err)
-        return
-    }
+    console.log('Cleaning up tmp folder...')
+    const tmpDir = path.join(__dirname, '../../tmp')
 
     try {
         await fs.access(tmpDir)
     } catch {
-        console.log('Tmp directory does not exist.')
         return
     }
 
-    try {
-        const files = await fs.readdir(tmpDir)
-        const now = Date.now()
+    const cleanupRecursive = async (dir: string) => {
+        let entries: string[]
 
-        await Promise.all(files.map(async file => {
-            const filePath = path.join(tmpDir, file)
+        try {
+            entries = await fs.readdir(dir)
+        } catch (err) {
+            console.error(`Error reading directory ${dir}:`, err)
+            return
+        }
+
+        await Promise.all(entries.map(async entry => {
+            const entryPath = path.join(dir, entry)
 
             try {
-                const stats = await fs.stat(filePath)
+                const stats = await fs.stat(entryPath)
 
-                if (stats.isFile()) {
+                if (stats.isDirectory()) {
+                    await cleanupRecursive(entryPath)
+
+                    const remaining = await fs.readdir(entryPath)
+
+                    if (remaining.length === 0) {
+                        await fs.rmdir(entryPath)
+                        console.log(`Deleted empty directory: ${entryPath}`)
+                    }
+                } else if (stats.isFile()) {
                     const mtime = stats.mtime.getTime()
 
-                    if (now - mtime > THREE_DAYS_MS) {
-                        await fs.unlink(filePath)
-                        console.log(`Deleted file: ${filePath}`)
+                    if (Date.now() - mtime > THREE_DAYS_MS) {
+                        await fs.unlink(entryPath)
+                        console.log(`Deleted file: ${entryPath}`)
                     }
                 }
             } catch (err) {
-                console.error(`Error processing file ${filePath}:`, err)
+                console.error(`Error processing ${entryPath}:`, err)
             }
         }))
-    } catch (err) {
-        console.error('Error reading tmp directory:', err)
     }
+
+    await cleanupRecursive(tmpDir)
 }

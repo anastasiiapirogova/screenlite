@@ -1,7 +1,7 @@
 import { deviceQueue } from 'bullmq/queues/deviceQueue.js'
 
-export const addSendNewStateToDeviceJob = (token: string) => {
-    deviceQueue.add(
+export const addSendNewStateToDeviceJob = async (token: string) => {
+    await deviceQueue.add(
         'sendNewStateToDevice',
         { token },
         {

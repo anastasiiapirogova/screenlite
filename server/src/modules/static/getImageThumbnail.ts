@@ -20,8 +20,8 @@ const generateImageThumbnail = async (readableStream: Readable): Promise<Buffer>
     const buffer = await streamToBuffer(readableStream)
 
     return sharp(buffer)
-        .resize(250, 250, { fit: 'cover' })
-        .jpeg({ quality: 100 })
+        .resize(250, 250, { fit: 'inside' })
+        .png({ quality: 100, force: true })
         .toBuffer()
 }
 
