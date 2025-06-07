@@ -6,7 +6,7 @@ import { TbX } from 'react-icons/tb'
 
 type Props = {
     children: ReactNode
-    trigger: ReactElement
+    trigger?: ReactElement
     title?: string
     description?: string
     maxWidth?: string
@@ -43,10 +43,14 @@ export const Modal = ({
         open={ open }
         onOpenChange={ onOpenChange }
     >
-        <DialogTrigger asChild>
-            { /* eslint-disable-next-line @typescript-eslint/no-explicit-any */ }
-            { React.cloneElement(trigger as ReactElement<any>, { onClick: trigger.type === 'button' ? undefined : () => onOpenChange(true) }) }
-        </DialogTrigger>
+        {
+            trigger && (
+                <DialogTrigger asChild>
+                    { /* eslint-disable-next-line @typescript-eslint/no-explicit-any */ }
+                    { React.cloneElement(trigger as ReactElement<any>, { onClick: trigger.type === 'button' ? undefined : () => onOpenChange(true) }) }
+                </DialogTrigger>
+            )
+        }
         <DialogPortal>
             <ModalOverlay />
             <DialogContent

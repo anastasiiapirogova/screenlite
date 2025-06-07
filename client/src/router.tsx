@@ -5,6 +5,7 @@ import { userRoutes } from './modules/user/userRoutes'
 import { PrivateRouteMiddleware } from './modules/auth/middlewares/PrivateRouteMiddleware'
 import { GuestRouteMiddleware } from './modules/auth/middlewares/GuestRouteMiddleware'
 import { workspaceRoutes } from './modules/workspace/workspaceRoutes'
+import { ComponentsProvider } from './providers/ComponentsProvider'
 
 const guestRoutes = {
     element: <GuestRouteMiddleware />,
@@ -23,10 +24,15 @@ const privateRoutes = {
 
 export const routes = [
     {
-        element: <AuthProvider />,
+        element: <ComponentsProvider />,
         children: [
-            guestRoutes,
-            privateRoutes
+            {
+                element: <AuthProvider />,
+                children: [
+                    guestRoutes,
+                    privateRoutes
+                ]
+            }
         ]
     }
 ]

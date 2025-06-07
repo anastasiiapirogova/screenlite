@@ -13,40 +13,24 @@ import { InputError } from '@shared/ui/input/InputError'
 import { currentUserQuery } from '@modules/auth/api/queries/currentUser'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 import { Button } from '@shared/ui/buttons/Button'
-import { disableTwoFaRequest } from '../api/requests/disableTwoFaRequest'
+import { DisableTwoFaButton } from '../components/buttons/DisableTwoFaButton'
 
 const TwoFactorEnabledState = () => {
-    const queryClient = useQueryClient()
-
-    const { mutate, isPending } = useMutation({
-        mutationFn: () => disableTwoFaRequest(),
-        onSuccess: async (screen) => {
-            queryClient.setQueryData(currentUserQuery().queryKey, screen)
-        },
-        onError: (error) => {
-            handleAxiosFieldErrors(error, console.log)
-        }
-    })
-
-    const onSubmit = () => {
-        mutate()
-    }
-
     return (
         <div>
             <div>
                 Two-factor authentication is enabled.
             </div>
             <div className='flex justify-end items-center gap-2 mt-5'>
-                <Button
-                    onClick={ () => onSubmit() }
-                    type='submit'
-                    disabled={ isPending }
-                    variant='solid'
-                    color='danger'
-                >
-                    Disable
-                </Button>
+                <DisableTwoFaButton>
+                    <Button
+                        type='submit'
+                        variant='solid'
+                        color='danger'
+                    >
+                        Disable
+                    </Button>
+                </DisableTwoFaButton>
             </div>
         </div>
     )
@@ -147,6 +131,7 @@ const TwoFactorSetup = () => {
                             <Input
                                 { ...field }
                                 type='text'
+                                autoComplete='off'
                             />
                         ) }
                     />
