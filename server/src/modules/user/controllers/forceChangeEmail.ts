@@ -35,8 +35,8 @@ export const forceChangeEmail = async (req: Request, res: Response) => {
 
     ResponseHandler.json(res, {
         user: {
-            ...updatedUser,
-            hasPassedTwoFactorAuth: user.hasPassedTwoFactorAuth
+            ...user,
+            ...updatedUser
         }
     })
 }
