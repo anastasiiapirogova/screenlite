@@ -6,6 +6,8 @@ import { PlaylistLayoutPreview } from '../components/PlaylistLayoutPreview'
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
 import { DeletePlaylistLayoutButton } from '../components/DeletePlaylistLayoutButton'
 import { Button } from '@shared/ui/buttons/Button'
+import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
+import { ScrollArea } from '@shared/ui/ScrollArea'
 
 const Layout = () => {
     const { sections, id, resolutionWidth, resolutionHeight } = usePlaylistLayout()
@@ -57,23 +59,29 @@ export const WorkspacePlaylistLayoutPage = () => {
     const playlistLayout = usePlaylistLayout()
 
     return (
-        <div className='flex flex-col gap-10'>
-            <DeletePlaylistLayoutButton>
-                <Button>Delete</Button>
-            </DeletePlaylistLayoutButton>
-            <div className='grid grid-cols-2 gap-5'>
-                <div className='flex flex-col gap-5'>
-                    <EntityPageCard title="Layout preview">
-                        <div className='aspect-video mt-5'>
-                            <PlaylistLayoutPreview playlistLayout={ playlistLayout }/>
+        <LayoutBodyContainer>
+            <ScrollArea verticalMargin={ 24 }>
+                <div className='p-7'>
+                    <div className='flex flex-col gap-10'>
+                        <DeletePlaylistLayoutButton>
+                            <Button>Delete</Button>
+                        </DeletePlaylistLayoutButton>
+                        <div className='grid grid-cols-2 gap-5'>
+                            <div className='flex flex-col gap-5'>
+                                <EntityPageCard title="Layout preview">
+                                    <div className='aspect-video mt-5'>
+                                        <PlaylistLayoutPreview playlistLayout={ playlistLayout }/>
+                                    </div>
+                                </EntityPageCard>
+                            </div>
+                            <div className='flex flex-col gap-5'>
+                                <Layout />
+                                <Playlists />
+                            </div>
                         </div>
-                    </EntityPageCard>
+                    </div>
                 </div>
-                <div className='flex flex-col gap-5'>
-                    <Layout />
-                    <Playlists />
-                </div>
-            </div>
-        </div>
+            </ScrollArea>
+        </LayoutBodyContainer>
     )
 }
