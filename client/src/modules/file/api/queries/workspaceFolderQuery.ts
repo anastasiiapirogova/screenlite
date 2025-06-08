@@ -3,6 +3,6 @@ import { workspaceFolderRequest, WorkspaceFolderRequestData } from '../requests/
 export const workspaceFolderQuery = (
     data: WorkspaceFolderRequestData
 ) => ({
-    queryKey: ['workspaceFolderQuery', data],
+    queryKey: ['workspaceFolder', data],
     queryFn: async () => workspaceFolderRequest(data)
 })
