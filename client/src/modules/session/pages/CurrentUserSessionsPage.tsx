@@ -45,13 +45,17 @@ export const CurrentUserSessionsPage = () => {
                         ) }
                     </div>
                     <div>
-                        <h2 className='text-xl mb-2'>Other sessions</h2>
-                        { otherSessions?.map((session) => (
-                            <SessionCard
-                                key={ session.id }
-                                session={ session }
-                            />
-                        )) }
+                        { otherSessions?.length !== 0 && (
+                            <>
+                                <h2 className='text-xl mb-2'>Other sessions</h2>
+                                { otherSessions?.map((session) => (
+                                    <SessionCard
+                                        key={ session.id }
+                                        session={ session }
+                                    />
+                                )) }
+                            </>
+                        ) }
                     </div>
                 </div>
             </ScrollArea>
