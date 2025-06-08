@@ -13,9 +13,10 @@ interface State {
 	pauseFile: (id: string) => void
 	resumeFile: (id: string) => void
 	restartUploading: (id: string) => void
-	setError: (id: string, error: 'UNKNOWN_ERROR' | 'SESSION_INIT_FAILED' | '404' | '403' | '401' | null) => void
+	setError: (id: string, error: 'UNKNOWN_ERROR' | 'SESSION_INIT_FAILED' | '404' | '403' | '401' | null) => void,
+	emptyQueue: () => void
 }
-// TODO: Uploaded files from one workspace should not be visible in another workspace
+
 export const useFileUploadingStorage = create<State>()(
     devtools(
         (set) => ({
@@ -113,7 +114,8 @@ export const useFileUploadingStorage = create<State>()(
 
                     return file
                 }),
-            }))
+            })),
+            emptyQueue: () => set(() => ({ queue: [] }))
         }),
         {
             name: 'file-uploadings-storage',
