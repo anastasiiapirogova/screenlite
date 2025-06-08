@@ -6,7 +6,7 @@ type PageHeaderProps = {
 
 export const ListPageHeader = ({ title, count, children }: PageHeaderProps) => {
     return (
-        <div className='bg-white border-b flex w-full justify-between items-center p-2'>
+        <div className='bg-white flex w-full justify-between items-center p-7 py-4'>
             <div className='flex items-center gap-3 text-2xl font-semibold'>
                 <h1>{ title }</h1>
                 {
