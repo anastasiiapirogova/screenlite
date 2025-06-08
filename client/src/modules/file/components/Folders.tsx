@@ -14,6 +14,7 @@ type FileListProps = {
 
 const SuspenseFolderList = ({ search, parentId }: FileListProps) => {
     const workspace = useWorkspace()
+	
     const { data: folders } = useSuspenseQuery(workspaceFoldersQuery({
         slug: workspace.slug,
         filters: {
@@ -24,22 +25,18 @@ const SuspenseFolderList = ({ search, parentId }: FileListProps) => {
     }))
 
     return (
-        <div>
-            {
-                folders.map(
-                    folder => (
-                        <FolderCard
-                            folder={ folder }
-                            key={ folder.id }
-                        />
-                    )
-                )
-            }
+        <div className='flex flex-wrap gap-5'>
+            { folders.map(folder => (
+                <FolderCard
+                    folder={ folder }
+                    key={ folder.id }
+                />
+            )) }
         </div>
     )
 }
 
-export const FolderList = ({ parentId }: { parentId?: string }) => {
+export const Folders = ({ parentId }: { parentId?: string }) => {
     const { searchTerm } = useRouterSearch()
     
     const debouncedSearchTerm = useDebounce(searchTerm, 300)

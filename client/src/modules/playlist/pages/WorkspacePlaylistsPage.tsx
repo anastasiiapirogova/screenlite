@@ -9,11 +9,7 @@ export const WorkspacePlaylistsPage = () => {
         <div className='flex gap-2 grow'>
             <div className='w-[325px] shrink-0'>
                 <LayoutBodyContainer>
-                    <ScrollArea verticalMargin={ 24 }>
-                        <div className='p-7'>
-                            <WorkspacePlaylistsPageSidebar />
-                        </div>
-                    </ScrollArea>
+                    <WorkspacePlaylistsPageSidebar />
                 </LayoutBodyContainer>
             </div>
             

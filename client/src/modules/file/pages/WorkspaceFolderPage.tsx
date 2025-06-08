@@ -5,7 +5,7 @@ import { useDeferredLoading } from '@shared/hooks/useDeferredLoading'
 import { WorkspaceFolderRequestResponse } from '../api/requests/workspaceFolderRequest'
 import { CreateFolderButton } from '../components/buttons/CreateFolderButton'
 import { Button } from '@shared/ui/buttons/Button'
-import { FolderList } from '../components/FolderList'
+import { Folders } from '../components/Folders'
 import { DeleteFoldersButton } from '../components/buttons/DeleteFoldersButton'
 
 const WorkspaceFolder = ({ data }: { data: WorkspaceFolderRequestResponse }) => {
@@ -24,7 +24,7 @@ const WorkspaceFolder = ({ data }: { data: WorkspaceFolderRequestResponse }) => 
             <div>
                 { data.folder.name }
             </div>
-            <FolderList parentId={ data.folder.id }/>
+            <Folders parentId={ data.folder.id }/>
         </div>
     )
 }
