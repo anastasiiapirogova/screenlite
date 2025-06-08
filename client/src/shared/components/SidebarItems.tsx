@@ -1,5 +1,5 @@
 import { cloneElement, createElement } from 'react'
-import { NavLink } from 'react-router'
+import { NavLink, useLocation } from 'react-router'
 import { TbChevronDown } from 'react-icons/tb'
 import { IconType } from 'react-icons/lib'
 import { Accordion } from 'radix-ui'
@@ -20,10 +20,15 @@ type SidebarItem = BaseItem & {
 }
 
 const SidebarGroupItem = ({ title, icon, children }: SidebarItem) => {
+    const location = useLocation()
+
+    const isAnyChildActive = children?.some(child => location.pathname === child.to)
+
     return (
         <Accordion.Root
             className='flex flex-col w-full gap-2'
             type="single"
+            defaultValue={ isAnyChildActive ? title : undefined }
             collapsible
         >
             <Accordion.Item value={ title }>
