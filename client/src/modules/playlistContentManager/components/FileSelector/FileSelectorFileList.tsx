@@ -8,10 +8,12 @@ type Props = {
 }
 
 export const FileSelectorFileList = ({ search }: Props) => {
-    const { slug } = useWorkspace()
+    const { id } = useWorkspace()
     const { data } = useSuspenseQuery(workspaceFilesQuery({
-        slug,
-        search,
+        id,
+        filters: {
+            search,
+        }
     }))
     const files = data.data
     const meta = data.meta

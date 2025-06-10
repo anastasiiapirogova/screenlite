@@ -11,6 +11,14 @@ const playlistNameSchema = z
     })
     .nonempty('PLAYLIST_NAME_IS_REQUIRED')
 
+export const copyPlaylistSchema = z.object({
+    playlistId: z.string(),
+})
+
+export const deletePlaylistsSchema = z.object({
+    playlistIds: z.array(z.string()).nonempty('PLAYLIST_IDS_ARE_REQUIRED'),
+})
+
 const playlistTypeSchema = z.enum(
     ['standard', 'nestable'], 
     {

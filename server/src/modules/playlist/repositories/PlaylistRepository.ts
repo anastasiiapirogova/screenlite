@@ -4,8 +4,14 @@ import { excludeFromArray } from '@utils/exclude.js'
 import { ComparablePlaylistItem } from 'types.js'
 import { CreatePlaylistData } from '../types.js'
 import { CreateScheduleData } from '@modules/playlistSchedule/types.js'
+import { PlaylistLayoutChangeService } from '../services/PlaylistLayoutChangeService.js'
 
 export class PlaylistRepository {
+    static TYPE = {
+        NESTABLE: 'nestable',
+        STANDARD: 'standard',
+    }
+
     static singularPlaylistIncludeClause: Prisma.PlaylistInclude = {
         layout: {
             include: {
@@ -259,6 +265,10 @@ export class PlaylistRepository {
             },
             include: PlaylistRepository.singularPlaylistIncludeClause
         })
+    }
+
+    static async updateLayoutPreservingItems(playlistId: string, newLayoutId: string) {
+        return await PlaylistLayoutChangeService.changeLayout(playlistId, newLayoutId)
     }
 
     static async update(id: string, data: Partial<Playlist>) {

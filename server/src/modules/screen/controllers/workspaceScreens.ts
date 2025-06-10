@@ -6,7 +6,7 @@ import { screenPolicy } from '../policies/screenPolicy.js'
 import { workspaceScreensSchema } from '../schemas/screenSchemas.js'
 import { getDeviceStatusClause } from '../utils/getDeviceStatusClause.js'
 
-export const getWorkspaceScreens = async (req: Request, res: Response) => {
+export const workspaceScreens = async (req: Request, res: Response) => {
     const user = req.user!
     const { slug } = req.params
 

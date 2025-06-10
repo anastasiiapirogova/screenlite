@@ -33,6 +33,9 @@ export class WorkspaceUserInvitationRepository {
                 email: email,
                 workspaceId: workspaceId ?? Prisma.skip,
                 status: WorkspaceUserInvitationRepository.STATUS.PENDING,
+                workspace: {
+                    deletedAt: null
+                }
             },
             include: {
                 invitor: {

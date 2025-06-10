@@ -1,12 +1,18 @@
 import { Request, Response } from 'express'
 import { createFolderSchema } from '../schemas/folderSchemas.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { WorkspaceRepository } from '@modules/workspace/repositories/WorkspaceRepository.js'
-import { filePolicy } from '../policies/filePolicy.js'
 import { FolderRepository } from '../repositories/FolderRepository.js'
+import { WORKSPACE_PERMISSIONS } from '@modules/workspace/constants/permissions.js'
+import { WorkspacePermissionService } from '@modules/workspace/services/WorkspacePermissionService.js'
 
 export const createFolder = async (req: Request, res: Response) => {
-    const user = req.user!
+    const workspace = req.workspace!
+
+    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.CREATE_FILES)
+
+    if (!allowed) {
+        return ResponseHandler.forbidden(res)
+    }
 
     const validation = await createFolderSchema.safeParseAsync(req.body)
 
@@ -14,27 +20,23 @@ export const createFolder = async (req: Request, res: Response) => {
         return ResponseHandler.zodError(req, res, validation.error.errors)
     }
 
-    const { workspaceId, name, parentId } = validation.data
+    const { name, parentId } = validation.data
 
-    const workspace = await WorkspaceRepository.getWithFolder(workspaceId, parentId)
+    const parentFolder = parentId ? await FolderRepository.getFolderById(parentId) : null
 
-    if (!workspace) {
-        return ResponseHandler.notFound(res)
+    if(parentFolder && parentFolder.deletedAt) {
+        return ResponseHandler.validationError(req, res, {
+            parentId: 'CANNOT_CREATE_IN_DELETED_FOLDER',
+        })
     }
-
-    const allowed = await filePolicy.canCreateFolders(user, workspace.id)
-
-    if (!allowed) {
-        return ResponseHandler.forbidden(res)
-    }
-
-    const parentFolderId = workspace.folders?.[0]?.id ?? null
 
     const folder = await FolderRepository.createFolder({
         name,
         workspaceId: workspace.id,
-        parentId: parentFolderId,
+        parentId: parentFolder?.id ?? null,
     })
 
-    return ResponseHandler.created(res, { folder })
+    return ResponseHandler.created(res, {
+        folder
+    })
 }

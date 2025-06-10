@@ -1,40 +1,31 @@
 import { Request, Response } from 'express'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { screenPolicy } from '../policies/screenPolicy.js'
-import { WorkspaceRepository } from '@modules/workspace/repositories/WorkspaceRepository.js'
 import { ScreenRepository } from '../repositories/ScreenRepository.js'
 import { createScreenSchema } from '../schemas/screenSchemas.js'
+import { WORKSPACE_PERMISSIONS } from '@modules/workspace/constants/permissions.js'
+import { WorkspacePermissionService } from '@modules/workspace/services/WorkspacePermissionService.js'
 
 export const createScreen = async (req: Request, res: Response) => {
-    const user = req.user!
-
+    const workspace = req.workspace!
     const validation = await createScreenSchema.safeParseAsync(req.body)
 
     if (!validation.success) {
         return ResponseHandler.zodError(req, res, validation.error.errors)
     }
 
-    const { workspaceId, name, type } = validation.data
+    const { name, type } = validation.data
 
-    const workspace = await WorkspaceRepository.getWithMember(workspaceId, user.id)
-
-    if (!workspace) {
-        return ResponseHandler.notFound(res)
-    }
-
-    const allowed = await screenPolicy.canCreateScreens(user, workspace.id)
-
-    if (!allowed) {
+    if (!WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.CREATE_SCREENS)) {
         return ResponseHandler.forbidden(res)
     }
 
-    const newScreen = await ScreenRepository.create({
+    const screen = await ScreenRepository.create({
         name,
         type,
         workspaceId: workspace.id
     })
 
     ResponseHandler.created(res, {
-        screen: newScreen
+        screen
     })
 }

@@ -5,7 +5,7 @@ import { WorkspaceFile } from '../../types'
 type WorkspaceFilesRequestResponse = PaginatedResponse<WorkspaceFile>
 
 export type WorkspaceFilesRequestData = {
-    slug: string
+    id: string
     filters: {
         search?: string | null
         deleted?: boolean
@@ -14,7 +14,7 @@ export type WorkspaceFilesRequestData = {
 }
 
 export const workspaceFilesRequest = async (data: WorkspaceFilesRequestData) => {
-    const response = await axios.get<WorkspaceFilesRequestResponse>(`/workspaces/${data.slug}/files`, {
+    const response = await axios.get<WorkspaceFilesRequestResponse>(`/workspaces/${data.id}/files`, {
         params: data.filters
     })
 

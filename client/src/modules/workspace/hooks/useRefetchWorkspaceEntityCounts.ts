@@ -7,7 +7,7 @@ export const useRefetchWorkspaceEntityCounts = () => {
     const workspace = useWorkspace()
 
     return () => {
-        const query = workspaceEntityCountsQuery(workspace.slug)
+        const query = workspaceEntityCountsQuery(workspace.id)
         
         queryClient.refetchQueries(query)
     }

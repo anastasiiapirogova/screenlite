@@ -97,4 +97,23 @@ export class ScreenRepository {
 
         return result?.workspaceId
     }
+
+    static async findManyByIdsAndWorkspaceId(screenIds: string[], workspaceId: string) {
+        return await prisma.screen.findMany({
+            where: {
+                id: {
+                    in: screenIds
+                },
+                workspaceId: workspaceId
+            },
+            select: {
+                id: true,
+                device: {
+                    select: {
+                        token: true
+                    }
+                }
+            }
+        })
+    }
 }

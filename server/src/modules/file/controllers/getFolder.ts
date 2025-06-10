@@ -31,7 +31,7 @@ export const getFolder = async (req: Request, res: Response) => {
         return ResponseHandler.forbidden(res)
     }
 
-    const parentFolderTree = await FolderRepository.getAllParentFolders(id)
+    const parentFolderTree = await FolderRepository.findFolderAncestorsById(id)
 
     return ResponseHandler.json(res, {
         folder,

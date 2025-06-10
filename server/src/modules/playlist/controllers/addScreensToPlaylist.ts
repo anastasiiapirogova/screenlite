@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import { prisma } from '../../../config/prisma.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { playlistPolicy } from '../policies/playlistPolicy.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { addScreensToPlaylistSchema } from '../schemas/playlistSchemas.js'
 import { addSendNewStateToDeviceJob } from '@modules/device/utils/addSendNewStateToDeviceJob.js'
+import { ScreenRepository } from '@modules/screen/repositories/ScreenRepository.js'
 
 export const addScreensToPlaylist = async (req: Request, res: Response) => {
     const user = req.user!
@@ -29,28 +29,13 @@ export const addScreensToPlaylist = async (req: Request, res: Response) => {
         return ResponseHandler.forbidden(res)
     }
 
-    if(playlist.type === 'nestable') {
+    if(playlist.type === PlaylistRepository.TYPE.NESTABLE) {
         return ResponseHandler.validationError(req, res, {
             playlistId: 'NESTABLE_PLAYLISTS_CANNOT_HAVE_SCREENS'
         })
     }
 
-    const screens = await prisma.screen.findMany({
-        where: {
-            id: {
-                in: screenIds
-            },
-            workspaceId: playlist.workspaceId
-        },
-        select: {
-            id: true,
-            device: {
-                select: {
-                    token: true
-                }
-            }
-        }
-    })
+    const screens = await ScreenRepository.findManyByIdsAndWorkspaceId(screenIds, playlist.workspaceId)
 
     const screensIds = screens.map(screen => screen.id)
 

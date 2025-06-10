@@ -4,7 +4,7 @@ import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { screenPolicy } from '../policies/screenPolicy.js'
 import { ScreenRepository } from '../repositories/ScreenRepository.js'
 
-export const getScreen = async (req: Request, res: Response) => {
+export const screen = async (req: Request, res: Response) => {
     const user = req.user!
     const { id } = req.params
 

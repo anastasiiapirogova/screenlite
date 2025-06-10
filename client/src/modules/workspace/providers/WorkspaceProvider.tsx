@@ -11,7 +11,7 @@ import { WorkspaceLoadingStatePage } from '../pages/WorkspaceLoadingStatePage'
 const WorkspaceProviderContent = () => {
     const params = useParams<{ workspaceSlug: string }>()
     const { data: workspace } = useSuspenseQuery(workspaceQuery(params.workspaceSlug!))
-    const { data: entityCounts } = useSuspenseQuery(workspaceEntityCountsQuery(params.workspaceSlug!))
+    const { data: entityCounts } = useSuspenseQuery(workspaceEntityCountsQuery(workspace.id))
 
     return (
         <WorkspaceContext.Provider value={ { ...workspace, _count: entityCounts } }>

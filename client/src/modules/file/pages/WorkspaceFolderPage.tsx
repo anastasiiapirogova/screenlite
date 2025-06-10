@@ -7,6 +7,7 @@ import { CreateFolderButton } from '../components/buttons/CreateFolderButton'
 import { Button } from '@shared/ui/buttons/Button'
 import { Folders } from '../components/Folders'
 import { DeleteFoldersButton } from '../components/buttons/DeleteFoldersButton'
+import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 
 const WorkspaceFolder = ({ data }: { data: WorkspaceFolderRequestResponse }) => {
     return (
@@ -31,9 +32,11 @@ const WorkspaceFolder = ({ data }: { data: WorkspaceFolderRequestResponse }) => 
 
 export const WorkspaceFolderPage = () => {
     const params = useParams<{ folderId: string }>()
+    const workspace = useWorkspace()
     
     const { data, isLoading, isSuccess } = useQuery(workspaceFolderQuery({
-        folderId: params.folderId!
+        folderId: params.folderId!,
+        workspaceId: workspace.id
     }))
 
     const deferredIsLoading = useDeferredLoading(isLoading, { delay: 0, minDuration: 500 })

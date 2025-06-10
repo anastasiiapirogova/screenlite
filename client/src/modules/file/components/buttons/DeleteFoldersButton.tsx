@@ -1,5 +1,6 @@
 import { ButtonElement } from '@/types'
 import { deleteFoldersRequest, DeleteFoldersRequestData } from '@modules/file/api/requests/deleteFoldersRequest'
+import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { useMutation } from '@tanstack/react-query'
 import { cloneElement } from 'react'
 
@@ -9,10 +10,13 @@ type Props = {
 }
 
 export const DeleteFoldersButton = ({ folderIds, children }: Props) => {
+    const workspace = useWorkspace()
+	
     const data: DeleteFoldersRequestData = {
-        folderIds: Array.isArray(folderIds) ? folderIds : [folderIds]
+        folderIds: Array.isArray(folderIds) ? folderIds : [folderIds],
+        workspaceId: workspace.id
     }
-    
+
     const { mutate, isPending } = useMutation({
         mutationFn: (data: DeleteFoldersRequestData) => deleteFoldersRequest(data),
         onSuccess: async (folder) => {

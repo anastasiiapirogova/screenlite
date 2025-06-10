@@ -4,7 +4,7 @@ import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { userInvitationsSchema } from '../schemas/workspaceUserInvitationSchemas.js'
 import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.js'
 
-export const getUserInvitations = async (req: Request, res: Response) => {
+export const userInvitations = async (req: Request, res: Response) => {
     const currentUser = req.user!
 
     const validation = userInvitationsSchema.safeParse(req.params)

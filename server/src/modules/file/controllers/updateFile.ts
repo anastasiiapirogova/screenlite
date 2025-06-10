@@ -38,7 +38,7 @@ export const updateFile = async (req: Request, res: Response) => {
 
     const { name, fileId, availabilityEndAt, availabilityStartAt, defaultDuration } = validation.data
 
-    const file = await FileRepository.getFileById(fileId)
+    const file = await FileRepository.findById(fileId)
 
     if (!file) {
         return ResponseHandler.notFound(res)
@@ -63,7 +63,7 @@ export const updateFile = async (req: Request, res: Response) => {
         defaultDuration,
     })
 
-    const updatedFile = await FileRepository.updateFile(fileId, updatedFields)
+    const updatedFile = await FileRepository.updateFileProperties(fileId, updatedFields)
 
     updatePlaylists(file, updatedFields)
 

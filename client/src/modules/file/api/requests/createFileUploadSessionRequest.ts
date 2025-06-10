@@ -14,7 +14,7 @@ type CreateFileUploadSessionRequestResponse = {
 }
 
 export const createFileUploadSessionRequest = async (data: CreateFileUploadSessionRequestData) => {
-    const response = await axios.post<CreateFileUploadSessionRequestResponse>('/files/createUploadSession', data)
+    const response = await axios.post<CreateFileUploadSessionRequestResponse>(`/workspaces/${data.workspaceId}/files/uploadSession`, data)
 
     return response.data.uploadSession
 }

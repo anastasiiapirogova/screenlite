@@ -33,7 +33,8 @@ export const userWorkspaces = async (req: Request, res: Response) => {
                 },
                 name: search ? {
                     contains: search,
-                } : Prisma.skip
+                } : Prisma.skip,
+                deletedAt: null
             },
             orderBy: {
                 name: 'asc'

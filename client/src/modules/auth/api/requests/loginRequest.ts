@@ -1,5 +1,5 @@
-import axios from '../../../../config/axios'
-import { User } from '../../../user/types'
+import axios from '@config/axios'
+import { User } from '@modules/user/types'
 
 export type LoginRequestData = {
 	email: string

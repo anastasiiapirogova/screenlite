@@ -1,6 +1,7 @@
 import { prisma } from '@config/prisma.js'
 import { addSendNewStateToDeviceJob } from '@modules/device/utils/addSendNewStateToDeviceJob.js'
 import { addPlaylistUpdatedJobs } from '../utils/addPlaylistUpdatedJobs.js'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 
 const handleUpdateNestablePlaylist = async (playlistId: string) => {
     const parentPlaylists = await prisma.playlistItem.findMany({
@@ -25,7 +26,6 @@ const handleUpdateNestablePlaylist = async (playlistId: string) => {
     addPlaylistUpdatedJobs(playlistIds)
 }
 
-// TODO: Skip updating devices state if the playlist was not active
 const handleUpdateStandardPlaylist = async (playlistId: string) => {
     const devices = await prisma.device.findMany({
         where: {
@@ -61,11 +61,11 @@ export const handlePlaylistUpdatedJob = async (playlistId: string) => {
         return
     }
 
-    if(playlist.type === 'nestable') {
+    if(playlist.type === PlaylistRepository.TYPE.NESTABLE) {
         await handleUpdateNestablePlaylist(playlistId)
     }
 
-    if(playlist.type === 'standard') {
+    if(playlist.type === PlaylistRepository.TYPE.STANDARD) {
         await handleUpdateStandardPlaylist(playlistId)
     }
 }

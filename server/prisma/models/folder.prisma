@@ -1,17 +1,21 @@
 model Folder {
-    id          String    @id @default(uuid())
-    name        String
-    workspaceId String
-    parentId    String?
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    deletedAt   DateTime?
+    id                     String    @id @default(uuid())
+    name                   String
+    workspaceId            String
+    parentId               String?
+    parentIdBeforeDeletion String?
+    createdAt              DateTime  @default(now())
+    updatedAt              DateTime  @updatedAt
+    deletedAt              DateTime?
 
-    workspace          Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-    parent             Folder?             @relation("FolderToFolder", fields: [parentId], references: [id], onDelete: Cascade)
-    subfolders         Folder[]            @relation("FolderToFolder")
-    files              File[]
-    fileUploadSessions FileUploadSession[]
+    workspace            Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    parent               Folder?             @relation("FolderToFolder", fields: [parentId], references: [id], onDelete: Cascade)
+    parentBeforeDeletion Folder?             @relation("FolderToFolderBeforeDeletion", fields: [parentIdBeforeDeletion], references: [id], onDelete: SetNull)
+    subfolders           Folder[]            @relation("FolderToFolder")
+    deletedSubfolders    Folder[]            @relation("FolderToFolderBeforeDeletion")
+    files                File[]              @relation("Files")
+    deletedFiles         File[]              @relation("DeletedFiles")
+    fileUploadSessions   FileUploadSession[]
 
     @@index([parentId])
 }

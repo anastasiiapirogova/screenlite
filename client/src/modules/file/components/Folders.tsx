@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { Suspense } from 'react'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { workspaceFoldersQuery } from '../api/queries/workspaceFoldersQuery'
-import { FolderCard } from './FolderCard'
+import { DraggableFolderCard } from './FolderCard'
 
 type FileListProps = {
 	search: string
@@ -16,7 +16,7 @@ const SuspenseFolderList = ({ search, parentId }: FileListProps) => {
     const workspace = useWorkspace()
 	
     const { data: folders } = useSuspenseQuery(workspaceFoldersQuery({
-        slug: workspace.slug,
+        id: workspace.id,
         filters: {
             search,
             deleted: false,
@@ -27,7 +27,7 @@ const SuspenseFolderList = ({ search, parentId }: FileListProps) => {
     return (
         <div className='flex flex-wrap gap-5'>
             { folders.map(folder => (
-                <FolderCard
+                <DraggableFolderCard
                     folder={ folder }
                     key={ folder.id }
                 />

@@ -1,11 +1,13 @@
-import { playlistQueue } from 'bullmq/queues/playlistQueue.js'
+import { playlistQueue, PlaylistQueueJobData } from 'bullmq/queues/playlistQueue.js'
 
-export const addPlaylistUpdatedJob = async (playlistId: string) => {
+export const addPlaylistUpdatedJob = async (data: PlaylistQueueJobData) => {
+    const deduplicationId = `playlistUpdated-${data.playlistId}`
+
     await playlistQueue.add(
         'playlistUpdated',
-        { playlistId },
+        data,
         {
-            deduplication: { id: `playlistUpdated-${playlistId}` },
+            deduplication: { id: deduplicationId },
         },
     )
 }

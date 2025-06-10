@@ -59,6 +59,7 @@ export const handleUploadNextChunk = async (
     const uploadData: UploadFilePartRequestData = {
         filePart: chunk,
         sessionId: session.id,
+        workspaceId: session.workspaceId,
         onProgress: (progress: AxiosProgressEvent) => updateFileUploadingProgress(id, progress.loaded),
         abortController: newController
     }

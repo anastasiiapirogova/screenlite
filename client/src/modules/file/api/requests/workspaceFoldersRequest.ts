@@ -2,7 +2,7 @@ import axios from '@config/axios'
 import { Folder } from '@modules/file/types'
 
 export type WorkspaceFoldersRequestData = {
-    slug: string
+    id: string
     filters: {
         search?: string | null
         deleted: boolean
@@ -15,7 +15,7 @@ type WorkspaceFoldersRequestResponse = {
 }
 
 export const workspaceFoldersRequest = async (data: WorkspaceFoldersRequestData) => {
-    const response = await axios.get<WorkspaceFoldersRequestResponse>(`/workspaces/${data.slug}/folders`, {
+    const response = await axios.get<WorkspaceFoldersRequestResponse>(`/workspaces/${data.id}/folders`, {
         params: data.filters
     })
 

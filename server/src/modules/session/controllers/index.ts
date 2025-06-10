@@ -1,3 +1,15 @@
-export * from './getUserSessions.js'
-export * from './terminateSession.js'
-export * from './terminateAllSessions.js'
+import { getUserSessions } from './getUserSessions.js'
+import { terminateSession } from './terminateSession.js'
+import { terminateAllSessions } from './terminateAllSessions.js'
+
+export {
+    getUserSessions,
+    terminateSession,
+    terminateAllSessions
+}
+
+export default {
+    getUserSessions,
+    terminateSession,
+    terminateAllSessions
+}

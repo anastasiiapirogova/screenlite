@@ -5,12 +5,8 @@ import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { updatePlaylistPlaylistLayoutSchema } from '../schemas/playlistSchemas.js'
 import { PlaylistLayoutRepository } from '@modules/playlistLayout/repositories/PlaylistLayoutRepository.js'
 import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.js'
+import { addPlaylistItemsUpdatedJob } from '../utils/addPlaylistItemsUpdatedJob.js'
 
-// TODO: When changing the layout, it might be better to avoid deleting all playlist items. 
-// Instead, we could retain items that have a layout section name matching a section in the 
-// new layout and associate these items with their corresponding sections. Only items with 
-// no matching section in the new layout should be deleted. This would allow users to change 
-// the layout without losing all their playlist items.
 export const changePlaylistLayout = async (req: Request, res: Response) => {
     const user = req.user!
     const data = req.body
@@ -52,11 +48,17 @@ export const changePlaylistLayout = async (req: Request, res: Response) => {
         })
     }
 
-    const updatedPlaylist = await PlaylistRepository.updateLayout(playlistId, playlistLayoutId)
+    try {
+        const updatedPlaylist = await PlaylistRepository.updateLayoutPreservingItems(playlistId, playlistLayoutId)
+        
+        addPlaylistItemsUpdatedJob(playlistId)
+        addPlaylistUpdatedJob({ playlistId })
 
-    addPlaylistUpdatedJob(playlistId)
-
-    ResponseHandler.json(res, {
-        playlist: updatedPlaylist
-    })
+        ResponseHandler.json(res, {
+            playlist: updatedPlaylist
+        })
+    } catch (error) {
+        console.error('Error updating playlist layout:', error)
+        return ResponseHandler.serverError(res)
+    }
 }

@@ -1,18 +1,14 @@
 import { Request, Response } from 'express'
-import { z } from 'zod'
 import { playlistPolicy } from '../policies/playlistPolicy.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { asyncFilter } from '@utils/asyncFilter.js'
-
-const schema = z.object({
-    playlistIds: z.array(z.string().nonempty('PLAYLIST_ID_IS_REQUIRED')),
-})
+import { deletePlaylistsSchema } from '../schemas/playlistSchemas.js'
 
 export const forceDeletePlaylists = async (req: Request, res: Response) => {
     const user = req.user!
 
-    const validation = await schema.safeParseAsync(req.body)
+    const validation = await deletePlaylistsSchema.safeParseAsync(req.body)
 
     if (!validation.success) {
         return ResponseHandler.zodError(req, res, validation.error.errors)

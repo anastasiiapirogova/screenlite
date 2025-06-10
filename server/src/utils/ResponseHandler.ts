@@ -23,6 +23,10 @@ export class ResponseHandler {
         res.status(500).send(message || 'Internal Server Error')
     }
 
+    static notModified(res: Response) {
+        res.status(304).send()
+    }
+
     static empty(res: Response) {
         res.status(204).send()
     }
@@ -35,8 +39,8 @@ export class ResponseHandler {
         res.status(403).send(message || 'Forbidden')
     }
 
-    static notFound(res: Response) {
-        res.status(404).send('Not Found')
+    static notFound(res: Response, message?: string) {
+        res.status(404).send(message || 'Not Found')
     }
 
     static unauthorized(res: Response) {

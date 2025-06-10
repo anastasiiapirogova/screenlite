@@ -1,14 +1,8 @@
 import { prisma } from '@config/prisma.js'
 import { AddMemberData } from '../types.js'
-import { MemberRole } from '../types.js'
+import { WORKSPACE_ROLES } from '@modules/workspace/constants/permissions.js'
 
 export class MemberRepository {
-    static ROLES: Record<string, MemberRole> = {
-        OWNER: 'owner',
-        ADMIN: 'admin',
-        MEMBER: 'member',
-    }
-
     static async removeMember(workspaceId: string, userId: string) {
         return await prisma.userWorkspace.deleteMany({
             where: {
@@ -27,7 +21,7 @@ export class MemberRepository {
                 userId,
                 workspaceInvitationId,
                 permissions,
-                role: role ?? MemberRepository.ROLES.MEMBER,
+                role: role ?? WORKSPACE_ROLES.MEMBER,
             },
         })
     }

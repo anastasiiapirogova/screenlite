@@ -12,7 +12,7 @@ type CreateFolderRequestResponse = {
 }
 
 export const createFolderRequest = async (data: CreateFolderRequestData) => {
-    const response = await axios.post<CreateFolderRequestResponse>('/files/createFolder', data)
+    const response = await axios.post<CreateFolderRequestResponse>(`/workspaces/${data.workspaceId}/folders`, data)
 
     return response.data.folder
 }

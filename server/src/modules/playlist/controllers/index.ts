@@ -1,13 +1,45 @@
-export { updatePlaylistItems } from '@modules/playlist/controllers/updatePlaylistItems.js'
-export { restorePlaylists } from '@modules/playlist/controllers/restorePlaylists.js'
-export { copyPlaylist } from '@modules/playlist/controllers/copyPlaylist.js'
-export { updatePlaylist } from '@modules/playlist/controllers/updatePlaylist.js'
-export { changePlaylistLayout } from '@modules/playlist/controllers/changePlaylistLayout.js'
-export { getWorkspacePlaylists } from '@modules/playlist/controllers/getWorkspacePlaylists.js'
-export { createPlaylist } from '@modules/playlist/controllers/createPlaylist.js'
-export { getPlaylist } from '@modules/playlist/controllers/getPlaylist.js'
-export { addScreensToPlaylist } from '@modules/playlist/controllers/addScreensToPlaylist.js'
-export { removeScreensFromPlaylist } from '@modules/playlist/controllers/removeScreensFromPlaylist.js'
-export { getPlaylistScreens } from '@modules/playlist/controllers/getPlaylistScreens.js'
-export { deletePlaylists } from '@modules/playlist/controllers/deletePlaylists.js'
-export { getPlaylistItems } from '@modules/playlist/controllers/getPlaylistItems.js'
+import { updatePlaylistItems } from './updatePlaylistItems.js'
+import { restorePlaylists } from './restorePlaylists.js'
+import { copyPlaylist } from './copyPlaylist.js'
+import { updatePlaylist } from './updatePlaylist.js'
+import { changePlaylistLayout } from './changePlaylistLayout.js'
+import { getWorkspacePlaylists } from './getWorkspacePlaylists.js'
+import { createPlaylist } from './createPlaylist.js'
+import { getPlaylist } from './getPlaylist.js'
+import { addScreensToPlaylist } from './addScreensToPlaylist.js'
+import { removeScreensFromPlaylist } from './removeScreensFromPlaylist.js'
+import { getPlaylistScreens } from './getPlaylistScreens.js'
+import { softDeletePlaylists } from './softDeletePlaylists.js'
+import { getPlaylistItems } from './getPlaylistItems.js'
+
+export {
+    updatePlaylistItems,
+    restorePlaylists,
+    copyPlaylist,
+    updatePlaylist,
+    changePlaylistLayout,
+    getWorkspacePlaylists,
+    createPlaylist,
+    getPlaylist,
+    addScreensToPlaylist,
+    removeScreensFromPlaylist,
+    getPlaylistScreens,
+    softDeletePlaylists,
+    getPlaylistItems
+}
+
+export default {
+    updatePlaylistItems,
+    restorePlaylists,
+    copyPlaylist,
+    updatePlaylist,
+    changePlaylistLayout,
+    getWorkspacePlaylists,
+    createPlaylist,
+    getPlaylist,
+    addScreensToPlaylist,
+    removeScreensFromPlaylist,
+    getPlaylistScreens,
+    softDeletePlaylists,
+    getPlaylistItems
+}

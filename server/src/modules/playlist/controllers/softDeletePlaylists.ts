@@ -1,20 +1,16 @@
 import { Request, Response } from 'express'
 import { prisma } from '../../../config/prisma.js'
-import { z } from 'zod'
 import { asyncFilter } from '../../../utils/asyncFilter.js'
 import { playlistPolicy } from '../policies/playlistPolicy.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { addPlaylistUpdatedJobs } from '../utils/addPlaylistUpdatedJobs.js'
+import { deletePlaylistsSchema } from '../schemas/playlistSchemas.js'
 
-const schema = z.object({
-    playlistIds: z.array(z.string().nonempty('PLAYLIST_ID_IS_REQUIRED')),
-})
-
-export const deletePlaylists = async (req: Request, res: Response) => {
+export const softDeletePlaylists = async (req: Request, res: Response) => {
     const user = req.user!
 
-    const validation = await schema.safeParseAsync(req.body)
+    const validation = await deletePlaylistsSchema.safeParseAsync(req.body)
 
     if (!validation.success) {
         return ResponseHandler.zodError(req, res, validation.error.errors)

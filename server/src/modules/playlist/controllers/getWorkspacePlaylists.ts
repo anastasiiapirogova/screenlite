@@ -6,6 +6,7 @@ import { playlistPolicy } from '../policies/playlistPolicy.js'
 import { exclude } from '@utils/exclude.js'
 import { getPlaylistStatusClause } from '../utils/getPlaylistStatusClause.js'
 import { getWorkspacePlaylistsSchema } from '../schemas/playlistSchemas.js'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 
 export const getWorkspacePlaylists = async (req: Request, res: Response) => {
     const user = req.user!
@@ -105,7 +106,7 @@ export const getWorkspacePlaylists = async (req: Request, res: Response) => {
             _count: {
                 screens: playlist._count.screens,
                 items: playlist._count.items,
-                parentPlaylists: playlist.type === 'nestable' ? playlist.parentItems.length : undefined,
+                parentPlaylists: playlist.type === PlaylistRepository.TYPE.NESTABLE ? playlist.parentItems.length : undefined,
             }
         }
     })

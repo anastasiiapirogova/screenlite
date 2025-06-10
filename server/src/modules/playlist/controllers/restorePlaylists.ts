@@ -63,7 +63,7 @@ export const restorePlaylists = async (req: Request, res: Response) => {
         .map(playlist => playlist.id)
 
     for (const id of publishedPlaylistIds) {
-        addPlaylistUpdatedJob(id)
+        addPlaylistUpdatedJob({ playlistId: id })
     }
 
     ResponseHandler.json(res, {

@@ -1,32 +1,34 @@
 model File {
-    id                  String    @id @default(uuid())
-    workspaceId         String
-    name                String
-    extension           String
-    mimeType            String
-    previewPath         String?
-    size                BigInt
-    type                String
-    path                String    @unique
-    width               Int?
-    height              Int?
-    duration            Int?
+    id                     String    @id @default(uuid())
+    workspaceId            String
+    name                   String
+    extension              String
+    mimeType               String
+    previewPath            String?
+    size                   BigInt
+    type                   String
+    path                   String    @unique
+    width                  Int?
+    height                 Int?
+    duration               Int?
     // TODO: Implement defaultDuration
-    defaultDuration     Int?
-    processingStatus    String    @default("pending")
-    md5                 String?
-    folderId            String?
-    availabilityStartAt DateTime?
-    availabilityEndAt   DateTime?
-    createdAt           DateTime  @default(now())
-    updatedAt           DateTime  @updatedAt
-    deletedAt           DateTime?
-    uploaderId          String?
+    defaultDuration        Int?
+    processingStatus       String    @default("pending")
+    md5                    String?
+    folderId               String?
+    folderIdBeforeDeletion String?
+    availabilityStartAt    DateTime?
+    availabilityEndAt      DateTime?
+    createdAt              DateTime  @default(now())
+    updatedAt              DateTime  @updatedAt
+    deletedAt              DateTime?
+    uploaderId             String?
 
-    folder        Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
-    workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-    uploader      User?          @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
-    playlistItems PlaylistItem[]
+    folder               Folder?        @relation("Files", fields: [folderId], references: [id], onDelete: Cascade)
+    folderBeforeDeletion Folder?        @relation("DeletedFiles", fields: [folderIdBeforeDeletion], references: [id], onDelete: SetNull)
+    workspace            Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    uploader             User?          @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
+    playlistItems        PlaylistItem[]
 
     @@index([workspaceId])
     @@index([folderId])

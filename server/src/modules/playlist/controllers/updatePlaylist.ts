@@ -5,7 +5,7 @@ import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { updatePlaylistSchema } from '../schemas/playlistSchemas.js'
 import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.js'
-import { getModifiedPlaylistFields } from '../utils/get.js'
+import { getModifiedPlaylistFields } from '../utils/getModifiedPlaylistFields.js'
 
 const doesUpdateAffectScreens = (deletedAt: Date | null, updatedFields: Record<string, unknown>) => {
     if(deletedAt) return false
@@ -63,7 +63,7 @@ export const updatePlaylist = async (req: Request, res: Response) => {
     const updatedPlaylist = await PlaylistRepository.update(playlistId, modifiedFields)
 
     if(doesUpdateAffectScreens(playlist.deletedAt, modifiedFields)) {
-        addPlaylistUpdatedJob(playlist.id)
+        addPlaylistUpdatedJob({ playlistId: playlist.id })
     }
 
     ResponseHandler.json(res, {

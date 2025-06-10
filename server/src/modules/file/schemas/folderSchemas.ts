@@ -13,13 +13,24 @@ export const updateFolderSchema = z.object({
     folderId: z.string().nonempty('FOLDER_ID_IS_REQUIRED'),
 })
 
-export const moveToFolderSchema = z.object({
+export const moveFolderSchema = z.object({
     folderId: z.string().nullable(),
-    fileIds: z.array(z.string()).optional(),
-    folderIds: z.array(z.string()).optional(),
+    folderIds: z.array(z.string()),
+    workspaceId: z.string().nonempty('WORKSPACE_ID_IS_REQUIRED'),
+})
+
+export const moveFilesSchema = z.object({
+    folderId: z.string().nullable(),
+    fileIds: z.array(z.string()),
     workspaceId: z.string().nonempty('WORKSPACE_ID_IS_REQUIRED'),
 })
 
 export const deleteFoldersSchema = z.object({
     folderIds: z.array(z.string().nonempty('FOLDER_ID_IS_REQUIRED')),
+})
+
+export const getWorkspaceFoldersSchema = z.object({
+    search: z.string().optional(),
+    deleted: z.enum(['true', 'false']).transform((value) => value === 'true').optional(),
+    parentId: z.string().nullable().optional(),
 })

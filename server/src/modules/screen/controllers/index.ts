@@ -1,7 +1,17 @@
-export { getWorkspaceScreens } from '@modules/screen/controllers/getWorkspaceScreens.js'
-export { createScreen } from '@modules/screen/controllers/createScreen.js'
-export { getScreen } from '@modules/screen/controllers/getScreen.js'
-export { connectDevice } from '@modules/screen/controllers/connectDevice.js'
-export { disconnectDevice } from '@modules/screen/controllers/disconnectDevice.js'
-export { getScreenPlaylists } from '@modules/screen/controllers/getScreenPlaylists.js'
-export { deleteScreens } from '@modules/screen/controllers/deleteScreens.js'
+import { workspaceScreens } from './workspaceScreens.js'
+import { createScreen } from './createScreen.js'
+import { screen } from './screen.js'
+import { connectDevice } from './connectDevice.js'
+import { disconnectDevice } from './disconnectDevice.js'
+import { screenPlaylists } from './screenPlaylists.js'
+import { deleteScreens } from './deleteScreens.js'
+
+export default {
+    workspaceScreens,
+    createScreen,
+    screen,
+    connectDevice,
+    disconnectDevice,
+    screenPlaylists,
+    deleteScreens
+}

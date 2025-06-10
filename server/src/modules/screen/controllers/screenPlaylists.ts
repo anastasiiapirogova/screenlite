@@ -3,7 +3,7 @@ import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { playlistPolicy } from '@modules/playlist/policies/playlistPolicy.js'
 import { ScreenRepository } from '../repositories/ScreenRepository.js'
 
-export const getScreenPlaylists = async (req: Request, res: Response) => {
+export const screenPlaylists = async (req: Request, res: Response) => {
     const user = req.user!
     const { id } = req.params
 

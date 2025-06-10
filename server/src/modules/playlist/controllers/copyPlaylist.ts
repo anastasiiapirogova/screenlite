@@ -3,7 +3,7 @@ import { prisma } from '../../../config/prisma.js'
 import { exclude } from '../../../utils/exclude.js'
 import { playlistPolicy } from '../policies/playlistPolicy.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { copyPlaylistSchema } from '../schemas/copyPlaylistSchema.js'
+import { copyPlaylistSchema } from '../schemas/playlistSchemas.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 
 export const copyPlaylist = async (req: Request, res: Response) => {

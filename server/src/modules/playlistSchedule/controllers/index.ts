@@ -1,3 +1,15 @@
-export { createPlaylistSchedule } from '@modules/playlistSchedule/controllers/createPlaylistSchedule.js'
-export { updatePlaylistSchedule } from '@modules/playlistSchedule/controllers/updatePlaylistSchedule.js'
-export { deletePlaylistSchedule } from '@modules/playlistSchedule/controllers/deletePlaylistSchedule.js'
+import { createPlaylistSchedule } from './createPlaylistSchedule.js'
+import { updatePlaylistSchedule } from './updatePlaylistSchedule.js'
+import { deletePlaylistSchedule } from './deletePlaylistSchedule.js'
+
+export {
+    createPlaylistSchedule,
+    updatePlaylistSchedule,
+    deletePlaylistSchedule
+}
+
+export default {
+    createPlaylistSchedule,
+    updatePlaylistSchedule,
+    deletePlaylistSchedule
+}

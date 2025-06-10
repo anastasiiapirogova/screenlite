@@ -1,6 +1,24 @@
-export { getWorkspacePlaylistLayouts } from '@modules/playlistLayout/controllers/getWorkspacePlaylistLayouts.js'
-export { getPlaylistLayout } from '@modules/playlistLayout/controllers/getPlaylistLayout.js'
-export { getPlaylistLayoutPlaylists } from '@modules/playlistLayout/controllers/getPlaylistLayoutPlaylists.js'
-export { createPlaylistLayout } from '@modules/playlistLayout/controllers/createPlaylistLayout.js'
-export { updatePlaylistLayout } from '@modules/playlistLayout/controllers/updatePlaylistLayout.js'
-export { deletePlaylistLayout } from '@modules/playlistLayout/controllers/deletePlaylistLayout.js'
+import { getWorkspacePlaylistLayouts } from './getWorkspacePlaylistLayouts.js'
+import { getPlaylistLayout } from './getPlaylistLayout.js'
+import { getPlaylistLayoutPlaylists } from './getPlaylistLayoutPlaylists.js'
+import { createPlaylistLayout } from './createPlaylistLayout.js'
+import { updatePlaylistLayout } from './updatePlaylistLayout.js'
+import { deletePlaylistLayout } from './deletePlaylistLayout.js'
+
+export {
+    getWorkspacePlaylistLayouts,
+    getPlaylistLayout,
+    getPlaylistLayoutPlaylists,
+    createPlaylistLayout,
+    updatePlaylistLayout,
+    deletePlaylistLayout
+}
+
+export default {
+    getWorkspacePlaylistLayouts,
+    getPlaylistLayout,
+    getPlaylistLayoutPlaylists,
+    createPlaylistLayout,
+    updatePlaylistLayout,
+    deletePlaylistLayout
+}

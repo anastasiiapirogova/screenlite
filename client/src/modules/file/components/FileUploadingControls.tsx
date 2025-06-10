@@ -63,7 +63,7 @@ export const FileUploadingControls = ({ data }: { data: FileUploadingData }) => 
 
         pauseFile(id)
 
-        const success = await cancelFileUploading(session.id)
+        const success = await cancelFileUploading(session.id, session.workspaceId)
 
         if (success) {
             removeFile(id)

@@ -45,7 +45,9 @@ export const createPlaylistSchedule = async (req: Request, res: Response) => {
         weekdays,
     })
 
-    addPlaylistUpdatedJob(updatedPlaylist.id)
+    if(updatedPlaylist.isPublished && !updatedPlaylist.deletedAt) {
+        addPlaylistUpdatedJob({ playlistId: updatedPlaylist.id })
+    }
 
     ResponseHandler.created(res, {
         schedules: updatedPlaylist.schedules

@@ -1,3 +1,4 @@
+import { paginationSchema } from 'schemas/paginationSchema.js'
 import { z } from 'zod'
 
 export const fileNameSchema = z
@@ -45,4 +46,14 @@ export const updateFileSchema = z.object({
 }).refine(validateEndAfterStart, {
     message: 'AVAILABILITY_END_AT_BEFORE_START_AT',
     path: ['availabilityEndAt'],
+})
+
+export const deleteFilesSchema = z.object({
+    fileIds: z.array(z.string().nonempty('FILE_ID_IS_REQUIRED')),
+})
+
+export const getWorkspaceFilesSchema = paginationSchema.extend({
+    search: z.string().optional(),
+    folderId: z.string().nullable().optional(),
+    deleted: z.enum(['true', 'false']).transform((value) => value === 'true').optional(),
 })

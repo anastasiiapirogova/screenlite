@@ -1,6 +1,6 @@
+import axios from '@config/axios'
+import { User } from '@modules/user/types'
 import { isAxiosError } from 'axios'
-import axios from '../../../../config/axios'
-import { User } from '../../../user/types'
 
 type CurrentUserRequestResponse = {
 	user: User

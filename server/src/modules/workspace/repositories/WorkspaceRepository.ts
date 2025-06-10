@@ -1,7 +1,7 @@
 import { prisma } from '@config/prisma.js'
 import { getRedisClient, redisKeys } from '@config/redis.js'
-import { WorkspaceUserInvitationPolicy } from '@modules/workspaceUserInvitation/policies/WorkspaceUserInvitationPolicy.js'
 import { UpdateWorkspaceData } from '../types.js'
+import { WORKSPACE_ROLES } from '../constants/permissions.js'
 
 export type ScreenStatusCount = { online: number, offline: number, notConnected: number }
 
@@ -20,13 +20,10 @@ type ScreenStatusCountRawQueryReturn = { online: string, offline: string, notCon
 export class WorkspaceRepository {
     static STATUS = {
         ACTIVE: 'active',
+        DELETED: 'deleted'
     }
 
     static DEFAULT_STATUS = WorkspaceRepository.STATUS.ACTIVE
-
-    static PERMISSIONS = {
-        ...WorkspaceUserInvitationPolicy.PERMISSIONS,
-    }
 
     static async create(name: string, slug: string, userId: string) {
         return await prisma.workspace.create({
@@ -36,6 +33,7 @@ export class WorkspaceRepository {
                 status: WorkspaceRepository.DEFAULT_STATUS,
                 members: {
                     create: {
+                        role: WORKSPACE_ROLES.OWNER,
                         user: {
                             connect: {
                                 id: userId
@@ -44,6 +42,15 @@ export class WorkspaceRepository {
                     }
                 }
             },
+            include: {
+                members: {
+                    where: {
+                        user: {
+                            id: userId,
+                        },
+                    }
+                }
+            }
         })
     }
 
@@ -65,6 +72,24 @@ export class WorkspaceRepository {
         })
     }
 
+    static async findBySlugWithMember(slug: string, userId: string) {
+        return await prisma.workspace.findFirst({
+            where: {
+                slug: {
+                    equals: slug,
+                    mode: 'insensitive',
+                },
+            },
+            include: {
+                members: {
+                    where: {
+                        userId
+                    }
+                },
+            }
+        })
+    }
+
     static async exists(workspaceId: string) {
         return await prisma.workspace.count({
             where: {
@@ -74,20 +99,29 @@ export class WorkspaceRepository {
     }
 
     static async getWithMember(workspaceId: string, userId: string) {
-        return await prisma.workspace.findUnique({
+        return await prisma.workspace.findFirst({
             where: {
-                id: workspaceId,
+                id: workspaceId
             },
             include: {
                 members: {
                     where: {
-                        user: {
-                            id: userId,
-                        },
+                        userId
                     }
                 }
             }
         })
+    }
+
+    static async getMember(workspaceId: string, userId: string) {
+        const result = await prisma.userWorkspace.findFirst({
+            where: {
+                workspaceId,
+                userId
+            }
+        })
+
+        return result || undefined
     }
 
     static async getWithFolder(workspaceId: string, folderId?: string | null) {
@@ -103,6 +137,23 @@ export class WorkspaceRepository {
                         }
                     }
                 } : {})
+            }
+        })
+    }
+
+    static async getWithFolders(workspaceId: string, folderIds: string[]) {
+        return await prisma.workspace.findUnique({
+            where: {
+                id: workspaceId
+            },
+            include: {
+                folders: {
+                    where: {
+                        id: {
+                            in: folderIds
+                        }
+                    }
+                }
             }
         })
     }
@@ -200,5 +251,23 @@ export class WorkspaceRepository {
         redis.setex(cacheKey, 30, JSON.stringify(result))
 
         return result
+    }
+
+    static async softDelete(workspaceId: string) {
+        return await prisma.workspace.update({
+            where: { id: workspaceId },
+            data: {
+                status: WorkspaceRepository.STATUS.DELETED,
+                deletedAt: new Date()
+            }
+        })
+    }
+
+    static async findById(id: string) {
+        return prisma.workspace.findUnique({
+            where: {
+                id
+            }
+        })
     }
 }

@@ -13,11 +13,7 @@ export class FolderRepository {
             data,
         })
     }
-    static async getFolderById(id: string | null) {
-        if (!id) {
-            return null
-        }
-
+    static async getFolderById(id: string) {
         return await prisma.folder.findUnique({
             where: { id },
         })
@@ -27,11 +23,7 @@ export class FolderRepository {
             where: { id },
         })
     }
-    static async getFoldersForFolderMove(folderIds?: string[]) {
-        if (!folderIds || !folderIds.length) {
-            return []
-        }
-
+    static async findFoldersByIdsWithWorkspace(folderIds: string[]) {
         return await prisma.folder.findMany({
             where: {
                 id: {
@@ -45,11 +37,7 @@ export class FolderRepository {
             },
         })
     }
-    static async updateFoldersParentId(folderIds: string[], parentId: string | null) {
-        if(!folderIds.length) {
-            return []
-        }
-
+    static async updateFoldersParent(folderIds: string[], parentId: string | null) {
         return await prisma.folder.updateManyAndReturn({
             where: {
                 id: {
@@ -59,7 +47,7 @@ export class FolderRepository {
             data: { parentId },
         })
     }
-    static async getAllSubFolders(folderId: string): Promise<FolderTreeResult[]> {
+    static async findFolderSubtreeById(folderId: string): Promise<FolderTreeResult[]> {
         return await prisma.$queryRaw`
             WITH RECURSIVE FolderTree AS (
                 SELECT id, "parentId"
@@ -76,7 +64,7 @@ export class FolderRepository {
             WHERE id != ${folderId};
         `
     }
-    static async getAllParentFolders(folderId: string): Promise<ParentFolderTreeResult[]> {
+    static async findFolderAncestorsById(folderId: string): Promise<ParentFolderTreeResult[]> {
         return await prisma.$queryRaw`
             WITH RECURSIVE ParentTree AS (
                 SELECT "id", "name", "parentId"
@@ -92,5 +80,19 @@ export class FolderRepository {
             SELECT * FROM ParentTree
             WHERE id != ${folderId};
         `
+    }
+    static async findActiveFoldersByIds(folderIds: string[]) {
+        return await prisma.folder.findMany({
+            where: {
+                id: {
+                    in: folderIds
+                },
+                deletedAt: null
+            },
+            select: {
+                id: true,
+                workspaceId: true
+            }
+        })
     }
 }

@@ -1,5 +1,5 @@
 import { useRouterSearch } from '@shared/hooks/useRouterSearch'
-import { FileCard } from './FileCard'
+import { DraggableFileCard } from './FileCard'
 import { useDebounce } from '@uidotdev/usehooks'
 import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -14,7 +14,7 @@ interface FileListProps {
 const SuspenseFileList = ({ search }: FileListProps) => {
     const workspace = useWorkspace()
     const { data } = useSuspenseQuery(workspaceFilesQuery({
-        slug: workspace.slug,
+        id: workspace.id,
         filters: {
             search,
             deleted: false,
@@ -29,7 +29,7 @@ const SuspenseFileList = ({ search }: FileListProps) => {
             {
                 files.map(
                     file => (
-                        <FileCard
+                        <DraggableFileCard
                             file={ file }
                             key={ file.id }
                         />
