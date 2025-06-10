@@ -12,7 +12,6 @@ services:
       - /app/src/generated/prisma
     environment:
       - NODE_ENV=development
-      - BACKEND_VERSION=0.0.1
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/screenlite
       - REDIS_HOST=redis
       - REDIS_PORT=6379
