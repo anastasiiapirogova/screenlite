@@ -1,5 +1,5 @@
-import axios from '../../../../config/axios'
-import { FileUploadSession } from '../../types'
+import axios from '@config/axios'
+import { FileUploadSession } from '@modules/file/types'
 
 export type CreateFileUploadSessionRequestData = {
 	workspaceId: string
