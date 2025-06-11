@@ -23,7 +23,7 @@ export const moveFolders = async (req: Request, res: Response) => {
 
     const { folderIds, targetFolderId } = validation.data
 
-    const foldersToMove = await FolderRepository.findFoldersByIdsWithWorkspace(folderIds)
+    const foldersToMove = await FolderRepository.findActiveFoldersByIds(folderIds, workspace.id)
 
     if (!foldersToMove.length) {
         return ResponseHandler.json(res, { folders: [] })

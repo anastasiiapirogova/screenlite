@@ -22,11 +22,9 @@ export const getFolder = async (req: Request, res: Response) => {
 
     const { folderId } = validation.data
 
-    const folder = await FolderRepository.findFolderInWorkspace(workspace.id, folderId)
+    const folder = await FolderRepository.findFolder(folderId, workspace.id)
 
-    const isFolderNotFound = !folder
-
-    if (isFolderNotFound) {
+    if (!folder) {
         return ResponseHandler.notFound(res)
     }
 

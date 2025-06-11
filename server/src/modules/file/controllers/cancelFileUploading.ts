@@ -38,7 +38,7 @@ export const cancelFileUploading = async (req: Request, res: Response) => {
 
     if (!sessionId) return
 
-    const fileUploadSession = await FileUploadingRepository.getFileUploadSession(sessionId)
+    const fileUploadSession = await FileUploadingRepository.getFileUploadSession(sessionId, workspace.id)
 
     if (!fileUploadSession) {
         return ResponseHandler.notFound(res)

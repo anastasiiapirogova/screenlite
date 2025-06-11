@@ -23,7 +23,7 @@ export const createFolder = async (req: Request, res: Response) => {
 
     const { name, parentId } = validation.data
 
-    const parentFolder = parentId ? await FolderRepository.findFolderInWorkspace(workspace.id, parentId) : null
+    const parentFolder = parentId ? await FolderRepository.findFolder(parentId, workspace.id) : null
 
     const isParentFolderDeleted = parentFolder && parentFolder.deletedAt
 

@@ -49,7 +49,7 @@ export const updateFile = async (req: Request, res: Response) => {
 
     const { name, availabilityEndAt, availabilityStartAt, defaultDuration } = validation.data
 
-    const file = await FileRepository.findById(fileId)
+    const file = await FileRepository.findById(fileId, workspace.id)
 
     if (!file) {
         return ResponseHandler.notFound(res)

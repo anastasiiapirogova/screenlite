@@ -10,7 +10,7 @@ import { WorkspacePermissionService } from '@modules/workspace/services/Workspac
 export const softDeleteFolders = async (req: Request, res: Response) => {
     const workspace = req.workspace!
 
-    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.UPDATE_FILES)
+    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.DELETE_FILES)
     
     if (!allowed) {
         return ResponseHandler.forbidden(res)
@@ -24,7 +24,7 @@ export const softDeleteFolders = async (req: Request, res: Response) => {
 
     const { folderIds } = validation.data
 
-    const foldersToDelete = await FolderRepository.findActiveFoldersByIds(folderIds)
+    const foldersToDelete = await FolderRepository.findActiveFoldersByIds(folderIds, workspace.id)
     
     if (!foldersToDelete.length) {
         return ResponseHandler.ok(res)
@@ -39,21 +39,26 @@ export const softDeleteFolders = async (req: Request, res: Response) => {
     }
 
     const allSubfolderPromises = folderIds.map(id => FolderRepository.findFolderSubtreeById(id))
+
     const allSubfolders = await Promise.all(allSubfolderPromises)
     
     const subfolderIds = [...new Set(allSubfolders.flat().map(folder => folder.id))]
-
+    
     const allFolderIds = [...folderIds, ...subfolderIds]
+    
     const files = await prisma.file.findMany({
         where: {
             folderId: {
                 in: allFolderIds
-            }
+            },
+            workspaceId: workspace.id,
+            deletedAt: null
         },
         select: {
             id: true
         }
     })
+
     const fileIds = files.map(file => file.id)
 
     try {

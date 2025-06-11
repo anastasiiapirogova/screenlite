@@ -10,7 +10,7 @@ import { WorkspacePermissionService } from '@modules/workspace/services/Workspac
 export const softDeleteFiles = async (req: Request, res: Response) => {
     const workspace = req.workspace!
 
-    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.UPDATE_FILES)
+    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.DELETE_FILES)
 
     if (!allowed) {
         return ResponseHandler.forbidden(res)
@@ -24,7 +24,7 @@ export const softDeleteFiles = async (req: Request, res: Response) => {
 
     const { fileIds } = validation.data
 
-    const filesToDelete = await FileRepository.findActiveFilesByIds(fileIds)
+    const filesToDelete = await FileRepository.findActiveFilesByIds(fileIds, workspace.id)
        
     if (!filesToDelete.length) {
         return ResponseHandler.ok(res)

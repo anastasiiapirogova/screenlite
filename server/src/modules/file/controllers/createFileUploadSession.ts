@@ -30,7 +30,7 @@ export const createFileUploadSession = async (req: Request, res: Response) => {
 
     const { name, size, folderId, mimeType: providedMime } = validation.data
 
-    const folder = folderId ? await FolderRepository.findFolderInWorkspace(workspace.id, folderId) : null
+    const folder = folderId ? await FolderRepository.findFolder(folderId, workspace.id) : null
 
     const isFolderDeleted = folder && folder.deletedAt
 

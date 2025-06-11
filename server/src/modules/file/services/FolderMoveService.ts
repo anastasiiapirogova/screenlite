@@ -31,7 +31,7 @@ export class FolderMoveService {
         if (!folderStateValidation.isValid) return folderStateValidation
 
         if (targetFolderId) {
-            const targetFolder = await FolderRepository.findFolderInWorkspace(targetWorkspaceId, targetFolderId)
+            const targetFolder = await FolderRepository.findFolder(targetFolderId, targetWorkspaceId)
             const targetValidation = this.validateTargetFolder(targetFolder)
 
             if (!targetValidation.isValid) return targetValidation

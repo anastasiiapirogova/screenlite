@@ -23,7 +23,7 @@ export const moveFiles = async (req: Request, res: Response) => {
 
     const { fileIds, targetFolderId } = validation.data
 
-    const filesToMove = await FileRepository.findActiveFilesByIds(fileIds)
+    const filesToMove = await FileRepository.findActiveFilesByIds(fileIds, workspace.id)
 
     if (!filesToMove.length) {
         return ResponseHandler.json(res, { files: [] })

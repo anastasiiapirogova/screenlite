@@ -1,6 +1,5 @@
 import { Folder } from 'generated/prisma/client.js'
 import { FolderRepository } from '../repositories/FolderRepository.js'
-import { FileRepository } from '../repositories/FileRepository.js'
 
 type MovableFile = {
     id: string
@@ -26,7 +25,7 @@ export class FileMoveService {
         if (!workspaceValidation.isValid) return workspaceValidation
 
         if (targetFolderId) {
-            const targetFolder = await FolderRepository.findFolderInWorkspace(targetWorkspaceId, targetFolderId)
+            const targetFolder = await FolderRepository.findFolder(targetFolderId, targetWorkspaceId)
             const targetValidation = this.validateTargetFolder(targetFolder)
             if (!targetValidation.isValid) return targetValidation
         }

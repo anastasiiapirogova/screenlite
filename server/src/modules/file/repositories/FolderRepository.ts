@@ -15,11 +15,11 @@ export class FolderRepository {
         })
     }
     
-    static async findFolderInWorkspace(workspaceId: string, folderId: string) {
+    static async findFolder(folderId: string, workspaceId?: string) {
         return await prisma.folder.findFirst({
             where: {
                 id: folderId,
-                workspaceId,
+                ...(workspaceId && { workspaceId }),
             },
         })
     }
@@ -92,17 +92,19 @@ export class FolderRepository {
         `
     }
     
-    static async findActiveFoldersByIds(folderIds: string[]) {
+    static async findActiveFoldersByIds(folderIds: string[], workspaceId?: string) {
         return await prisma.folder.findMany({
             where: {
                 id: {
                     in: folderIds
                 },
-                deletedAt: null
+                deletedAt: null,
+                ...(workspaceId && { workspaceId })
             },
             select: {
                 id: true,
-                workspaceId: true
+                workspaceId: true,
+                deletedAt: true,
             }
         })
     }

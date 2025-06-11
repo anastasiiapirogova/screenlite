@@ -2,9 +2,12 @@ import { prisma } from '@config/prisma.js'
 import { UpdateFileData } from '../types.js'
 
 export class FileRepository {
-    static async findById(id: string) {
+    static async findById(id: string, workspaceId?: string) {
         return await prisma.file.findUnique({
-            where: { id },
+            where: {
+                id,
+                ...(workspaceId && { workspaceId })
+            },
         })
     }
 
@@ -15,13 +18,14 @@ export class FileRepository {
         })
     }
 
-    static async findActiveFilesByIds(fileIds: string[]) {
+    static async findActiveFilesByIds(fileIds: string[], workspaceId?: string) {
         return await prisma.file.findMany({
             where: {
                 id: {
                     in: fileIds
                 },
-                deletedAt: null
+                deletedAt: null,
+                ...(workspaceId && { workspaceId })
             },
             select: {
                 id: true,

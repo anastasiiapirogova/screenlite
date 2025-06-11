@@ -26,7 +26,7 @@ export const updateFolder = async (req: Request, res: Response) => {
 
     const { name } = validation.data
 
-    const folder = await FolderRepository.findFolderInWorkspace(workspace.id, folderId)
+    const folder = await FolderRepository.findFolder(folderId, workspace.id)
 
     if (!folder) {
         return ResponseHandler.notFound(res)
