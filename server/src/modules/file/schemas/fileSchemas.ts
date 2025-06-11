@@ -33,7 +33,6 @@ const bothDatesOrNeither = ({ availabilityStartAt, availabilityEndAt }: { availa
 }
 
 export const updateFileSchema = z.object({
-    fileId: z.string().nonempty('FILE_ID_IS_REQUIRED'),
     name: fileNameSchema.max(100, 'FILE_NAME_TOO_LONG').optional(),
     defaultDuration: z.preprocess((val) => Number(val), z.number({
         invalid_type_error: 'FILE_DEFAULT_DURATION_IS_INVALID',

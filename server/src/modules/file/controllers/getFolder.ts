@@ -1,37 +1,36 @@
 import { Request, Response } from 'express'
-import { z } from 'zod'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { filePolicy } from '../policies/filePolicy.js'
 import { FolderRepository } from '../repositories/FolderRepository.js'
-
-const schema = z.object({
-    id: z.string(),
-})
+import { getFolderSchema } from '../schemas/folderSchemas.js'
+import { WORKSPACE_PERMISSIONS } from '@modules/workspace/constants/permissions.js'
+import { WorkspacePermissionService } from '@modules/workspace/services/WorkspacePermissionService.js'
 
 export const getFolder = async (req: Request, res: Response) => {
-    const user = req.user!
+    const workspace = req.workspace!
 
-    const parsedData = schema.safeParse(req.params)
-
-    if (!parsedData.success) {
-        return ResponseHandler.zodError(req, res, parsedData.error.errors)
-    }
-
-    const { id } = parsedData.data
-
-    const folder = await FolderRepository.getFolderById(id)
-
-    if (!folder) {
-        return ResponseHandler.notFound(res)
-    }
-
-    const allowed = await filePolicy.canViewFolders(user, folder.workspaceId)
+    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.VIEW_FILES)
 
     if (!allowed) {
         return ResponseHandler.forbidden(res)
     }
 
-    const parentFolderTree = await FolderRepository.findFolderAncestorsById(id)
+    const validation = await getFolderSchema.safeParseAsync(req.params)
+
+    if (!validation.success) {
+        return ResponseHandler.zodError(req, res, validation.error.errors)
+    }
+
+    const { folderId } = validation.data
+
+    const folder = await FolderRepository.findFolderInWorkspace(workspace.id, folderId)
+
+    const isFolderNotFound = !folder
+
+    if (isFolderNotFound) {
+        return ResponseHandler.notFound(res)
+    }
+
+    const parentFolderTree = await FolderRepository.findFolderAncestorsById(folderId)
 
     return ResponseHandler.json(res, {
         folder,

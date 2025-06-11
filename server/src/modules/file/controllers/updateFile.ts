@@ -1,10 +1,11 @@
 import { Request, Response } from 'express'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { filePolicy } from '../policies/filePolicy.js'
 import { updateFileSchema } from '../schemas/fileSchemas.js'
 import { FileRepository } from '../repositories/FileRepository.js'
 import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
 import { addFileUpdatedJob } from '../utils/addFileUpdatedJob.js'
+import { WorkspacePermissionService } from '@modules/workspace/services/WorkspacePermissionService.js'
+import { WORKSPACE_PERMISSIONS } from '@modules/workspace/constants/permissions.js'
 
 const updatePlaylists = (
     file: { id: string, availabilityStartAt: Date | null, availabilityEndAt: Date | null },
@@ -28,15 +29,25 @@ const updatePlaylists = (
 }
 
 export const updateFile = async (req: Request, res: Response) => {
-    const user = req.user!
+    const { fileId } = req.params
+    const workspace = req.workspace!
 
-    const validation = await updateFileSchema.safeParseAsync(req.body)
+    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.UPDATE_FILES)
+
+    if (!allowed) {
+        return ResponseHandler.forbidden(res)
+    }
+
+    const validation = await updateFileSchema.safeParseAsync({
+        ...req.body,
+        fileId
+    })
 
     if (!validation.success) {
         return ResponseHandler.zodError(req, res, validation.error.errors)
     }
 
-    const { name, fileId, availabilityEndAt, availabilityStartAt, defaultDuration } = validation.data
+    const { name, availabilityEndAt, availabilityStartAt, defaultDuration } = validation.data
 
     const file = await FileRepository.findById(fileId)
 
@@ -44,13 +55,7 @@ export const updateFile = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(res)
     }
 
-    const allowed = await filePolicy.canUpdateFiles(user, file.workspaceId)
-
-    if (!allowed) {
-        return ResponseHandler.forbidden(res)
-    }
-
-    if(file.deletedAt) {
+    if (file.deletedAt) {
         return ResponseHandler.validationError(req, res, {
             fileId: 'FILE_IS_DELETED'
         })

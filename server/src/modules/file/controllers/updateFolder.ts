@@ -1,33 +1,38 @@
 import { Request, Response } from 'express'
 import { updateFolderSchema } from '../schemas/folderSchemas.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { filePolicy } from '../policies/filePolicy.js'
 import { FolderRepository } from '../repositories/FolderRepository.js'
+import { WorkspacePermissionService } from '@modules/workspace/services/WorkspacePermissionService.js'
+import { WORKSPACE_PERMISSIONS } from '@modules/workspace/constants/permissions.js'
 
 export const updateFolder = async (req: Request, res: Response) => {
-    const user = req.user!
+    const workspace = req.workspace!
+    const { folderId } = req.params
 
-    const validation = await updateFolderSchema.safeParseAsync(req.body)
-
-    if (!validation.success) {
-        return ResponseHandler.zodError(req, res, validation.error.errors)
-    }
-
-    const { name, folderId } = validation.data
-
-    const folder = await FolderRepository.getFolderById(folderId)
-
-    if (!folder) {
-        return ResponseHandler.notFound(res)
-    }
-
-    const allowed = await filePolicy.canUpdateFolders(user, folder.workspaceId)
+    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.UPDATE_FILES)
 
     if (!allowed) {
         return ResponseHandler.forbidden(res)
     }
 
-    if(folder.deletedAt) {
+    const validation = await updateFolderSchema.safeParseAsync({
+        ...req.body,
+        folderId
+    })
+
+    if (!validation.success) {
+        return ResponseHandler.zodError(req, res, validation.error.errors)
+    }
+
+    const { name } = validation.data
+
+    const folder = await FolderRepository.findFolderInWorkspace(workspace.id, folderId)
+
+    if (!folder) {
+        return ResponseHandler.notFound(res)
+    }
+
+    if (folder.deletedAt) {
         return ResponseHandler.validationError(req, res, {
             folderId: 'FOLDER_IS_DELETED'
         })

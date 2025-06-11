@@ -1,13 +1,20 @@
 import { Request, Response } from 'express'
 import { deleteFilesSchema } from '../schemas/fileSchemas.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { filePolicy } from '../policies/filePolicy.js'
 import { prisma } from '@config/prisma.js'
 import { Prisma } from 'generated/prisma/client.js'
 import { FileRepository } from '../repositories/FileRepository.js'
+import { WORKSPACE_PERMISSIONS } from '@modules/workspace/constants/permissions.js'
+import { WorkspacePermissionService } from '@modules/workspace/services/WorkspacePermissionService.js'
 
 export const softDeleteFiles = async (req: Request, res: Response) => {
-    const user = req.user!
+    const workspace = req.workspace!
+
+    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.UPDATE_FILES)
+
+    if (!allowed) {
+        return ResponseHandler.forbidden(res)
+    }
 
     const validation = await deleteFilesSchema.safeParseAsync(req.body)
 
@@ -29,14 +36,6 @@ export const softDeleteFiles = async (req: Request, res: Response) => {
         return ResponseHandler.validationError(req, res, {
             fileIds: 'FILES_MUST_BELONG_TO_SAME_WORKSPACE'
         })
-    }
-
-    const workspaceId = Array.from(workspaceIds)[0]
-
-    const allowed = await filePolicy.canDeleteFiles(user, workspaceId)
-
-    if (!allowed) {
-        return ResponseHandler.forbidden(res)
     }
 
     try {

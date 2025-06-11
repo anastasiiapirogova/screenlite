@@ -2,6 +2,10 @@ import { z } from 'zod'
 
 const folderNameSchema = z.string().nonempty('FOLDER_NAME_IS_REQUIRED').max(100, 'FOLDER_NAME_TOO_LONG')
 
+export const getFolderSchema = z.object({
+    folderId: z.string().nonempty('FOLDER_ID_IS_REQUIRED'),
+})
+
 export const createFolderSchema = z.object({
     name: folderNameSchema,
     parentId: z.string().nullable().optional(),
@@ -14,15 +18,13 @@ export const updateFolderSchema = z.object({
 })
 
 export const moveFolderSchema = z.object({
-    folderId: z.string().nullable(),
+    targetFolderId: z.string().nullable(),
     folderIds: z.array(z.string()),
-    workspaceId: z.string().nonempty('WORKSPACE_ID_IS_REQUIRED'),
 })
 
 export const moveFilesSchema = z.object({
-    folderId: z.string().nullable(),
+    targetFolderId: z.string().nullable(),
     fileIds: z.array(z.string()),
-    workspaceId: z.string().nonempty('WORKSPACE_ID_IS_REQUIRED'),
 })
 
 export const deleteFoldersSchema = z.object({

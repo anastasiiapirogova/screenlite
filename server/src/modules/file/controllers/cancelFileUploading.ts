@@ -1,12 +1,13 @@
 import { Request, Response } from 'express'
 import { z } from 'zod'
-import { prisma } from '../../../config/prisma.js'
-import { getRedisClient } from '../../../config/redis.js'
-import { Buckets, s3Client } from '../../../config/s3Client.js'
+import { prisma } from '@config/prisma.js'
+import { getRedisClient } from '@config/redis.js'
+import { Buckets, s3Client } from '@config/s3Client.js'
 import { AbortMultipartUploadCommand } from '@aws-sdk/client-s3'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { filePolicy } from '../policies/filePolicy.js'
 import { FileUploadingRepository } from '../repositories/FileUploadingRepository.js'
+import { WorkspacePermissionService } from '@modules/workspace/services/WorkspacePermissionService.js'
+import { WORKSPACE_PERMISSIONS } from '@modules/workspace/constants/permissions.js'
 
 const filePartUploadSchema = z.object({
     'fileUploadSessionId': z.string().nonempty('FILE_UPLOAD_SESSION_ID_IS_REQUIRED'),
@@ -25,6 +26,13 @@ const validateRequest = async (req: Request, res: Response) => {
 
 export const cancelFileUploading = async (req: Request, res: Response) => {
     const user = req.user!
+    const workspace = req.workspace!
+
+    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.CREATE_FILES)
+
+    if (!allowed) {
+        return ResponseHandler.forbidden(res)
+    }
 
     const sessionId = await validateRequest(req, res)
 
@@ -36,9 +44,7 @@ export const cancelFileUploading = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(res)
     }
 
-    const allowed = await filePolicy.canUploadFilePart(user, fileUploadSession.userId, fileUploadSession.workspaceId)
-
-    if (!allowed) {
+    if (user.id !== fileUploadSession.userId) {
         return ResponseHandler.forbidden(res)
     }
 
@@ -58,5 +64,5 @@ export const cancelFileUploading = async (req: Request, res: Response) => {
         UploadId: fileUploadSession.uploadId,
     }))
 
-    return ResponseHandler.empty(res)
+    return ResponseHandler.ok(res)
 }

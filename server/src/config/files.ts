@@ -6,3 +6,5 @@ export const supportedMimeTypes = [
     'video/mp4',
     'video/mkv'
 ]
+
+export const MAX_FOLDER_DEPTH = 10

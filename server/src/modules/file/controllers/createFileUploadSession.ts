@@ -3,16 +3,24 @@ import { CreateMultipartUploadCommand } from '@aws-sdk/client-s3'
 import mime from 'mime'
 import { generateUniqueFileName } from '../utils/generateUniqueFileName.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { filePolicy } from '../policies/filePolicy.js'
-import { WorkspaceRepository } from '@modules/workspace/repositories/WorkspaceRepository.js'
 import { createFileUploadSessionSchema } from '../schemas/fileSchemas.js'
 import { prisma } from '@config/prisma.js'
 import { Buckets, s3Client } from '@config/s3Client.js'
 import { isValidMimeType } from '../utils/isValidMemeType.js'
 import { shortenFileName } from '../utils/shortenFileName.js'
+import { WorkspacePermissionService } from '@modules/workspace/services/WorkspacePermissionService.js'
+import { WORKSPACE_PERMISSIONS } from '@modules/workspace/constants/permissions.js'
+import { FolderRepository } from '../repositories/FolderRepository.js'
 
 export const createFileUploadSession = async (req: Request, res: Response) => {
     const user = req.user!
+    const workspace = req.workspace!
+
+    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.CREATE_FILES)
+
+    if (!allowed) {
+        return ResponseHandler.forbidden(res)
+    }
 
     const validation = await createFileUploadSessionSchema.safeParseAsync(req.body)
 
@@ -20,31 +28,41 @@ export const createFileUploadSession = async (req: Request, res: Response) => {
         return ResponseHandler.zodError(req, res, validation.error.errors)
     }
 
-    const { workspaceId, name, size, folderId, mimeType: providedMime } = validation.data
+    const { name, size, folderId, mimeType: providedMime } = validation.data
+
+    const folder = folderId ? await FolderRepository.findFolderInWorkspace(workspace.id, folderId) : null
+
+    const isFolderDeleted = folder && folder.deletedAt
+
+    if (isFolderDeleted) {
+        return ResponseHandler.validationError(req, res, {
+            folderId: 'CANNOT_UPLOAD_IN_DELETED_FOLDER'
+        })
+    }
+
+    const isFolderNotFound = folderId && !folder
+
+    if (isFolderNotFound) {
+        return ResponseHandler.validationError(req, res, {
+            folderId: 'FOLDER_NOT_FOUND',
+        })
+    }
 
     const mimeType = providedMime || mime.getType(name)
 
-    if (!mimeType || !isValidMimeType(mimeType)) {
-        return ResponseHandler.validationError(req, res, { mimeType: 'MIME_TYPE_IS_NOT_SUPPORTED' })
-    }
+    const isMimeTypeInvalid = !mimeType || !isValidMimeType(mimeType)
 
-    const workspace = await WorkspaceRepository.getWithFolder(workspaceId, folderId)
-
-    if (!workspace) {
-        return ResponseHandler.notFound(res)
-    }
-
-    const allowed = await filePolicy.canUploadFiles(user, workspace.id)
-
-    if (!allowed) {
-        return ResponseHandler.forbidden(res)
+    if (isMimeTypeInvalid) {
+        return ResponseHandler.validationError(req, res, {
+            mimeType: 'MIME_TYPE_IS_NOT_SUPPORTED',
+        })
     }
 
     const uniqueFilename = generateUniqueFileName(name)
 
     const params = {
         Bucket: Buckets.uploads,
-        Key: `workspaces/${workspaceId}/${uniqueFilename}`,
+        Key: `workspaces/${workspace.id}/${uniqueFilename}`,
         ContentType: mimeType,
     }
 
@@ -61,11 +79,11 @@ export const createFileUploadSession = async (req: Request, res: Response) => {
             name: shortenedName,
             path: params.Key,
             size: size,
-            workspaceId,
+            workspaceId: workspace.id,
             userId: user.id,
             mimeType,
             uploadId: multipartUpload.UploadId,
-            folderId: workspace.folders?.length ? workspace.folders[0].id : null
+            folderId: folder ? folder.id : null,
         }
     })
 

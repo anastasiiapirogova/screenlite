@@ -3,8 +3,9 @@ import { z } from 'zod'
 import { FileUploadSession } from 'generated/prisma/client.js'
 import { completeFilePartUpload } from '../utils/filePartUploading/completeFilePartUpload.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { filePolicy } from '../policies/filePolicy.js'
 import { FileUploadingRepository } from '../repositories/FileUploadingRepository.js'
+import { WORKSPACE_PERMISSIONS } from '@modules/workspace/constants/permissions.js'
+import { WorkspacePermissionService } from '@modules/workspace/services/WorkspacePermissionService.js'
 
 const filePartUploadSchema = z.object({
     'x-file-upload-session-id': z.string().nonempty('FILE_UPLOAD_SESSION_ID_IS_REQUIRED'),
@@ -59,6 +60,13 @@ const handleUpload = (req: Request, res: Response, fileUploadSession: FileUpload
 
 export const uploadFilePart = async (req: Request, res: Response) => {
     const user = req.user!
+    const workspace = req.workspace!
+
+    const allowed = WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.CREATE_FILES)
+
+    if (!allowed) {
+        return ResponseHandler.forbidden(res)
+    }
 
     const sessionId = await validateRequest(req, res)
 
@@ -70,9 +78,7 @@ export const uploadFilePart = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(res)
     }
 
-    const allowed = await filePolicy.canUploadFilePart(user, fileUploadSession.userId, fileUploadSession.workspaceId)
-
-    if (!allowed) {
+    if (user.id !== fileUploadSession.userId) {
         return ResponseHandler.forbidden(res)
     }
 

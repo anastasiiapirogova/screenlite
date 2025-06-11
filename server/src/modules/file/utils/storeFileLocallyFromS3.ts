@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { File } from 'generated/prisma/client.js'
 import { GetObjectCommand } from '@aws-sdk/client-s3'
+import { Readable } from 'stream'
 
 export const storeFileLocallyFromS3 = async (file: File, localFilePath: string) => {
     const s3 = s3Client
@@ -17,7 +18,7 @@ export const storeFileLocallyFromS3 = async (file: File, localFilePath: string) 
     const fileStream = fs.createWriteStream(localFilePath)
     const files = await s3.send(new GetObjectCommand(params))
 
-    if (files.Body) {
+    if (files.Body instanceof Readable) {
         files.Body.pipe(fileStream)
     } else {
         throw new Error('File not found in S3')
