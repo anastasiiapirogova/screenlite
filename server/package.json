@@ -6,7 +6,8 @@
 		"db:deploy": "npx prisma migrate deploy && npx prisma generate",
 		"dev": "[ -f .env ] && env-cmd -f .env --no-override tsx watch src/screenlite.ts || tsx watch src/screenlite.ts",
 		"lint": "eslint --fix",
-		"start": "[ -f .env ] && env-cmd -f .env --no-override node dist/screenlite.js || node dist/screenlite.js"
+		"start": "[ -f .env ] && env-cmd -f .env --no-override node dist/screenlite.js || node dist/screenlite.js",
+		"test": "vitest"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.758.0",
@@ -37,10 +38,10 @@
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.22.0",
-		"@stylistic/eslint-plugin": "^4.4.1",
-		"@swc/cli": "^0.6.0",
-		"@swc/core": "^1.11.9",
+		"@eslint/js": "^9.28.0",
+		"@stylistic/eslint-plugin": "^2.6.5",
+		"@swc/cli": "^0.7.7",
+		"@swc/core": "^1.12.0",
 		"@types/bcrypt": "^5.0.2",
 		"@types/cors": "^2.8.17",
 		"@types/express": "^5.0.0",
@@ -52,7 +53,7 @@
 		"@types/uuid": "^10.0.0",
 		"concurrently": "^9.1.2",
 		"env-cmd": "^10.1.0",
-		"eslint": "^9.22.0",
+		"eslint": "^9.28.0",
 		"globals": "^16.0.0",
 		"nodemon": "^3.1.9",
 		"prisma": "^6.9.0",
@@ -61,7 +62,8 @@
 		"tsconfig-paths": "^4.2.0",
 		"tsx": "^4.19.3",
 		"typescript": "^5.8.2",
-		"typescript-eslint": "^8.26.1"
+		"typescript-eslint": "^8.26.1",
+		"vitest": "^3.2.3"
 	},
 	"prisma": {
 		"schema": "./prisma"
