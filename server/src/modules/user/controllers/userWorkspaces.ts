@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import { Prisma } from 'generated/prisma/client.js'
+import { Prisma } from '@generated/prisma/client.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { prisma } from '@config/prisma.js'
 import { userWorkspacesSchema } from '../schemas/userSchemas.js'
 import { UserPolicy } from '../policies/userPolicy.js'
 
 export const userWorkspaces = async (req: Request, res: Response) => {
-    const userId = req.params.id
+    const { userId } = req.params
     const user = req.user!
 
     const allowed = UserPolicy.canViewUserWorkspaces(user, userId)

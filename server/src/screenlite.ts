@@ -1,7 +1,6 @@
 import { createBuckets } from './config/s3Client.js'
 import { GracefulShutdown } from './types.js'
 import { initPrisma } from './config/prisma.js'
-import { registerListeners } from './listeners/registerListeners.js'
 import { initSocketIo } from './controllers/socket.js'
 import { closeWorkers } from 'bullmq/workers.js'
 import './config/rateLimiter.js'
@@ -29,7 +28,6 @@ const bootstrap = async () => {
     }
 
     initSocketIo(server)
-    registerListeners()
 }
 
 process.on('SIGINT', () => gracefulShutdown('SIGINT'))

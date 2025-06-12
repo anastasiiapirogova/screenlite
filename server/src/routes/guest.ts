@@ -1,9 +1,33 @@
-import { verifyEmail } from '@modules/user/controllers/verifyEmail.js'
-import { health } from '@modules/health/health.js'
 import { createGuestRoute, HttpMethod } from './utils.js'
 import AuthController from '@modules/auth/controllers/index.js'
+import UserController from '@modules/user/controllers/index.js'
+import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { Request, Response } from 'express'
 
-createGuestRoute(HttpMethod.POST, '/auth/signup', AuthController.signup)
-createGuestRoute(HttpMethod.POST, '/auth/login', AuthController.login)
-createGuestRoute(HttpMethod.POST, '/user/verifyEmail', verifyEmail)
-createGuestRoute(HttpMethod.GET, '/health', health)
+const health = async (req: Request, res: Response) => {
+    return ResponseHandler.ok(res)
+}
+
+createGuestRoute({
+    method: HttpMethod.GET,
+    path: '/health',
+    handler: health
+})
+
+createGuestRoute({
+    method: HttpMethod.POST,
+    path: '/auth/signup',
+    handler: AuthController.signup
+})
+
+createGuestRoute({
+    method: HttpMethod.POST,
+    path: '/auth/login',
+    handler: AuthController.login
+})
+
+createGuestRoute({
+    method: HttpMethod.POST,
+    path: '/user/verifyEmail',
+    handler: UserController.verifyEmail
+})

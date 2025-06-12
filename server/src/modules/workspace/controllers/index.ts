@@ -9,7 +9,7 @@ export {
     getWorkspace,
     getWorkspaceEntityCounts,
     updateWorkspace,
-    deleteWorkspace
+    deleteWorkspace,
 }
 
 export default {
@@ -17,5 +17,5 @@ export default {
     getWorkspace,
     getWorkspaceEntityCounts,
     updateWorkspace,
-    deleteWorkspace
+    deleteWorkspace,
 }

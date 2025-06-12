@@ -1,4 +1,4 @@
-import { WorkspaceFile } from '@modules/file/types'
+import { WorkspaceFile } from '@workspaceModules/file/types'
 import { createItemStore } from './utils/createItemStore'
 
 export const useFileStore = createItemStore<WorkspaceFile>()

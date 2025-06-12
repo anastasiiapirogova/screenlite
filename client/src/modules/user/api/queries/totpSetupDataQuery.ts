@@ -1,7 +1,7 @@
 import { getTotpSetupDataRequest } from '../requests/getTotpSetupDataRequest'
 
-export const totpSetupDataQuery = () => ({
-    queryKey: ['totpSetupData'],
-    queryFn: () => getTotpSetupDataRequest(),
+export const totpSetupDataQuery = (userId: string) => ({
+    queryKey: ['totpSetupData', { userId }],
+    queryFn: () => getTotpSetupDataRequest(userId),
     refetchOnWindowFocus: false,
 })

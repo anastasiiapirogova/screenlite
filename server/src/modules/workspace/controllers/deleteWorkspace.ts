@@ -1,8 +1,6 @@
 import { Request, Response } from 'express'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
-import { WORKSPACE_PERMISSIONS } from '../constants/permissions.js'
-import { WorkspacePermissionService } from '../services/WorkspacePermissionService.js'
 import { deleteWorkspaceSchema } from '../schemas/workspaceSchemas.js'
 
 export const deleteWorkspace = async (req: Request, res: Response) => {
@@ -14,10 +12,6 @@ export const deleteWorkspace = async (req: Request, res: Response) => {
     
     if (!parseResult.success) {
         return ResponseHandler.zodError(req, res, parseResult.error.errors)
-    }
-
-    if (!WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.DELETE_WORKSPACE)) {
-        return ResponseHandler.forbidden(res)
     }
     
     const expectedCode = `${workspaceId.slice(0, 3)}${workspaceId.slice(-3)}`.toUpperCase()

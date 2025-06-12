@@ -7,7 +7,7 @@
 		"dev": "[ -f .env ] && env-cmd -f .env --no-override tsx watch src/screenlite.ts || tsx watch src/screenlite.ts",
 		"lint": "eslint --fix",
 		"start": "[ -f .env ] && env-cmd -f .env --no-override node dist/screenlite.js || node dist/screenlite.js",
-		"test": "vitest"
+		"test": "vitest --bail=1"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.758.0",

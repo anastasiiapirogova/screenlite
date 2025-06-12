@@ -15,25 +15,62 @@ export enum HttpMethod {
 }
 
 type RouteHandler = (req: Request, res: Response) => Promise<void>
-type WorkspaceRouteHandler = (req: Request, res: Response) => Promise<void>
 
-export const createGuestRoute = (method: HttpMethod, path: string, handler: RouteHandler, ...middlewares: RequestHandler[]) => {
-    router[method](path, ...middlewares, asyncHandler(handler))
+type BaseRouteOptions = {
+    method: HttpMethod
+    path: string
+    handler: RouteHandler
+    additionalMiddleware?: RequestHandler[]
 }
 
-export const createRoute = (method: HttpMethod, path: string, handler: RouteHandler, ...middlewares: RequestHandler[]) => {
-    router[method](path, authMiddleware, twoFactorAuthMiddleware, ...middlewares, asyncHandler(handler))
+type GuestRouteOptions = BaseRouteOptions
+type UnprotectedRouteOptions = BaseRouteOptions
+type ProtectedRouteOptions = BaseRouteOptions
+type WorkspaceRouteOptions = BaseRouteOptions
+
+export const createGuestRoute = ({
+    method,
+    path,
+    handler,
+    additionalMiddleware = [],
+}: GuestRouteOptions) => {
+    router[method](path, ...additionalMiddleware, asyncHandler(handler))
 }
 
-export const createUnprotectedRoute = (method: HttpMethod, path: string, handler: RouteHandler, ...middlewares: RequestHandler[]) => {
-    router[method](path, authMiddleware, ...middlewares, asyncHandler(handler))
+export const createRoute = ({
+    method,
+    path,
+    handler,
+    additionalMiddleware = [],
+}: ProtectedRouteOptions) => {
+    router[method](path, authMiddleware, twoFactorAuthMiddleware, ...additionalMiddleware, asyncHandler(handler))
 }
 
-export const createWorkspaceRoute = (method: HttpMethod, path: string, handler: WorkspaceRouteHandler, ...additionalMiddleware: RequestHandler[]) => {
+export const createUnprotectedRoute = ({
+    method,
+    path,
+    handler,
+    additionalMiddleware = [],
+}: UnprotectedRouteOptions) => {
+    router[method](path, authMiddleware, ...additionalMiddleware, asyncHandler(handler))
+}
+
+export const createWorkspaceRoute = ({
+    method,
+    path,
+    handler,
+    additionalMiddleware = [],
+}: WorkspaceRouteOptions) => {
     if (!path.startsWith('/workspaces/:workspaceId')) {
         path = `/workspaces/:workspaceId${path}`
     }
+
     const baseHandler = handler as RouteHandler
 
-    createRoute(method, path, baseHandler, workspaceMiddleware, ...additionalMiddleware)
+    createRoute({
+        method,
+        path,
+        handler: baseHandler,
+        additionalMiddleware: [workspaceMiddleware, ...additionalMiddleware]
+    })
 }

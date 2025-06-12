@@ -3,18 +3,12 @@ import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
 import { updateWorkspaceSchema, workspacePictureSchema } from '../schemas/workspaceSchemas.js'
 import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
-import { uploadWorkspacePictureToS3 } from '../utils/uploadWorkspacePictureToS3.js'
-import { WorkspacePermissionService } from '../services/WorkspacePermissionService.js'
-import { WORKSPACE_PERMISSIONS } from '../constants/permissions.js'
+import { StorageService } from '@services/StorageService.js'
 
 export const updateWorkspace = async (req: Request, res: Response) => {
     const { name, slug, workspaceId } = req.body
     const picture = req.file
     const workspace = req.workspace!
-
-    if (!WorkspacePermissionService.can(workspace.permissions, WORKSPACE_PERMISSIONS.UPDATE_WORKSPACE)) {
-        return ResponseHandler.forbidden(res)
-    }
 
     const updatedWorkspaceData = {
         name: name !== workspace.name ? name : undefined,
@@ -37,13 +31,18 @@ export const updateWorkspace = async (req: Request, res: Response) => {
             return ResponseHandler.zodError(req, res, pictureParseResult.error.errors)
         }
 
-        const picturePath = await uploadWorkspacePictureToS3(workspaceId, picture)
+        const path = `workspaces/${workspaceId}/picture.jpg`
 
-        if (!picturePath) {
+        try {
+            await StorageService.uploadAndProcessImage(path, picture.buffer, {
+                width: 514,
+                height: 514,
+                format: 'jpeg'
+            })
+            result.picture = path
+        } catch {
             return ResponseHandler.validationError(req, res, { picture: 'PICTURE_UPLOAD_FAILED' })
         }
-
-        result.picture = picturePath
     }
 
     const data = removeUndefinedFromObject(result)
@@ -59,8 +58,6 @@ export const updateWorkspace = async (req: Request, res: Response) => {
     return ResponseHandler.json(res, {
         workspace: {
             ...updatedWorkspace,
-            role: workspace.role,
-            permissions: workspace.permissions,
         }
     })
 }

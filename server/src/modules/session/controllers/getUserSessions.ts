@@ -2,12 +2,12 @@ import { Request, Response } from 'express'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { SessionPolicy } from '../policies/sessionPolicy.js'
 import { userSessionsSchema } from '../schemas/sessionSchema.js'
-import { Prisma } from 'generated/prisma/client.js'
+import { Prisma } from '@generated/prisma/client.js'
 import { prisma } from '@config/prisma.js'
 import { parseUserAgent } from '../utils/parseUserAgent.js'
 
 export const getUserSessions = async (req: Request, res: Response) => {
-    const { id } = req.params
+    const { userId } = req.params
     const requestUser = req.user!
     const token = req.token!
 
@@ -37,7 +37,7 @@ export const getUserSessions = async (req: Request, res: Response) => {
 	
     const user = await prisma.user.findUnique({
         where: {
-            id,
+            id: userId,
         },
         select: {
             id: true,
@@ -61,7 +61,7 @@ export const getUserSessions = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(res)
     }
 
-    const allowed = SessionPolicy.canAccessUserSessions(requestUser, user.id)
+    const allowed = SessionPolicy.canAccessUserSessions(requestUser, userId)
 
     if (!allowed) {
         return ResponseHandler.forbidden(res)
@@ -76,15 +76,12 @@ export const getUserSessions = async (req: Request, res: Response) => {
     })
 	
     const total = user._count.sessions
-    const pages = Math.ceil(total / limit)
-	
-    ResponseHandler.json(res, {
-        data: safeSessions,
-        meta: {
-            page,
-            limit,
-            pages,
-            total,
-        },
-    })
+
+    const meta = {
+        page,
+        limit,
+        total
+    }
+
+    return ResponseHandler.paginated(res, safeSessions, meta)
 }

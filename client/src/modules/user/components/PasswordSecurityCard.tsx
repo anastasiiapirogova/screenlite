@@ -1,5 +1,5 @@
 import { useCurrentUser } from '@modules/auth/hooks/useCurrentUser'
-import { SettingsCard } from '../../../shared/components/SettingsCard'
+import { SettingsCard } from '@shared/components/SettingsCard'
 import { Button } from '@shared/ui/buttons/Button'
 
 export const PasswordSecurityCard = () => {

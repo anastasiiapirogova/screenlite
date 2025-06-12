@@ -1,10 +1,11 @@
 import { Server as SocketServer } from 'socket.io'
 import { Server as HTTPServer } from 'http'
 import { createAdapter } from '@socket.io/redis-adapter'
-import { getRedisClient } from '../config/redis.js'
+import { getRedisClient } from '@config/redis.js'
 import { handleDeviceData } from '../modules/device/controllers/handleDeviceData.js'
 import { getDeviceSocketConnectionInfoByToken, removeDeviceSocketConnectionInfoBySocketId, storeDeviceSocketConnectionInfo } from '../modules/device/utils/deviceSocketConnection.js'
-import { deviceEventEmitter } from '../events/eventEmitter.js'
+import { setDeviceOnlineStatus } from '@modules/device/utils/setDeviceOnlineStatus.js'
+import { addSendNewStateToDeviceJob } from '@modules/device/utils/addSendNewStateToDeviceJob.js'
 
 let io: SocketServer
 
@@ -39,7 +40,9 @@ export const initSocketIo = (server: HTTPServer) => {
             await storeDeviceSocketConnectionInfo(token, socket)
 
             if (!hasAlreadyBeenConnected) {
-                deviceEventEmitter.emit('deviceConnected', token)
+                setDeviceOnlineStatus(token, true)
+
+                addSendNewStateToDeviceJob(token)
             }
         })
 
@@ -47,7 +50,7 @@ export const initSocketIo = (server: HTTPServer) => {
             const token = await removeDeviceSocketConnectionInfoBySocketId(socket.id)
 
             if (token) {
-                deviceEventEmitter.emit('deviceDisconnected', token)
+                setDeviceOnlineStatus(token, false)
             }
         })
     })

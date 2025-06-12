@@ -4,31 +4,115 @@ import { createRoute, createUnprotectedRoute, HttpMethod } from './utils.js'
 import SessionController from '@modules/session/controllers/index.js'
 import UserController from '@modules/user/controllers/index.js'
 import AuthController from '@modules/auth/controllers/index.js'
-import WorkspaceUserInvitationController from '@modules/workspaceUserInvitation/controllers/index.js'
+import WorkspaceUserInvitationController from '@modules/workspace/modules/workspaceUserInvitation/controllers/index.js'
 
 // =======================
 // Unprotected Routes
 // =======================
 
-createUnprotectedRoute(HttpMethod.GET, '/auth/me', AuthController.me)
-createUnprotectedRoute(HttpMethod.POST, '/auth/logout', AuthController.logout)
-createUnprotectedRoute(HttpMethod.POST, '/users/2fa/verify', UserController.verifyTwoFa)
+createUnprotectedRoute({
+    method: HttpMethod.GET,
+    path: '/auth/me',
+    handler: AuthController.me
+})
+
+createUnprotectedRoute({
+    method: HttpMethod.POST,
+    path: '/auth/logout',
+    handler: AuthController.logout
+})
+
+createUnprotectedRoute({
+    method: HttpMethod.POST,
+    path: '/users/2fa/verify',
+    handler: UserController.verifyTwoFa
+})
 
 // =======================
 // Protected Routes (requires 2FA if enabled)
 // =======================
 
-createRoute(HttpMethod.GET, '/users/:id/sessions', SessionController.getUserSessions)
-createRoute(HttpMethod.GET, '/users/:id/workspaces', UserController.userWorkspaces)
-createRoute(HttpMethod.GET, '/users/:id/invitations', WorkspaceUserInvitationController.userInvitations)
-createRoute(HttpMethod.POST, '/users/:id/changePassword', UserController.changePassword)
-createRoute(HttpMethod.POST, '/users/:id/terminateAllSessions', SessionController.terminateAllSessions)
-createRoute(HttpMethod.POST, '/users/:id/changeEmail', UserController.forceChangeEmail)
-createRoute(HttpMethod.DELETE, '/users/:id', UserController.deleteUser)
-createRoute(HttpMethod.PATCH, '/users/:id', UserController.updateUser, userUpdateMulterMiddleware)
+createRoute({
+    method: HttpMethod.GET,
+    path: '/users/:userId/sessions',
+    handler: SessionController.getUserSessions
+})
 
-createRoute(HttpMethod.GET, '/security/2fa/totpSetupData', UserController.getTotpSetupData)
-createRoute(HttpMethod.POST, '/security/2fa/enable', UserController.enableTwoFa)
-createRoute(HttpMethod.POST, '/security/2fa/disable', UserController.disableTwoFa)
+createRoute({
+    method: HttpMethod.GET,
+    path: '/users/:userId/workspaces',
+    handler: UserController.userWorkspaces
+})
 
-createRoute(HttpMethod.POST, '/sessions/:id/terminate', SessionController.terminateSession)
+createRoute({
+    method: HttpMethod.GET,
+    path: '/users/:userId/invitations',
+    handler: WorkspaceUserInvitationController.userInvitations
+})
+
+createRoute({
+    method: HttpMethod.PUT,
+    path: '/users/:userId/password',
+    handler: UserController.changePassword
+})
+
+createRoute({
+    method: HttpMethod.POST,
+    path: '/users/:userId/terminateAllSessions',
+    handler: SessionController.terminateAllSessions
+})
+
+createRoute({
+    method: HttpMethod.PUT,
+    path: '/users/:userId/email',
+    handler: UserController.forceChangeEmail
+})
+
+createRoute({
+    method: HttpMethod.DELETE,
+    path: '/users/:userId',
+    handler: UserController.deleteUser
+})
+
+createRoute({
+    method: HttpMethod.PATCH,
+    path: '/users/:userId',
+    handler: UserController.updateUser,
+    additionalMiddleware: [userUpdateMulterMiddleware]
+})
+
+createRoute({
+    method: HttpMethod.GET,
+    path: '/users/:userId/security/2fa/totpSetupData',
+    handler: UserController.getTotpSetupData
+})
+
+createRoute({
+    method: HttpMethod.POST,
+    path: '/security/2fa/enable',
+    handler: UserController.enableTwoFa
+})
+
+createRoute({
+    method: HttpMethod.POST,
+    path: '/security/2fa/disable',
+    handler: UserController.disableTwoFa
+})
+
+createRoute({
+    method: HttpMethod.POST,
+    path: '/sessions/:sessionId/terminate',
+    handler: SessionController.terminateSession
+})
+
+createRoute({
+    method: HttpMethod.POST,
+    path: '/invitations/:workspaceUserInvitationId/accept',
+    handler: WorkspaceUserInvitationController.acceptUserWorkspaceInvitation
+})
+
+createRoute({
+    method: HttpMethod.POST,
+    path: '/invitations/:workspaceUserInvitationId/cancel',
+    handler: WorkspaceUserInvitationController.cancelUserWorkspaceInvitation
+})

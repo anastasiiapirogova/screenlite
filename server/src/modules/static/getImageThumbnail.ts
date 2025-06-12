@@ -1,16 +1,16 @@
 import { Request, Response } from 'express'
-import { GetObjectCommand } from '@aws-sdk/client-s3'
 import { Readable } from 'stream'
 import sharp from 'sharp'
-import { Buckets, s3Client } from '../../config/s3Client.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import crypto from 'crypto'
+import { StorageService } from '@services/StorageService.js'
+import mime from 'mime'
 
 interface ThumbnailOptions {
     width: number
     height: number
     quality: number
-    format: 'jpeg' | 'png' | 'webp'
+    format: 'webp'
 }
 
 const DEFAULT_THUMBNAIL_OPTIONS: ThumbnailOptions = {
@@ -20,67 +20,49 @@ const DEFAULT_THUMBNAIL_OPTIONS: ThumbnailOptions = {
     format: 'webp'
 }
 
-const CACHE_DURATION = 7 * 24 * 60 * 60
+const CACHE_DURATION = 60 * 60 * 24 * 7 // 7 days
 
-const streamToBuffer = async (stream: Readable): Promise<Buffer> => {
-    return new Promise((resolve, reject) => {
-        const chunks: Uint8Array[] = []
+const isValidFilePath = (filePath: string): boolean => {
+    const mimeType = mime.getType(filePath)
 
-        stream.on('data', (chunk: Uint8Array) => chunks.push(chunk))
-        stream.on('error', reject)
-        stream.on('end', () => resolve(Buffer.concat(chunks)))
-    })
-}
-
-const generateImageThumbnail = async (
-    body: unknown,
-    options: ThumbnailOptions = DEFAULT_THUMBNAIL_OPTIONS
-): Promise<Buffer> => {
-    try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const stream = body instanceof Readable ? body : Readable.from(body as any)
-        const buffer = await streamToBuffer(stream)
-
-        return sharp(buffer)
-            .resize(options.width, options.height, {
-                fit: 'inside',
-                withoutEnlargement: true
-            })[options.format]({
-                quality: options.quality,
-                force: true
-            })
-            .toBuffer()
-    } catch (err) {
-        const error = err instanceof Error ? err : new Error('Unknown error during thumbnail generation')
-
-        throw error
-    }
+    return mimeType ? mimeType.startsWith('image/') : false
 }
 
 const generateETag = (buffer: Buffer): string => {
-    return crypto.createHash('sha256').update(buffer).digest('hex')
+    return crypto.createHash('md5').update(buffer).digest('hex')
 }
 
-const isValidFilePath = (filePath: string): boolean => {
-    if (!filePath || filePath.includes('..')) return false
-    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif']
+const generateImageThumbnail = async (imageStream: Readable): Promise<Buffer> => {
+    const transformer = sharp()
+        .resize(DEFAULT_THUMBNAIL_OPTIONS.width, DEFAULT_THUMBNAIL_OPTIONS.height, {
+            fit: 'cover',
+            position: 'centre'
+        })[DEFAULT_THUMBNAIL_OPTIONS.format]({
+            quality: DEFAULT_THUMBNAIL_OPTIONS.quality
+        })
 
-    return allowedExtensions.some(ext => filePath.toLowerCase().endsWith(ext))
+    return new Promise((resolve, reject) => {
+        const chunks: Buffer[] = []
+
+        transformer.on('data', chunk => chunks.push(chunk))
+        transformer.on('end', () => resolve(Buffer.concat(chunks)))
+        transformer.on('error', reject)
+        imageStream.pipe(transformer)
+    })
 }
 
 const getS3File = async (filePath: string) => {
-    const command = new GetObjectCommand({
-        Bucket: Buckets.uploads,
-        Key: filePath,
-    })
+    const s3Stream = await StorageService.downloadFile(filePath)
 
-    try {
-        return await s3Client.send(command)
-    } catch (error) {
-        if (error instanceof Error && error.name === 'NoSuchKey') {
-            return null
-        }
-        throw error
+    if (!s3Stream) {
+        return null
+    }
+
+    const mimeType = mime.getType(filePath)
+
+    return {
+        Body: s3Stream,
+        ContentType: mimeType || 'application/octet-stream'
     }
 }
 

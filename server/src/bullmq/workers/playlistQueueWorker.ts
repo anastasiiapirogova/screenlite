@@ -1,6 +1,6 @@
 import { bullmqConnection } from '@config/bullmq.js'
-import { handlePlaylistUpdatedJob } from '@modules/playlist/jobs/handlePlaylistUpdatedJob.js'
-import { recalculatePlaylistSizeJob } from '@modules/playlist/jobs/recalculatePlaylistSizeJob.js'
+import { handlePlaylistUpdatedJob } from '@modules/workspace/modules/playlist/jobs/handlePlaylistUpdatedJob.js'
+import { recalculatePlaylistSizeJob } from '@modules/workspace/modules/playlist/jobs/recalculatePlaylistSizeJob.js'
 import { Job, Worker } from 'bullmq'
 import { playlistQueue, PlaylistQueueJobData } from 'bullmq/queues/playlistQueue.js'
 

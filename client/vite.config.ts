@@ -7,6 +7,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
+            '@workspaceModules': path.resolve(__dirname, './src/modules/workspace/modules'),
             '@modules': path.resolve(__dirname, './src/modules'),
             '@config': path.resolve(__dirname, './src/config'),
             '@shared': path.resolve(__dirname, './src/shared'),

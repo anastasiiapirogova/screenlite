@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
 import { useCurrentUser } from '../../auth/hooks/useCurrentUser'
 import { ErrorBoundary } from 'react-error-boundary'
-import { WorkspacePicture } from '../../../shared/components/WorkspacePicture'
+import { WorkspacePicture } from '@shared/components/WorkspacePicture'
 import { userInvitationsQuery } from '../api/queries/userInvitationsQuery'
 
 const InvitationsListLoadingState = () => {

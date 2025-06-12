@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { WorkspaceRepository } from '@modules/workspace/repositories/WorkspaceRepository.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { WorkspacePermissionService } from '@modules/workspace/services/WorkspacePermissionService.js'
 import { exclude } from '@utils/exclude.js'
 
 export const workspaceMiddleware = async (
@@ -28,16 +27,13 @@ export const workspaceMiddleware = async (
         }
 
         const workspaceMember = workspace.members.find(member => member.userId === user.id)
-        const { hasAccess, permissions, role } = WorkspacePermissionService.getUserWorkspacePermissions(workspaceMember)
 
-        if (!hasAccess) {
+        if (!workspaceMember) {
             return ResponseHandler.forbidden(res, 'NOT_A_MEMBER_OF_WORKSPACE')
         }
 
         req.workspace = {
-            ...exclude(workspace, ['members']),
-            permissions,
-            role,
+            ...exclude(workspace, ['members'])
         }
 
         next()

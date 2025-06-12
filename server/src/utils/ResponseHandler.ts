@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { PaginationMeta } from 'types.js'
 import { ZodIssue } from 'zod'
 
 export class ResponseHandler {
@@ -9,6 +10,18 @@ export class ResponseHandler {
         } else {
             res.status(status).send()
         }
+    }
+
+    static paginated(res: Response, data: Record<string, unknown>[], meta: PaginationMeta) {
+        const pages = Math.max(meta.pages ?? Math.ceil(meta.total / meta.limit), 1)
+
+        ResponseHandler.json(res, {
+            data,
+            meta: {
+                ...meta,
+                pages
+            }
+        })
     }
 
     static ok(res: Response, data?: Record<string, unknown>) {
@@ -33,6 +46,10 @@ export class ResponseHandler {
 
     static created(res: Response, data: Record<string, unknown>) {
         ResponseHandler.json(res, data, 201)
+    }
+
+    static tooLarge(res: Response, message?: string) {
+        res.status(413).send(message || 'Too Large')
     }
 
     static forbidden(res: Response, message?: string) {
