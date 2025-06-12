@@ -33,7 +33,11 @@ export const workspaceMiddleware = async (
         }
 
         req.workspace = {
-            ...exclude(workspace, ['members'])
+            ...exclude(workspace, ['members']),
+            currentUserAccess: {
+                role: workspaceMember.role,
+                permissions: workspaceMember.permissions
+            }
         }
 
         next()

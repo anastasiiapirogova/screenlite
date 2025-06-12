@@ -6,4 +6,9 @@ export type UpdateWorkspaceData = {
 	picture?: string
 }
 
-export type WorkspaceWithCurrentUser = Workspace
+export type WorkspaceWithCurrentUser = Workspace & {
+	currentUserAccess: {
+		role: string
+		permissions: string[]
+	}
+}
