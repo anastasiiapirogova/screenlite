@@ -1,0 +1,25 @@
+model Link {
+    id                  String    @id @default(uuid())
+    workspaceId         String
+    name                String
+    path                String
+    width               Int?
+    height              Int?
+    // TODO: Implement defaultDuration
+    defaultDuration     Int?
+    availabilityStartAt DateTime?
+    availabilityEndAt   DateTime?
+    createdAt           DateTime  @default(now())
+    updatedAt           DateTime  @updatedAt
+    deletedAt           DateTime? @default(now())
+    addedById           String?
+
+    workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    addedByUser   User?          @relation(fields: [addedById], references: [id], onDelete: SetNull)
+    playlistItems PlaylistItem[]
+
+    @@index([workspaceId])
+    @@index([addedById])
+    @@index([deletedAt])
+    @@index([name])
+}

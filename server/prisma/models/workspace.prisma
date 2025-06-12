@@ -1,11 +1,11 @@
 model Workspace {
-    id        String   @id @default(uuid())
+    id        String    @id @default(uuid())
     name      String
-    slug      String   @unique
+    slug      String    @unique
     status    String
     picture   String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
     deletedAt DateTime?
 
     members            UserWorkspace[]
@@ -17,4 +17,5 @@ model Workspace {
     fileUploadSessions FileUploadSession[]
     userInvitations    WorkspaceUserInvitation[]
     screenGroups       ScreenGroup[]
+    links              Link[]
 }

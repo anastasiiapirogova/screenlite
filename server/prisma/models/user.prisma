@@ -19,4 +19,5 @@ model User {
     uploadedFiles           File[]
     fileUploadSessions      FileUploadSession[]
     sentInvitations         WorkspaceUserInvitation[]
+    addedLinks              Link[]
 }

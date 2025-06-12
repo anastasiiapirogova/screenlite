@@ -10,4 +10,4 @@ export enum PlaylistStatus {
     deleted = 'deleted',
 }
 
-export type PlaylistItemType = 'file' | 'nested_playlist'
+export type PlaylistItemType = 'file' | 'nested_playlist' | 'link'
