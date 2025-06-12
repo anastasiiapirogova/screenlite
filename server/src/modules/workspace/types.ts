@@ -9,6 +9,6 @@ export type UpdateWorkspaceData = {
 export type WorkspaceWithCurrentUser = Workspace & {
 	currentUserAccess: {
 		role: string
-		permissions: string[]
+		permissions: Record<string, boolean>
 	}
 }

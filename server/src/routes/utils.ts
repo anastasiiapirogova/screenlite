@@ -26,7 +26,9 @@ type BaseRouteOptions = {
 type GuestRouteOptions = BaseRouteOptions
 type UnprotectedRouteOptions = BaseRouteOptions
 type ProtectedRouteOptions = BaseRouteOptions
-type WorkspaceRouteOptions = BaseRouteOptions
+type WorkspaceRouteOptions = BaseRouteOptions & {
+    enforcePolicy?: RequestHandler
+}
 
 export const createGuestRoute = ({
     method,
@@ -59,18 +61,25 @@ export const createWorkspaceRoute = ({
     method,
     path,
     handler,
+    enforcePolicy,
     additionalMiddleware = [],
 }: WorkspaceRouteOptions) => {
-    if (!path.startsWith('/workspaces/:workspaceId')) {
-        path = `/workspaces/:workspaceId${path}`
-    }
+    const finalPath = path.startsWith('/workspaces/:workspaceId')
+        ? path
+        : `/workspaces/:workspaceId${path}`
 
     const baseHandler = handler as RouteHandler
 
+    const workspacePolicyMiddleware: RequestHandler[] = enforcePolicy ? [enforcePolicy] : []
+
     createRoute({
         method,
-        path,
+        path: finalPath,
         handler: baseHandler,
-        additionalMiddleware: [workspaceMiddleware, ...additionalMiddleware]
+        additionalMiddleware: [
+            workspaceMiddleware,
+            ...workspacePolicyMiddleware,
+            ...additionalMiddleware
+        ]
     })
 }

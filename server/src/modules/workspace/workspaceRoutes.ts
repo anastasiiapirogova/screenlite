@@ -10,6 +10,8 @@ import PlaylistScheduleController from '@modules/workspace/modules/playlistSched
 import ScreenController from '@modules/workspace/modules/screen/controllers/index.js'
 import WorkspaceController from '@modules/workspace/controllers/index.js'
 import WorkspaceUserInvitationController from '@modules/workspace/modules/workspaceUserInvitation/controllers/index.js'
+import { enforceWorkspacePolicy } from 'middlewares/enforceWorkspacePolicy.js'
+import { WORKSPACE_PERMISSIONS } from './accessControl/permissions.js'
 
 // Workspace
 createRoute({
@@ -22,361 +24,422 @@ createRoute({
     method: HttpMethod.GET,
     path: '/workspaces/bySlug/:workspaceSlug',
     handler: WorkspaceController.getWorkspace,
-    additionalMiddleware: [workspaceMiddleware]
+    additionalMiddleware: [
+        workspaceMiddleware,
+        enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.workspace.view })
+    ]
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/entityCounts',
-    handler: WorkspaceController.getWorkspaceEntityCounts
+    handler: WorkspaceController.getWorkspaceEntityCounts,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.workspace.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/delete',
-    handler: WorkspaceController.deleteWorkspace
+    handler: WorkspaceController.deleteWorkspace,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.workspace.delete })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.PATCH,
     path: '/',
     handler: WorkspaceController.updateWorkspace,
-    additionalMiddleware: [workspaceUpdateMulterMiddleware]
+    additionalMiddleware: [workspaceUpdateMulterMiddleware],
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.workspace.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/',
-    handler: WorkspaceController.getWorkspace
+    handler: WorkspaceController.getWorkspace,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.workspace.view })
 })
 
 // Screens
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/screens',
-    handler: ScreenController.workspaceScreens
+    handler: ScreenController.workspaceScreens,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.screen.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/screens',
-    handler: ScreenController.createScreen
+    handler: ScreenController.createScreen,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.screen.create })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/screens/delete',
-    handler: ScreenController.deleteScreens
+    handler: ScreenController.deleteScreens,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.screen.delete })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/screens/:screenId',
-    handler: ScreenController.screen
+    handler: ScreenController.screen,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.screen.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/screens/:screenId/connectDevice',
-    handler: ScreenController.connectDevice
+    handler: ScreenController.connectDevice,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.screen.connect })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/screens/:screenId/disconnectDevice',
-    handler: ScreenController.disconnectDevice
+    handler: ScreenController.disconnectDevice,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.screen.connect })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/screens/:screenId/playlists',
-    handler: ScreenController.screenPlaylists
+    handler: ScreenController.screenPlaylists,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.view })
 })
 
 // Playlists
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/playlists',
-    handler: PlaylistController.workspacePlaylists
+    handler: PlaylistController.workspacePlaylists,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/playlists',
-    handler: PlaylistController.createPlaylist
+    handler: PlaylistController.createPlaylist,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.create })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/playlists/:playlistId',
-    handler: PlaylistController.playlist
+    handler: PlaylistController.playlist,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.PATCH,
     path: '/playlists/:playlistId',
-    handler: PlaylistController.updatePlaylist
+    handler: PlaylistController.updatePlaylist,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/playlists/:playlistId/copy',
-    handler: PlaylistController.copyPlaylist
+    handler: PlaylistController.copyPlaylist,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.create })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.PUT,
     path: '/playlists/:playlistId/layout',
-    handler: PlaylistController.changePlaylistLayout
+    handler: PlaylistController.changePlaylistLayout,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/playlists/delete',
-    handler: PlaylistController.softDeletePlaylists
+    handler: PlaylistController.softDeletePlaylists,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.delete })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/playlists/restore',
-    handler: PlaylistController.restorePlaylists
+    handler: PlaylistController.restorePlaylists,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.restore })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/playlists/:playlistId/screens',
-    handler: PlaylistController.getPlaylistScreens
+    handler: PlaylistController.getPlaylistScreens,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.screen.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/playlists/:playlistId/screens',
-    handler: PlaylistController.addScreensToPlaylist
+    handler: PlaylistController.addScreensToPlaylist,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.screen.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/playlists/:playlistId/removeScreens',
-    handler: PlaylistController.removeScreensFromPlaylist
+    handler: PlaylistController.removeScreensFromPlaylist,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.screen.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/playlists/:playlistId/items',
-    handler: PlaylistController.getPlaylistItems
+    handler: PlaylistController.getPlaylistItems,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.PUT,
     path: '/playlists/:playlistId/items',
-    handler: PlaylistController.updatePlaylistItems
+    handler: PlaylistController.updatePlaylistItems,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/playlists/emptyTrash',
-    handler: PlaylistController.emptyTrash
+    handler: PlaylistController.emptyTrash,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.delete })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/playlists/forceDelete',
-    handler: PlaylistController.forceDeletePlaylists
+    handler: PlaylistController.forceDeletePlaylists,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.permanentDelete })
 })
 
 // Playlist Layouts
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/playlistLayouts',
-    handler: PlaylistLayoutController.getWorkspacePlaylistLayouts
+    handler: PlaylistLayoutController.getWorkspacePlaylistLayouts,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlistLayout.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/playlistLayouts',
-    handler: PlaylistLayoutController.createPlaylistLayout
+    handler: PlaylistLayoutController.createPlaylistLayout,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlistLayout.create })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/playlistLayouts/:playlistLayoutId/playlists',
-    handler: PlaylistLayoutController.getPlaylistLayoutPlaylists
+    handler: PlaylistLayoutController.getPlaylistLayoutPlaylists,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/playlistLayouts/:playlistLayoutId',
-    handler: PlaylistLayoutController.getPlaylistLayout
+    handler: PlaylistLayoutController.getPlaylistLayout,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlistLayout.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.PATCH,
     path: '/playlistLayouts/:playlistLayoutId',
-    handler: PlaylistLayoutController.updatePlaylistLayout
+    handler: PlaylistLayoutController.updatePlaylistLayout,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlistLayout.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.DELETE,
     path: '/playlistLayouts/:playlistLayoutId',
-    handler: PlaylistLayoutController.deletePlaylistLayout
+    handler: PlaylistLayoutController.deletePlaylistLayout,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlistLayout.delete })
 })
 
 // Playlist Schedules
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/playlistSchedules',
-    handler: PlaylistScheduleController.createPlaylistSchedule
+    handler: PlaylistScheduleController.createPlaylistSchedule,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.PATCH,
     path: '/playlistSchedules/:playlistScheduleId',
-    handler: PlaylistScheduleController.updatePlaylistSchedule
+    handler: PlaylistScheduleController.updatePlaylistSchedule,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.DELETE,
     path: '/playlistSchedules/:playlistScheduleId',
-    handler: PlaylistScheduleController.deletePlaylistSchedule
+    handler: PlaylistScheduleController.deletePlaylistSchedule,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlist.update })
 })
 
 // Files
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/files',
-    handler: FileController.getWorkspaceFiles
+    handler: FileController.getWorkspaceFiles,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/files/uploadSessions',
-    handler: FileController.createFileUploadSession
+    handler: FileController.createFileUploadSession,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.upload })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/files/uploadSessions/:fileUploadSessionId/cancel',
-    handler: FileController.cancelFileUploading
+    handler: FileController.cancelFileUploading,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.upload })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.PUT,
     path: '/files/uploadSessions/:fileUploadSessionId/uploadPart',
-    handler: FileController.uploadFilePart
+    handler: FileController.uploadFilePart,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.upload })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/files/move',
-    handler: FileController.moveFiles
+    handler: FileController.moveFiles,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/files/delete',
-    handler: FileController.softDeleteFiles
+    handler: FileController.softDeleteFiles,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.delete })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/files/restore',
-    handler: FileController.restoreFiles
+    handler: FileController.restoreFiles,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.delete })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/files/emptyTrash',
-    handler: FileController.emptyTrash
+    handler: FileController.emptyTrash,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.permanentDelete })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/files/forceDelete',
-    handler: FileController.forceDeleteFiles
+    handler: FileController.forceDeleteFiles,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.permanentDelete })
 })
 
 // Folders
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/folders',
-    handler: FileController.getWorkspaceFolders
+    handler: FileController.getWorkspaceFolders,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/folders/:folderId',
-    handler: FileController.getFolder
+    handler: FileController.getFolder,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/folders',
-    handler: FileController.createFolder
+    handler: FileController.createFolder,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.folder.create })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/folders/move',
-    handler: FileController.moveFolders
+    handler: FileController.moveFolders,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.folder.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/folders/delete',
-    handler: FileController.softDeleteFolders
+    handler: FileController.softDeleteFolders,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.delete })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/folders/restore',
-    handler: FileController.restoreFolders
+    handler: FileController.restoreFolders,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.delete })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/folders/forceDelete',
-    handler: FileController.forceDeleteFolders
+    handler: FileController.forceDeleteFolders,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.permanentDelete })
 })
 
 // Members and Invitations
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/members',
-    handler: MemberController.members
+    handler: MemberController.members,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.member.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.PATCH,
     path: '/members/:userId',
-    handler: MemberController.updateMember
+    handler: MemberController.updateMember,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.member.update })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/leave',
-    handler: MemberController.leaveWorkspace
+    handler: MemberController.leaveWorkspace,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.workspace.leave })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/members/:userId/remove',
-    handler: MemberController.removeMember
+    handler: MemberController.removeMember,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.invitation.create })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/invitations',
-    handler: WorkspaceUserInvitationController.workspaceUserInvitations
+    handler: WorkspaceUserInvitationController.workspaceUserInvitations,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.invitation.view })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/invitations',
-    handler: WorkspaceUserInvitationController.inviteUserToWorkspace
+    handler: WorkspaceUserInvitationController.inviteUserToWorkspace,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.invitation.create })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.DELETE,
     path: '/invitations/:workspaceUserInvitationId',
-    handler: WorkspaceUserInvitationController.deleteUserWorkspaceInvitation
+    handler: WorkspaceUserInvitationController.deleteUserWorkspaceInvitation,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.invitation.create })
 })

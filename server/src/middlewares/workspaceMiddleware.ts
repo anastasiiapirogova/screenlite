@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express'
 import { WorkspaceRepository } from '@modules/workspace/repositories/WorkspaceRepository.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { exclude } from '@utils/exclude.js'
+import { PermissionService } from '@modules/workspace/accessControl/services/PermissionService.js'
+import { WorkspaceRole } from '@modules/workspace/modules/member/types.js'
 
 export const workspaceMiddleware = async (
     req: Request,
@@ -36,7 +38,7 @@ export const workspaceMiddleware = async (
             ...exclude(workspace, ['members']),
             currentUserAccess: {
                 role: workspaceMember.role,
-                permissions: workspaceMember.permissions
+                permissions: PermissionService.getPermissionsStatus(workspaceMember.role as WorkspaceRole, workspaceMember.permissions)
             }
         }
 

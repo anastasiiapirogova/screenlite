@@ -1,6 +1,7 @@
 import { prisma } from '@config/prisma.js'
 import { getRedisClient, redisKeys } from '@config/redis.js'
 import { UpdateWorkspaceData } from '../types.js'
+import { WORKSPACE_ROLES } from '../accessControl/roles.js'
 
 export type ScreenStatusCount = { online: number, offline: number, notConnected: number }
 
@@ -32,7 +33,7 @@ export class WorkspaceRepository {
                 status: WorkspaceRepository.DEFAULT_STATUS,
                 members: {
                     create: {
-                        role: 'owner',
+                        role: WORKSPACE_ROLES.OWNER,
                         user: {
                             connect: {
                                 id: userId
