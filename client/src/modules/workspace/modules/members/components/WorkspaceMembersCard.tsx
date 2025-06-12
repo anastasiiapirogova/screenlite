@@ -1,10 +1,14 @@
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
+import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
 import { SettingsCard } from '@shared/components/SettingsCard'
 import { Button } from '@shared/ui/buttons/Button'
+import { useNavigate } from 'react-router'
 
 export const WorkspaceMembersCard = () => {
     const workspace = useWorkspace()
-
+    const navigate = useNavigate()
+    const routes = useWorkspaceRoutes()
+    
     return (
         <SettingsCard
             title='Members'
@@ -16,7 +20,7 @@ export const WorkspaceMembersCard = () => {
                 </div>
                 <div className='flex justify-end'>
                     <Button
-                        onClick={ alert.bind(null, 'This feature is not implemented yet.') }
+                        onClick={ () => navigate(routes.workspaceMembersList) }
                         color='secondary'
                         variant="soft"
                     >

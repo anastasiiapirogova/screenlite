@@ -21,7 +21,7 @@ export const members = async (req: Request, res: Response) => {
             name: search ? {
                 contains: search,
                 mode: 'insensitive' as Prisma.QueryMode,
-            } : undefined,
+            } : Prisma.skip,
         },
     }
 
@@ -41,7 +41,7 @@ export const members = async (req: Request, res: Response) => {
                         id: true,
                         name: true,
                         email: true,
-                        createdAt: true,
+                        profilePhoto: true,
                     }
                 }
             }

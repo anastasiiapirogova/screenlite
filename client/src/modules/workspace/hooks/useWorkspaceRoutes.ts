@@ -28,6 +28,7 @@ export const useWorkspaceRoutes = (slug?: string) => {
             playlistContentManager: (playlistId: string) => createRoute(`playlists/${playlistId}/content`),
             playlistLayoutEditor: (playlistLayoutId: string) => createRoute(`layouts/${playlistLayoutId}/edit`),
             playlistLayoutPlaylists: (playlistLayoutId: string) => createRoute(`layouts/${playlistLayoutId}/playlists`),
+            workspaceMembersList: createRoute('members/list'),
         }
     }, [routePrefix])
 

@@ -8,7 +8,6 @@ export const WorkspaceMembersPage = () => {
         <LayoutBodyContainer>
             <ScrollArea verticalMargin={ 24 }>
                 <div className='max-w-screen-md w-full mx-auto p-7'>
-                    <div className='text-3xl mb-4'>Manage workspace members</div>
                     <div className='flex flex-col gap-5'>
                         <WorkspaceMembersCard />
                         <WorkspaceInvitationsCard />

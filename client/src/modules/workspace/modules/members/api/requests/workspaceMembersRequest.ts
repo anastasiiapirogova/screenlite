@@ -6,6 +6,8 @@ export type WorkspaceMembersRequestData = {
     workspaceId: string
     filters: {
         search?: string | null
+        page?: number | null
+        limit?: number | null
     }
 }
 

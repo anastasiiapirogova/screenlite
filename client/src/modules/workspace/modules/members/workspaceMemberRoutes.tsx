@@ -1,3 +1,4 @@
+import { WorkspaceMembersListPage } from './pages/WorkspaceMembersListPage'
 import { WorkspaceMembersPage } from './pages/WorkspaceMembersPage'
 
 export const workspaceMemberRoutes = {
@@ -6,6 +7,10 @@ export const workspaceMemberRoutes = {
         {
             path: '',
             element: <WorkspaceMembersPage />,
+        },
+        {
+            path: 'list',
+            element: <WorkspaceMembersListPage />,
         }
     ]
 }
