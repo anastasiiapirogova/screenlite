@@ -7,9 +7,10 @@ const isRemovingSelf = (requesterId: string, targetId: string) => requesterId ==
 
 export const removeMember = async (req: Request, res: Response) => {
     const workspace = req.workspace!
+    const user = req.user!
     const { userId } = req.params
 
-    if (isRemovingSelf(req.user!.id, userId)) {
+    if (isRemovingSelf(user.id, userId)) {
         return ResponseHandler.validationError(req, res, {
             userId: 'CANNOT_REMOVE_SELF',
         })
