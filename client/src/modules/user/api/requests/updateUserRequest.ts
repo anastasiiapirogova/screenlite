@@ -26,8 +26,8 @@ export const updateUserRequest = async (data: UpdateUserData) => {
         }
     }
 
-    const response = await axios.post<UpdateUserResponse>(
-        '/users/update',
+    const response = await axios.patch<UpdateUserResponse>(
+        `/users/${data.userId}`,
         formData,
         {
             headers: {
