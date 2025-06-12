@@ -12,8 +12,8 @@ type ChangePasswordResponse = {
 }
 
 export const changePasswordRequest = async (data: ChangePasswordData) => {
-    const response = await axios.post<ChangePasswordResponse>(
-        '/users/changePassword',
+    const response = await axios.put<ChangePasswordResponse>(
+        `/users/${data.userId}/password`,
         data,
     )
 

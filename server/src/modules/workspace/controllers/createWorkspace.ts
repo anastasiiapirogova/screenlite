@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { createWorkspaceSchema } from '../schemas/workspaceSchemas.js'
 import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
+import { exclude } from '@utils/exclude.js'
 
 export const createWorkspace = async (req: Request, res: Response) => {
     const user = req.user!
@@ -16,7 +17,9 @@ export const createWorkspace = async (req: Request, res: Response) => {
 
     const workspace = await WorkspaceRepository.create(name, slug, user.id)
 
-    ResponseHandler.created(res, {
-        workspace,
+    return ResponseHandler.created(res, {
+        workspace: {
+            ...exclude(workspace, ['members'])
+        }
     })
 }

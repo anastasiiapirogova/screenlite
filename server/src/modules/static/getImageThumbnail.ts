@@ -1,51 +1,68 @@
 import { Request, Response } from 'express'
-import { GetObjectCommand } from '@aws-sdk/client-s3'
 import { Readable } from 'stream'
 import sharp from 'sharp'
-import { Buckets, s3Client } from '../../config/s3Client.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import crypto from 'crypto'
+import { StorageService } from '@services/StorageService.js'
+import mime from 'mime'
 
-const streamToBuffer = async (stream: Readable): Promise<Buffer> => {
-    return new Promise((resolve, reject) => {
-        const chunks: Uint8Array[] = []
-
-        stream.on('data', (chunk: Uint8Array) => chunks.push(chunk))
-        stream.on('error', reject)
-        stream.on('end', () => resolve(Buffer.concat(chunks)))
-    })
+interface ThumbnailOptions {
+    width: number
+    height: number
+    quality: number
+    format: 'webp'
 }
 
-const generateImageThumbnail = async (readableStream: Readable): Promise<Buffer> => {
-    const buffer = await streamToBuffer(readableStream)
+const DEFAULT_THUMBNAIL_OPTIONS: ThumbnailOptions = {
+    width: 250,
+    height: 250,
+    quality: 80,
+    format: 'webp'
+}
 
-    return sharp(buffer)
-        .resize(250, 250, { fit: 'inside' })
-        .png({ quality: 100, force: true })
-        .toBuffer()
+const CACHE_DURATION = 60 * 60 * 24 * 7 // 7 days
+
+const isValidFilePath = (filePath: string): boolean => {
+    const mimeType = mime.getType(filePath)
+
+    return mimeType ? mimeType.startsWith('image/') : false
 }
 
 const generateETag = (buffer: Buffer): string => {
-    return crypto.createHash('sha256').update(buffer).digest('hex')
+    return crypto.createHash('md5').update(buffer).digest('hex')
 }
 
-const isValidFilePath = (filePath: string): boolean => {
-    return !!filePath && !filePath.includes('..')
+const generateImageThumbnail = async (imageStream: Readable): Promise<Buffer> => {
+    const transformer = sharp()
+        .resize(DEFAULT_THUMBNAIL_OPTIONS.width, DEFAULT_THUMBNAIL_OPTIONS.height, {
+            fit: 'cover',
+            position: 'centre'
+        })[DEFAULT_THUMBNAIL_OPTIONS.format]({
+            quality: DEFAULT_THUMBNAIL_OPTIONS.quality
+        })
+
+    return new Promise((resolve, reject) => {
+        const chunks: Buffer[] = []
+
+        transformer.on('data', chunk => chunks.push(chunk))
+        transformer.on('end', () => resolve(Buffer.concat(chunks)))
+        transformer.on('error', reject)
+        imageStream.pipe(transformer)
+    })
 }
 
 const getS3File = async (filePath: string) => {
-    const command = new GetObjectCommand({
-        Bucket: Buckets.uploads,
-        Key: filePath,
-    })
+    const s3Stream = await StorageService.downloadFile(filePath)
 
-    try {
-        return await s3Client.send(command)
-    } catch (error) {
-        if (error instanceof Error && error.name === 'NoSuchKey') {
-            return null
-        }
-        throw error
+    if (!s3Stream) {
+        return null
+    }
+
+    const mimeType = mime.getType(filePath)
+
+    return {
+        Body: s3Stream,
+        ContentType: mimeType || 'application/octet-stream'
     }
 }
 
@@ -53,35 +70,31 @@ export const getImageThumbnail = async (req: Request, res: Response) => {
     const filePath = req.params[0]
 
     if (!isValidFilePath(filePath)) {
-        ResponseHandler.notFound(res)
-        return
+        return ResponseHandler.notFound(res)
     }
 
     const s3File = await getS3File(filePath)
 
-    if (!s3File || !s3File.Body) {
-        ResponseHandler.notFound(res)
-        return
+    if (!s3File?.Body || !s3File.ContentType) {
+        return ResponseHandler.notFound(res)
     }
 
-    const contentType = s3File.ContentType
-
-    if (!contentType || !contentType.startsWith('image/')) {
-        res.status(204).send()
-        return
+    if (!s3File.ContentType.startsWith('image/')) {
+        return ResponseHandler.empty(res)
     }
 
     const thumbnail = await generateImageThumbnail(s3File.Body)
     const etag = generateETag(thumbnail)
 
     res.setHeader('ETag', etag)
+    res.setHeader('Cache-Control', `public, max-age=${CACHE_DURATION}`)
+    res.setHeader('Expires', new Date(Date.now() + CACHE_DURATION * 1000).toUTCString())
 
     const ifNoneMatch = req.headers['if-none-match']
 
     if (ifNoneMatch === etag) {
-        res.status(304).send()
-        return
+        return ResponseHandler.notModified(res)
     }
 
-    res.contentType('image/jpeg').send(thumbnail)
+    res.contentType(`image/${DEFAULT_THUMBNAIL_OPTIONS.format}`).send(thumbnail)
 }

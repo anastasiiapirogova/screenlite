@@ -36,10 +36,6 @@ export const updateWorkspaceSchema = z.object({
     picture: z.string().optional()
 })
 
-export const workspaceIdSchema = z.object({
-    workspaceId: z.string().nonempty('WORKSPACE_ID_IS_REQUIRED')
-})
-
 export const workspacePictureSchema = z.object({
     picture: z.object({
         mimetype: z.string().refine((mimetype) => {
@@ -52,4 +48,10 @@ export const workspacePictureSchema = z.object({
 export const createWorkspaceSchema = z.object({
     name: workspaceNameSchema,
     slug: workspaceSlugSchema,
+})
+
+export const deleteWorkspaceSchema = z.object({
+    confirmationCode: z.string()
+        .length(6, 'CONFIRMATION_CODE_MUST_BE_6_CHARACTERS')
+        .regex(/^[A-Z0-9]+$/, 'CONFIRMATION_CODE_MUST_BE_UPPERCASE_LETTERS_AND_NUMBERS')
 })

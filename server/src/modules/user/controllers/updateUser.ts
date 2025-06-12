@@ -5,15 +5,18 @@ import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
 import { updateUserSchema, userIdSchema, userProfilePhotoSchema } from '../schemas/userSchemas.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { UserPolicy } from '../policies/userPolicy.js'
-import { uploadProfilePhotoToS3 } from '../utils/uploadProfilePhotoToS3.js'
+import { StorageService } from 'services/StorageService.js'
 
 export const updateUser = async (req: Request, res: Response) => {
     const user = req.user!
-    const { name, userId } = req.body
+    const { userId } = req.params
+    const { name } = req.body
     const profilePhoto = req.file
 
     try {
-        userIdSchema.parse(req.body)
+        userIdSchema.parse({
+            userId,
+        })
 
         const userToUpdate = await UserRepository.findUserById(userId)
 
@@ -43,14 +46,21 @@ export const updateUser = async (req: Request, res: Response) => {
                 return ResponseHandler.validationError(req, res, { profilePhoto: firstError.message})
             }
 
-            const profilePhotoPath = await uploadProfilePhotoToS3(userId, profilePhoto)
+            const path = `users/${userId}/photo.jpg`
 
-            if (!profilePhotoPath) {
+            try {
+                await StorageService.uploadAndProcessImage(path, profilePhoto.buffer, {
+                    width: 514,
+                    height: 514,
+                    format: 'jpeg'
+                })
+                result.profilePhoto = path
+            } catch {
                 return ResponseHandler.validationError(req, res, { profilePhoto: 'PROFILE_PHOTO_UPLOAD_FAILED' })
             }
 
-            if(userToUpdate.profilePhoto !== profilePhotoPath ) {
-                result.profilePhoto = profilePhotoPath
+            if(userToUpdate.profilePhoto !== path) {
+                result.profilePhoto = path
             }
         }
 

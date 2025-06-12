@@ -5,7 +5,7 @@ import { removeAuthToken, storeAuthToken } from '../helpers/authToken'
 import { AuthContext } from '../contexts/AuthContext'
 import { Outlet } from 'react-router'
 import { LoginRequestResponse } from '../api/requests/loginRequest'
-import { AppPreloader } from '../../../shared/components/AppPreloader'
+import { AppPreloader } from '@shared/components/AppPreloader'
 
 export const AuthProvider = () => {
     const queryClient = useQueryClient()

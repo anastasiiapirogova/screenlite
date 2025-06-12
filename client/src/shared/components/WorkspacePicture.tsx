@@ -1,4 +1,4 @@
-import { getFileThumbnailSrc } from '@modules/file/utils/getFileThumbnailSrc'
+import { getFileThumbnailSrc } from "@workspaceModules/file/utils/getFileThumbnailSrc"
 
 interface Props {
 	name?: string

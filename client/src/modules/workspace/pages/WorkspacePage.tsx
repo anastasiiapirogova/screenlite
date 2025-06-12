@@ -14,7 +14,7 @@ const ScreenCountCard = ({ label, count }: { label: string, count: number }) => 
 export const WorkspacePage = () => {
     const workspace = useWorkspace()
 
-    const { data: entityCounts } = useSuspenseQuery(workspaceEntityCountsQuery(workspace.slug))
+    const { data: entityCounts } = useSuspenseQuery(workspaceEntityCountsQuery(workspace.id))
 
     const screenStatus = entityCounts.screenStatus || { online: 0, offline: 0 }
 

@@ -1,4 +1,18 @@
-export { login } from '@modules/auth/controllers/login.js'
-export { signup } from '@modules/auth/controllers/signup.js'
-export { logout } from '@modules/auth/controllers/logout.js'
-export { me } from '@modules/auth/controllers/me.js'
+import { login } from '@modules/auth/controllers/login.js'
+import { signup } from '@modules/auth/controllers/signup.js'
+import { logout } from '@modules/auth/controllers/logout.js'
+import { me } from '@modules/auth/controllers/me.js'
+
+export {
+    login,
+    signup,
+    logout,
+    me
+}
+
+export default {
+    login,
+    signup,
+    logout,
+    me
+}

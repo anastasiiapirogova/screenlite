@@ -1,6 +1,0 @@
-export { getWorkspacePlaylistLayouts } from '@modules/playlistLayout/controllers/getWorkspacePlaylistLayouts.js'
-export { getPlaylistLayout } from '@modules/playlistLayout/controllers/getPlaylistLayout.js'
-export { getPlaylistLayoutPlaylists } from '@modules/playlistLayout/controllers/getPlaylistLayoutPlaylists.js'
-export { createPlaylistLayout } from '@modules/playlistLayout/controllers/createPlaylistLayout.js'
-export { updatePlaylistLayout } from '@modules/playlistLayout/controllers/updatePlaylistLayout.js'
-export { deletePlaylistLayout } from '@modules/playlistLayout/controllers/deletePlaylistLayout.js'

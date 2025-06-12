@@ -1,7 +1,7 @@
-import { WorkspaceFile } from '@modules/file/types'
-import { arePlaylistItemsEqual } from '@modules/playlistContentManager/helpers/arePlaylistItemsEqual'
-import { mapFileToPlaylistItem } from '@modules/playlistContentManager/helpers/mapFileToPlaylistItem'
-import { PlaylistContentManagerItem, PlaylistItemType } from '@modules/playlist/types'
+import { WorkspaceFile } from '@workspaceModules/file/types'
+import { PlaylistContentManagerItem, PlaylistItemType } from '@workspaceModules/playlist/types'
+import { arePlaylistItemsEqual } from '@workspaceModules/playlistContentManager/helpers/arePlaylistItemsEqual'
+import { mapFileToPlaylistItem } from '@workspaceModules/playlistContentManager/helpers/mapFileToPlaylistItem'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 

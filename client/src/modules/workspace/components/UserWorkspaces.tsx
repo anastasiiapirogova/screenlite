@@ -4,7 +4,7 @@ import { useCurrentUser } from '../../auth/hooks/useCurrentUser'
 import { userWorkspacesQuery } from '../api/queries/userWorkspacesQuery'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Link } from 'react-router'
-import { WorkspacePicture } from '../../../shared/components/WorkspacePicture'
+import { WorkspacePicture } from '@shared/components/WorkspacePicture'
 import { TbPlus } from 'react-icons/tb'
 import { Button } from '@shared/ui/buttons/Button'
 

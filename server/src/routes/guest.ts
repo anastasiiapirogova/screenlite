@@ -1,23 +1,33 @@
-import express, { RequestHandler } from 'express'
-import { verifyEmail } from '@modules/user/controllers/verifyEmail.js'
-import { asyncHandler } from '@utils/asyncHandler.js'
-import { health } from '@modules/health/health.js'
-import { login, signup } from '@modules/auth/controllers/index.js'
+import { createGuestRoute, HttpMethod } from './utils.js'
+import AuthController from '@modules/auth/controllers/index.js'
+import UserController from '@modules/user/controllers/index.js'
+import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { Request, Response } from 'express'
 
-const router = express.Router()
-
-enum HttpMethod {
-    GET = 'get',
-    POST = 'post'
+const health = async (req: Request, res: Response) => {
+    return ResponseHandler.ok(res)
 }
 
-const createRoute = (method: HttpMethod, path: string, handler: (req: express.Request, res: express.Response) => Promise<void>, ...middlewares: RequestHandler[]) => {
-    router[method](path, ...middlewares, asyncHandler(handler))
-}
+createGuestRoute({
+    method: HttpMethod.GET,
+    path: '/health',
+    handler: health
+})
 
-createRoute(HttpMethod.POST, '/auth/signup', signup)
-createRoute(HttpMethod.POST, '/auth/login', login)
-createRoute(HttpMethod.POST, '/user/verifyEmail', verifyEmail)
-createRoute(HttpMethod.GET, '/health', health)
+createGuestRoute({
+    method: HttpMethod.POST,
+    path: '/auth/signup',
+    handler: AuthController.signup
+})
 
-export { router as guestRoutes }
+createGuestRoute({
+    method: HttpMethod.POST,
+    path: '/auth/login',
+    handler: AuthController.login
+})
+
+createGuestRoute({
+    method: HttpMethod.POST,
+    path: '/user/verifyEmail',
+    handler: UserController.verifyEmail
+})

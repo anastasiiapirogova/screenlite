@@ -25,6 +25,9 @@
 		"noUncheckedSideEffectImports": true,
 		"baseUrl": ".",
 		"paths": {
+			"@workspaceModules/*": [
+				"src/modules/workspace/modules/*"
+			],
 			"@modules/*": [
 				"src/modules/*"
 			],

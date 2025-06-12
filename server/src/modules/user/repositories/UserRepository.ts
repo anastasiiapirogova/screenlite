@@ -1,6 +1,6 @@
 import { prisma } from '@config/prisma.js'
 import { EmailVerificationTokenRepository } from '@modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.js'
-import { Prisma } from 'generated/prisma/client.js'
+import { Prisma } from '@generated/prisma/client.js'
 import { SafeUser } from 'types.js'
 import { UserService } from '../utils/UserService.js'
 

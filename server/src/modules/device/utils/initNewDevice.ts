@@ -1,12 +1,11 @@
 import { Socket } from 'socket.io'
-import { generateConnectionCode } from '../helpers/generateConnectionCode.js'
-import { prisma } from '../../../config/prisma.js'
+import { prisma } from '@config/prisma.js'
 import { DeviceData } from '../types.js'
-import { generateDeviceToken } from '../helpers/generateDeviceToken.js'
 import { storeDeviceTelemetry } from './storeDeviceTelemetry.js'
+import { DeviceRepository } from '../repositories/DeviceRepository.js'
 
 const generateUniqueConnectionCode = async (): Promise<string> => {
-    const connectionCode = generateConnectionCode()
+    const connectionCode = await DeviceRepository.generateConnectionCode()
 
     const existingDevice = await prisma.device.findUnique({
         where: { connectionCode },
@@ -23,7 +22,7 @@ const generateUniqueConnectionCode = async (): Promise<string> => {
 export const initNewDevice = async (data: DeviceData, socket: Socket) => {
     const connectionCode = await generateUniqueConnectionCode()
 
-    const token = generateDeviceToken()
+    const token = DeviceRepository.generateDeviceToken()
 
     const device = await prisma.device.create({
         data: {

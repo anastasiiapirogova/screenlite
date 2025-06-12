@@ -1,4 +1,4 @@
-import { SettingsCard } from '../../../shared/components/SettingsCard'
+import { SettingsCard } from '@shared/components/SettingsCard'
 import { useQuery } from '@tanstack/react-query'
 import { useCurrentUser } from '@modules/auth/hooks/useCurrentUser'
 import { userSessionsQuery } from '@modules/session/queries/userSessionsQuery'

@@ -6,7 +6,6 @@ const router = express.Router()
 
 enum HttpMethod {
     GET = 'get',
-    POST = 'post'
 }
 
 const createRoute = (method: HttpMethod, path: string, handler: (req: express.Request, res: express.Response) => Promise<void>, ...middlewares: RequestHandler[]) => {

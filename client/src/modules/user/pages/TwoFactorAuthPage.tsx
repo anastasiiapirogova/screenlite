@@ -56,7 +56,8 @@ const Notification = () => (
 )
 
 const TwoFactorSetup = () => {
-    const { data } = useQuery(totpSetupDataQuery())
+    const user = useCurrentUser()
+    const { data } = useQuery(totpSetupDataQuery(user.id))
     const queryClient = useQueryClient()
 
     const {

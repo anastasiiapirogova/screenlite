@@ -5,8 +5,8 @@ type GetTotpSetupDataResponse = {
 	authUrl: string
 }
 
-export const getTotpSetupDataRequest = async () => {
-    const response = await axios.get<GetTotpSetupDataResponse>('/users/getTotpSetupData')
+export const getTotpSetupDataRequest = async (userId: string) => {
+    const response = await axios.get<GetTotpSetupDataResponse>(`/users/${userId}/security/2fa/totpSetupData`)
 
     return response.data
 }

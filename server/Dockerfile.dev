@@ -1,12 +1,17 @@
-FROM node:lts-alpine3.17
+FROM node:slim
 
 WORKDIR /app
 
-RUN apk add --no-cache ffmpeg
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    ffmpeg \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 COPY prisma ./prisma
-RUN npm install
+
+RUN npm ci
 
 COPY . .
 

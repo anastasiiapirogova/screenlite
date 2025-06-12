@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { prisma } from '../../../config/prisma.js'
+import { prisma } from '@config/prisma.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { deleteUserSchema } from '../schemas/userSchemas.js'

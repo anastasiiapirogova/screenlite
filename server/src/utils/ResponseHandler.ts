@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { PaginationMeta } from 'types.js'
 import { ZodIssue } from 'zod'
 
 export class ResponseHandler {
@@ -9,6 +10,18 @@ export class ResponseHandler {
         } else {
             res.status(status).send()
         }
+    }
+
+    static paginated(res: Response, data: Record<string, unknown>[], meta: PaginationMeta) {
+        const pages = Math.max(meta.pages ?? Math.ceil(meta.total / meta.limit), 1)
+
+        ResponseHandler.json(res, {
+            data,
+            meta: {
+                ...meta,
+                pages
+            }
+        })
     }
 
     static ok(res: Response, data?: Record<string, unknown>) {
@@ -23,6 +36,10 @@ export class ResponseHandler {
         res.status(500).send(message || 'Internal Server Error')
     }
 
+    static notModified(res: Response) {
+        res.status(304).send()
+    }
+
     static empty(res: Response) {
         res.status(204).send()
     }
@@ -31,12 +48,16 @@ export class ResponseHandler {
         ResponseHandler.json(res, data, 201)
     }
 
+    static tooLarge(res: Response, message?: string) {
+        res.status(413).send(message || 'Too Large')
+    }
+
     static forbidden(res: Response, message?: string) {
         res.status(403).send(message || 'Forbidden')
     }
 
-    static notFound(res: Response) {
-        res.status(404).send('Not Found')
+    static notFound(res: Response, message?: string) {
+        res.status(404).send(message || 'Not Found')
     }
 
     static unauthorized(res: Response) {

@@ -1,6 +1,6 @@
 import { EmailVerificationTokenRepository } from '@modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.js'
 import { sendVerificationEmail } from '@modules/user/utils/sendVerificationEmail.js'
-import { User } from 'generated/prisma/client.js'
+import { User } from '@generated/prisma/client.js'
 
 export const handleUserSignedUpJob = async (user: User) => {
     try {

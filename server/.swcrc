@@ -21,6 +21,12 @@
             "@utils/*": [
                 "src/utils/*"
             ],
+            "@services/*": [
+                "src/services/*"
+            ],
+            "@generated/*": [
+                "src/generated/*"
+            ],
             "*": [
                 "node_modules",
                 "src/*"

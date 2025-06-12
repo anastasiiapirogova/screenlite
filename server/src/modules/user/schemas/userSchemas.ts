@@ -1,6 +1,15 @@
 import { z } from 'zod'
-import { passwordZodSchema } from './passwordSchema.js'
 import { paginationSchema } from 'schemas/paginationSchema.js'
+
+export const passwordZodSchema = z
+    .string({
+        required_error: 'PASSWORD_IS_REQUIRED',
+    })
+    .min(8, 'PASSWORD_TOO_SHORT')
+    .regex(/[\p{Lu}]/u, 'PASSWORD_UPPERCASE_REQUIRED')
+    .regex(/[\p{Ll}]/u, 'PASSWORD_LOWERCASE_REQUIRED')
+    .regex(/\p{N}/u, 'PASSWORD_NUMBER_REQUIRED')
+    .regex(/[^\p{L}\p{N}]/u, 'PASSWORD_SYMBOL_REQUIRED')
 
 export const userNameSchema = z.string().min(1, 'NAME_IS_REQUIRED').max(100, 'NAME_TOO_LONG')
 

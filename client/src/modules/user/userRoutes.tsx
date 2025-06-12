@@ -1,5 +1,5 @@
 import { sessionRoutes } from '@modules/session/sessionRoutes'
-import { MainLayout } from '../../shared/layouts/MainLayout'
+import { MainLayout } from '@shared/layouts/MainLayout'
 import { UserFullWidthSettingsPagesLayout } from './layouts/UserFullWidthSettingsPagesLayout'
 import { UserPagesLayout } from './layouts/UserPagesLayout'
 import {

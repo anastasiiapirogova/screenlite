@@ -6,6 +6,7 @@ import { TbLogout, TbSettings, TbSmartHome } from 'react-icons/tb'
 import { useNavigate } from 'react-router'
 import { useLogout } from '@modules/auth/hooks/useLogout'
 import { useAuth } from '@modules/auth/hooks/useAuth'
+import { APP_VERSION } from '@config/screenlite'
 
 const MenuItem = ({
     children,
@@ -43,7 +44,7 @@ export const NavbarUserMenu = () => {
         return null
     }
 
-    const appVersion = import.meta.env.VITE_APP_VERSION
+    const appVersion = APP_VERSION
 	
     return (
         <DropdownMenu.Root modal={ false }>
