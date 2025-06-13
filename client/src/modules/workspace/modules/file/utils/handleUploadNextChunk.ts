@@ -1,4 +1,4 @@
-import { uploadFilePartRequest, UploadFilePartRequestData } from '../api/requests/uploadFilePartRequest'
+import { uploadFilePartRequest, UploadFilePartRequestData } from '../api/uploadFilePart'
 import { AxiosProgressEvent, isAxiosError } from 'axios'
 import { FileUploadingData, FileUploadSession } from '../types'
 

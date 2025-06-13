@@ -16,3 +16,10 @@ export const workspaceFolderRequest = async (data: WorkspaceFolderRequestData) =
 
     return response.data
 }
+
+export const workspaceFolderQuery = (
+    data: WorkspaceFolderRequestData
+) => ({
+    queryKey: ['workspaceFolder', data],
+    queryFn: async () => workspaceFolderRequest(data)
+})

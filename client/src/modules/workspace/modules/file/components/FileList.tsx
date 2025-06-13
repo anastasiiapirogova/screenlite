@@ -5,7 +5,7 @@ import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query
 import { ErrorBoundary } from 'react-error-boundary'
 import { Suspense } from 'react'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
-import { workspaceFilesQuery } from '../api/queries/workspaceFilesQuery'
+import { workspaceFilesQuery } from '../api/workspaceFiles'
 
 interface FileListProps {
 	search: string

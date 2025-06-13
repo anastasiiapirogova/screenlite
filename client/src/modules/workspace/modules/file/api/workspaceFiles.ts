@@ -1,6 +1,6 @@
 import { PaginatedResponse } from '@/types'
 import axios from '@config/axios'
-import { WorkspaceFile } from '../../types'
+import { WorkspaceFile } from '../types'
 
 type WorkspaceFilesRequestResponse = PaginatedResponse<WorkspaceFile>
 
@@ -20,3 +20,8 @@ export const workspaceFilesRequest = async (data: WorkspaceFilesRequestData) => 
 
     return response.data
 }
+
+export const workspaceFilesQuery = (data: WorkspaceFilesRequestData) => ({
+    queryKey: ['workspaceFiles', data],
+    queryFn: async () => workspaceFilesRequest(data)
+})

@@ -21,3 +21,10 @@ export const workspaceFoldersRequest = async (data: WorkspaceFoldersRequestData)
 
     return response.data.folders
 }
+
+export const workspaceFoldersQuery = (
+    data: WorkspaceFoldersRequestData
+) => ({
+    queryKey: ['workspaceFolders', data],
+    queryFn: async () => workspaceFoldersRequest(data)
+})

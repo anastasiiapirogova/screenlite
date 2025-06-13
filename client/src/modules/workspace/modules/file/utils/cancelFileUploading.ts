@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios'
-import { cancelFileUploadingRequest } from '../api/requests/cancelFileUploadingRequest'
+import { cancelFileUploadingRequest } from '../api/cancelFileUploading'
 
 export const cancelFileUploading = async (fileUploadSessionId: string, workspaceId: string) => {
     const successCodes = [403, 404]

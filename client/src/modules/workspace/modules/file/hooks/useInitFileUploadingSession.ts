@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useFileUploadingStorage } from '@stores/useFileUploadingStorage'
-import { createFileUploadSessionRequest, CreateFileUploadSessionRequestData } from '../api/requests/createFileUploadSessionRequest'
+import { createFileUploadSessionRequest, CreateFileUploadSessionRequestData } from '../api/createFileUploadSession'
 import { useWorkspace } from '@/modules/workspace/hooks/useWorkspace'
 import { FileUploadingData } from '../types'
 

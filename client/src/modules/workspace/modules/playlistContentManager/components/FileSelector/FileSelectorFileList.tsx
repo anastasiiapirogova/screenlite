@@ -1,7 +1,7 @@
-import { workspaceFilesQuery } from '@workspaceModules/file/api/queries/workspaceFilesQuery'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { FileSelectorFileCard } from './FileSelectorFileCard'
+import { workspaceFilesQuery } from '@workspaceModules/file/api/workspaceFiles'
 
 type Props = {
     search: string

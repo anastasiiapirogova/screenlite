@@ -4,8 +4,8 @@ import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query
 import { ErrorBoundary } from 'react-error-boundary'
 import { Suspense } from 'react'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
-import { workspaceFoldersQuery } from '../api/queries/workspaceFoldersQuery'
 import { DraggableFolderCard } from './FolderCard'
+import { workspaceFoldersQuery } from '../api/workspaceFolders'
 
 type FileListProps = {
 	search: string
@@ -20,7 +20,7 @@ const SuspenseFolderList = ({ search, parentId }: FileListProps) => {
         filters: {
             search,
             deleted: false,
-            parentId: parentId
+            parentId: parentId || null
         }
     }))
 

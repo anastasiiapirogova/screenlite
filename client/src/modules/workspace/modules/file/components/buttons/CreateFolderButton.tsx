@@ -1,5 +1,5 @@
 import { ButtonElement } from '@/types'
-import { createFolderRequest, CreateFolderRequestData } from '@workspaceModules/file/api/requests/createFolderRequest'
+import { createFolderRequest, CreateFolderRequestData } from '@workspaceModules/file/api/createFolder'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { cloneElement } from 'react'
@@ -10,14 +10,14 @@ type Props = {
 }
 
 export const CreateFolderButton = ({ children, parentId }: Props) => {
-    const { id, slug } = useWorkspace()
+    const { id } = useWorkspace()
     const queryClient = useQueryClient()
 
     const { mutate, isPending } = useMutation({
         mutationFn: (data: CreateFolderRequestData) => createFolderRequest(data),
         onSuccess: async () => {
             queryClient.invalidateQueries({
-                queryKey: ['workspaceFolders', { slug: slug }],
+                queryKey: ['workspaceFolders', { id, filters: { parentId } }],
             })
         },
         onError: (error) => {

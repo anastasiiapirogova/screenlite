@@ -1,5 +1,5 @@
 import { ButtonElement } from '@/types'
-import { deleteFoldersRequest, DeleteFoldersRequestData } from '@workspaceModules/file/api/requests/deleteFoldersRequest'
+import { deleteFoldersRequest, DeleteFoldersRequestData } from '@workspaceModules/file/api/deleteFolders'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { useMutation } from '@tanstack/react-query'
 import { cloneElement } from 'react'
