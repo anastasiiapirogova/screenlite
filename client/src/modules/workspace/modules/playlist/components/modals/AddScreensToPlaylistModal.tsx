@@ -24,142 +24,142 @@ interface ScreenListProps {
 }
 
 const ScreenList = ({ search, toggleItemSelection, isSelected }: ScreenListProps) => {
-	const playlist = usePlaylist()
-	const workspace = useWorkspace()
+    const playlist = usePlaylist()
+    const workspace = useWorkspace()
 
-	const { data } = useSuspenseQuery(workspaceScreensQuery(
-		{
-			workspaceId: workspace.id,
-			filters: {
-				search,
-				playlistId: playlist.id,
-				page: 1,
-				limit: 10
-			}
-		}
-	))
+    const { data } = useSuspenseQuery(workspaceScreensQuery(
+        {
+            workspaceId: workspace.id,
+            filters: {
+                search,
+                playlistId: playlist.id,
+                page: 1,
+                limit: 10
+            }
+        }
+    ))
 
-	const screens = data.data as ScreenWithPlaylists[]
+    const screens = data.data as ScreenWithPlaylists[]
 
-	const meta = data.meta
+    const meta = data.meta
 
-	const isAddedToPlaylist = (screen: ScreenWithPlaylists) => {
-		return screen.playlists.length > 0
-	}
+    const isAddedToPlaylist = (screen: ScreenWithPlaylists) => {
+        return screen.playlists.length > 0
+    }
 
-	return (
-		<ul className='w-full'>
-			{meta.total === 0 && <li>No screens found</li>}
-			{screens.map(screen => (
-				<li
-					key={screen.id}
-					onClick={() => {
-						if (!isAddedToPlaylist(screen)) {
-							toggleItemSelection(screen)
-						}
-					}}
-					className='px-4 py-2 cursor-pointer hover:bg-neutral-100'
-				>
-					{screen.name}
-					{isAddedToPlaylist(screen) && <span>Screen is added</span>}
-					{
-						isSelected(screen) && <span>Selected</span>
-					}
-				</li>
-			))}
-		</ul>
-	)
+    return (
+        <ul className='w-full'>
+            { meta.total === 0 && <li>No screens found</li> }
+            { screens.map(screen => (
+                <li
+                    key={ screen.id }
+                    onClick={ () => {
+                        if (!isAddedToPlaylist(screen)) {
+                            toggleItemSelection(screen)
+                        }
+                    } }
+                    className='px-4 py-2 cursor-pointer hover:bg-neutral-100'
+                >
+                    { screen.name }
+                    { isAddedToPlaylist(screen) && <span>Screen is added</span> }
+                    {
+                        isSelected(screen) && <span>Selected</span>
+                    }
+                </li>
+            )) }
+        </ul>
+    )
 }
 
 export const AddScreensToPlaylistModal = ({ onClose }: { onClose: () => void }) => {
-	const [searchTerm, setSearchTerm] = useState('')
-	const debouncedSearchTerm = useDebounce(searchTerm, 300)
-	const playlist = usePlaylist()
-	const screensQuery = playlistScreensQuery(playlist.id)
-	const queryClient = useQueryClient()
-	const workspace = useWorkspace()
+    const [searchTerm, setSearchTerm] = useState('')
+    const debouncedSearchTerm = useDebounce(searchTerm, 300)
+    const playlist = usePlaylist()
+    const screensQuery = playlistScreensQuery(playlist.id)
+    const queryClient = useQueryClient()
+    const workspace = useWorkspace()
 
-	const { toggleItemSelection, isSelected, selectedItems } = useSelection<ScreenWithPlaylists>([], 'id')
+    const { toggleItemSelection, isSelected, selectedItems } = useSelection<ScreenWithPlaylists>([], 'id')
 
-	const {
-		handleSubmit,
-		setError,
-		setValue,
-	} = useForm<AddScreensToPlaylistRequestData>({
-		defaultValues: {
-			playlistId: playlist.id,
-			screenIds: selectedItems.map(item => item.id)
-		}
-	})
+    const {
+        handleSubmit,
+        setError,
+        setValue,
+    } = useForm<AddScreensToPlaylistRequestData>({
+        defaultValues: {
+            playlistId: playlist.id,
+            screenIds: selectedItems.map(item => item.id)
+        }
+    })
 
-	useEffect(() => {
-		setValue('screenIds', selectedItems.map(item => item.id))
-	}, [selectedItems, setValue])
+    useEffect(() => {
+        setValue('screenIds', selectedItems.map(item => item.id))
+    }, [selectedItems, setValue])
 
-	const { mutate, isPending } = useMutation({
-		mutationFn: (data: AddScreensToPlaylistRequestData) => addScreensToPlaylistRequest(data),
-		onSuccess: (data) => {
-			queryClient.invalidateQueries(playlistQuery({
-				playlistId: playlist.id,
-				workspaceId: workspace.id
-			}))
-			queryClient.setQueryData(screensQuery.queryKey, data)
-			onClose()
-		},
-		onError: (error) => {
-			handleAxiosFieldErrors(error, setError)
-		}
-	})
+    const { mutate, isPending } = useMutation({
+        mutationFn: (data: AddScreensToPlaylistRequestData) => addScreensToPlaylistRequest(data),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(playlistQuery({
+                playlistId: playlist.id,
+                workspaceId: workspace.id
+            }))
+            queryClient.setQueryData(screensQuery.queryKey, data)
+            onClose()
+        },
+        onError: (error) => {
+            handleAxiosFieldErrors(error, setError)
+        }
+    })
 
-	const onSubmit: SubmitHandler<AddScreensToPlaylistRequestData> = (data) => {
-		mutate(data)
-	}
+    const onSubmit: SubmitHandler<AddScreensToPlaylistRequestData> = (data) => {
+        mutate(data)
+    }
 
-	return (
-		<>
-			<div className='flex flex-col items-start'>
-				<div className='mb-4'>
-					<Input
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-						placeholder="Search screens..."
-					/>
-				</div>
-				<QueryErrorResetBoundary>
-					<ErrorBoundary fallbackRender={() => (
-						<div>
-							There was an error!
-						</div>
-					)}
-					>
-						<Suspense fallback={<>Loading</>}>
-							<ScreenList
-								search={debouncedSearchTerm}
-								toggleItemSelection={toggleItemSelection}
-								isSelected={isSelected}
-							/>
-						</Suspense>
-					</ErrorBoundary>
-				</QueryErrorResetBoundary>
-			</div>
-			<div>
-				<ModalClose asChild>
-					<Button
-						size='small'
-						className='w-full'
-					>
-						Cancel
-					</Button>
-				</ModalClose>
-				<Button
-					size='small'
-					className='w-full'
-					disabled={isPending || selectedItems.length === 0}
-					onClick={() => handleSubmit(onSubmit)()}
-				>
-					Add screens
-				</Button>
-			</div>
-		</>
-	)
+    return (
+        <>
+            <div className='flex flex-col items-start'>
+                <div className='mb-4'>
+                    <Input
+                        value={ searchTerm }
+                        onChange={ (e) => setSearchTerm(e.target.value) }
+                        placeholder="Search screens..."
+                    />
+                </div>
+                <QueryErrorResetBoundary>
+                    <ErrorBoundary fallbackRender={ () => (
+                        <div>
+                            There was an error!
+                        </div>
+                    ) }
+                    >
+                        <Suspense fallback={ <>Loading</> }>
+                            <ScreenList
+                                search={ debouncedSearchTerm }
+                                toggleItemSelection={ toggleItemSelection }
+                                isSelected={ isSelected }
+                            />
+                        </Suspense>
+                    </ErrorBoundary>
+                </QueryErrorResetBoundary>
+            </div>
+            <div>
+                <ModalClose asChild>
+                    <Button
+                        size='small'
+                        className='w-full'
+                    >
+                        Cancel
+                    </Button>
+                </ModalClose>
+                <Button
+                    size='small'
+                    className='w-full'
+                    disabled={ isPending || selectedItems.length === 0 }
+                    onClick={ () => handleSubmit(onSubmit)() }
+                >
+                    Add screens
+                </Button>
+            </div>
+        </>
+    )
 }

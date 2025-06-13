@@ -1,5 +1,5 @@
-import { WorkspaceMemberCard } from "./WorkspaceMemberCard"
-import { Member } from "../types"
+import { WorkspaceMemberCard } from './WorkspaceMemberCard'
+import { Member } from '../types'
 
 export const WorkspaceMembersList = ({ members }: { members: Member[] }) => {
     return (

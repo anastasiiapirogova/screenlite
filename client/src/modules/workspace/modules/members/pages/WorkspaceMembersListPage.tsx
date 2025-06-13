@@ -1,9 +1,9 @@
-import { LayoutBodyContainer } from "@shared/components/LayoutBodyContainer"
-import { ScrollArea } from "@shared/ui/ScrollArea"
-import { WorkspaceMembersList } from "../components/WorkspaceMembersList"
-import { workspaceMembersQuery } from "../api/queries/workspaceMembersQuery"
-import { useQuery } from "@tanstack/react-query"
-import { useWorkspace } from "@modules/workspace/hooks/useWorkspace"
+import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
+import { ScrollArea } from '@shared/ui/ScrollArea'
+import { WorkspaceMembersList } from '../components/WorkspaceMembersList'
+import { workspaceMembersQuery } from '../api/queries/workspaceMembersQuery'
+import { useQuery } from '@tanstack/react-query'
+import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 
 export const WorkspaceMembersListPage = () => {
     const workspace = useWorkspace()

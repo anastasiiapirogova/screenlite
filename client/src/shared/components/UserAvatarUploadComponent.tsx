@@ -1,4 +1,4 @@
-import { getFileThumbnailSrc } from '@workspaceModules/file/utils/getFileThumbnailSrc';
+import { getFileThumbnailSrc } from '@workspaceModules/file/utils/getFileThumbnailSrc'
 import React, { useEffect, useRef, useState } from 'react'
 import { TbCamera } from 'react-icons/tb'
 

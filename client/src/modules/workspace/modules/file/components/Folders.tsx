@@ -25,7 +25,7 @@ const SuspenseFolderList = ({ search, parentId }: FileListProps) => {
     }))
 
     return (
-        <div className='flex flex-wrap gap-5'>
+        <div className='flex flex-wrap justify-between gap-5'>
             { folders.map(folder => (
                 <DraggableFolderCard
                     folder={ folder }

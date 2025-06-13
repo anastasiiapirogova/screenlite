@@ -1,4 +1,4 @@
-import { getFileThumbnailSrc } from '@workspaceModules/file/utils/getFileThumbnailSrc';
+import { getFileThumbnailSrc } from '@workspaceModules/file/utils/getFileThumbnailSrc'
 import React from 'react'
 
 type UserAvatarProps = {

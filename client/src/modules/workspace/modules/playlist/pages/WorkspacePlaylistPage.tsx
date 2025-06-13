@@ -120,10 +120,10 @@ export const WorkspacePlaylistPage = () => {
                 </RestorePlaylistButton>
             </div>
             <div className='flex gap-5 mt-5'>
-				<PlaylistPageLayoutCard />
+                <PlaylistPageLayoutCard />
                 <div className='w-1/2'>
                     <Items />
-					<Status />
+                    <Status />
                 </div>
                 <div className='w-1/2'>
                     <Size />

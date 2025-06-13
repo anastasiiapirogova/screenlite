@@ -1,6 +1,6 @@
-import { Button } from "@shared/ui/buttons/Button"
-import { Member } from "../types"
-import { RemoveMemberButton } from "./buttons/RemoveMemberButton"
+import { Button } from '@shared/ui/buttons/Button'
+import { Member } from '../types'
+import { RemoveMemberButton } from './buttons/RemoveMemberButton'
 
 export const WorkspaceMemberCard = ({ member }: { member: Member }) => {
     return (
@@ -11,7 +11,10 @@ export const WorkspaceMemberCard = ({ member }: { member: Member }) => {
             </div>
             <div className='flex items-center gap-2'>
                 <RemoveMemberButton member={ member }>
-                    <Button color='danger' variant='soft'>Remove</Button>
+                    <Button
+                        color='danger'
+                        variant='soft'
+                    >Remove</Button>
                 </RemoveMemberButton>
             </div>
         </div>

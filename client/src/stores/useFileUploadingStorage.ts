@@ -1,4 +1,4 @@
-import { FileUploadingData, FileUploadSession } from '@/modules/file/types'
+import { FileUploadingData, FileUploadSession } from '@workspaceModules/file/types'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'

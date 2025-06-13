@@ -1,5 +1,4 @@
 import { createElement, forwardRef } from 'react'
-import { CSS } from '@dnd-kit/utilities'
 import React from 'react'
 import { useDraggable, useDroppable } from '@dnd-kit/core'
 import { Folder } from '../types'
@@ -36,7 +35,7 @@ export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProp
 export const DraggableFolderCard = (props: { folder: Folder }) => {
     const { folder } = props
 
-    const { setNodeRef: setDroppableRef } = useDroppable({
+    const { setNodeRef: setDroppableRef, isOver } = useDroppable({
         id: folder.id,
     })
 
@@ -44,8 +43,6 @@ export const DraggableFolderCard = (props: { folder: Folder }) => {
         attributes,
         listeners,
         setNodeRef,
-        transform,
-        isDragging
     } = useDraggable({
         id: folder.id,
         data: {
@@ -56,8 +53,6 @@ export const DraggableFolderCard = (props: { folder: Folder }) => {
     })
 
     const style: React.CSSProperties = {
-        transform: CSS.Transform.toString(transform),
-        opacity: isDragging ? 0 : 1,
         touchAction: 'none',
         userSelect: 'none',
     }
@@ -66,6 +61,7 @@ export const DraggableFolderCard = (props: { folder: Folder }) => {
         <div
             ref={ setDroppableRef }
             style={ style }
+            className={ isOver ? 'bg-gray-100' : '' }
         >
             <FolderCard
                 folder={ folder }
