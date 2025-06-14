@@ -4,7 +4,7 @@ import { Prisma } from '@generated/prisma/client.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { getWorkspaceLayoutsSchema } from '../schemas/playlistLayoutSchemas.js'
 
-export const getWorkspacePlaylistLayouts = async (req: Request, res: Response) => {
+export const workspacePlaylistLayouts = async (req: Request, res: Response) => {
     const workspace = req.workspace!
 
     const parsedData = getWorkspaceLayoutsSchema.safeParse(req.query)
@@ -20,7 +20,7 @@ export const getWorkspacePlaylistLayouts = async (req: Request, res: Response) =
         name: search ? {
             contains: search,
             mode: 'insensitive' as Prisma.QueryMode,
-        } : undefined
+        } : Prisma.skip
     }
 
     const [layouts, total] = await Promise.all([

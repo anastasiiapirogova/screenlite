@@ -1,4 +1,4 @@
-import { getWorkspacePlaylistLayouts } from './getWorkspacePlaylistLayouts.js'
+import { workspacePlaylistLayouts } from './workspacePlaylistLayouts.js'
 import { getPlaylistLayout } from './getPlaylistLayout.js'
 import { getPlaylistLayoutPlaylists } from './getPlaylistLayoutPlaylists.js'
 import { createPlaylistLayout } from './createPlaylistLayout.js'
@@ -6,7 +6,7 @@ import { updatePlaylistLayout } from './updatePlaylistLayout.js'
 import { deletePlaylistLayout } from './deletePlaylistLayout.js'
 
 export {
-    getWorkspacePlaylistLayouts,
+    workspacePlaylistLayouts,
     getPlaylistLayout,
     getPlaylistLayoutPlaylists,
     createPlaylistLayout,
@@ -15,7 +15,7 @@ export {
 }
 
 export default {
-    getWorkspacePlaylistLayouts,
+    workspacePlaylistLayouts,
     getPlaylistLayout,
     getPlaylistLayoutPlaylists,
     createPlaylistLayout,
