@@ -219,7 +219,7 @@ createWorkspaceRoute({
 createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/playlistLayouts',
-    handler: PlaylistLayoutController.getWorkspacePlaylistLayouts,
+    handler: PlaylistLayoutController.workspacePlaylistLayouts,
     enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.playlistLayout.view })
 })
 
