@@ -18,11 +18,16 @@ export const forceDeleteFiles = async (req: Request, res: Response) => {
 
     const { fileIds } = result.data
 
-    await prisma.file.deleteMany({
+    await prisma.file.updateMany({
         where: {
             id: { in: fileIds },
             workspaceId: workspace.id,
             deletedAt: { not: null }
+        },
+        data: {
+            forceDeleteRequestedAt: new Date(),
+            folderId: null,
+            folderIdBeforeDeletion: null,
         }
     })
 
