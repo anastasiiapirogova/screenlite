@@ -4,12 +4,17 @@ import { ResponseHandler } from '@utils/ResponseHandler.js'
 
 export const emptyTrash = async (req: Request, res: Response) => {
     const workspace = req.workspace!
-    
+
     await prisma.$transaction(async (tx) => {
-        await tx.file.deleteMany({
+        await tx.file.updateMany({
             where: {
                 workspaceId: workspace.id,
-                deletedAt: { not: null }
+                deletedAt: { not: null },
+            },
+            data: {
+                forceDeleteRequestedAt: new Date(),
+                folderId: null,
+                folderIdBeforeDeletion: null,
             }
         })
 
@@ -23,4 +28,4 @@ export const emptyTrash = async (req: Request, res: Response) => {
     })
 
     return ResponseHandler.ok(res)
-} 
+}
