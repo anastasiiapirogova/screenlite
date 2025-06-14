@@ -22,6 +22,7 @@ model File {
     createdAt              DateTime  @default(now())
     updatedAt              DateTime  @updatedAt
     deletedAt              DateTime?
+    forceDeleteRequestedAt DateTime?
     uploaderId             String?
 
     folder               Folder?        @relation("Files", fields: [folderId], references: [id], onDelete: Cascade)
