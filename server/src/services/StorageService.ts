@@ -138,7 +138,10 @@ export class StorageService {
         let processedImage = sharp(imageBuffer)
 
         if (options?.width || options?.height) {
-            processedImage = processedImage.resize(options.width, options.height, { fit: 'cover' })
+            processedImage = processedImage.resize(options.width, options.height, {
+                fit: 'cover',
+                background: { r: 255, g: 255, b: 255 }
+            })
         }
 
         if (options?.format) {
