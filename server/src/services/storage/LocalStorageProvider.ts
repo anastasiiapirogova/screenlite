@@ -4,7 +4,6 @@ import path from 'path'
 import { v4 as uuid } from 'uuid'
 import { IStorageProvider } from './IStorageProvider.js'
 import { FileNotFoundError } from './errors.js'
-import { join } from 'path'
 import { stat } from 'fs/promises'
 
 export class LocalStorageProvider implements IStorageProvider {
@@ -25,8 +24,16 @@ export class LocalStorageProvider implements IStorageProvider {
         }
     }
 
+    private sanitizeKey(key: string): string {
+        const sanitized = path.normalize(key).replace(/^(\.\.(\/|\\|$))+/, '')
+        
+        return sanitized.replace(/^[/\\]/, '')
+    }
+
     private getFilePath(key: string): string {
-        return path.join(this.uploadsDir, key)
+        const sanitizedKey = this.sanitizeKey(key)
+        
+        return path.join(this.uploadsDir, sanitizedKey)
     }
 
     private async checkFileExists(key: string): Promise<boolean> {
@@ -156,11 +163,13 @@ export class LocalStorageProvider implements IStorageProvider {
             throw new FileNotFoundError(key)
         }
 
-        return `${this.baseUrl}/api/static/uploads/${key}`
+        const sanitizedKey = this.sanitizeKey(key)
+        
+        return `${this.baseUrl}/api/static/uploads/${sanitizedKey}`
     }
 
     public async getFileSize(key: string): Promise<number> {
-        const filePath = join(this.uploadsDir, key)
+        const filePath = this.getFilePath(key)
         
         try {
             const stats = await stat(filePath)
