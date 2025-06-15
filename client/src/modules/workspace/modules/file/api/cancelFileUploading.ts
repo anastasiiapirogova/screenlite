@@ -6,7 +6,7 @@ export type CancelFileUploadingRequestData = {
 }
 
 export const cancelFileUploadingRequest = async (data: CancelFileUploadingRequestData) => {
-    const response = await axios.post(`/workspaces/${data.workspaceId}/files/uploadSessions/${data.fileUploadSessionId}/cancel`, data)
+    const response = await axios.post(`/workspaces/${data.workspaceId}/files/uploadSessions/${data.fileUploadSessionId}/cancel`)
 
     return response.data
 }

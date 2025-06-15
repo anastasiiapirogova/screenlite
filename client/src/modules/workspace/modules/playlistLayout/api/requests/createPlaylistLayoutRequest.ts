@@ -6,7 +6,7 @@ type CreatePlaylistLayoutRequestResponse = {
 }
 
 export const createPlaylistLayoutRequest = async (data: CreatePlaylistLayoutRequestData) => {
-    const response = await axios.post<CreatePlaylistLayoutRequestResponse>('/playlistLayouts/create', data)
+    const response = await axios.post<CreatePlaylistLayoutRequestResponse>(`/workspaces/${data.workspaceId}/playlistLayouts`, data)
 
     return response.data.playlistLayout
 }

@@ -8,11 +8,14 @@ export type WorkspacePlaylistLayoutsRequestFilters = PaginatedRequestFilter & {
     search?: string | null
 }
 
-export const workspacePlaylistLayoutsRequest = async (workspaceId: string, filters: WorkspacePlaylistLayoutsRequestFilters) => {
-    const response = await axios.get<WorkspacePlaylistLayoutsRequestResponse>(`/workspaces/${workspaceId}/playlistLayouts`, {
-        params: {
-            ...filters
-        }
+export type WorkspacePlaylistLayoutsRequestData = {
+    workspaceId: string,
+    filters: WorkspacePlaylistLayoutsRequestFilters
+}
+
+export const workspacePlaylistLayoutsRequest = async (data: WorkspacePlaylistLayoutsRequestData) => {
+    const response = await axios.get<WorkspacePlaylistLayoutsRequestResponse>(`/workspaces/${data.workspaceId}/playlistLayouts`, {
+        params: data.filters
     })
 
     return response.data
