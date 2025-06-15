@@ -1,6 +1,8 @@
 import { motion } from 'motion/react'
 
-export const AppPreloader = () => {
+export const AppPreloader = ({ error }: { error: Error | null }) => {
+    const errorMessage = error?.message || 'Something went wrong'
+
     return (
         <div className="flex items-center justify-center h-screen">
             <motion.div
@@ -13,7 +15,9 @@ export const AppPreloader = () => {
                     Screenlite
                 </div>
                 <div className='text-sm text-neutral-500 mt-2'>
-                    Connecting to the server...
+                    {
+                        error ? errorMessage : 'Connecting to the server...'
+                    }
                 </div>
             </motion.div>
         </div>

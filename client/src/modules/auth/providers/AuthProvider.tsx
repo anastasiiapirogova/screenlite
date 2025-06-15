@@ -10,7 +10,7 @@ import { AppPreloader } from '@shared/components/AppPreloader'
 export const AuthProvider = () => {
     const queryClient = useQueryClient()
 
-    const { data: user } = useQuery<User | null>(currentUserQuery())
+    const { data: user, error } = useQuery<User | null>(currentUserQuery())
 
     const handleLogin = (data: LoginRequestResponse) => {
         storeAuthToken(data.token)
@@ -24,7 +24,7 @@ export const AuthProvider = () => {
     }
 
     if (user === undefined) {
-        return <AppPreloader />
+        return <AppPreloader error={ error }/>
     }
 
     const contextValue = {
