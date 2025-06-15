@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { FileNotFoundError } from '../../services/storage/errors.js'
 import { Storage } from '@config/storage.js'
-import { normalize } from 'path'
+import { normalize, extname } from 'path'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 
 interface Range {
@@ -46,65 +46,83 @@ function validateFilePath(filePath: string): string {
     return cleanPath
 }
 
+function getContentType(filePath: string): string {
+    const ext = extname(filePath).toLowerCase()
+
+    const contentTypes: Record<string, string> = {
+        '.mp4': 'video/mp4',
+        '.webm': 'video/webm',
+        '.mkv': 'video/x-matroska',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.png': 'image/png',
+        '.gif': 'image/gif',
+    }
+
+    return contentTypes[ext] || 'application/octet-stream'
+}
+
+function setCommonHeaders(res: Response, filePath: string, fileSize: number, range?: Range) {
+    const contentType = getContentType(filePath)
+
+    res.setHeader('Accept-Ranges', 'bytes')
+    res.setHeader('Content-Disposition', 'inline')
+    res.setHeader('Content-Type', contentType)
+    res.setHeader('Cache-Control', 'public, max-age=31536000')
+
+    if (range) {
+        const chunkSize = range.end - range.start + 1
+
+        res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${fileSize}`)
+        res.setHeader('Content-Length', chunkSize.toString())
+        res.status(206)
+    } else {
+        res.setHeader('Content-Length', fileSize.toString())
+    }
+}
+
+async function handleStream(stream: NodeJS.ReadableStream, res: Response) {
+    stream.on('error', (error) => {
+        console.error('Stream error:', error)
+
+        if (!res.headersSent) {
+            ResponseHandler.serverError(res, 'Stream error')
+        }
+    })
+
+    stream.pipe(res)
+}
+
 export const getFile = async (req: Request, res: Response) => {
     try {
         const rawFilePath = req.params[0]
         const filePath = validateFilePath(rawFilePath)
-
         const fileSize = await Storage.getFileSize(filePath)
         const rangeHeader = req.headers.range
 
         if (rangeHeader) {
             try {
                 const range = parseRange(rangeHeader, fileSize)
-                const chunkSize = range.end - range.start + 1
 
-                res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${fileSize}`)
-                res.setHeader('Accept-Ranges', 'bytes')
-                res.setHeader('Content-Length', chunkSize.toString())
-                res.setHeader('Content-Disposition', 'inline')
-                res.setHeader('Content-Type', 'video/mp4')
-                res.setHeader('Cache-Control', 'public, max-age=31536000')
-                res.status(206)
+                setCommonHeaders(res, filePath, fileSize, range)
 
                 const stream = await Storage.createReadStream(filePath, {
                     start: range.start,
                     end: range.end
                 })
 
-                stream.on('error', (error) => {
-                    console.error('Stream error:', error)
-                    if (!res.headersSent) {
-                        res.status(500).json({ error: 'Stream error' })
-                    }
-                })
-
-                stream.pipe(res)
-                
+                await handleStream(stream, res)
                 return
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            } catch (err) {
-                res.status(416)
-                res.json({ error: 'Invalid range' })
+            } catch {
+                res.status(416).json({ error: 'Invalid range' })
                 return
             }
         }
 
-        res.setHeader('Content-Length', fileSize.toString())
-        res.setHeader('Accept-Ranges', 'bytes')
-        res.setHeader('Content-Disposition', 'inline')
-        res.setHeader('Content-Type', 'video/mp4')
-        res.setHeader('Cache-Control', 'public, max-age=31536000')
+        setCommonHeaders(res, filePath, fileSize)
         const stream = await Storage.createReadStream(filePath)
 
-        stream.on('error', (error) => {
-            console.error('Stream error:', error)
-            if (!res.headersSent) {
-                res.status(500).json({ error: 'Stream error' })
-            }
-        })
-
-        stream.pipe(res)
+        await handleStream(stream, res)
         return
     } catch (error) {
         if (error instanceof FileNotFoundError) {
