@@ -6,6 +6,8 @@ import { IStorageProvider } from './IStorageProvider.js'
 import { FileNotFoundError } from './errors.js'
 import { stat } from 'fs/promises'
 
+// TODO: Instead of creating multiple files for uploading multiple parts, write to a single file
+// and then when the upload is complete, move the file to the final location
 export class LocalStorageProvider implements IStorageProvider {
     private readonly baseDir: string
     private readonly uploadsDir: string
