@@ -8,3 +8,4 @@ prisma/dev.db
 .swc
 tmp
 /src/generated/prisma
+/storage

@@ -1,10 +1,10 @@
-import { createBuckets } from './config/s3Client.js'
 import { GracefulShutdown } from './types.js'
 import { initPrisma } from './config/prisma.js'
 import { initSocketIo } from './controllers/socket.js'
 import { closeWorkers } from 'bullmq/workers.js'
 import './config/rateLimiter.js'
 import { server } from '@config/server.js'
+import './config/storage.js'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {
@@ -20,7 +20,6 @@ const gracefulShutdown: GracefulShutdown = async (signal) => {
 const bootstrap = async () => {
     try {
         await initPrisma()
-        await createBuckets()
     } catch (error) {
         console.error('Error during bootstrap:', error)
         await closeWorkers()

@@ -11,10 +11,9 @@ model File {
     width                  Int?
     height                 Int?
     duration               Int?
-    // TODO: Implement defaultDuration
     defaultDuration        Int?
-    processingStatus       String    @default("pending")
-    md5                    String?
+    codec                  String?
+    processingStatus       String    @default("processing")
     folderId               String?
     folderIdBeforeDeletion String?
     availabilityStartAt    DateTime?

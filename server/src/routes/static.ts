@@ -1,6 +1,7 @@
 import express, { RequestHandler } from 'express'
 import { asyncHandler } from '../utils/asyncHandler.js'
 import { getImageThumbnail } from '@modules/static/getImageThumbnail.js'
+import { getFile } from '@modules/static/getFile.js'
 
 const router = express.Router()
 
@@ -13,5 +14,7 @@ const createRoute = (method: HttpMethod, path: string, handler: (req: express.Re
 }
 
 createRoute(HttpMethod.GET, '/thumbnail/*', getImageThumbnail)
+createRoute(HttpMethod.GET, '/uploads/*', getFile)
+
 
 export { router as staticRoutes }
