@@ -13,7 +13,14 @@ import { changePlaylistLayoutRequest, ChangePlaylistLayoutRequestData } from '@m
 
 const PlaylistLayoutsList = ({ search, selectedLayoutId, selectLayout }: { search: string, selectedLayoutId: string | undefined, selectLayout: (id: string) => void }) => {
     const workspace = useWorkspace()
-    const { data } = useSuspenseQuery(workspacePlaylistLayoutsQuery(workspace.slug, { search, limit: 10, page: 1 }))
+    const { data } = useSuspenseQuery(workspacePlaylistLayoutsQuery({
+        workspaceId: workspace.id,
+        filters: {
+            search,
+            limit: 10,
+            page: 1
+        }
+    }))
     const { data: playlistLayouts } = data
 
     return (

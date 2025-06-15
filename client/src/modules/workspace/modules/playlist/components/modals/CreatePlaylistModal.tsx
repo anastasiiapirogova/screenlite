@@ -1,6 +1,5 @@
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { useMutation } from '@tanstack/react-query'
-import { isAxiosError } from 'axios'
 import { DialogDescription } from '@radix-ui/react-dialog'
 import { useWorkspace } from '@/modules/workspace/hooks/useWorkspace'
 import { useNavigate } from 'react-router'
@@ -15,12 +14,15 @@ import { Button } from '@shared/ui/buttons/Button'
 import { ModalClose } from '@shared/ui/modal/Modal'
 import { getPlaylistTypeOptions } from '@modules/workspace/modules/playlist/utils/playlistTypes'
 import { RadioGroup } from '@shared/ui/radio/RadioGroup'
+import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
+import { useRefetchWorkspaceEntityCounts } from '@modules/workspace/hooks/useRefetchWorkspaceEntityCounts'
 
 export const CreatePlaylistModal = () => {
     const workspace = useWorkspace()
     const routes = useWorkspaceRoutes()
     const navigate = useNavigate()
     const setPlaylistQueryData = useSetPlaylistQueryData()
+    const refetchEntityCounts = useRefetchWorkspaceEntityCounts()
 
     const {
         control,
@@ -41,24 +43,11 @@ export const CreatePlaylistModal = () => {
         mutationFn: (data: CreatePlaylistRequestData) => createPlaylistRequest(data),
         onSuccess: async (playlist) => {
             setPlaylistQueryData(playlist.id, playlist)
+            refetchEntityCounts()
             navigate(routes.playlist(playlist.id))
         },
         onError: (error) => {
-            if (isAxiosError(error) && error.response) {
-
-                if (error.response.data && error.response.data.errors) {
-				  const errors = error.response.data.errors
-		
-				  for (const [field, message] of Object.entries(errors)) {
-                        const messageString = String(message)
-
-                        setError(field as keyof CreatePlaylistRequestData, {
-                            type: 'custom',
-                            message: messageString
-                        })
-				  }
-                }
-            }
+            handleAxiosFieldErrors<CreatePlaylistRequestData>(error, setError)
         }
     })
 
@@ -84,7 +73,8 @@ export const CreatePlaylistModal = () => {
                             render={ ({ field }) => (
                                 <Input
                                     { ...field }
-                                    placeholder='Breakfasts'
+                                    autoComplete='off'
+                                    placeholder='Enter a descriptive playlist name'
                                 />
                             ) }
                         />

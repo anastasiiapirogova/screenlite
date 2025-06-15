@@ -1,9 +1,6 @@
-import { workspacePlaylistLayoutsRequest, WorkspacePlaylistLayoutsRequestFilters } from '../requests/workspacePlaylistLayoutsRequest'
+import { workspacePlaylistLayoutsRequest, WorkspacePlaylistLayoutsRequestData } from '../requests/workspacePlaylistLayoutsRequest'
 
-export const workspacePlaylistLayoutsQuery = (
-    slug: string,
-    filters: WorkspacePlaylistLayoutsRequestFilters
-) => ({
-    queryKey: ['workspacePlaylistLayouts', { slug, filters }],
-    queryFn: async () => workspacePlaylistLayoutsRequest(slug, filters)
+export const workspacePlaylistLayoutsQuery = (data: WorkspacePlaylistLayoutsRequestData) => ({
+    queryKey: ['workspacePlaylistLayouts', data],
+    queryFn: async () => workspacePlaylistLayoutsRequest(data)
 })

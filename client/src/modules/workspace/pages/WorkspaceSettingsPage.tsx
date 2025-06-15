@@ -5,7 +5,9 @@ export const WorkspaceSettingsPage = () => {
     return (
         <LayoutBodyContainer>
             <ScrollArea verticalMargin={ 24 }>
-                Hello
+                <div className='p-7'>
+                    Settings
+                </div>
             </ScrollArea>
         </LayoutBodyContainer>
     )

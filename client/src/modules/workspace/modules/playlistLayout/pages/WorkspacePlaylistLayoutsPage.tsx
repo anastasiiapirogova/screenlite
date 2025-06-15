@@ -22,7 +22,10 @@ const PlaylistLayoutsList = () => {
     const { setPlaylistLayoutCount } = useSearchCountStore()
     const { filters } = useRouterPlaylistLayoutFilter()
 
-    const { data } = useSuspenseQuery(workspacePlaylistLayoutsQuery(workspace.slug, filters))
+    const { data } = useSuspenseQuery(workspacePlaylistLayoutsQuery({
+        workspaceId: workspace.id,
+        filters
+    }))
 
     const { meta, data: playlistLayouts } = data
 

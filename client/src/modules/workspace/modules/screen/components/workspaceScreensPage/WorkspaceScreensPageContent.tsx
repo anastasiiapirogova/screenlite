@@ -8,9 +8,8 @@ import { WorkspaceScreensPageList } from './WorkspaceScreensPageList'
 
 export const WorkspaceScreensPageContent = () => {
     const workspace = useWorkspace()
-    
     const { filters, setPage } = useRouterScreenFilter()
-    
+
     const { data, isLoading } = useQuery(workspaceScreensQuery({
         workspaceId: workspace.id,
         filters
@@ -19,17 +18,21 @@ export const WorkspaceScreensPageContent = () => {
     const deferredIsLoading = useDeferredLoading(isLoading, { delay: 0, minDuration: 500 })
 
     return (
-        <>
-            <WorkspaceScreensPageList
-                data={ data }
-                isLoading={ deferredIsLoading }
-            />
+        <div
+            className="flex flex-col h-full"
+            style={ { height: 'calc(100vh - 168px)' } }
+        >
+            <div className="grow">
+                <WorkspaceScreensPageList
+                    data={ data }
+                    isLoading={ deferredIsLoading }
+                />
+            </div>
             <Pagination
                 page={ filters.page }
                 pages={ data?.meta.pages }
                 onPageChange={ setPage }
             />
-        </>
-        
+        </div>
     )
 }

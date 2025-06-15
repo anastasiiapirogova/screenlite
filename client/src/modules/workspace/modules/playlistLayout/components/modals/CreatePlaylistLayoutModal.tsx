@@ -1,6 +1,5 @@
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { isAxiosError } from 'axios'
 import { DialogDescription } from '@radix-ui/react-dialog'
 import { useWorkspace } from '@/modules/workspace/hooks/useWorkspace'
 import { useNavigate } from 'react-router'
@@ -13,15 +12,15 @@ import { ModalClose } from '@shared/ui/modal/Modal'
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { Input } from '@shared/ui/input/Input'
 import { InputError } from '@shared/ui/input/InputError'
+import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
+import { useRefetchWorkspaceEntityCounts } from '@modules/workspace/hooks/useRefetchWorkspaceEntityCounts'
 
 export const CreatePlaylistLayoutModal = () => {
     const workspace = useWorkspace()
-
     const routes = useWorkspaceRoutes()
-
     const navigate = useNavigate()
-
     const queryClient = useQueryClient()
+    const refetchEntityCounts = useRefetchWorkspaceEntityCounts()
 
     const {
         control,
@@ -40,25 +39,12 @@ export const CreatePlaylistLayoutModal = () => {
     const { mutate, isPending } = useMutation({
         mutationFn: (data: CreatePlaylistLayoutRequestData) => createPlaylistLayoutRequest(data),
         onSuccess: async (playlistLayout) => {
-            await queryClient.setQueryData(playlistLayoutQuery(playlistLayout.id).queryKey, playlistLayout)
+            queryClient.setQueryData(playlistLayoutQuery(playlistLayout.id).queryKey, playlistLayout)
+            refetchEntityCounts()
             navigate(routes.playlistLayout(playlistLayout.id))
         },
         onError: (error) => {
-            if (isAxiosError(error) && error.response) {
-
-                if (error.response.data && error.response.data.errors) {
-				  const errors = error.response.data.errors
-		
-				  for (const [field, message] of Object.entries(errors)) {
-                        const messageString = String(message)
-
-                        setError(field as keyof CreatePlaylistLayoutRequestData, {
-                            type: 'custom',
-                            message: messageString
-                        })
-				  }
-                }
-            }
+            handleAxiosFieldErrors<CreatePlaylistLayoutRequestData>(error, setError)
         }
     })
 
@@ -67,7 +53,7 @@ export const CreatePlaylistLayoutModal = () => {
     }
 	  
     return (
-        <>
+        <div className='px-7 flex flex-col gap-5 mt-5'>
             <div className='flex flex-col items-start gap-4'>
                 <DialogDescription aria-description='Create playlist modal'/>
                 <form
@@ -75,7 +61,7 @@ export const CreatePlaylistLayoutModal = () => {
                     className='w-full flex flex-col gap-2'
                 >
                     <InputLabelGroup
-                        label='Playlist name'
+                        label='Layout name'
                         name='name'
                     >
                         <Controller
@@ -84,7 +70,8 @@ export const CreatePlaylistLayoutModal = () => {
                             render={ ({ field }) => (
                                 <Input
                                     { ...field }
-                                    placeholder='Breakfasts'
+                                    autoComplete='off'
+                                    placeholder='Enter a descriptive layout name'
                                 />
                             ) }
                         />
@@ -92,25 +79,22 @@ export const CreatePlaylistLayoutModal = () => {
                     </InputLabelGroup>
                 </form>
             </div>
-            <div>
+            <div className='flex gap-5 justify-end'>
                 <ModalClose asChild>
                     <Button
-                        size='small'
-                        className='w-full'
+                        color='secondary'
+                        variant='soft'
                     >
                         Cancel
                     </Button>
                 </ModalClose>
                 <Button
-                    size='small'
-                    className='w-full'
                     disabled={ isPending }
                     onClick={ () => handleSubmit(onSubmit)() }
                 >
                     Create layout
                 </Button>
             </div>
-        </>
-		
+        </div>
     )
 }

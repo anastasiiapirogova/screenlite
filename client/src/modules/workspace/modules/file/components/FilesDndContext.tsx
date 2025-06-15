@@ -51,7 +51,7 @@ export const FilesDndContext = ({ children }: { children: ReactNode }) => {
                 {
                     draggedItem && (
                         draggedItem.data.current ? (
-                            <div className='rounded-md p-2 flex items-center justify-center shadow bg-slate-600'>
+                            <div className='rounded-md p-2 flex items-center justify-center shadow-lg bg-slate-100 w-[150px]'>
                                 { selectedCount }
                             </div>
                         ) : null
