@@ -50,13 +50,24 @@ const generateETag = (buffer: Buffer): string => {
     return crypto.createHash('md5').update(buffer).digest('hex')
 }
 
-const generateImageThumbnail = async (imageStream: Readable): Promise<Buffer> => {
+const generateImageThumbnail = async (
+    imageStream: Readable,
+    options: Partial<ThumbnailOptions> = {}
+): Promise<Buffer> => {
+    const { width, height, quality, format } = {
+        ...DEFAULT_THUMBNAIL_OPTIONS,
+        ...options
+    }
+
     const transformer = sharp()
-        .resize(DEFAULT_THUMBNAIL_OPTIONS.width, DEFAULT_THUMBNAIL_OPTIONS.height, {
-            fit: 'cover',
-            position: 'centre'
-        })[DEFAULT_THUMBNAIL_OPTIONS.format]({
-            quality: DEFAULT_THUMBNAIL_OPTIONS.quality
+        .resize({
+            width,
+            height,
+            fit: 'inside',
+            withoutEnlargement: true,
+            background: { r: 0, g: 0, b: 0, alpha: 0 }
+        })[format]({
+            quality
         })
 
     return new Promise((resolve, reject) => {
@@ -68,6 +79,7 @@ const generateImageThumbnail = async (imageStream: Readable): Promise<Buffer> =>
         imageStream.pipe(transformer)
     })
 }
+
 
 export const getImageThumbnail = async (req: Request, res: Response) => {
     try {
