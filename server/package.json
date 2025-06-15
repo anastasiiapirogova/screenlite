@@ -9,6 +9,9 @@
 		"start": "[ -f .env ] && env-cmd -f .env --no-override node dist/screenlite.js || node dist/screenlite.js",
 		"test": "vitest --bail=1"
 	},
+	"bin": {
+		"bullmq": "./bin/bullmq-cli.ts"
+	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.758.0",
 		"@prisma/adapter-pg": "^6.8.2",
