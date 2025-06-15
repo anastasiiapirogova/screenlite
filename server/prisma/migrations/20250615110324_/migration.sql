@@ -74,13 +74,15 @@ CREATE TABLE "File" (
     "height" INTEGER,
     "duration" INTEGER,
     "defaultDuration" INTEGER,
-    "md5" TEXT,
+    "processingStatus" TEXT NOT NULL DEFAULT 'pending',
     "folderId" TEXT,
+    "folderIdBeforeDeletion" TEXT,
     "availabilityStartAt" TIMESTAMP(3),
     "availabilityEndAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
+    "forceDeleteRequestedAt" TIMESTAMP(3),
     "uploaderId" TEXT,
 
     CONSTRAINT "File_pkey" PRIMARY KEY ("id")
@@ -111,11 +113,31 @@ CREATE TABLE "Folder" (
     "name" TEXT NOT NULL,
     "workspaceId" TEXT NOT NULL,
     "parentId" TEXT,
+    "parentIdBeforeDeletion" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "Folder_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Link" (
+    "id" TEXT NOT NULL,
+    "workspaceId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "path" TEXT NOT NULL,
+    "width" INTEGER,
+    "height" INTEGER,
+    "defaultDuration" INTEGER,
+    "availabilityStartAt" TIMESTAMP(3),
+    "availabilityEndAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "addedById" TEXT,
+
+    CONSTRAINT "Link_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -144,6 +166,7 @@ CREATE TABLE "PlaylistItem" (
     "duration" INTEGER,
     "playlistLayoutSectionId" TEXT NOT NULL,
     "fileId" TEXT,
+    "linkId" TEXT,
     "nestedPlaylistId" TEXT,
     "order" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -239,8 +262,9 @@ CREATE TABLE "Session" (
     "ipAddress" TEXT NOT NULL,
     "location" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "revokedAt" TIMESTAMP(3),
+    "terminatedAt" TIMESTAMP(3),
     "lastActivityAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "twoFaVerifiedAt" TIMESTAMP(3),
 
     CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
 );
@@ -252,7 +276,10 @@ CREATE TABLE "User" (
     "emailVerifiedAt" TIMESTAMP(3),
     "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "passwordUpdatedAt" TIMESTAMP(3),
     "profilePhoto" TEXT,
+    "totpSecret" TEXT,
+    "twoFactorEnabled" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
@@ -293,6 +320,7 @@ CREATE TABLE "Workspace" (
     "picture" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "Workspace_pkey" PRIMARY KEY ("id")
 );
@@ -359,10 +387,28 @@ CREATE INDEX "File_name_idx" ON "File"("name");
 CREATE INDEX "Folder_parentId_idx" ON "Folder"("parentId");
 
 -- CreateIndex
+CREATE INDEX "Link_workspaceId_idx" ON "Link"("workspaceId");
+
+-- CreateIndex
+CREATE INDEX "Link_addedById_idx" ON "Link"("addedById");
+
+-- CreateIndex
+CREATE INDEX "Link_deletedAt_idx" ON "Link"("deletedAt");
+
+-- CreateIndex
+CREATE INDEX "Link_name_idx" ON "Link"("name");
+
+-- CreateIndex
 CREATE INDEX "PlaylistItem_playlistId_idx" ON "PlaylistItem"("playlistId");
 
 -- CreateIndex
 CREATE INDEX "PlaylistItem_fileId_idx" ON "PlaylistItem"("fileId");
+
+-- CreateIndex
+CREATE INDEX "PlaylistItem_linkId_idx" ON "PlaylistItem"("linkId");
+
+-- CreateIndex
+CREATE INDEX "PlaylistItem_nestedPlaylistId_idx" ON "PlaylistItem"("nestedPlaylistId");
 
 -- CreateIndex
 CREATE INDEX "PlaylistLayout_name_idx" ON "PlaylistLayout"("name");
@@ -383,7 +429,7 @@ CREATE UNIQUE INDEX "Session_token_key" ON "Session"("token");
 CREATE INDEX "Session_userId_idx" ON "Session"("userId");
 
 -- CreateIndex
-CREATE INDEX "Session_revokedAt_idx" ON "Session"("revokedAt");
+CREATE INDEX "Session_terminatedAt_idx" ON "Session"("terminatedAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
@@ -413,6 +459,9 @@ ALTER TABLE "EmailVerificationToken" ADD CONSTRAINT "EmailVerificationToken_user
 ALTER TABLE "File" ADD CONSTRAINT "File_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "Folder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "File" ADD CONSTRAINT "File_folderIdBeforeDeletion_fkey" FOREIGN KEY ("folderIdBeforeDeletion") REFERENCES "Folder"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "File" ADD CONSTRAINT "File_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -434,6 +483,15 @@ ALTER TABLE "Folder" ADD CONSTRAINT "Folder_workspaceId_fkey" FOREIGN KEY ("work
 ALTER TABLE "Folder" ADD CONSTRAINT "Folder_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Folder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Folder" ADD CONSTRAINT "Folder_parentIdBeforeDeletion_fkey" FOREIGN KEY ("parentIdBeforeDeletion") REFERENCES "Folder"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Link" ADD CONSTRAINT "Link_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Link" ADD CONSTRAINT "Link_addedById_fkey" FOREIGN KEY ("addedById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Playlist" ADD CONSTRAINT "Playlist_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -444,6 +502,9 @@ ALTER TABLE "PlaylistItem" ADD CONSTRAINT "PlaylistItem_playlistId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "PlaylistItem" ADD CONSTRAINT "PlaylistItem_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES "File"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PlaylistItem" ADD CONSTRAINT "PlaylistItem_linkId_fkey" FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PlaylistItem" ADD CONSTRAINT "PlaylistItem_nestedPlaylistId_fkey" FOREIGN KEY ("nestedPlaylistId") REFERENCES "Playlist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
