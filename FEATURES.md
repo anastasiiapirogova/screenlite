@@ -79,11 +79,25 @@
 		</tr>
 	</thead>
 	<tbody>
+		<tr><td>Storage setup documentation</td><td>Planned</td></tr>
+		<tr><td>Video preview</td><td>In Progress</td></tr>
+		<tr><td>Metadata generation</td><td>In Progress</td></tr>
+		<tr><td>Optimized thumbnail generation</td><td>In Progress</td></tr>
+		<tr><td>Auto-update playlists when related files are deleted</td><td>In Progress</td></tr>
+		<tr><td>Serve static content</td><td>In Progress</td></tr>
+		<tr><td>Clear trash</td><td>In Progress</td></tr>
+		<tr><td>Force delete files/folders</td><td>In Progress</td></tr>
+		<tr><td>S3 storage</td><td>In Progress</td></tr>
+		<tr><td>Local storage</td><td>In Progress</td></tr>
 		<tr><td>Generate thumbnails</td><td>UI</td></tr>
-		<tr><td>Upload files</td><td>Done</td></tr>
-		<tr><td>Create folder</td><td>Done</td></tr>
-		<tr><td>Move to folder</td><td>Done</td></tr>
-		<tr><td>Trash folders</td><td>Done</td></tr>
+		<tr><td>Upload files</td><td>UI</td></tr>
+		<tr><td>Create folder</td><td>UI</td></tr>
+		<tr><td>Move to folder</td><td>UI</td></tr>
+		<tr><td>Trash folders</td><td>UI</td></tr>
+		<tr><td>List files</td><td>UI</td></tr>
+		<tr><td>List folders</td><td>UI</td></tr>
+		<tr><td>List trash</td><td>UI</td></tr>
+		<tr><td>Drag and drop files/folders management</td><td>UI</td></tr>
 	</tbody>
 </table>
 

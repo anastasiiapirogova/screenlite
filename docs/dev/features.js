@@ -66,14 +66,30 @@ export const features = [
 	{
 		section: "Files",
 		features: {
-			[STATUS.UI]: [
-				"Generate thumbnails"
+			[STATUS.PLANNED]: [
+				"Storage setup documentation"
 			],
-			[STATUS.DONE]: [
+			[STATUS.IN_PROGRESS]: [
+				"Video preview",
+				"Metadata generation",
+				"Optimized thumbnail generation",
+				"Auto-update playlists when related files are deleted",
+				"Serve static content",
+				"Clear trash",
+				"Force delete files/folders",
+				"S3 storage",
+				"Local storage"
+			],
+			[STATUS.UI]: [
+				"Generate thumbnails",
 				"Upload files",
 				"Create folder",
 				"Move to folder",
-				"Trash folders"
+				"Trash folders",
+				"List files",
+				"List folders",
+				"List trash",
+				"Drag and drop files/folders management",
 			]
 		}
 	},
