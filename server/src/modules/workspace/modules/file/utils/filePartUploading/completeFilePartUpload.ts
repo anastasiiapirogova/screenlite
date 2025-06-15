@@ -4,7 +4,7 @@ import { getRedisClient } from '@config/redis.js'
 import { updateFileUploadSession } from './updateFileUploadSession.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { addFileUploadCompleteJob } from '../addFileUploadCompleteJob.js'
-import { StorageService } from '@services/StorageService.js'
+import { StorageService } from '@services/storage/StorageService.js'
 
 const validateFilePart = (req: Request, res: Response, fileUploadSession: FileUploadSession, data: Buffer): boolean => {
     if (data.length === 0) {
@@ -27,7 +27,7 @@ const validateFilePart = (req: Request, res: Response, fileUploadSession: FileUp
 }
 
 const uploadPartToS3 = async (fileUploadSession: FileUploadSession, data: Buffer) => {
-    return await StorageService.uploadPart(
+    return await StorageService.getInstance().uploadPart(
         fileUploadSession.path,
         fileUploadSession.uploadId,
         fileUploadSession.parts + 1,

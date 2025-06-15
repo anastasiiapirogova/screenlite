@@ -1,6 +1,6 @@
 import { prisma } from '@config/prisma.js'
 import { getRedisClient } from '@config/redis.js'
-import { StorageService } from '@services/StorageService.js'
+import { StorageService } from '@services/storage/StorageService.js'
 
 export const mergeFileParts = async (fileUploadSessionId: string) => {
     const fileUploadSession = await prisma.fileUploadSession.findUnique({
@@ -22,7 +22,7 @@ export const mergeFileParts = async (fileUploadSessionId: string) => {
     }))
 
     try {
-        await StorageService.completeMultipartUpload(
+        await StorageService.getInstance().completeMultipartUpload(
             fileUploadSession.path,
             fileUploadSession.uploadId,
             formattedParts

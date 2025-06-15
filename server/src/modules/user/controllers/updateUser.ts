@@ -5,7 +5,7 @@ import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
 import { updateUserSchema, userIdSchema, userProfilePhotoSchema } from '../schemas/userSchemas.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { UserPolicy } from '../policies/userPolicy.js'
-import { StorageService } from 'services/StorageService.js'
+import { StorageHelper } from '@services/StorageHelper.js'
 
 export const updateUser = async (req: Request, res: Response) => {
     const user = req.user!
@@ -49,10 +49,10 @@ export const updateUser = async (req: Request, res: Response) => {
             const path = `users/${userId}/photo.jpg`
 
             try {
-                await StorageService.uploadAndProcessImage(path, profilePhoto.buffer, {
+                await StorageHelper.uploadAndProcessImage(path, profilePhoto.buffer, {
                     width: 514,
                     height: 514,
-                    format: 'jpeg'
+                    format: 'webp'
                 })
                 result.profilePhoto = path
             } catch {

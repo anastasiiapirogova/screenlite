@@ -4,7 +4,7 @@ import { prisma } from '@config/prisma.js'
 import { getRedisClient } from '@config/redis.js'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { FileUploadingRepository } from '../repositories/FileUploadingRepository.js'
-import { StorageService } from '@services/StorageService.js'
+import { StorageService } from '@services/storage/StorageService.js'
 
 const filePartUploadSchema = z.object({
     'fileUploadSessionId': z.string().nonempty('FILE_UPLOAD_SESSION_ID_IS_REQUIRED'),
@@ -49,7 +49,7 @@ export const cancelFileUploading = async (req: Request, res: Response) => {
 
     await redis.del(`fileUploadSession:${fileUploadSession.id}`)
 
-    await StorageService.abortMultipartUpload(fileUploadSession.path, fileUploadSession.uploadId)
+    await StorageService.getInstance().abortMultipartUpload(fileUploadSession.path, fileUploadSession.uploadId)
 
     return ResponseHandler.ok(res)
 }

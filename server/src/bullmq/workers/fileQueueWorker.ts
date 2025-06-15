@@ -8,7 +8,7 @@ export const fileQueueWorker = new Worker(
     fileQueue.name,
     async job => {
         if (job.name === 'generateFilePreviewAndMetadata') {
-            await generateFilePreviewAndMetadataJob(job.data.fileId)
+            await generateFilePreviewAndMetadataJob(job.data.fileId, job.attemptsMade + 1)
         }
         if (job.name === 'fileUpdated') {
             await handleFileUpdatedJob(job.data.fileId)

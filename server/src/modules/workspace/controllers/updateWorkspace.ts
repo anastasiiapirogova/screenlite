@@ -3,7 +3,7 @@ import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
 import { updateWorkspaceSchema, workspacePictureSchema } from '../schemas/workspaceSchemas.js'
 import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
-import { StorageService } from '@services/StorageService.js'
+import { StorageHelper } from '@services/StorageHelper.js'
 
 export const updateWorkspace = async (req: Request, res: Response) => {
     const { name, slug, workspaceId } = req.body
@@ -34,10 +34,10 @@ export const updateWorkspace = async (req: Request, res: Response) => {
         const path = `workspaces/${workspaceId}/picture.jpg`
 
         try {
-            await StorageService.uploadAndProcessImage(path, picture.buffer, {
+            await StorageHelper.uploadAndProcessImage(path, picture.buffer, {
                 width: 514,
                 height: 514,
-                format: 'jpeg'
+                format: 'webp'
             })
             result.picture = path
         } catch {

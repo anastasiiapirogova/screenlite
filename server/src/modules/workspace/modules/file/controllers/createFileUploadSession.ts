@@ -7,7 +7,7 @@ import { prisma } from '@config/prisma.js'
 import { isValidMimeType } from '../utils/isValidMemeType.js'
 import { shortenFileName } from '../utils/shortenFileName.js'
 import { FolderRepository } from '../repositories/FolderRepository.js'
-import { StorageService } from '@services/StorageService.js'
+import { StorageService } from '@services/storage/StorageService.js'
 
 export const createFileUploadSession = async (req: Request, res: Response) => {
     const user = req.user!
@@ -53,7 +53,7 @@ export const createFileUploadSession = async (req: Request, res: Response) => {
     const key = `workspaces/${workspace.id}/${uniqueFilename}`
 
     try {
-        const uploadId = await StorageService.initializeMultipartUpload(key, mimeType)
+        const uploadId = await StorageService.getInstance().initializeMultipartUpload(key, mimeType)
         const shortenedName = shortenFileName(name, 100)
 
         const uploadSession = await prisma.fileUploadSession.create({
