@@ -73,43 +73,27 @@ export class FileProcessingService {
         })
     }
 
-
     public static async getVideoMetadata(url: string): Promise<{
         width: number
         height: number
         duration: number
         codec: string
     }> {
-        const baseArgs = [
+        const args = [
             '-v', 'error',
             '-select_streams', 'v:0',
             '-show_entries', 'stream=width,height,codec_name,codec_type',
             '-show_entries', 'format=duration,format_name',
             '-of', 'json',
-        ]
-        
-        const normalArgs = [
-            ...baseArgs,
             url
         ]
 
         try {
-            return await FileProcessingService.tryGetMetadata(normalArgs)
+            return await FileProcessingService.tryGetMetadata(args)
         } catch (error: unknown) {
-            const lastMBArgs = [
-                ...baseArgs,
-                '-read_ahead_limit', '1M',
-                url
-            ]
+            const errorMessage = error instanceof Error ? error.message : String(error)
 
-            try {
-                return await FileProcessingService.tryGetMetadata(lastMBArgs)
-            } catch (fallbackError: unknown) {
-                const errorMessage = error instanceof Error ? error.message : String(error)
-                const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError)
-
-                throw new Error(`Failed to get video metadata: ${errorMessage}. Fallback also failed: ${fallbackErrorMessage}`)
-            }
+            throw new Error(`Failed to get video metadata: ${errorMessage}.`)
         }
     }
 
