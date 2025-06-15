@@ -6,6 +6,7 @@ export const emptyTrash = async (req: Request, res: Response) => {
     const workspace = req.workspace!
 
     await prisma.$transaction(async (tx) => {
+        // TODO: For large numbers of files, implement batch processing here to avoid long-running transactions
         await tx.file.updateMany({
             where: {
                 workspaceId: workspace.id,
