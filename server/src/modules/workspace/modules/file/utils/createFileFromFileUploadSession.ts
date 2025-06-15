@@ -30,6 +30,7 @@ export const createFileFromFileUploadSession = async (session: FileUploadSession
             path: session.path,
             createdAt: new Date(),
             type: fileType || 'unknown',
+            processingStatus: 'pending',
         }
     })
 
