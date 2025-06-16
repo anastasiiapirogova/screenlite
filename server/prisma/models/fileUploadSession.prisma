@@ -1,19 +1,20 @@
 model FileUploadSession {
-    id          String    @id @default(uuid())
-    name        String
-    path        String
-    size        BigInt
-    uploaded    BigInt    @default(0)
-    parts       Int       @default(0)
-    mimeType    String    @default("application/octet-stream")
-    workspaceId String
-    uploadId    String
-    folderId    String?
-    userId      String
-    createdAt   DateTime  @default(now())
-    completedAt DateTime?
+    id            String    @id @default(uuid())
+    name          String
+    path          String
+    size          BigInt
+    uploaded      BigInt    @default(0)
+    uploadedParts Int       @default(0)
+    mimeType      String    @default("application/octet-stream")
+    workspaceId   String
+    uploadId      String?
+    folderId      String?
+    userId        String?
+    createdAt     DateTime  @default(now())
+    completedAt   DateTime?
+    cancelledAt   DateTime?
 
     folder    Folder?   @relation(fields: [folderId], references: [id], onDelete: SetNull)
     workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
