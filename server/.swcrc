@@ -27,6 +27,9 @@
             "@generated/*": [
                 "src/generated/*"
             ],
+            "@schemas/*": [
+                "src/schemas/*"
+            ],
             "*": [
                 "node_modules",
                 "src/*"

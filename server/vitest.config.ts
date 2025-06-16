@@ -9,7 +9,8 @@ export default defineConfig({
             '@utils': path.resolve(__dirname, './src/utils'),
             '@services': path.resolve(__dirname, './src/services'),
             '@generated': path.resolve(__dirname, './src/generated'),
-            '*': path.resolve(__dirname, './src/*')
+            '@schemas': path.resolve(__dirname, './src/schemas'),
+            '*': path.resolve(__dirname, './src/*'),
         },
     },
     test: {
