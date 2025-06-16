@@ -68,7 +68,12 @@ export class ResponseHandler {
         const errors = issues.reduce((acc: Record<string, string>, issue) => {
             const key = issue.path.join('.')
 
-            acc[key] = req.t(issue.message)
+            if(req.t) {
+                acc[key] = req.t(issue.message)
+            } else {
+                acc[key] = issue.message
+            }
+
             return acc
         }, {})
 
@@ -77,7 +82,12 @@ export class ResponseHandler {
 
     static validationError = (req: Request, res: Response, errors: Record<string, string>) => {
         const translatedErrors = Object.keys(errors).reduce((acc: Record<string, string>, key) => {
-            acc[key] = req.t(errors[key]) || errors[key]
+            if(req.t) {
+                acc[key] = req.t(errors[key]) || errors[key]
+            } else {
+                acc[key] = errors[key]
+            }
+
             return acc
         }, {})
 
