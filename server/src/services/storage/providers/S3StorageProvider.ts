@@ -1,20 +1,16 @@
 import {
     PutObjectCommand,
     GetObjectCommand,
-    CreateMultipartUploadCommand,
-    CompleteMultipartUploadCommand,
-    AbortMultipartUploadCommand,
-    UploadPartCommand,
     DeleteObjectCommand,
     HeadObjectCommand
 } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { Readable } from 'stream'
 import { s3Client, Buckets, createBuckets } from '@config/s3Client.js'
-import { IStorageProvider } from './IStorageProvider.js'
-import { FileNotFoundError } from './errors.js'
+import { FileNotFoundError } from '../errors.js'
+import { StorageProviderInterface } from './StorageProviderInterface.js'
 
-export class S3StorageProvider implements IStorageProvider {
+export class S3StorageProvider implements StorageProviderInterface {
     private readonly bucket: string
 
     constructor(bucket: keyof typeof Buckets = 'uploads') {
@@ -67,64 +63,7 @@ export class S3StorageProvider implements IStorageProvider {
             throw error
         }
     }
-
-    public async initializeMultipartUpload(key: string, contentType?: string): Promise<string> {
-        const command = new CreateMultipartUploadCommand({
-            Bucket: this.bucket,
-            Key: key,
-            ContentType: contentType
-        })
-
-        const response = await s3Client.send(command)
-
-        if (!response.UploadId) {
-            throw new Error('Failed to initialize multipart upload')
-        }
-
-        return response.UploadId
-    }
-
-    public async uploadPart(key: string, uploadId: string, partNumber: number, body: Buffer): Promise<string> {
-        const command = new UploadPartCommand({
-            Bucket: this.bucket,
-            Key: key,
-            PartNumber: partNumber,
-            UploadId: uploadId,
-            Body: body
-        })
-
-        const response = await s3Client.send(command)
-
-        if (!response.ETag) {
-            throw new Error('Failed to upload part')
-        }
-
-        return response.ETag
-    }
-
-    public async completeMultipartUpload(key: string, uploadId: string, parts: { PartNumber: number, ETag: string }[]): Promise<void> {
-        const command = new CompleteMultipartUploadCommand({
-            Bucket: this.bucket,
-            Key: key,
-            UploadId: uploadId,
-            MultipartUpload: {
-                Parts: parts
-            }
-        })
-
-        await s3Client.send(command)
-    }
-
-    public async abortMultipartUpload(key: string, uploadId: string): Promise<void> {
-        const command = new AbortMultipartUploadCommand({
-            Bucket: this.bucket,
-            Key: key,
-            UploadId: uploadId
-        })
-
-        await s3Client.send(command)
-    }
-
+    
     public async deleteFile(key: string): Promise<void> {
         const command = new DeleteObjectCommand({
             Bucket: this.bucket,

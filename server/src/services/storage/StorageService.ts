@@ -1,17 +1,17 @@
 import { Readable } from 'stream'
-import { IStorageProvider } from './IStorageProvider.js'
-import { S3StorageProvider } from './S3StorageProvider.js'
-import { LocalStorageProvider } from './LocalStorageProvider.js'
+import { S3StorageProvider } from './providers/S3StorageProvider.js'
+import { LocalStorageProvider } from './providers/LocalStorageProvider.js'
+import { StorageProviderInterface } from './providers/StorageProviderInterface.js'
 
 export class StorageService {
     private static instance: StorageService
-    private provider: IStorageProvider
+    private provider: StorageProviderInterface
 
     private constructor() {
         this.provider = this.createProvider()
     }
 
-    private createProvider(): IStorageProvider {
+    private createProvider(): StorageProviderInterface {
         const storageType = process.env.STORAGE_TYPE?.toLowerCase() || 's3'
 
         switch (storageType) {
@@ -39,22 +39,6 @@ export class StorageService {
 
     public async downloadFile(key: string): Promise<Readable | null> {
         return this.provider.downloadFile(key)
-    }
-
-    public async initializeMultipartUpload(key: string, contentType?: string): Promise<string> {
-        return this.provider.initializeMultipartUpload(key, contentType)
-    }
-
-    public async uploadPart(key: string, uploadId: string, partNumber: number, body: Buffer): Promise<string> {
-        return this.provider.uploadPart(key, uploadId, partNumber, body)
-    }
-
-    public async completeMultipartUpload(key: string, uploadId: string, parts: { PartNumber: number, ETag: string }[]): Promise<void> {
-        return this.provider.completeMultipartUpload(key, uploadId, parts)
-    }
-
-    public async abortMultipartUpload(key: string, uploadId: string): Promise<void> {
-        return this.provider.abortMultipartUpload(key, uploadId)
     }
 
     public async deleteFile(key: string): Promise<void> {
