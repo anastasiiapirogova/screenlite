@@ -1,14 +1,11 @@
 import { Readable } from 'stream'
 import fs from 'fs'
 import path from 'path'
-import { v4 as uuid } from 'uuid'
-import { IStorageProvider } from './IStorageProvider.js'
-import { FileNotFoundError } from './errors.js'
+import { FileNotFoundError } from '../errors.js'
 import { stat } from 'fs/promises'
+import { StorageProviderInterface } from './StorageProviderInterface.js'
 
-// TODO: Instead of creating multiple files for uploading multiple parts, write to a single file
-// and then when the upload is complete, move the file to the final location
-export class LocalStorageProvider implements IStorageProvider {
+export class LocalStorageProvider implements StorageProviderInterface {
     private readonly baseDir: string
     private readonly uploadsDir: string
     private readonly baseUrl: string
@@ -81,61 +78,6 @@ export class LocalStorageProvider implements IStorageProvider {
             console.error('Error reading file:', error)
             return null
         }
-    }
-
-    public async initializeMultipartUpload(): Promise<string> {
-        const uploadId = uuid()
-        const tempDir = path.join(this.uploadsDir, 'multipart', uploadId)
-        
-        if (!fs.existsSync(tempDir)) {
-            fs.mkdirSync(tempDir, { recursive: true })
-        }
-
-        return uploadId
-    }
-
-    public async uploadPart(key: string, uploadId: string, partNumber: number, body: Buffer): Promise<string> {
-        const tempDir = path.join(this.uploadsDir, 'multipart', uploadId)
-        const partPath = path.join(tempDir, `part-${partNumber}`)
-
-        await fs.promises.writeFile(partPath, body)
-        
-        return `"${partNumber}-${Date.now()}"`
-    }
-
-    public async completeMultipartUpload(key: string, uploadId: string, parts: { PartNumber: number, ETag: string }[]): Promise<void> {
-        const tempDir = path.join(this.uploadsDir, 'multipart', uploadId)
-        const filePath = this.getFilePath(key)
-        const dirPath = path.dirname(filePath)
-
-        if (!fs.existsSync(dirPath)) {
-            fs.mkdirSync(dirPath, { recursive: true })
-        }
-
-        const writeStream = fs.createWriteStream(filePath)
-        
-        const sortedParts = parts.sort((a, b) => a.PartNumber - b.PartNumber)
-
-        for (const part of sortedParts) {
-            const partPath = path.join(tempDir, `part-${part.PartNumber}`)
-            const partStream = fs.createReadStream(partPath)
-
-            await new Promise<void>((resolve, reject) => {
-                partStream.pipe(writeStream, { end: false })
-                partStream.on('end', resolve)
-                partStream.on('error', reject)
-            })
-        }
-
-        writeStream.end()
-
-        await fs.promises.rm(tempDir, { recursive: true, force: true })
-    }
-
-    public async abortMultipartUpload(key: string, uploadId: string): Promise<void> {
-        const tempDir = path.join(this.uploadsDir, 'multipart', uploadId)
-
-        await fs.promises.rm(tempDir, { recursive: true, force: true })
     }
 
     public async deleteFile(key: string): Promise<void> {

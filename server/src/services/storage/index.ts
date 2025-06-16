@@ -1,4 +1,4 @@
 export { StorageService } from './StorageService.js'
-export { IStorageProvider } from './IStorageProvider.js'
-export { S3StorageProvider } from './S3StorageProvider.js'
-export { LocalStorageProvider } from './LocalStorageProvider.js' 
+export { S3StorageProvider } from './providers/S3StorageProvider.js'
+export { LocalStorageProvider } from './providers/LocalStorageProvider.js' 
+export { StorageProviderInterface } from './providers/StorageProviderInterface.js'
