@@ -10,6 +10,7 @@ import PlaylistScheduleController from '@modules/workspace/modules/playlistSched
 import ScreenController from '@modules/workspace/modules/screen/controllers/index.js'
 import WorkspaceController from '@modules/workspace/controllers/index.js'
 import WorkspaceUserInvitationController from '@modules/workspace/modules/workspaceUserInvitation/controllers/index.js'
+import FileUploadController from '@modules/workspace/modules/fileUpload/controllers/index.js'
 import { enforceWorkspacePolicy } from 'middlewares/enforceWorkspacePolicy.js'
 import { WORKSPACE_PERMISSIONS } from './accessControl/permissions.js'
 
@@ -291,14 +292,14 @@ createWorkspaceRoute({
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/files/uploadSessions',
-    handler: FileController.createFileUploadSession,
+    handler: FileUploadController.createFileUploadSession,
     enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.upload })
 })
 
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/files/uploadSessions/:fileUploadSessionId/cancel',
-    handler: FileController.cancelFileUploading,
+    handler: FileUploadController.cancelFileUploading,
     enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.upload })
 })
 

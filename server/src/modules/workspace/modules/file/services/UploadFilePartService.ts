@@ -1,12 +1,12 @@
 import { FileUploadSession } from '@generated/prisma/client.js'
 import { Request } from 'express'
-import { FileUploadingRepository } from '../repositories/FileUploadingRepository.js'
+import { FileUploadRepository } from '../../fileUpload/repositories/FileUploadRepository.js'
 
 export class UploadFilePartService {
     private static readonly MAX_SIZE = 100 * 1024 * 1024
 
     static async validateSession(sessionId: string, workspaceId: string, userId: string): Promise<FileUploadSession | null> {
-        const fileUploadSession = await FileUploadingRepository.getFileUploadSession(sessionId, workspaceId)
+        const fileUploadSession = await FileUploadRepository.getFileUploadSession(sessionId, workspaceId)
 
         if (!fileUploadSession) {
             return null
