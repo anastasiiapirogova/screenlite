@@ -1,6 +1,4 @@
-import { createFileUploadSession } from '@modules/workspace/modules/file/controllers/createFileUploadSession.js'
 import { uploadFilePart } from '@modules/workspace/modules/file/controllers/uploadFilePart.js'
-import { cancelFileUploading } from '@modules/workspace/modules/file/controllers/cancelFileUploading.js'
 import { getWorkspaceFiles } from '@modules/workspace/modules/file/controllers/getWorkspaceFiles.js'
 import { createFolder } from '@modules/workspace/modules/file/controllers/createFolder.js'
 import { getFolder } from '@modules/workspace/modules/file/controllers/getFolder.js'
@@ -17,8 +15,6 @@ import { forceDeleteFiles } from '@modules/workspace/modules/file/controllers/fo
 import { forceDeleteFolders } from '@modules/workspace/modules/file/controllers/forceDeleteFolders.js'
 
 export {
-    cancelFileUploading,
-    createFileUploadSession,
     createFolder,
     emptyTrash,
     forceDeleteFiles,
@@ -37,8 +33,6 @@ export {
 }
 
 export default {
-    cancelFileUploading,
-    createFileUploadSession,
     createFolder,
     emptyTrash,
     forceDeleteFiles,
