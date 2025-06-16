@@ -1,10 +1,10 @@
 import { FileUploadSession } from '@generated/prisma/client.js'
 import { prisma } from '@config/prisma.js'
-import { sanitizeFileName } from './sanitizeFileName.js'
+import { FileService } from '../services/FileService.js'
 
 export const createFileFromFileUploadSession = async (session: FileUploadSession) => {
     const mimeType = session.mimeType
-    const fileName = sanitizeFileName(session.name)
+    const fileName = FileService.sanitizeFileName(session.name)
 
     let fileType: 'video' | 'image' | 'audio' | undefined
 
