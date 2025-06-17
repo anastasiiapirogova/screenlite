@@ -25,6 +25,7 @@ export default [
             'semi': ['error', 'never'],
             'indent': ['error', 4, { 'SwitchCase': 1 }],
             'quotes': ['error', 'single'],
+            'object-curly-spacing': ['error', 'always'],
             '@stylistic/ts/member-delimiter-style': ['error', {
                 'multiline': {
                     'delimiter': 'none',

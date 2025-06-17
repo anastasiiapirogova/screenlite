@@ -43,7 +43,7 @@ export const updateUser = async (req: Request, res: Response) => {
             if(!validation.success) {
                 const firstError = validation.error.errors[0]
 
-                return ResponseHandler.validationError(req, res, { profilePhoto: firstError.message})
+                return ResponseHandler.validationError(req, res, { profilePhoto: firstError.message })
             }
 
             const path = `users/${userId}/photo.jpg`
