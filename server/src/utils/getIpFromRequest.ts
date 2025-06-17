@@ -17,5 +17,5 @@ export const getIpFromRequest = (req: Request) => {
         return req.ip.trim()
     }
 
-    throw new Error('IP address not found in request')
+    throw new Error('IP_ADDRESS_NOT_FOUND')
 }
