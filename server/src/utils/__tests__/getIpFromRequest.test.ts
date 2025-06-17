@@ -1,6 +1,6 @@
 import { getIpFromRequest } from '@utils/getIpFromRequest.js'
 import { Request } from 'express'
-import { describe, expect, it, } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 describe('getIpFromRequest', () => {
     let mockReq : Partial<Request>
@@ -26,5 +26,12 @@ describe('getIpFromRequest', () => {
         const res = getIpFromRequest(mockReq as Request)
 
         expect(res).toBe('192.168.1.1')
+    })
+
+    it('should throw an error if no IP is found', () => {
+        mockReq = {
+            headers: {},
+        }
+        expect(() => getIpFromRequest(mockReq as Request)).toThrow('IP_ADDRESS_NOT_FOUND')
     })
 })
