@@ -1,6 +1,6 @@
 import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { Request, Response } from 'express'
-import {beforeEach, describe, it, vi, expect} from 'vitest'
+import { beforeEach, describe, it, vi, expect } from 'vitest'
 import { ZodIssue } from 'zod'
 
 describe('ResponseHandler', () => {
@@ -13,20 +13,20 @@ describe('ResponseHandler', () => {
             json: vi.fn(),
             send: vi.fn()
         }
-        mockReq = {
-            t: vi.fn((msg) => msg)
-        }
+        mockReq = {}
     })
 
     describe('ResponseHandler.json', () => {
         it('sends JSON with status 200 if data is provided', () => {
-            ResponseHandler.json(mockRes as Response, {message:'ok'})
+            ResponseHandler.json(mockRes as Response, { message:'ok' })
+
             expect(mockRes.status).toHaveBeenCalledWith(200)
-            expect(mockRes.json).toHaveBeenCalledWith({message:'ok'})
+            expect(mockRes.json).toHaveBeenCalledWith({ message:'ok' })
         })
 
         it('sends empty response if no data is provided', () => {
             ResponseHandler.json(mockRes as Response)
+            
             expect(mockRes.status).toHaveBeenCalledWith(200)
             expect(mockRes.send).toHaveBeenCalledWith()
         })
@@ -36,19 +36,19 @@ describe('ResponseHandler', () => {
         it('calculates "pages" meta data', () => {
             using spy = vi.spyOn(ResponseHandler, 'json').mockImplementation(() => {})
 
-            const data = [{id: 1}]
-            const meta = {total: 10, limit:3, page:1}
+            const data = [{ id: 1 }]
+            const meta = { total: 10, limit:3, page:1 }
 
             ResponseHandler.paginated(mockRes as Response, data, meta)
 
             expect(spy).toHaveBeenCalledWith(
                 mockRes,
-                { data, meta: {...meta, pages : 4} },
+                { data, meta: { ...meta, pages : 4 } },
             )
 
             const callInfo = spy.mock.calls[0][1]
 
-            expect(callInfo?.data).toStrictEqual([{id: 1}])
+            expect(callInfo?.data).toStrictEqual([{ id: 1 }])
             expect(callInfo?.meta).toStrictEqual({ total: 10, limit: 3, page: 1, pages: 4 })
 
             expect(mockRes.json).not.toHaveBeenCalled()
@@ -60,10 +60,11 @@ describe('ResponseHandler', () => {
         it('sends JSON in response if data is provided', () => {
             using responseHandlerSpy = vi.spyOn(ResponseHandler, 'json').mockImplementation(() => {})
 
-            ResponseHandler.ok(mockRes as Response, {message:'success'})
+            ResponseHandler.ok(mockRes as Response, { message:'success' })
+            
             expect(responseHandlerSpy).toHaveBeenCalledWith(
                 mockRes,
-                {message:'success'}
+                { message:'success' }
             )
         })
 
@@ -71,6 +72,7 @@ describe('ResponseHandler', () => {
             using responseHandlerSpy = vi.spyOn(ResponseHandler, 'json').mockImplementation(() => {})
 
             ResponseHandler.ok(mockRes as Response)
+            
             expect(responseHandlerSpy).toHaveBeenCalledWith(mockRes, undefined)
         })
     })
@@ -122,10 +124,11 @@ describe('ResponseHandler', () => {
         it('sends JSON in response with data', () => {
             using responseHandlerSpy = vi.spyOn(ResponseHandler, 'json').mockImplementation(() => {})
 
-            ResponseHandler.created(mockRes as Response, {message:'success'})
+            ResponseHandler.created(mockRes as Response, { message:'success' })
+            
             expect(responseHandlerSpy).toHaveBeenCalledWith(
                 mockRes,
-                {message:'success'},
+                { message:'success' },
                 201
             )
         })
@@ -198,6 +201,7 @@ describe('ResponseHandler', () => {
             ] as ZodIssue[]
 
             ResponseHandler.zodError(mockReq as Request, mockRes as Response, issues)
+            
             expect(mockRes.status).toHaveBeenCalledWith(400)
             expect(mockRes.json).toHaveBeenCalledWith({
                 errors: {
@@ -216,14 +220,11 @@ describe('ResponseHandler', () => {
             }
 
             ResponseHandler.validationError(mockReq as Request, mockRes as Response, errors)
+            
             expect(mockRes.status).toHaveBeenCalledWith(400)
             expect(mockRes.json).toHaveBeenCalledWith({
                 errors
             })
-            
         })
     })
-
-
-    
 })
