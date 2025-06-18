@@ -1,5 +1,8 @@
 name: Client ESLint Check
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [ main ]
