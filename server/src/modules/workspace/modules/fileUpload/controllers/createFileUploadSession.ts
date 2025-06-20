@@ -27,11 +27,9 @@ const validateRequest = async (req: Request, res: Response) => {
     const error = isFolderDeleted ? 'CANNOT_UPLOAD_IN_DELETED_FOLDER' : isFolderNotFound ? 'FOLDER_NOT_FOUND' : null
 
     if (error) {
-        ResponseHandler.validationError(req, res, {
+        return ResponseHandler.validationError(req, res, {
             folderId: error
         })
-
-        return null
     }
 
     return validation.data
@@ -43,10 +41,8 @@ export const createFileUploadSession = async (req: Request, res: Response) => {
 
     const validation = await validateRequest(req, res)
 
-    if (!validation) {
-        return
-    }
-
+    if (!validation) return
+    
     const { name, mimeType, folderId, size } = validation
 
     const key = await FileRepository.createFileKey(workspace.id, name)
@@ -75,6 +71,6 @@ export const createFileUploadSession = async (req: Request, res: Response) => {
 
         return ResponseHandler.created(res, { fileUploadSession })
     }).catch(() => {
-        return ResponseHandler.serverError(res, 'Failed to init upload session')
+        return ResponseHandler.serverError(req, res, 'FAILED_TO_INIT_FILE_UPLOAD_SESSION')
     })
 }
