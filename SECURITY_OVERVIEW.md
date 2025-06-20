@@ -4,10 +4,6 @@
 
 This application uses **opaque token-based authentication** for client-server communication. Tokens are sent explicitly in the `Authorization` header as `Bearer <token>` and are **not stored in cookies**.
 
-### CSRF Protection
-
-**CSRF protection is not required**, as the application does **not use cookie-based authentication**. All authenticated requests must include an `Authorization` header, which cannot be forged by third-party sites due to browser CORS policies.
-
 ## Considerations
 
 - **Refresh Tokens** are not yet implemented. This means:
@@ -38,3 +34,25 @@ Currently, disabling 2FA **does not require an additional 2FA confirmation**, as
 ## Session Management
 
 Users have the ability to **view active sessions** associated with their account, including details like device and IP address. They can **revoke any active session** at any time to maintain control over their account access and improve security.
+
+## CSRF Protection
+
+**CSRF protection is not required**, as the application does **not use cookie-based authentication**. All authenticated requests must include an `Authorization` header, which cannot be forged by third-party sites due to browser CORS policies.
+
+## XSS and Frontend Security
+
+The frontend is built using **React**, which provides built-in protection against **Cross-Site Scripting (XSS)** by automatically escaping user-generated content in JSX. This helps prevent injection of malicious HTML or JavaScript when rendering dynamic data.
+
+We **do not use** `dangerouslySetInnerHTML`, which is a React escape hatch for injecting raw HTML into the DOM. Avoiding this feature significantly reduces the risk of XSS vulnerabilities.
+
+## Content Security Policy (CSP)
+
+**For production deployments**, it is strongly recommended to serve the application with appropriate **Content Security Policy (CSP)** headers. These headers help mitigate XSS and other injection attacks by restricting the sources from which scripts, styles, and other resources can be loaded.
+
+> ⚠️ **Note:** CSP headers are **not yet implemented** for serving `index.html` in the production SPA deployment. This should be addressed before going live in a high-security environment.
+
+## Vite and Production Deployment
+
+Do **not use the Vite dev server for production deployments**, even if proxied behind NGINX or another reverse proxy.
+
+The Vite dev server — such as the one exposed on **port 3001** when running the development Docker container — is intended for **development use only**. It lacks necessary production-grade security and performance optimizations, and should **never be exposed to the internet** in a live environment.
