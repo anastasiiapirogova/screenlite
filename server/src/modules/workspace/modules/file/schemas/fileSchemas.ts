@@ -1,10 +1,6 @@
 import { z } from 'zod'
 import { paginationSchema } from '@schemas/paginationSchema.js'
 
-export const filePartUploadSchema = z.object({
-    'fileUploadSessionId': z.string().nonempty('FILE_UPLOAD_SESSION_ID_IS_REQUIRED'),
-})
-
 export const fileNameSchema = z
     .string({
         invalid_type_error: 'FILE_NAME_IS_INVALID',
