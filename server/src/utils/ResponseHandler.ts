@@ -28,11 +28,13 @@ export class ResponseHandler {
         ResponseHandler.json(res, data)
     }
 
-    static tooManyRequests(res: Response) {
+    static tooManyRequests(req: Request, res: Response) {
+        req.resume()
         res.status(429).send('Too Many Requests')
     }
 
-    static serverError(res: Response, message?: string) {
+    static serverError(req: Request, res: Response, message?: string) {
+        req.resume()
         res.status(500).send(message || 'Internal Server Error')
     }
 
@@ -48,23 +50,27 @@ export class ResponseHandler {
         ResponseHandler.json(res, data, 201)
     }
 
-    static tooLarge(res: Response, message?: string) {
+    static tooLarge(req: Request, res: Response, message?: string) {
+        req.resume()
         res.status(413).send(message || 'Too Large')
     }
 
-    static forbidden(res: Response, message?: string) {
+    static forbidden(req: Request, res: Response, message?: string) {
+        req.resume()
         res.status(403).send(message || 'Forbidden')
     }
 
-    static notFound(res: Response, message?: string) {
+    static notFound(req: Request, res: Response, message?: string) {
         res.status(404).send(message || 'Not Found')
     }
 
-    static unauthorized(res: Response) {
+    static unauthorized(req: Request, res: Response) {
         res.status(401).send('Unauthorized')
     }
 
     static zodError = (req: Request, res: Response, issues: ZodIssue[]) => {
+        req.resume()
+
         const errors = issues.reduce((acc: Record<string, string>, issue) => {
             const key = issue.path.join('.')
 
@@ -81,6 +87,8 @@ export class ResponseHandler {
     }
 
     static validationError = (req: Request, res: Response, errors: Record<string, string>) => {
+        req.resume()
+        
         const translatedErrors = Object.keys(errors).reduce((acc: Record<string, string>, key) => {
             if(req.t) {
                 acc[key] = req.t(errors[key]) || errors[key]

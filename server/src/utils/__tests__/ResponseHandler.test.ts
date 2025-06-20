@@ -13,7 +13,9 @@ describe('ResponseHandler', () => {
             json: vi.fn(),
             send: vi.fn()
         }
-        mockReq = {}
+        mockReq = {
+            resume: vi.fn()
+        }
     })
 
     describe('ResponseHandler.json', () => {
@@ -79,7 +81,7 @@ describe('ResponseHandler', () => {
 
     describe('ResponseHandler.tooManyRequests', () => {
         it('should reponse with message and status', () => {
-            ResponseHandler.tooManyRequests(mockRes as Response)
+            ResponseHandler.tooManyRequests(mockReq as Request, mockRes as Response)
 
             expect(mockRes.status).toHaveBeenCalledWith(429)
             expect(mockRes.send).toHaveBeenCalledWith('Too Many Requests')
@@ -88,14 +90,14 @@ describe('ResponseHandler', () => {
 
     describe('ResponseHandler.serverError', () => {
         it('sends error message if message is provided', () => {
-            ResponseHandler.serverError(mockRes as Response, 'server error' )
+            ResponseHandler.serverError(mockReq as Request, mockRes as Response, 'server error' )
 
             expect(mockRes.status).toHaveBeenCalledWith(500)
             expect(mockRes.send).toHaveBeenCalledWith('server error')
         })
 
         it('should send default message if message is not provided', () => {
-            ResponseHandler.serverError(mockRes as Response)
+            ResponseHandler.serverError(mockReq as Request, mockRes as Response)
 
             expect(mockRes.status).toHaveBeenCalledWith(500)
             expect(mockRes.send).toHaveBeenCalledWith('Internal Server Error')
@@ -136,14 +138,14 @@ describe('ResponseHandler', () => {
 
     describe('ResponseHandler.tooLarge', () => {
         it('sends error message if message is provided', () => {
-            ResponseHandler.tooLarge(mockRes as Response, 'not supported above 50MB' )
+            ResponseHandler.tooLarge(mockReq as Request, mockRes as Response, 'not supported above 50MB' )
 
             expect(mockRes.status).toHaveBeenCalledWith(413)
             expect(mockRes.send).toHaveBeenCalledWith('not supported above 50MB')
         })
 
         it('should send default message if message is not provided', () => {
-            ResponseHandler.tooLarge(mockRes as Response)
+            ResponseHandler.tooLarge(mockReq as Request, mockRes as Response)
 
             expect(mockRes.status).toHaveBeenCalledWith(413)
             expect(mockRes.send).toHaveBeenCalledWith('Too Large')
@@ -152,14 +154,14 @@ describe('ResponseHandler', () => {
 
     describe('ResponseHandler.forbidden', () => {
         it('sends error message if message is provided', () => {
-            ResponseHandler.forbidden(mockRes as Response, 'not supported' )
+            ResponseHandler.forbidden(mockReq as Request, mockRes as Response, 'not supported' )
 
             expect(mockRes.status).toHaveBeenCalledWith(403)
             expect(mockRes.send).toHaveBeenCalledWith('not supported')
         })
 
         it('should send default message if message is not provided', () => {
-            ResponseHandler.forbidden(mockRes as Response)
+            ResponseHandler.forbidden(mockReq as Request, mockRes as Response)
 
             expect(mockRes.status).toHaveBeenCalledWith(403)
             expect(mockRes.send).toHaveBeenCalledWith('Forbidden')
@@ -168,14 +170,14 @@ describe('ResponseHandler', () => {
 
     describe('ResponseHandler.notFound', () => {
         it('sends error message if message is provided', () => {
-            ResponseHandler.notFound(mockRes as Response, 'Video has been removed' )
+            ResponseHandler.notFound(mockReq as Request, mockRes as Response, 'Video has been removed' )
 
             expect(mockRes.status).toHaveBeenCalledWith(404)
             expect(mockRes.send).toHaveBeenCalledWith('Video has been removed')
         })
 
         it('should send default message if message is not provided', () => {
-            ResponseHandler.notFound(mockRes as Response)
+            ResponseHandler.notFound(mockReq as Request, mockRes as Response)
 
             expect(mockRes.status).toHaveBeenCalledWith(404)
             expect(mockRes.send).toHaveBeenCalledWith('Not Found')
@@ -184,7 +186,7 @@ describe('ResponseHandler', () => {
 
     describe('ResponseHandler.unauthorized', () => {
         it('send empty reponse with status', () => {
-            ResponseHandler.unauthorized(mockRes as Response)
+            ResponseHandler.unauthorized(mockReq as Request, mockRes as Response)
 
             expect(mockRes.status).toHaveBeenCalledWith(401)
             expect(mockRes.send).toHaveBeenCalledWith('Unauthorized')
