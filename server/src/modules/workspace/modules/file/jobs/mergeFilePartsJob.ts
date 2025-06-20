@@ -1,5 +1,5 @@
 import { addGenerateFilePreviewAndMetadataJob } from '../utils/addGenerateFilePreviewAndMetadataJob.js'
-import { createFileFromFileUploadSession } from '../utils/createFileFromFileUploadSession.js'
+import { createFileFromFileUploadSession } from '../../fileUpload/utils/createFileFromFileUploadSession.js'
 import { mergeFileParts } from '../utils/mergeFileParts.js'
 
 export const mergeFilePartsJob = async (fileUploadSessionId: string) => {
