@@ -3,13 +3,13 @@ Screenlite is an open-source digital signage solution, providing an alternative 
 
 Get in early, use it now, and help shape what comes next. Your feedback, insights, and contributions will directly influence the future of Screenlite. Together, we’ll create a solution that’s simple, powerful, and truly free.
 
-⚠️ **Development notes:**  
+## ⚠️ **Development notes:**  
 
 Screenlite is currently **in public development** and **not ready for production use**. It’s not feature-complete yet.
 
 **The client-side experience is partially broken** — you can explore the interface, but expect bugs, errors, and incomplete features.
 
-I am currently working on the file management module (last updated on 2025-06-18):
+I am currently working on the file management module (last updated on 2025-06-21):
 
 - Resumable multipart uploads
 - Video previews with ffmpeg
@@ -50,6 +50,10 @@ A web-based player that can run on any device with a modern browser.
 Screenlite is simple to set up and deploy. You can quickly configure and get it running with minimal effort.
 
 [See deployment instructions](DEPLOYMENT.md)
+
+## Security overview
+
+Screenlite follows modern web security best practices to ensure the safety of user data and system integrity. For a detailed explanation of our security approach please refer to the [SECURITY_OVERVIEW.md](./SECURITY_OVERVIEW.md) file.
 
 ## Spotted a bug? Want to suggest a feature?
 Let us know by opening an issue on GitHub.
