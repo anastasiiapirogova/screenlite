@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import { Readable } from 'stream'
 import sharp from 'sharp'
 import { ResponseHandler } from '@utils/ResponseHandler.js'
-import crypto from 'crypto'
 import mime from 'mime'
 import { Storage } from '@config/storage.js'
 import { FileNotFoundError } from '../../services/storage/errors.js'
@@ -46,10 +45,6 @@ const isValidImageFile = (filePath: string): boolean => {
     return mimeType ? mimeType.startsWith('image/') : false
 }
 
-const generateETag = (buffer: Buffer): string => {
-    return crypto.createHash('md5').update(buffer).digest('hex')
-}
-
 const generateImageThumbnail = async (
     imageStream: Readable,
     options: Partial<ThumbnailOptions> = {}
@@ -87,27 +82,19 @@ export const getImageThumbnail = async (req: Request, res: Response) => {
         const filePath = validateFilePath(rawFilePath)
 
         if (!isValidImageFile(filePath)) {
-            return ResponseHandler.notFound(res)
+            return ResponseHandler.notFound(req, res)
         }
 
         const stream = await Storage.createReadStream(filePath)
         const thumbnail = await generateImageThumbnail(stream)
-        const etag = generateETag(thumbnail)
 
-        res.setHeader('ETag', etag)
         res.setHeader('Cache-Control', `public, max-age=${CACHE_DURATION}`)
         res.setHeader('Expires', new Date(Date.now() + CACHE_DURATION * 1000).toUTCString())
-
-        const ifNoneMatch = req.headers['if-none-match']
-
-        if (ifNoneMatch === etag) {
-            return ResponseHandler.notModified(res)
-        }
 
         res.contentType(`image/${DEFAULT_THUMBNAIL_OPTIONS.format}`).send(thumbnail)
     } catch (error) {
         if (error instanceof FileNotFoundError) {
-            return ResponseHandler.notFound(res)
+            return ResponseHandler.notFound(req, res)
         }
         if (error instanceof Error && error.message === 'Invalid file path') {
             return ResponseHandler.validationError(req, res, {
