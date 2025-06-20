@@ -61,10 +61,12 @@ export class ResponseHandler {
     }
 
     static notFound(req: Request, res: Response, message?: string) {
+        req.resume()
         res.status(404).send(message || 'Not Found')
     }
 
     static unauthorized(req: Request, res: Response) {
+        req.resume()
         res.status(401).send('Unauthorized')
     }
 
