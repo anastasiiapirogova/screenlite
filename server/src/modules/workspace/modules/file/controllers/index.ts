@@ -1,4 +1,3 @@
-import { uploadFilePart } from '@modules/workspace/modules/file/controllers/uploadFilePart.js'
 import { getWorkspaceFiles } from '@modules/workspace/modules/file/controllers/getWorkspaceFiles.js'
 import { createFolder } from '@modules/workspace/modules/file/controllers/createFolder.js'
 import { getFolder } from '@modules/workspace/modules/file/controllers/getFolder.js'
@@ -29,7 +28,6 @@ export {
     softDeleteFiles,
     softDeleteFolders,
     updateFolder,
-    uploadFilePart
 }
 
 export default {
@@ -47,5 +45,4 @@ export default {
     softDeleteFiles,
     softDeleteFolders,
     updateFolder,
-    uploadFilePart
 }
