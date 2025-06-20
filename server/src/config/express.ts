@@ -8,13 +8,21 @@ import swaggerUi from 'swagger-ui-express'
 import { specs } from '../swagger/index.js'
 import { router } from '../routes/index.js'
 import Middlewares from '../middlewares/index.js'
+import helmet from 'helmet'
 
 const app = express()
 
 app.use(Middlewares.corsMiddleware)
+
+// TODO: Add more helmet middleware
+app.use(helmet.permittedCrossDomainPolicies())
+app.use(helmet.dnsPrefetchControl({ allow: false }))
+app.use(helmet.noSniff())
+
 app.use(i18nextMiddleware.handle(i18n))
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ extended: true }))
+// app.use(express.raw({ type: 'application/octet-stream', limit: '30mb' }))
 
 app.enable('etag')
 app.disable('x-powered-by')
