@@ -13,11 +13,11 @@ export const cancelFileUploading = async (req: Request, res: Response) => {
     const fileUploadSession = await FileUploadRepository.getFileUploadSession(fileUploadSessionId, workspace.id)
 
     if (!fileUploadSession || fileUploadSession.cancelledAt || fileUploadSession.completedAt) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     if (user.id !== fileUploadSession.userId) {
-        return ResponseHandler.forbidden(res)
+        return ResponseHandler.forbidden(req, res)
     }
 
     return await prisma.$transaction(async (tx) => {
@@ -34,6 +34,6 @@ export const cancelFileUploading = async (req: Request, res: Response) => {
             fileUploadSession: cancelledFileUploadSession
         })
     }).catch(() => {
-        return ResponseHandler.serverError(res, 'Failed to cancel file upload')
+        return ResponseHandler.serverError(req, res, 'FAILED_TO_CANCEL_FILE_UPLOADING')
     })
 }
