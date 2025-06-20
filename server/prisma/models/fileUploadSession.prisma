@@ -17,4 +17,5 @@ model FileUploadSession {
     folder    Folder?   @relation(fields: [folderId], references: [id], onDelete: SetNull)
     workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
     user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+    files     File[]
 }
