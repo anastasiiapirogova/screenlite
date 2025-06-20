@@ -306,7 +306,7 @@ createWorkspaceRoute({
 createWorkspaceRoute({
     method: HttpMethod.PUT,
     path: '/files/uploadSessions/:fileUploadSessionId/uploadPart',
-    handler: FileController.uploadFilePart,
+    handler: FileUploadController.uploadFilePart,
     enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.upload })
 })
 
