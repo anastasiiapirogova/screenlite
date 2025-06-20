@@ -9,7 +9,7 @@ export const getPlaylistItems = async (req: Request, res: Response) => {
     const playlist = await PlaylistRepository.getWithExtendedItems(playlistId)
 
     if (!playlist) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     ResponseHandler.json(res, {

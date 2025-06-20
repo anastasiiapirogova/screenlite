@@ -23,7 +23,7 @@ export const changePlaylistLayout = async (req: Request, res: Response) => {
     const playlist = await PlaylistRepository.getPlaylist(playlistId)
 
     if (!playlist) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const layoutExists = await PlaylistLayoutRepository.existsInWorkspace(playlistLayoutId, playlist.workspaceId)
@@ -51,6 +51,6 @@ export const changePlaylistLayout = async (req: Request, res: Response) => {
         })
     } catch (error) {
         console.error('Error updating playlist layout:', error)
-        return ResponseHandler.serverError(res)
+        return ResponseHandler.serverError(req, res)
     }
 }

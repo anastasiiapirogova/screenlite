@@ -28,7 +28,7 @@ export const deletePlaylistSchedule = async (req: Request, res: Response) => {
     })
 
     if (!schedule) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const updatedPlaylist = await PlaylistRepository.deleteSchedule(schedule.playlistId, scheduleId)

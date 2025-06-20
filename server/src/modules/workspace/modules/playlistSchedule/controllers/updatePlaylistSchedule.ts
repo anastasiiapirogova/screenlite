@@ -27,7 +27,7 @@ export const updatePlaylistSchedule = async (req: Request, res: Response) => {
     })
 
     if (!schedule) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const updatedStartTime = startTime ?? (endTime ? '00:00' : null)

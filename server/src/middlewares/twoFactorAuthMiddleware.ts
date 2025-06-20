@@ -5,7 +5,7 @@ export const twoFactorAuthMiddleware = (req: Request, res: Response, next: NextF
     const user = req.user!
 
     if (user.twoFactorEnabled && !user.hasPassedTwoFactorAuth) {
-        return ResponseHandler.forbidden(res)
+        return ResponseHandler.forbidden(req, res)
     }
 
     next()

@@ -95,6 +95,6 @@ export const softDeleteFolders = async (req: Request, res: Response) => {
         return ResponseHandler.ok(res)
     } catch (error) {
         console.error('Error during folders deletion:', error)
-        return ResponseHandler.serverError(res)
+        return ResponseHandler.serverError(req, res)
     }
 }

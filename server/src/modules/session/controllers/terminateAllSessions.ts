@@ -18,7 +18,7 @@ export const terminateAllSessions = async (req: Request, res: Response) => {
     const allowed = SessionPolicy.canTerminateSession(user, userId)
 
     if (!allowed) {
-        return ResponseHandler.forbidden(res)
+        return ResponseHandler.forbidden(req, res)
     }
 
     await SessionRepository.terminateSessionsByUserId(userId, excludeSessionId)

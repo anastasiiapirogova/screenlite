@@ -32,7 +32,7 @@ export const deleteScreens = async (req: Request, res: Response) => {
     })
 
     if (!screens.length) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     await prisma.screen.deleteMany({

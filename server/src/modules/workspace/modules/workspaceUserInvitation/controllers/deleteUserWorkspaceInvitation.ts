@@ -15,7 +15,7 @@ export const deleteUserWorkspaceInvitation = async (req: Request, res: Response)
     const workspaceUserInvitation = await WorkspaceUserInvitationRepository.find(workspaceUserInvitationId)
 
     if (!workspaceUserInvitation) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const isPending = workspaceUserInvitation.status === WorkspaceUserInvitationRepository.STATUS.PENDING

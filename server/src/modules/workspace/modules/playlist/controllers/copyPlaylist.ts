@@ -18,7 +18,7 @@ export const copyPlaylist = async (req: Request, res: Response) => {
     const playlistToCopy = await PlaylistRepository.getPlaylistToCopy(playlistId)
 
     if (!playlistToCopy) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const playlist = await PlaylistCopyService.copyPlaylist(playlistToCopy)

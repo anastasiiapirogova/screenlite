@@ -20,7 +20,7 @@ export const updatePlaylistItems = async (req: Request, res: Response) => {
     const playlist = await PlaylistRepository.getWithItems(playlistId)
 
     if (!playlist) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const currentItems = mapPlaylistItemsToComparable(playlist.items)

@@ -10,7 +10,7 @@ export const deletePlaylistLayout = async (req: Request, res: Response) => {
     const playlistLayout = await PlaylistLayoutRepository.getWithPlaylistIds(playlistLayoutId)
 
     if (!playlistLayout) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     await prisma.playlistLayout.delete({

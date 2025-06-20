@@ -18,11 +18,11 @@ export const forceChangeEmail = async (req: Request, res: Response) => {
     const userToUpdate = await UserRepository.findUserById(userId)
 
     if (!userToUpdate) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     if (!UserPolicy.canChangeEmail(user, userId)) {
-        return ResponseHandler.forbidden(res)
+        return ResponseHandler.forbidden(req, res)
     }
 
     if (userToUpdate.email === email) {

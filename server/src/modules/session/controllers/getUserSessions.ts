@@ -58,13 +58,13 @@ export const getUserSessions = async (req: Request, res: Response) => {
     })
 	
     if (!user) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const allowed = SessionPolicy.canAccessUserSessions(requestUser, userId)
 
     if (!allowed) {
-        return ResponseHandler.forbidden(res)
+        return ResponseHandler.forbidden(req, res)
     }
 
     const safeSessions = user.sessions.map(session => {

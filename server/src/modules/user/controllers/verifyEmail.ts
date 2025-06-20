@@ -22,7 +22,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     const tokenRecord = await EmailVerificationTokenRepository.checkEmailVerificationToken(token)
 
     if (!tokenRecord) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const newEmail = tokenRecord.newEmail || undefined

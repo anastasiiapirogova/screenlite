@@ -9,13 +9,13 @@ export const verifyTwoFa = async (req: Request, res: Response) => {
     const user = req.user!
 
     if (!user.twoFactorEnabled) {
-        return ResponseHandler.forbidden(res, 'TWO_FACTOR_NOT_ENABLED')
+        return ResponseHandler.forbidden(req, res, 'TWO_FACTOR_NOT_ENABLED')
     }
 
     const dbUser = await UserRepository.getUserWithTotpSecret(user.id)
 
     if (!dbUser) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     if (!dbUser.totpSecret) {

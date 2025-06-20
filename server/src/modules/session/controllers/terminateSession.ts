@@ -18,13 +18,13 @@ export const terminateSession = async (req: Request, res: Response) => {
     const session = await SessionRepository.getSession(sessionId)
 
     if (!session) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const allowed = SessionPolicy.canTerminateSession(user, session.userId)
 
     if (!allowed) {
-        return ResponseHandler.forbidden(res)
+        return ResponseHandler.forbidden(req, res)
     }
 
     await SessionRepository.terminateSessionByToken(session.token)

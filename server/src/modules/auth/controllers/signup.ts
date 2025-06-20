@@ -22,7 +22,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     setRateLimitHeaders(res, rateLimiterResponse)
 
     if (!rateLimiterResponse.allowed) {
-        return ResponseHandler.tooManyRequests(res)
+        return ResponseHandler.tooManyRequests(req, res)
     }
 
     const { email, name, password } = validation.data

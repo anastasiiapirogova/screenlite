@@ -36,7 +36,7 @@ export const updatePlaylistLayout = async (req: Request, res: Response) => {
     const playlistLayout = await PlaylistLayoutRepository.getWithSections(playlistLayoutId)
 
     if (!playlistLayout) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const updatedData = removeUndefinedFromObject({

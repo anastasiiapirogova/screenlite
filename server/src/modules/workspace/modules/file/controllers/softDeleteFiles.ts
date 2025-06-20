@@ -46,6 +46,6 @@ export const softDeleteFiles = async (req: Request, res: Response) => {
         return ResponseHandler.ok(res)
     } catch (error) {
         console.error('Error during files deletion:', error)
-        return ResponseHandler.serverError(res)
+        return ResponseHandler.serverError(req, res)
     }
 } 

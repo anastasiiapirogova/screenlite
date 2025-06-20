@@ -81,12 +81,12 @@ function setCommonHeaders(res: Response, filePath: string, fileSize: number, ran
     }
 }
 
-async function handleStream(stream: NodeJS.ReadableStream, res: Response) {
+async function handleStream(req: Request, res: Response, stream: NodeJS.ReadableStream) {
     stream.on('error', (error) => {
         console.error('Stream error:', error)
 
         if (!res.headersSent) {
-            ResponseHandler.serverError(res, 'Stream error')
+            ResponseHandler.serverError(req, res, 'Stream error')
         }
     })
 
@@ -111,7 +111,7 @@ export const getFile = async (req: Request, res: Response) => {
                     end: range.end
                 })
 
-                await handleStream(stream, res)
+                await handleStream(req, res, stream)
                 return
             } catch {
                 res.status(416).json({ error: 'Invalid range' })
@@ -122,11 +122,11 @@ export const getFile = async (req: Request, res: Response) => {
         setCommonHeaders(res, filePath, fileSize)
         const stream = await Storage.createReadStream(filePath)
 
-        await handleStream(stream, res)
+        await handleStream(req, res, stream)
         return
     } catch (error) {
         if (error instanceof FileNotFoundError) {
-            return ResponseHandler.notFound(res)
+            return ResponseHandler.notFound(req, res)
         }
         if (error instanceof Error && error.message === 'Invalid file path') {
             return ResponseHandler.validationError(req, res, {

@@ -15,23 +15,23 @@ export const workspaceMiddleware = async (
         const { workspaceId, workspaceSlug } = req.params
 
         if (!workspaceId && !workspaceSlug) {
-            return ResponseHandler.notFound(res, 'WORKSPACE_NOT_FOUND')
+            return ResponseHandler.notFound(req, res, 'WORKSPACE_NOT_FOUND')
         }
 
         const workspace = workspaceId ? await WorkspaceRepository.getWithMember(workspaceId, user.id) : await WorkspaceRepository.findBySlugWithMember(workspaceSlug, user.id)
 
         if (!workspace) {
-            return ResponseHandler.notFound(res, 'WORKSPACE_NOT_FOUND')
+            return ResponseHandler.notFound(req, res, 'WORKSPACE_NOT_FOUND')
         }
 
         if (workspace.deletedAt) {
-            return ResponseHandler.notFound(res, 'WORKSPACE_DELETED')
+            return ResponseHandler.notFound(req, res, 'WORKSPACE_DELETED')
         }
 
         const workspaceMember = workspace.members.find(member => member.userId === user.id)
 
         if (!workspaceMember) {
-            return ResponseHandler.forbidden(res, 'NOT_A_MEMBER_OF_WORKSPACE')
+            return ResponseHandler.forbidden(req, res, 'NOT_A_MEMBER_OF_WORKSPACE')
         }
 
         req.workspace = {

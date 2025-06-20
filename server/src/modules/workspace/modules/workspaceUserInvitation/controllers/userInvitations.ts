@@ -25,11 +25,11 @@ export const userInvitations = async (req: Request, res: Response) => {
     })
 
     if (!user) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     if (userId !== currentUser.id) {
-        return ResponseHandler.forbidden(res)
+        return ResponseHandler.forbidden(req, res)
     }
 
     const invitations = await WorkspaceUserInvitationRepository.findPendingInvitationsByEmail(user.email)

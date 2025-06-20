@@ -17,7 +17,7 @@ export const disconnectDevice = async (req: Request, res: Response) => {
     const screen = await ScreenRepository.findWithDevice(screenId, workspace.id)
 
     if (!screen) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     if (!screen.device) {

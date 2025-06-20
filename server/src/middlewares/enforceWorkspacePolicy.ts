@@ -14,7 +14,7 @@ export const enforceWorkspacePolicy = ({
         const hasPermission = currentUserAccess.permissions[permission]
 
         if (!hasPermission) {
-            return ResponseHandler.forbidden(res, 'PERMISSION_DENIED')
+            return ResponseHandler.forbidden(req, res, 'PERMISSION_DENIED')
         }
 
         next()

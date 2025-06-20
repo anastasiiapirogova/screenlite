@@ -17,7 +17,7 @@ export const addScreensToPlaylist = async (req: Request, res: Response) => {
     const playlist = await PlaylistRepository.getPlaylistWithoutRelationsById(playlistId)
 
     if (!playlist) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     if(playlist.type === PlaylistRepository.TYPE.NESTABLE) {

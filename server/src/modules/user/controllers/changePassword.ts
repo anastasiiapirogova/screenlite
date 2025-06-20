@@ -19,11 +19,11 @@ export const changePassword = async (req: Request, res: Response) => {
     const userToUpdate = await UserRepository.findUserByIdToChangePassword(userId)
 
     if (!userToUpdate) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     if (!UserPolicy.canChangePassword(user, userId)) {
-        return ResponseHandler.forbidden(res)
+        return ResponseHandler.forbidden(req, res)
     }
 
     const isCurrentPasswordMatched = await UserService.validatePassword(currentPassword, userToUpdate.password)

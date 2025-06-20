@@ -12,7 +12,7 @@ export const userWorkspaces = async (req: Request, res: Response) => {
     const allowed = UserPolicy.canViewUserWorkspaces(user, userId)
 
     if (!allowed) {
-        return ResponseHandler.forbidden(res)
+        return ResponseHandler.forbidden(req, res)
     }
 
     const parsedData = userWorkspacesSchema.safeParse(req.query)

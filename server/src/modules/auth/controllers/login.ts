@@ -23,7 +23,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     setRateLimitHeaders(res, rateLimiterResponse)
 
     if (!rateLimiterResponse.allowed) {
-        return ResponseHandler.tooManyRequests(res)
+        return ResponseHandler.tooManyRequests(req, res)
     }
 
     const { email, password } = parsedData.data

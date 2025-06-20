@@ -17,7 +17,7 @@ export const getFolder = async (req: Request, res: Response) => {
     const folder = await FolderRepository.findFolder(folderId, workspace.id)
 
     if (!folder) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const parentFolderTree = await FolderRepository.findFolderAncestorsById(folderId)

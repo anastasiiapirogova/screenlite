@@ -20,7 +20,7 @@ export const getPlaylistLayoutPlaylists = async (req: Request, res: Response) =>
     })
 
     if (!playlistLayout) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     return ResponseHandler.json(res, {

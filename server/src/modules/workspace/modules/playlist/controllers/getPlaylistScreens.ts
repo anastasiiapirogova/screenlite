@@ -8,7 +8,7 @@ export const getPlaylistScreens = async (req: Request, res: Response) => {
     const playlist = await PlaylistRepository.getWithScreens(playlistId)
 
     if (!playlist) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const screens = playlist?.screens.map(s => s.screen)

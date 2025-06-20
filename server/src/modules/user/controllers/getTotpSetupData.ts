@@ -9,11 +9,11 @@ export const getTotpSetupData = async (req: Request, res: Response) => {
     const { userId } = req.params
 
     if (userId !== user.id) {
-        return ResponseHandler.forbidden(res)
+        return ResponseHandler.forbidden(req, res)
     }
 
     if (user.twoFactorEnabled) {
-        return ResponseHandler.forbidden(res, 'TWO_FACTOR_ALREADY_ENABLED')
+        return ResponseHandler.forbidden(req, res, 'TWO_FACTOR_ALREADY_ENABLED')
     }
 
     const secret = TotpService.generateSecret()

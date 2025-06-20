@@ -19,7 +19,7 @@ export const restorePlaylists = async (req: Request, res: Response) => {
     const playlists = await PlaylistRepository.findManyByIdEagerUser(playlistIds, user.id)
 
     if (!playlists.length) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const updatedPlaylists = await prisma.playlist.updateManyAndReturn({

@@ -7,7 +7,7 @@ export const disableTwoFa = async (req: Request, res: Response) => {
     const user = req.user!
 
     if (!user.twoFactorEnabled) {
-        return ResponseHandler.forbidden(res, 'TWO_FACTOR_NOT_ENABLED')
+        return ResponseHandler.forbidden(req, res, 'TWO_FACTOR_NOT_ENABLED')
     }
 
     const updatedUserData = await UserRepository.disableTwoFactor(user.id)

@@ -32,7 +32,7 @@ export const updatePlaylist = async (req: Request, res: Response) => {
     const playlist = await PlaylistRepository.getPlaylist(playlistId)
 
     if (!playlist) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const updatedFields = removeUndefinedFromObject({

@@ -16,7 +16,7 @@ export const createPlaylist = async (req: Request, res: Response) => {
     const workspace = await WorkspaceRepository.exists(workspaceId)
 
     if (!workspace) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const playlist = await PlaylistRepository.create({

@@ -17,7 +17,7 @@ export const removeScreensFromPlaylist = async (req: Request, res: Response) => 
     const playlist = await PlaylistRepository.getPlaylistType(playlistId)
 
     if (!playlist) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const screens = await prisma.screen.findMany({

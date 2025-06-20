@@ -16,7 +16,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     const user = await UserRepository.findUserById(userId)
 
     if (!user) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     await prisma.user.update({

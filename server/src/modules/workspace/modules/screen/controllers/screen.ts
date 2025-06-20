@@ -10,7 +10,7 @@ export const screen = async (req: Request, res: Response) => {
     const screen = await ScreenRepository.findExtended(screenId, workspace.id)
 
     if (!screen) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     const device = screen.device ? {

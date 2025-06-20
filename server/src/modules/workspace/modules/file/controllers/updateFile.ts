@@ -44,7 +44,7 @@ export const updateFile = async (req: Request, res: Response) => {
     const file = await FileRepository.findById(fileId, workspace.id)
 
     if (!file) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     if (file.deletedAt) {

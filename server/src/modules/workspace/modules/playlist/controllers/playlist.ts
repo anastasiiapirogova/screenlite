@@ -9,7 +9,7 @@ export const playlist = async (req: Request, res: Response) => {
     const playlist = await PlaylistRepository.getPlaylist(playlistId, workspace.id)
 
     if (!playlist) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     ResponseHandler.json(res, {

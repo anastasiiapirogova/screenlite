@@ -7,7 +7,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         const authHeader = req.headers['authorization']
 
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return ResponseHandler.unauthorized(res)
+            return ResponseHandler.unauthorized(req, res)
         }
 
         const token = authHeader.split(' ')[1]
@@ -15,7 +15,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         const sessionData = await SessionRepository.getSessionData(token)
 
         if (!sessionData) {
-            return ResponseHandler.unauthorized(res)
+            return ResponseHandler.unauthorized(req, res)
         }
 
         const { user, session } = sessionData
@@ -33,6 +33,6 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     } catch (error) {
         console.error('authMiddleware middleware error:', error)
 
-        return ResponseHandler.serverError(res)
+        return ResponseHandler.serverError(req, res)
     }
 }

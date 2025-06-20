@@ -8,7 +8,7 @@ export const getPlaylistLayout = async (req: Request, res: Response) => {
     const playlistLayout = await PlaylistLayoutRepository.find(playlistLayoutId)
 
     if (!playlistLayout) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     return ResponseHandler.json(res, {

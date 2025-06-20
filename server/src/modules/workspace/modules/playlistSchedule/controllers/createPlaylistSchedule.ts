@@ -17,7 +17,7 @@ export const createPlaylistSchedule = async (req: Request, res: Response) => {
     const playlist = await PlaylistRepository.getPlaylistType(playlistId, workspace.id)
 
     if (!playlist) {
-        return ResponseHandler.notFound(res)
+        return ResponseHandler.notFound(req, res)
     }
 
     if(playlist.type === 'nestable') {
