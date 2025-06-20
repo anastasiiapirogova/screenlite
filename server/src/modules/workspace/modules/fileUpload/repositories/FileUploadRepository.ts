@@ -35,19 +35,6 @@ export class FileUploadRepository {
         })
     }
 
-    static async addUploadedData(fileUploadSession: FileUploadSession, receivedBytes: number) {
-        return await prisma.fileUploadSession.update({
-            where: {
-                id: fileUploadSession.id,
-            },
-            data: {
-                uploaded: fileUploadSession.uploaded + BigInt(receivedBytes),
-                uploadedParts: fileUploadSession.uploadedParts + 1,
-                completedAt: fileUploadSession.uploaded + BigInt(receivedBytes) === fileUploadSession.size ? new Date() : null,
-            },
-        })
-    }
-
     static async updateFileUploadSession(id: string, data: Partial<FileUploadSession>) {
         return await prisma.fileUploadSession.update({
             where: {
