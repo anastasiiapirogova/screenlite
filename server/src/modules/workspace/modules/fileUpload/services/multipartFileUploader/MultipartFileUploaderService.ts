@@ -38,8 +38,12 @@ export class MultipartFileUploaderService {
         return this.provider.initializeUpload(fileUploadSession)
     }
 
-    async uploadPart(fileUploadSession: FileUploadSession, body: Buffer | Readable): Promise<void> {
-        await this.provider.uploadPart(fileUploadSession, body)
+    async uploadPart(fileUploadSession: FileUploadSession, body: Buffer | Readable, partNumber: number): Promise<void> {
+        await this.provider.uploadPart(fileUploadSession, body, partNumber)
+    }
+
+    async confirmPartUpload(fileUploadSession: FileUploadSession, partNumber: number): Promise<void> {
+        await this.provider.confirmPartUpload(fileUploadSession, partNumber)
     }
 
     async completeUpload(fileUploadSession: FileUploadSession): Promise<void> {

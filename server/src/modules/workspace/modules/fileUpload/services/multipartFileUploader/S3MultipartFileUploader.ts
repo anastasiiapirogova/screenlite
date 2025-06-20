@@ -31,7 +31,7 @@ export class S3MultipartFileUploader implements MultipartFileUploaderProviderInt
         const response = await this.s3Client.send(command)
 
         if (!response.UploadId) {
-            throw new Error('Failed to initialize S3 multipart upload')
+            throw new Error('FAILED_TO_INIT_S3_MULTIPART_UPLOAD')
         }
 
         const redisKey = this.getRedisKey(fileUploadSession.id)
@@ -42,7 +42,7 @@ export class S3MultipartFileUploader implements MultipartFileUploaderProviderInt
         return { uploadId: response.UploadId }
     }
 
-    async uploadPart(fileUploadSession: FileUploadSession, body: Buffer | Readable): Promise<void> {
+    async uploadPart(fileUploadSession: FileUploadSession, body: Buffer | Readable, partNumber: number): Promise<void> {
         if (!fileUploadSession.uploadId) {
             throw new Error('Upload ID is required')
         }
@@ -52,7 +52,7 @@ export class S3MultipartFileUploader implements MultipartFileUploaderProviderInt
         const command = new UploadPartCommand({
             Bucket: this.bucket,
             Key: fileUploadSession.path,
-            PartNumber: fileUploadSession.uploadedParts + 1,
+            PartNumber: partNumber,
             UploadId: fileUploadSession.uploadId,
             Body: body,
         })
@@ -60,15 +60,28 @@ export class S3MultipartFileUploader implements MultipartFileUploaderProviderInt
         const response = await this.s3Client.send(command)
 
         if (!response.ETag) {
-            throw new Error('Failed to upload part to S3')
+            throw new Error('FAILED_TO_UPLOAD_PART')
         }
 
-        await this.redis.hset(redisKey, `part:${fileUploadSession.uploadedParts + 1}`, response.ETag)
+        await this.redis.hset(redisKey, `part:${partNumber}`, response.ETag)
+    }
+
+    async confirmPartUpload(fileUploadSession: FileUploadSession, partNumber: number): Promise<void> {
+        // For S3, parts are automatically confirmed when uploaded
+        // This method is a no-op for S3 as parts are managed by AWS
+        const redisKey = this.getRedisKey(fileUploadSession.id)
+
+        // Verify the part exists in Redis
+        const partEtag = await this.redis.hget(redisKey, `part:${partNumber}`)
+
+        if (!partEtag) {
+            throw new Error(`Part ${partNumber} not found in upload session`)
+        }
     }
 
     async completeUpload(fileUploadSession: FileUploadSession): Promise<void> {
         if (!fileUploadSession.uploadId) {
-            throw new Error('Upload ID is required')
+            throw new Error('UPLOAD_ID_IS_REQUIRED')
         }
 
         const redisKey = this.getRedisKey(fileUploadSession.id)

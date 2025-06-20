@@ -3,7 +3,7 @@ import { MultipartFileUploaderProviderInterface } from './MultipartFileUploaderI
 import { Readable } from 'stream'
 import * as fs from 'fs/promises'
 import * as path from 'path'
-import { createWriteStream } from 'fs'
+import { createWriteStream, createReadStream } from 'fs'
 import { v4 as uuid } from 'uuid'
 
 export class LocalMultipartFileUploader implements MultipartFileUploaderProviderInterface {
@@ -24,22 +24,28 @@ export class LocalMultipartFileUploader implements MultipartFileUploaderProvider
 
     private getFileUploadSessionTempPath(fileUploadSession: FileUploadSession): string {
         if (!fileUploadSession.uploadId) {
-            throw new Error('Upload ID is required')
+            throw new Error('UPLOAD_ID_IS_REQUIRED')
         }
 
         return path.join(this.multipartUploadsDir, fileUploadSession.uploadId)
+    }
+
+    private getPartFilePath(fileUploadSession: FileUploadSession, partNumber: number): string {
+        const basePath = this.getFileUploadSessionTempPath(fileUploadSession)
+
+        return `${basePath}_part_${partNumber}`
     }
 
     private getFileUploadSessionFinalPath(fileUploadSession: FileUploadSession): string {
         return path.join(this.uploadsDir, fileUploadSession.path)
     }
 
-    async uploadPart(fileUploadSession: FileUploadSession, body: Buffer | Readable): Promise<void> {
-        const tempPath = this.getFileUploadSessionTempPath(fileUploadSession)
+    async uploadPart(fileUploadSession: FileUploadSession, body: Buffer | Readable, partNumber: number): Promise<void> {
+        const partPath = this.getPartFilePath(fileUploadSession, partNumber)
 
         if (body instanceof Buffer) {
             await new Promise<void>((resolve, reject) => {
-                const writeStream = createWriteStream(tempPath, { flags: 'a' })
+                const writeStream = createWriteStream(partPath, { flags: 'w' })
 
                 writeStream.write(body, (error: Error | null | undefined) => {
                     if (error) reject(error)
@@ -49,14 +55,40 @@ export class LocalMultipartFileUploader implements MultipartFileUploaderProvider
             })
         } else if (body instanceof Readable) {
             await new Promise<void>((resolve, reject) => {
-                const writeStream = createWriteStream(tempPath, { flags: 'a' })
+                const writeStream = createWriteStream(partPath, { flags: 'w' })
 
                 body.pipe(writeStream)
                     .on('finish', () => resolve())
                     .on('error', (error: Error) => reject(error))
             })
         } else {
-            throw new Error('Invalid body type: must be Buffer or Readable')
+            throw new Error('INVALID_BODY_TYPE')
+        }
+    }
+
+    async confirmPartUpload(fileUploadSession: FileUploadSession, partNumber: number): Promise<void> {
+        const partPath = this.getPartFilePath(fileUploadSession, partNumber)
+        const mainFilePath = this.getFileUploadSessionTempPath(fileUploadSession)
+
+        try {
+            await fs.access(partPath)
+        } catch {
+            throw new Error(`Part file not found: ${partPath}`)
+        }
+
+        await new Promise<void>((resolve, reject) => {
+            const readStream = createReadStream(partPath)
+            const writeStream = createWriteStream(mainFilePath, { flags: 'a' })
+
+            readStream.pipe(writeStream)
+                .on('finish', () => resolve())
+                .on('error', (error: Error) => reject(error))
+        })
+
+        try {
+            await fs.unlink(partPath)
+        } catch {
+            // Ignore errors if file doesn't exist
         }
     }
 
@@ -76,6 +108,25 @@ export class LocalMultipartFileUploader implements MultipartFileUploaderProvider
             await fs.unlink(tempPath)
         } catch {
             // Ignore errors if file doesn't exist
+        }
+
+        const basePath = this.getFileUploadSessionTempPath(fileUploadSession)
+        const dir = path.dirname(basePath)
+        const baseName = path.basename(basePath)
+        
+        try {
+            const files = await fs.readdir(dir)
+            const partFiles = files.filter(file => file.startsWith(baseName + '_part_'))
+            
+            for (const partFile of partFiles) {
+                try {
+                    await fs.unlink(path.join(dir, partFile))
+                } catch {
+                    // Ignore errors if file doesn't exist
+                }
+            }
+        } catch {
+            // Ignore errors if directory doesn't exist
         }
     }
 } 
