@@ -2,12 +2,17 @@ export type FileUploadSession = {
 	id: string
 	name: string
 	path: string
-	size: bigint
-	uploaded: bigint
+	size: string
+	uploaded: string
+	uploadedParts: number
 	workspaceId: string
 	folderId: string | null
 	userId: string
 	createdAt: string
+	completedAt: string | null
+	cancelledAt: string | null
+	mimeType: string
+	uploadId: string | null
 }
 
 export type FileUploadingData = {
