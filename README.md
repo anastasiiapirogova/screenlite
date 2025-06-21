@@ -11,12 +11,13 @@ Screenlite is currently **in public development** and **not ready for production
 
 I am currently working on the file management module (last updated on 2025-06-21):
 
-- Resumable multipart uploads
-- Video previews with ffmpeg
-- Metadata generation with ffprobe
+- Resumable multipart uploads (API is done; UI is in progress)
 - Drag and drop file management
 - Moving files/folders to trash, clearing trash, and force deletes
 - Auto-updating playlists when related files are deleted
+
+- Video previews with ffmpeg (DONE)
+- Metadata generation with ffprobe (DONE)
 - Support for local and S3 storage (DONE)
 - Serving static content to clients (DONE)
 - Optimized thumbnail generation with ETags (DONE)
