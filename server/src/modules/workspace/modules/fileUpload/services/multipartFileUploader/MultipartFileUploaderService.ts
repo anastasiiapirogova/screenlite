@@ -2,7 +2,8 @@ import { FileUploadSession } from '@generated/prisma/client.js'
 import { MultipartFileUploaderProviderInterface } from './MultipartFileUploaderInterface.js'
 import { S3MultipartFileUploader } from './S3MultipartFileUploader.js'
 import { LocalMultipartFileUploader } from './LocalMultipartFileUploader.js'
-import { Readable } from 'stream'
+import { Request } from 'express'
+import { STORAGE_TYPE } from '@config/screenlite.js'
 
 export class MultipartFileUploaderService {
     private static instance: MultipartFileUploaderService
@@ -13,9 +14,7 @@ export class MultipartFileUploaderService {
     }
 
     private createProvider(): MultipartFileUploaderProviderInterface {
-        const storageType = process.env.STORAGE_TYPE?.toLowerCase() || 's3'
-
-        switch (storageType) {
+        switch (STORAGE_TYPE) {
             case 'local':
                 console.log('Screenlite: Multipart upload service initialized with local storage provider')
                 return new LocalMultipartFileUploader()
@@ -23,7 +22,7 @@ export class MultipartFileUploaderService {
                 console.log('Screenlite: Multipart upload service initialized with s3 storage provider')
                 return new S3MultipartFileUploader()
             default:
-                throw new Error(`Invalid storage type: ${storageType}`)
+                throw new Error(`Invalid storage type: ${STORAGE_TYPE}`)
         }
     }
 
@@ -38,16 +37,16 @@ export class MultipartFileUploaderService {
         return this.provider.initializeUpload(fileUploadSession)
     }
 
-    async uploadPart(fileUploadSession: FileUploadSession, body: Buffer | Readable, partNumber: number): Promise<void> {
-        await this.provider.uploadPart(fileUploadSession, body, partNumber)
+    async uploadPart(fileUploadSession: FileUploadSession, req: Request, partNumber: number): Promise<void> {
+        await this.provider.uploadPart(fileUploadSession, req, partNumber)
     }
 
     async confirmPartUpload(fileUploadSession: FileUploadSession, partNumber: number): Promise<void> {
         await this.provider.confirmPartUpload(fileUploadSession, partNumber)
     }
 
-    async completeUpload(fileUploadSession: FileUploadSession): Promise<void> {
-        await this.provider.completeUpload(fileUploadSession)
+    async completeUpload(fileUploadSession: FileUploadSession): Promise<boolean> {
+        return await this.provider.completeUpload(fileUploadSession)
     }
 
     async abortUpload(fileUploadSession: FileUploadSession): Promise<void> {
