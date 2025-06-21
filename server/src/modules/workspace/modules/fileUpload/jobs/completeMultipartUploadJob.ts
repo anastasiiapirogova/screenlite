@@ -2,6 +2,7 @@
 import { MultipartFileUploader } from '@config/storage.js'
 import { FileUploadSession } from '@generated/prisma/client.js'
 import { FileRepository } from '../../file/repositories/FileRepository.js'
+import { addGenerateFilePreviewAndMetadataJob } from '../../file/utils/addGenerateFilePreviewAndMetadataJob.js'
 
 export const completeMultipartUploadJob = async (fileUploadSession: FileUploadSession, fileId: string) => {
     const session = await MultipartFileUploader.completeUpload(fileUploadSession)
@@ -11,6 +12,6 @@ export const completeMultipartUploadJob = async (fileUploadSession: FileUploadSe
             processingStatus: 'pending_metadata_generation'
         })
 
-        // addGenerateFilePreviewAndMetadataJob(fileId)
+        addGenerateFilePreviewAndMetadataJob(fileId)
     }
 }
