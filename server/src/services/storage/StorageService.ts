@@ -2,6 +2,7 @@ import { Readable } from 'stream'
 import { S3StorageProvider } from './providers/S3StorageProvider.js'
 import { LocalStorageProvider } from './providers/LocalStorageProvider.js'
 import { StorageProviderInterface } from './providers/StorageProviderInterface.js'
+import { STORAGE_TYPE } from '@config/screenlite.js'
 
 export class StorageService {
     private static instance: StorageService
@@ -12,9 +13,7 @@ export class StorageService {
     }
 
     private createProvider(): StorageProviderInterface {
-        const storageType = process.env.STORAGE_TYPE?.toLowerCase() || 's3'
-
-        switch (storageType) {
+        switch (STORAGE_TYPE) {
             case 'local':
                 console.log('Screenlite: Storage service initialized with local storage provider')
                 return new LocalStorageProvider()
@@ -22,7 +21,7 @@ export class StorageService {
                 console.log('Screenlite: Storage service initialized with s3 storage provider')
                 return new S3StorageProvider()
             default:
-                throw new Error(`Invalid storage type: ${storageType}`)
+                throw new Error(`Invalid storage type: ${STORAGE_TYPE}`)
         }
     }
 
