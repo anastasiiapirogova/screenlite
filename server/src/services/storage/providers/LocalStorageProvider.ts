@@ -4,15 +4,14 @@ import path from 'path'
 import { FileNotFoundError } from '../errors.js'
 import { stat } from 'fs/promises'
 import { StorageProviderInterface } from './StorageProviderInterface.js'
+import { STORAGE_UPLOADS_DIR } from '@config/files.js'
 
 export class LocalStorageProvider implements StorageProviderInterface {
-    private readonly baseDir: string
     private readonly uploadsDir: string
     private readonly baseUrl: string
 
-    constructor(baseDir: string = process.cwd()) {
-        this.baseDir = baseDir
-        this.uploadsDir = path.join(this.baseDir, 'storage/uploads')
+    constructor() {
+        this.uploadsDir = STORAGE_UPLOADS_DIR
         this.baseUrl = process.env.BASE_URL || 'http://localhost:3000'
         this.ensureUploadsDir()
     }
