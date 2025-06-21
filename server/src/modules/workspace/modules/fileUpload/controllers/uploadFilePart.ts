@@ -2,13 +2,19 @@ import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { Request, Response } from 'express'
 import { MultipartFileUploader } from '@config/storage.js'
 import { UploadSessionManager } from '../utils/UploadSessionManager.js'
-import { IdleTimeoutManager } from '../utils/IdleTimeoutManager.js'
 import { FileUploadSessionValidator } from '../utils/FileUploadSessionValidator.js'
 import { ContentLengthValidator } from '../utils/ContentLengthValidator.js'
-
-const MAX_IDLE_TIME_MS = 10000 // 10 seconds
+import { FileRepository } from '../../file/repositories/FileRepository.js'
+import { addCompleteMultipartUploadJob } from '../utils/addCompleteMultipartUploadJob.js'
+import { Readable } from 'stream'
 
 export const uploadFilePart = async (req: Request, res: Response): Promise<void> => {
+    if(!(req instanceof Readable)) {
+        return ResponseHandler.validationError(req, res, {
+            file: 'INVALID_REQUEST_BODY'
+        })
+    }
+
     const fileUploadSession = await FileUploadSessionValidator.validate(req, res)
 
     if (!fileUploadSession) return
@@ -16,10 +22,6 @@ export const uploadFilePart = async (req: Request, res: Response): Promise<void>
     const contentLength = ContentLengthValidator.validate(req, res, fileUploadSession)
 
     if (!contentLength) return
-
-    const idleManager = new IdleTimeoutManager(req, MAX_IDLE_TIME_MS)
-
-    idleManager.setupEventListeners()
 
     try {
         const partNumber = Number(fileUploadSession.uploadedParts) + 1
@@ -36,7 +38,9 @@ export const uploadFilePart = async (req: Request, res: Response): Promise<void>
         )
 
         if(updatedSession.completedAt) {
-            console.log('completed')
+            const file = await FileRepository.createFileFromFileUploadSession(updatedSession)
+
+            addCompleteMultipartUploadJob(updatedSession, file.id)
         }
 
         ResponseHandler.json(res, {
@@ -50,8 +54,6 @@ export const uploadFilePart = async (req: Request, res: Response): Promise<void>
             return
         }
 
-        ResponseHandler.serverError(req, res, 'FAILED_TO_UPLOAD_FILE_PART')
-    } finally {
-        idleManager.cleanup()
+        throw error
     }
 }
