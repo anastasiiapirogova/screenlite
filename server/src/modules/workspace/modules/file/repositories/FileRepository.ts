@@ -1,6 +1,8 @@
 import { prisma } from '@config/prisma.js'
 import { UpdateFileData } from '../types.js'
 import { v4 as uuid } from 'uuid'
+import { File, FileUploadSession } from '@generated/prisma/client.js'
+import { FileService } from '../services/FileService.js'
 
 export class FileRepository {
     static async createFileKey(workspaceId: string, filename: string) {
@@ -25,6 +27,13 @@ export class FileRepository {
                 id,
                 ...(workspaceId && { workspaceId })
             },
+        })
+    }
+
+    static async updateFile(id: string, data: Partial<File>) {
+        return await prisma.file.update({
+            where: { id },
+            data,
         })
     }
 
@@ -61,5 +70,40 @@ export class FileRepository {
             },
             data: { folderId },
         })
+    }
+
+    static async createFileFromFileUploadSession(session: FileUploadSession) {
+        const mimeType = session.mimeType
+        const fileName = FileService.sanitizeFileName(session.name)
+    
+        let fileType: 'video' | 'image' | 'audio' | undefined
+    
+        if (mimeType.startsWith('video/')) {
+            fileType = 'video'
+        } else if (mimeType.startsWith('image/')) {
+            fileType = 'image'
+        } else if (mimeType.startsWith('audio/')) {
+            fileType = 'audio'
+        }
+    
+        const uniqueName = session.path.split('/').pop() || fileName
+    
+        const file = await prisma.file.create({
+            data: {
+                name: fileName,
+                extension: uniqueName.split('.').pop() || '',
+                size: session.size,
+                mimeType: mimeType,
+                workspaceId: session.workspaceId,
+                folderId: session.folderId,
+                uploaderId: session.userId,
+                path: session.path,
+                createdAt: new Date(),
+                type: fileType || 'unknown',
+                processingStatus: 'pending_complete_multipart_upload',
+            }
+        })
+    
+        return file
     }
 }
