@@ -1,17 +1,13 @@
 import { bullmqConnection } from '@config/bullmq.js'
-import { mergeFilePartsJob } from '@modules/workspace/modules/file/jobs/mergeFilePartsJob.js'
-import { cleanupTmpFolder } from '@utils/cleanupTmpFolder.js'
+import { completeMultipartUploadJob } from '@modules/workspace/modules/fileUpload/jobs/completeMultipartUploadJob.js'
 import { Worker } from 'bullmq'
 import { fileUploadQueue } from 'bullmq/queues/fileUploadQueue.js'
 
 export const fileUploadWorker = new Worker(
     fileUploadQueue.name,
     async job => {
-        if (job.name === 'mergeFileParts') {
-            await mergeFilePartsJob(job.data.fileUploadSessionId)
-        }
-        if (job.name === 'cleanupTmpFolder') {
-            await cleanupTmpFolder()
+        if (job.name === 'completeMultipartUpload') {
+            await completeMultipartUploadJob(job.data.fileUploadSession, job.data.fileId)
         }
     },
     {
