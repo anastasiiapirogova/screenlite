@@ -5,14 +5,26 @@ import * as fs from 'fs/promises'
 import * as path from 'path'
 import { createWriteStream, createReadStream } from 'fs'
 import { v4 as uuid } from 'uuid'
+import { Request } from 'express'
+import { STORAGE_MULTIPART_UPLOADS_DIR, STORAGE_UPLOADS_DIR } from '@config/files.js'
 
 export class LocalMultipartFileUploader implements MultipartFileUploaderProviderInterface {
     private uploadsDir: string
     private multipartUploadsDir: string
 
     constructor() {
-        this.uploadsDir = 'storage/uploads'
-        this.multipartUploadsDir = 'storage/multipartUploads'
+        this.uploadsDir = STORAGE_UPLOADS_DIR
+        this.multipartUploadsDir = STORAGE_MULTIPART_UPLOADS_DIR
+    }
+
+    private async ensureDirectoryExists(filePath: string): Promise<void> {
+        try {
+            const dir = path.dirname(filePath)
+
+            await fs.mkdir(dir, { recursive: true })
+        } catch (error) {
+            console.error(`Failed to create directory for path ${filePath}:`, error)
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,24 +52,26 @@ export class LocalMultipartFileUploader implements MultipartFileUploaderProvider
         return path.join(this.uploadsDir, fileUploadSession.path)
     }
 
-    async uploadPart(fileUploadSession: FileUploadSession, body: Buffer | Readable, partNumber: number): Promise<void> {
+    async uploadPart(fileUploadSession: FileUploadSession, req: Request, partNumber: number): Promise<void> {
         const partPath = this.getPartFilePath(fileUploadSession, partNumber)
 
-        if (body instanceof Buffer) {
+        await this.ensureDirectoryExists(partPath)
+
+        if (req instanceof Buffer) {
             await new Promise<void>((resolve, reject) => {
                 const writeStream = createWriteStream(partPath, { flags: 'w' })
 
-                writeStream.write(body, (error: Error | null | undefined) => {
+                writeStream.write(req, (error: Error | null | undefined) => {
                     if (error) reject(error)
                     else resolve()
                 })
                 writeStream.end()
             })
-        } else if (body instanceof Readable) {
+        } else if (req instanceof Readable) {
             await new Promise<void>((resolve, reject) => {
                 const writeStream = createWriteStream(partPath, { flags: 'w' })
 
-                body.pipe(writeStream)
+                req.pipe(writeStream)
                     .on('finish', () => resolve())
                     .on('error', (error: Error) => reject(error))
             })
@@ -92,13 +106,15 @@ export class LocalMultipartFileUploader implements MultipartFileUploaderProvider
         }
     }
 
-    async completeUpload(fileUploadSession: FileUploadSession): Promise<void> {
+    async completeUpload(fileUploadSession: FileUploadSession): Promise<boolean> {
         const tempPath = this.getFileUploadSessionTempPath(fileUploadSession)
         const finalPath = this.getFileUploadSessionFinalPath(fileUploadSession)
 
-        await fs.mkdir(path.dirname(finalPath), { recursive: true })
+        await this.ensureDirectoryExists(finalPath)
 
         await fs.rename(tempPath, finalPath)
+
+        return true
     }
 
     async abortUpload(fileUploadSession: FileUploadSession): Promise<void> {
