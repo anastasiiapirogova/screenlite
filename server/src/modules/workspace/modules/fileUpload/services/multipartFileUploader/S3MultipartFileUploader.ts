@@ -1,9 +1,9 @@
 import { S3Client, CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand, AbortMultipartUploadCommand } from '@aws-sdk/client-s3'
 import { FileUploadSession } from '@generated/prisma/client.js'
 import { MultipartFileUploaderProviderInterface } from './MultipartFileUploaderInterface.js'
-import { Readable } from 'stream'
 import { getRedisClient } from '@config/redis.js'
 import { Buckets, s3Client } from '@config/s3Client.js'
+import { Request } from 'express'
 
 export class S3MultipartFileUploader implements MultipartFileUploaderProviderInterface {
     private s3Client: S3Client
@@ -42,7 +42,7 @@ export class S3MultipartFileUploader implements MultipartFileUploaderProviderInt
         return { uploadId: response.UploadId }
     }
 
-    async uploadPart(fileUploadSession: FileUploadSession, body: Buffer | Readable, partNumber: number): Promise<void> {
+    async uploadPart(fileUploadSession: FileUploadSession, req: Request, partNumber: number): Promise<void> {
         if (!fileUploadSession.uploadId) {
             throw new Error('Upload ID is required')
         }
@@ -54,7 +54,8 @@ export class S3MultipartFileUploader implements MultipartFileUploaderProviderInt
             Key: fileUploadSession.path,
             PartNumber: partNumber,
             UploadId: fileUploadSession.uploadId,
-            Body: body,
+            Body: req,
+            ContentLength: Number(req.headers['content-length']),
         })
 
         const response = await this.s3Client.send(command)
@@ -79,7 +80,7 @@ export class S3MultipartFileUploader implements MultipartFileUploaderProviderInt
         }
     }
 
-    async completeUpload(fileUploadSession: FileUploadSession): Promise<void> {
+    async completeUpload(fileUploadSession: FileUploadSession): Promise<boolean> {
         if (!fileUploadSession.uploadId) {
             throw new Error('UPLOAD_ID_IS_REQUIRED')
         }
@@ -107,6 +108,8 @@ export class S3MultipartFileUploader implements MultipartFileUploaderProviderInt
 
         await this.s3Client.send(command)
         await this.redis.del(redisKey)
+
+        return true
     }
 
     async abortUpload(fileUploadSession: FileUploadSession): Promise<void> {
