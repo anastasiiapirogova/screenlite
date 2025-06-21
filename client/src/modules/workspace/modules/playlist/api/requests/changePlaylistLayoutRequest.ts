@@ -10,10 +10,11 @@ type ChangePlaylistLayoutRequestResponse = {
 export type ChangePlaylistLayoutRequestData = {
 	playlistId: string,
 	playlistLayoutId: string,
+	workspaceId: string
 }
 
 export const changePlaylistLayoutRequest = async (data: ChangePlaylistLayoutRequestData) => {
-    const response = await axios.post<ChangePlaylistLayoutRequestResponse>('/playlists/changeLayout', data)
+    const response = await axios.put<ChangePlaylistLayoutRequestResponse>(`/workspaces/${data.workspaceId}/playlists/${data.playlistId}/layout`, data)
 
     return response.data.playlist
 }

@@ -74,7 +74,8 @@ export const ChangePlaylistLayoutModal = ({ closeModal }: { closeModal: () => vo
 
         mutate({
             playlistId: playlist.id,
-            playlistLayoutId
+            playlistLayoutId,
+            workspaceId: playlist.workspaceId
         })
     }
 	  
