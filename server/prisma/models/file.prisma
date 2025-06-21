@@ -13,7 +13,7 @@ model File {
     duration               Int?
     defaultDuration        Int?
     codec                  String?
-    processingStatus       String    @default("processing")
+    processingStatus       String?
     folderId               String?
     folderIdBeforeDeletion String?
     availabilityStartAt    DateTime?
