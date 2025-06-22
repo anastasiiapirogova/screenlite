@@ -9,6 +9,7 @@ import { addCompleteMultipartUploadJob } from '../utils/addCompleteMultipartUplo
 import { Readable } from 'stream'
 
 export const uploadFilePart = async (req: Request, res: Response): Promise<void> => {
+    throw new Error('test')
     if(!(req instanceof Readable)) {
         return ResponseHandler.validationError(req, res, {
             file: 'INVALID_REQUEST_BODY'

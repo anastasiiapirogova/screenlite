@@ -1,13 +1,14 @@
 import { useRef } from 'react'
-import { useFileUploadingStorage } from '@stores/useFileUploadingStorage'
+import { fileUploadService } from '../services/FileUploadService'
+import { useWorkspace } from '@/modules/workspace/hooks/useWorkspace'
 
 export const UploadFilesDropzone = () => {
-    const { addFiles } = useFileUploadingStorage()
+    const { id: workspaceId } = useWorkspace()
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleFiles = (files: FileList | null) => {
         if (files) {
-            addFiles(Array.from(files))
+            fileUploadService.addFiles(Array.from(files), workspaceId)
             if (fileInputRef.current) {
                 fileInputRef.current.value = ''
             }

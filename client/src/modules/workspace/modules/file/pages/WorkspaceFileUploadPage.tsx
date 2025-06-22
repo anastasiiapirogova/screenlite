@@ -1,13 +1,21 @@
-import { useFileUploadingStorage } from '@stores/useFileUploadingStorage'
+import { useEffect, useState } from 'react'
 import { UploadFilesDropzone } from '../components/UploadFilesDropzone'
 import { FileUploadingCard } from '../components/FileUploadingCard'
-import { FileUploader } from '../components/FileUploader'
+import { FileUploadingStatus } from '../components/FileUploadingStatus'
 import { useUploadingPageLeaveInterceptor } from '../hooks/useUploadingPageLeaveInterceptor'
 import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
 import { ScrollArea } from '@shared/ui/ScrollArea'
+import { fileUploadService } from '../services/FileUploadService'
+import { FileUploadingData } from '../types'
 
 export const WorkspaceFileUploadPage = () => {
-    const { queue } = useFileUploadingStorage()
+    const [queue, setQueue] = useState<FileUploadingData[]>([])
+
+    useEffect(() => {
+        const unsubscribe = fileUploadService.subscribe(setQueue)
+        
+        return unsubscribe
+    }, [])
 
     useUploadingPageLeaveInterceptor()
 	
@@ -16,7 +24,7 @@ export const WorkspaceFileUploadPage = () => {
             <ScrollArea verticalMargin={ 24 }>
                 <div className='max-w-screen-md w-full mx-auto p-7'>
                     <UploadFilesDropzone />
-                    <FileUploader />
+                    <FileUploadingStatus />
                     { queue.map((data) => (
                         <FileUploadingCard
                             data={ data }

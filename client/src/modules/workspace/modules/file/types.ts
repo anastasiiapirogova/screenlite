@@ -15,14 +15,45 @@ export type FileUploadSession = {
 	uploadId: string | null
 }
 
+export type FileUploadError = 
+	| 'NETWORK_ERROR'
+	| 'SESSION_INIT_FAILED'
+	| 'FILE_TOO_LARGE'
+	| 'INVALID_FILE_TYPE'
+	| 'INSUFFICIENT_PERMISSIONS'
+	| 'WORKSPACE_NOT_FOUND'
+	| 'QUOTA_EXCEEDED'
+	| 'SERVER_ERROR'
+	| 'UPLOAD_CANCELLED'
+	| 'TIMEOUT_ERROR'
+	| 'UNKNOWN_ERROR'
+
+export type UploadStatus = 
+	| 'pending'
+	| 'uploading'
+	| 'paused'
+	| 'completed'
+	| 'error'
+
 export type FileUploadingData = {
 	id: string
 	session: FileUploadSession | null
 	file: File
+	workspaceId: string
 	progress: number
-	controller: AbortController | null
-	isPaused: boolean
-	error: 'UNKNOWN_ERROR' | 'SESSION_INIT_FAILED' | '404' | '403' | '401' | null
+	status: UploadStatus
+	error: FileUploadError | null
+	errorMessage?: string
+	retryCount: number
+	startedAt?: Date
+	completedAt?: Date
+	completed: boolean
+}
+
+export type FileUploadConfig = {
+	chunkSize: number
+	maxConcurrentUploads: number
+	timeout: number
 }
 
 // The name WorkspaceFile is used to avoid confusion with the built-in File type

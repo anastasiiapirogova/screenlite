@@ -1,13 +1,20 @@
 import { useConfirmationDialogStore } from '@stores/useConfirmationDialogStore'
-import { useFileUploadingStorage } from '@stores/useFileUploadingStorage'
 import { useEffect, useState } from 'react'
 import { useBlocker } from 'react-router'
+import { fileUploadService } from '../services/FileUploadService'
+import { FileUploadingData } from '../types'
 
 export const useUploadingPageLeaveInterceptor = () => {
     const [isUploading, setIsUploading] = useState(false)
-    const { queue, emptyQueue } = useFileUploadingStorage()
+    const [queue, setQueue] = useState<FileUploadingData[]>([])
     const { confirm } = useConfirmationDialogStore()
     const blocker = useBlocker(isUploading)
+
+    useEffect(() => {
+        const unsubscribe = fileUploadService.subscribe(setQueue)
+
+        return unsubscribe
+    }, [])
 
     useEffect(() => {
         if (
@@ -34,7 +41,7 @@ export const useUploadingPageLeaveInterceptor = () => {
                 })
 
                 if(confirmed) {
-                    emptyQueue()
+                    fileUploadService.emptyQueue()
                     blocker.proceed()
                 } else {
                     blocker.reset()
@@ -42,5 +49,5 @@ export const useUploadingPageLeaveInterceptor = () => {
             }
         }
         handleBlocker()
-    }, [blocker, confirm, emptyQueue])
+    }, [blocker, confirm])
 }

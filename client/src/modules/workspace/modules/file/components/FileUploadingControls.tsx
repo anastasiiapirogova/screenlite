@@ -1,17 +1,10 @@
-import { useFileUploadingStorage } from '@stores/useFileUploadingStorage'
 import { FileUploadingData } from '../types'
 import { Button } from '@/shared/ui/buttons/Button'
-import { cancelFileUploading } from '../utils/cancelFileUploading'
+import { fileUploadService } from '../services/FileUploadService'
 
 const ResumeButton = ({ onClick }: { onClick: () => void }) => (
     <div onClick={ onClick }>
         Resume
-    </div>
-)
-
-const PauseButton = ({ onClick }: { onClick: () => void }) => (
-    <div onClick={ onClick }>
-        Pause
     </div>
 )
 
@@ -22,12 +15,11 @@ const ErrorResumeButton = ({ onClick }: { onClick: () => void }) => (
 )
 
 export const FileUploadingControls = ({ data }: { data: FileUploadingData }) => {
-    const { pauseFile, resumeFile, restartUploading, removeFile } = useFileUploadingStorage()
-    const { id, isPaused, error, session } = data
+    const { id, status, session } = data
+
+    const isPaused = status === 'paused'
 
     const isUploaded = session && session.uploaded === session.size
-
-    const isSessionNotFound = error && error === '404'
 
     if(isUploaded) {
         return null
@@ -35,39 +27,24 @@ export const FileUploadingControls = ({ data }: { data: FileUploadingData }) => 
 
     const MainControl = () => {
         if(isPaused) {
-            if(isSessionNotFound) {
+            if(session) {
                 return (
-                    <ErrorResumeButton onClick={ () => restartUploading(id) } />
+                    <ErrorResumeButton onClick={ () => fileUploadService.restartUploading(id) } />
                 )
             }
 			
             if(session) {
                 return (
-                    <ResumeButton onClick={ () => resumeFile(id) } />
+                    <ResumeButton onClick={ () => fileUploadService.resumeFile(id) } />
                 )
             }
-        } else {
-            return (
-                <PauseButton onClick={ () => pauseFile(id) } />
-            )
         }
 
         return null
     }
 
     const cancel = async () => {
-        if (!session || isUploaded) {
-            removeFile(id)
-            return
-        }
-
-        pauseFile(id)
-
-        const success = await cancelFileUploading(session.id, session.workspaceId)
-
-        if (success) {
-            removeFile(id)
-        }
+        fileUploadService.cancelUpload(id)
     }
 
     return (
