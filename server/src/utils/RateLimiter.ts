@@ -1,4 +1,4 @@
-import { getRedisClient } from '@config/redis.js'
+import { getRedisClient } from '@/config/redis.js'
 import { Redis } from 'ioredis'
 import { toSeconds } from './toSeconds.js'
 

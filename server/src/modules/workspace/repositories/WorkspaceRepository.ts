@@ -1,5 +1,5 @@
-import { prisma } from '@config/prisma.js'
-import { getRedisClient, redisKeys } from '@config/redis.js'
+import { prisma } from '@/config/prisma.js'
+import { getRedisClient, redisKeys } from '@/config/redis.js'
 import { UpdateWorkspaceData } from '../types.js'
 import { WORKSPACE_ROLES } from '../accessControl/roles.js'
 

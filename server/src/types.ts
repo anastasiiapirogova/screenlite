@@ -1,4 +1,4 @@
-import { User } from '@generated/prisma/client.js'
+import { User } from '@/generated/prisma/client.js'
 
 export type SafeUser = Omit<User, 'password' | 'totpSecret'>
 

@@ -1,7 +1,7 @@
-import { FileUploadSession } from '@generated/prisma/client.js'
+import { FileUploadSession } from '@/generated/prisma/client.js'
 import { Request, Response } from 'express'
 import { filePartUploadSchema } from '../schemas/fileUploadSchemas.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { FileUploadRepository } from '../repositories/FileUploadRepository.js'
 
 export class FileUploadSessionValidator {

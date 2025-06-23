@@ -1,5 +1,5 @@
-import { CONNECTION_CODE_CHARACTERS } from '@modules/device/repositories/DeviceRepository.js'
-import { paginationSchema } from 'schemas/paginationSchema.js'
+import { CONNECTION_CODE_CHARACTERS } from '@/modules/device/repositories/DeviceRepository.js'
+import { paginationSchema } from '@/schemas/paginationSchema.js'
 import { z } from 'zod'
 
 export const screenTypes = [

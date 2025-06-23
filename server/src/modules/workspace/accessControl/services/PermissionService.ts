@@ -1,4 +1,4 @@
-import { WorkspaceRole } from '@modules/workspace/modules/member/types.js'
+import { WorkspaceRole } from '@/modules/workspace/modules/member/types.js'
 import { WORKSPACE_PERMISSIONS_ARRAY } from '../permissions.js'
 import { WORKSPACE_ROLES_PERMISSIONS } from '../roles.js'
 

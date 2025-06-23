@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { prisma } from '@config/prisma.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { prisma } from '@/config/prisma.js'
 import { MemberRepository } from '../repositories/MemberRepository.js'
 
 const isRemovingSelf = (requesterId: string, targetId: string) => requesterId === targetId

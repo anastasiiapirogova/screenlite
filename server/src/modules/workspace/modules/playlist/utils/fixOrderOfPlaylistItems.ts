@@ -1,4 +1,4 @@
-import { ComparablePlaylistItem } from 'types.js'
+import { ComparablePlaylistItem } from '@/types.js'
 
 export const fixOrderOfPlaylistItems = (items: ComparablePlaylistItem[]): ComparablePlaylistItem[] => {
     const groupedItems = new Map<string, ComparablePlaylistItem[]>()

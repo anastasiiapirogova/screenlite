@@ -1,4 +1,4 @@
-import { paginationSchema } from 'schemas/paginationSchema.js'
+import { paginationSchema } from '@/schemas/paginationSchema.js'
 import { z } from 'zod'
 import { PlaylistStatus } from '../types.js'
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { newPlaylistSchema } from '../schemas/playlistSchemas.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { WorkspaceRepository } from '@modules/workspace/repositories/WorkspaceRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { WorkspaceRepository } from '@/modules/workspace/repositories/WorkspaceRepository.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 
 export const createPlaylist = async (req: Request, res: Response) => {

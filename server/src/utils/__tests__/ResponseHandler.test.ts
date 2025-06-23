@@ -1,7 +1,7 @@
-import { ResponseHandler } from '@utils/ResponseHandler.js'
 import { Request, Response } from 'express'
 import { beforeEach, describe, it, vi, expect } from 'vitest'
 import { ZodIssue } from 'zod'
+import { ResponseHandler } from '../ResponseHandler.js'
 
 describe('ResponseHandler', () => {
     let mockRes: Partial<Response>
@@ -76,6 +76,16 @@ describe('ResponseHandler', () => {
             ResponseHandler.ok(mockRes as Response)
             
             expect(responseHandlerSpy).toHaveBeenCalledWith(mockRes, undefined)
+        })
+    })
+
+    describe('ResponseHandler.conflict', () => {
+
+        it('sends error message if message is provided', () => {
+            ResponseHandler.conflict(mockReq as Request, mockRes as Response, 'conflict' )
+
+            expect(mockRes.status).toHaveBeenCalledWith(409)
+            expect(mockRes.send).toHaveBeenCalledWith('conflict')
         })
     })
 

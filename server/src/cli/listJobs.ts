@@ -1,4 +1,4 @@
-import { bullmqConnection } from '@config/bullmq.js'
+import { bullmqConnection } from '@/config/bullmq.js'
 import { Queue } from 'bullmq'
 
 export async function listJobs(queueName: string, status: string, start = 0, end = 10) {

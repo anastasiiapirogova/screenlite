@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { UserPolicy } from '../policies/userPolicy.js'
 import { changeEmailSchema } from '../schemas/userSchemas.js'

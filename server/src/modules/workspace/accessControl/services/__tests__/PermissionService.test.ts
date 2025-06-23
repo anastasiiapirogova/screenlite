@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { WorkspaceRole } from '@modules/workspace/modules/member/types.js'
+import { WorkspaceRole } from '@/modules/workspace/modules/member/types.js'
 import { WORKSPACE_PERMISSIONS } from '../../permissions.js'
 import { PermissionService } from '../PermissionService.js'
 

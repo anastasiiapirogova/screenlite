@@ -1,6 +1,6 @@
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { CreateUserInvitationData } from '../types.js'
-import { Prisma } from '@generated/prisma/client.js'
+import { Prisma } from '@/generated/prisma/client.js'
 
 export class WorkspaceUserInvitationRepository {
     static STATUS = {

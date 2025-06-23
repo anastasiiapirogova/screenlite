@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { SessionRepository } from '../repositories/SessionRepository.js'
 import { SessionPolicy } from '../policies/sessionPolicy.js'
 import { terminateAllSessionsSchema } from '../schemas/sessionSchema.js'

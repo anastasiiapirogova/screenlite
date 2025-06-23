@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import { exclude, excludeFromArray } from '@utils/exclude.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { exclude, excludeFromArray } from '@/utils/exclude.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { PlaylistLayoutRepository } from '../repositories/PlaylistLayoutRepository.js'
 import { updatePlaylistLayoutSchema } from '../schemas/playlistLayoutSchemas.js'
-import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
-import { PlaylistLayoutSection } from '@generated/prisma/client.js'
-import { prisma } from '@config/prisma.js'
-import { addPlaylistUpdatedJobs } from '@modules/workspace/modules/playlist/utils/addPlaylistUpdatedJobs.js'
+import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.js'
+import { PlaylistLayoutSection } from '@/generated/prisma/client.js'
+import { prisma } from '@/config/prisma.js'
+import { addPlaylistUpdatedJobs } from '@/modules/workspace/modules/playlist/utils/addPlaylistUpdatedJobs.js'
 
 type SectionData = Omit<PlaylistLayoutSection, 'playlistLayoutId'>
 

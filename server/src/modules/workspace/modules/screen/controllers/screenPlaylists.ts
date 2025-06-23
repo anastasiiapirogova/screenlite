@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { ScreenRepository } from '../repositories/ScreenRepository.js'
 
 export const screenPlaylists = async (req: Request, res: Response) => {

@@ -1,9 +1,9 @@
-import { FileUploadSession } from '@generated/prisma/client.js'
+import { FileUploadSession } from '@/generated/prisma/client.js'
 import { MultipartFileUploaderProviderInterface } from './MultipartFileUploaderInterface.js'
 import { S3MultipartFileUploader } from './S3MultipartFileUploader.js'
 import { LocalMultipartFileUploader } from './LocalMultipartFileUploader.js'
 import { Request } from 'express'
-import { STORAGE_TYPE } from '@config/screenlite.js'
+import { STORAGE_TYPE } from '@/config/screenlite.js'
 
 export class MultipartFileUploaderService {
     private static instance: MultipartFileUploaderService

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { Prisma } from '@generated/prisma/client.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { Prisma } from '@/generated/prisma/client.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { getWorkspaceFoldersSchema } from '../schemas/folderSchemas.js'
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 
 export const getWorkspaceFolders = async (req: Request, res: Response) => {
     const workspace = req.workspace!

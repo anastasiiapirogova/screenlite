@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { prisma } from '@config/prisma.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { prisma } from '@/config/prisma.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { restorePlaylistsSchema } from '../schemas/playlistSchemas.js'

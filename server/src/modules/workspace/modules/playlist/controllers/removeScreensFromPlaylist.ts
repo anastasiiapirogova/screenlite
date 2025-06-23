@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { removeScreensFromPlaylistSchema } from '../schemas/playlistSchemas.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
-import { addSendNewStateToDeviceJob } from '@modules/device/utils/addSendNewStateToDeviceJob.js'
+import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.js'
 
 export const removeScreensFromPlaylist = async (req: Request, res: Response) => {
     const validation = await removeScreensFromPlaylistSchema.safeParseAsync(req.body)

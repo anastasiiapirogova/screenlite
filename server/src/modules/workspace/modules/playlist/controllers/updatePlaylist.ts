@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { updatePlaylistSchema } from '../schemas/playlistSchemas.js'
 import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.js'

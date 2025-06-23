@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { CreateFolderData, FolderTreeResult, ParentFolderTreeResult, UpdateFolderData } from '../types.js'
 
 export class FolderRepository {

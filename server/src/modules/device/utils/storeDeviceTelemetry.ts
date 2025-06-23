@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io'
 import { getIpFromSocket } from '../helpers/getIpFromSocket.js'
 import { DeviceData } from '../types.js'
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 export const storeDeviceTelemetry = async (token: string, data: DeviceData, socket: Socket) => {
     const publicIp = getIpFromSocket(socket)
 

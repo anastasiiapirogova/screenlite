@@ -1,4 +1,4 @@
-import { Workspace } from '@generated/prisma/client.js'
+import { Workspace } from '@/generated/prisma/client.js'
 
 export type UpdateWorkspaceData = {
 	name?: string

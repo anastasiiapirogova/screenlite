@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { exclude } from '@utils/exclude.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { exclude } from '@/utils/exclude.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { ScreenRepository } from '../repositories/ScreenRepository.js'
 
 export const screen = async (req: Request, res: Response) => {

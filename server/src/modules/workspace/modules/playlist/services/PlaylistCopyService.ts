@@ -1,5 +1,5 @@
-import { prisma } from '@config/prisma.js'
-import { exclude } from '@utils/exclude.js'
+import { prisma } from '@/config/prisma.js'
+import { exclude } from '@/utils/exclude.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 
 type PlaylistWithRelations = NonNullable<Awaited<ReturnType<typeof PlaylistRepository.getPlaylistToCopy>>>

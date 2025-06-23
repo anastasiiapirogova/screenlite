@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { prisma } from '@config/prisma.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { addPlaylistUpdatedJob } from '@modules/workspace/modules/playlist/utils/addPlaylistUpdatedJob.js'
-import { PlaylistRepository } from '@modules/workspace/modules/playlist/repositories/PlaylistRepository.js'
+import { prisma } from '@/config/prisma.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { addPlaylistUpdatedJob } from '@/modules/workspace/modules/playlist/utils/addPlaylistUpdatedJob.js'
+import { PlaylistRepository } from '@/modules/workspace/modules/playlist/repositories/PlaylistRepository.js'
 import { deleteScheduleSchema } from '../schemas/scheduleValidationSchemas.js'
 
 export const deletePlaylistSchedule = async (req: Request, res: Response) => {

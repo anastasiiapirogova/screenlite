@@ -1,4 +1,4 @@
-import { SafeUser } from 'types.js'
+import { SafeUser } from '@/types.js'
 
 export class SessionPolicy{
     static canAccessUserSessions(user: SafeUser, userId: string): boolean {

@@ -1,5 +1,5 @@
-import { prisma } from '@config/prisma.js'
-import { addSendNewStateToDeviceJob } from '@modules/device/utils/addSendNewStateToDeviceJob.js'
+import { prisma } from '@/config/prisma.js'
+import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.js'
 import { addPlaylistUpdatedJobs } from '../utils/addPlaylistUpdatedJobs.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 

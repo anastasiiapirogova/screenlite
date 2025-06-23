@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io'
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { DeviceData } from '../types.js'
 import { storeDeviceTelemetry } from './storeDeviceTelemetry.js'
 import { DeviceRepository } from '../repositories/DeviceRepository.js'

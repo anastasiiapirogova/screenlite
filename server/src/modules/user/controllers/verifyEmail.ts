@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { EmailVerificationTokenRepository } from '@modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { EmailVerificationTokenRepository } from '@/modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { verifyEmailSchema } from '../schemas/userSchemas.js'
 

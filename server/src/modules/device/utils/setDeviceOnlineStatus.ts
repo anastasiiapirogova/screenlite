@@ -1,5 +1,5 @@
-import { Prisma } from '@generated/prisma/client.js'
-import { prisma } from '@config/prisma.js'
+import { Prisma } from '@/generated/prisma/client.js'
+import { prisma } from '@/config/prisma.js'
 
 export const setDeviceOnlineStatus = async (token: string, status: boolean, createdAt?: Date) => {
     const device = await prisma.device.findUnique({

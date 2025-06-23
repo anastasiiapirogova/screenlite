@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 import { deleteFoldersSchema } from '../schemas/folderSchemas.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { FolderRepository } from '../repositories/FolderRepository.js'
-import { prisma } from '@config/prisma.js'
-import { Prisma } from '@generated/prisma/client.js'
+import { prisma } from '@/config/prisma.js'
+import { Prisma } from '@/generated/prisma/client.js'
 
 export const softDeleteFolders = async (req: Request, res: Response) => {
     const workspace = req.workspace!

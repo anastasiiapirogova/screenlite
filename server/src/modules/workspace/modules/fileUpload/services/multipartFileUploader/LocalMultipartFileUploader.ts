@@ -1,4 +1,4 @@
-import { FileUploadSession } from '@generated/prisma/client.js'
+import { FileUploadSession } from '@/generated/prisma/client.js'
 import { MultipartFileUploaderProviderInterface } from './MultipartFileUploaderInterface.js'
 import { Readable } from 'stream'
 import * as fs from 'fs/promises'
@@ -6,7 +6,7 @@ import * as path from 'path'
 import { createWriteStream, createReadStream } from 'fs'
 import { v4 as uuid } from 'uuid'
 import { Request } from 'express'
-import { STORAGE_MULTIPART_UPLOADS_DIR, STORAGE_UPLOADS_DIR } from '@config/files.js'
+import { STORAGE_MULTIPART_UPLOADS_DIR, STORAGE_UPLOADS_DIR } from '@/config/files.js'
 
 export class LocalMultipartFileUploader implements MultipartFileUploaderProviderInterface {
     private uploadsDir: string
@@ -56,6 +56,19 @@ export class LocalMultipartFileUploader implements MultipartFileUploaderProvider
         const partPath = this.getPartFilePath(fileUploadSession, partNumber)
 
         await this.ensureDirectoryExists(partPath)
+
+        // Check if part file already exists and delete it if so
+        // This handles cases where a previous upload was incomplete or failed
+        try {
+            await fs.access(partPath)
+            // If no error, file exists - delete it to allow retry
+            await fs.unlink(partPath)
+        } catch (err: unknown) {
+            if (typeof err === 'object' && err !== null && 'code' in err && (err as { code?: string }).code !== 'ENOENT') {
+                throw err
+            }
+            // else, file does not exist, proceed
+        }
 
         if (req instanceof Buffer) {
             await new Promise<void>((resolve, reject) => {
