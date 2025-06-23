@@ -10,27 +10,10 @@
 		"skipLibCheck": true, /* Skip type checking all .d.ts files. */
 		"baseUrl": ".",
 		"paths": {
-			"@config/*": [
-				"src/config/*"
-			],
-			"@modules/*": [
-				"src/modules/*"
-			],
-			"@utils/*": [
-				"src/utils/*"
-			],
-			"@services/*": [
-				"src/services/*"
-			],
-			"@generated/*": [
-				"src/generated/*"
-			],
-			"@schemas/*": [
-				"src/schemas/*"
-			],
+			"@workspaceModules/*": ["./src/modules/workspace/*"],
+			"@/*": ["./src/*"],
 			"*": [
 				"node_modules",
-				"src/*"
 			],
 		},
 	},

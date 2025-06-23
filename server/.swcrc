@@ -12,27 +12,14 @@
         "keepClassNames": false,
         "baseUrl": "./",
         "paths": {
-            "@config/*": [
-                "src/config/*"
+            "@workspaceModules/*": [
+                "src/modules/workspace/*"
             ],
-            "@modules/*": [
-                "src/modules/*"
-            ],
-            "@utils/*": [
-                "src/utils/*"
-            ],
-            "@services/*": [
-                "src/services/*"
-            ],
-            "@generated/*": [
-                "src/generated/*"
-            ],
-            "@schemas/*": [
-                "src/schemas/*"
+            "@": [
+                "src"
             ],
             "*": [
-                "node_modules",
-                "src/*"
+                "node_modules"
             ]
         }
     },
