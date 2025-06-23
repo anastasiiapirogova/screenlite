@@ -1,8 +1,8 @@
-import { bullmqConnection } from '@config/bullmq.js'
-import { generateFilePreviewAndMetadataJob } from '@modules/workspace/modules/file/jobs/generateFilePreviewAndMetadataJob.js'
-import { handleFileUpdatedJob } from '@modules/workspace/modules/file/jobs/handleFileUpdatedJob.js'
+import { bullmqConnection } from '@/config/bullmq.js'
+import { generateFilePreviewAndMetadataJob } from '@/modules/workspace/modules/file/jobs/generateFilePreviewAndMetadataJob.js'
+import { handleFileUpdatedJob } from '@/modules/workspace/modules/file/jobs/handleFileUpdatedJob.js'
 import { Worker } from 'bullmq'
-import { fileQueue } from 'bullmq/queues/fileQueue.js'
+import { fileQueue } from '@/bullmq/queues/fileQueue.js'
 
 export const fileQueueWorker = new Worker(
     fileQueue.name,

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
 import { updatePlaylistPlaylistLayoutSchema } from '../schemas/playlistSchemas.js'
-import { PlaylistLayoutRepository } from '@modules/workspace/modules/playlistLayout/repositories/PlaylistLayoutRepository.js'
+import { PlaylistLayoutRepository } from '@/modules/workspace/modules/playlistLayout/repositories/PlaylistLayoutRepository.js'
 import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.js'
 import { addPlaylistItemsUpdatedJob } from '../utils/addPlaylistItemsUpdatedJob.js'
 

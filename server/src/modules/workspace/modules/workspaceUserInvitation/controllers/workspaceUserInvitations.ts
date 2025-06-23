@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { prisma } from '@config/prisma.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { prisma } from '@/config/prisma.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { workspaceUserInvitationsSchema } from '../schemas/workspaceUserInvitationSchemas.js'
-import { PaginationMeta } from 'types.js'
+import { PaginationMeta } from '@/types.js'
 
 export const workspaceUserInvitations = async (req: Request, res: Response) => {
     const workspace = req.workspace!

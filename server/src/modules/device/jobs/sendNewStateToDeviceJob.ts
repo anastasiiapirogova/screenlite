@@ -1,5 +1,5 @@
-import { getDeviceSocketConnectionByToken } from 'controllers/socket.js'
-import { prisma } from '@config/prisma.js'
+import { getDeviceSocketConnectionByToken } from '@/controllers/socket.js'
+import { prisma } from '@/config/prisma.js'
 
 export const sendNewStateToDeviceJob = async (token: string) => {
     const deviceSocket = await getDeviceSocketConnectionByToken(token)

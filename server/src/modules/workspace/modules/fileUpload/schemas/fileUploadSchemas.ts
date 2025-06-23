@@ -1,6 +1,6 @@
-import { fileNameSchema } from '@modules/workspace/modules/file/schemas/fileSchemas.js'
+import { fileNameSchema } from '@/modules/workspace/modules/file/schemas/fileSchemas.js'
 import { z } from 'zod'
-import { FileService } from '@modules/workspace/modules/file/services/FileService.js'
+import { FileService } from '@/modules/workspace/modules/file/services/FileService.js'
 import mime from 'mime'
 
 const validateMimeType = (name: string, providedMime?: string) => {

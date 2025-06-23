@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { createPlaylistLayoutSchema } from '../schemas/playlistLayoutSchemas.js'
 import { PlaylistLayoutRepository } from '../repositories/PlaylistLayoutRepository.js'
 

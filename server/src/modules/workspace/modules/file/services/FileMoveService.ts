@@ -1,4 +1,4 @@
-import { Folder } from '@generated/prisma/client.js'
+import { Folder } from '@/generated/prisma/client.js'
 import { FolderRepository } from '../repositories/FolderRepository.js'
 
 type MovableFile = {

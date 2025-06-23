@@ -1,4 +1,4 @@
-import { WorkspaceWithCurrentUser } from '@modules/workspace/types.ts'
+import { WorkspaceWithCurrentUser } from '@/modules/workspace/types.ts'
 import { AuthUser } from 'types.ts'
 import i18next from 'i18next'
 

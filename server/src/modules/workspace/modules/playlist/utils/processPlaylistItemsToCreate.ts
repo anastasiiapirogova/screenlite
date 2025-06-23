@@ -1,5 +1,5 @@
-import { prisma } from '@config/prisma.js'
-import { ComparablePlaylistItem } from 'types.js'
+import { prisma } from '@/config/prisma.js'
+import { ComparablePlaylistItem } from '@/types.js'
 
 export const processPlaylistItemsToCreate = async (items: ComparablePlaylistItem[], workspaceId: string): Promise<ComparablePlaylistItem[]> => {
     const fileTypeItems = items.filter(item => item.fileId) as (ComparablePlaylistItem & { fileId: string })[]

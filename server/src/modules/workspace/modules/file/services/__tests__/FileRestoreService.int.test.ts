@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest'
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { FileRestoreService } from '../FileRestoreService.js'
 
 const WORKSPACE_ID = 'workspace-file-restore'

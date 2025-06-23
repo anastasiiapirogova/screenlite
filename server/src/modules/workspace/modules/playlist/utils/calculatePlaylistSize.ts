@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { PlaylistItemRepository } from '../repositories/PlaylistItemRepository.js'
 
 export const calculatePlaylistSize = async (playlistId: string): Promise<bigint> => {

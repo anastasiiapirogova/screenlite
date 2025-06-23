@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { ScreenRepository } from '../repositories/ScreenRepository.js'
-import { addSendNewStateToDeviceJob } from '@modules/device/utils/addSendNewStateToDeviceJob.js'
+import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.js'
 import { disconnectDeviceSchema } from '../schemas/screenSchemas.js'
 
 export const disconnectDevice = async (req: Request, res: Response) => {

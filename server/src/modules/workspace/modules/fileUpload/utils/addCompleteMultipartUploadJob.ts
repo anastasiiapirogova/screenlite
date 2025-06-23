@@ -1,5 +1,5 @@
-import { FileUploadSession } from '@generated/prisma/client.js'
-import { fileUploadQueue } from 'bullmq/queues/fileUploadQueue.js'
+import { fileUploadQueue } from '@/bullmq/queues/fileUploadQueue.js'
+import { FileUploadSession } from '@/generated/prisma/client.js'
 
 export const addCompleteMultipartUploadJob = async (fileUploadSession: FileUploadSession, fileId: string) => {
     await fileUploadQueue.add(

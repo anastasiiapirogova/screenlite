@@ -1,5 +1,5 @@
 import swaggerJsdoc from 'swagger-jsdoc'
-import { APP_VERSION } from '@config/screenlite.js'
+import { APP_VERSION } from '@/config/screenlite.js'
 import { schemas } from './definitions/schemas.js'
 import { responses } from './definitions/responses.js'
 import { authPaths } from './paths/auth.js'

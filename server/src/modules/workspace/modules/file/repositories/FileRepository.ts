@@ -1,7 +1,7 @@
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { UpdateFileData } from '../types.js'
 import { v4 as uuid } from 'uuid'
-import { File, FileUploadSession } from '@generated/prisma/client.js'
+import { File, FileUploadSession } from '@/generated/prisma/client.js'
 import { FileService } from '../services/FileService.js'
 
 export class FileRepository {

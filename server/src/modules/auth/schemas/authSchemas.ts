@@ -1,5 +1,5 @@
-import { UserRepository } from '@modules/user/repositories/UserRepository.js'
-import { passwordZodSchema, userNameSchema } from '@modules/user/schemas/userSchemas.js'
+import { UserRepository } from '@/modules/user/repositories/UserRepository.js'
+import { passwordZodSchema, userNameSchema } from '@/modules/user/schemas/userSchemas.js'
 import { z } from 'zod'
 
 const emailSchema = z.string({

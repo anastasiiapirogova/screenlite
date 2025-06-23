@@ -1,4 +1,4 @@
-import { getRedisClient } from '@config/redis.js'
+import { getRedisClient } from '@/config/redis.js'
 
 export async function getAllQueueNames(prefix = 'bull') {
     const redis = getRedisClient()

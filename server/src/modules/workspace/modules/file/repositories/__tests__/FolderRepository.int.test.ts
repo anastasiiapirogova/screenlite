@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest'
 import { FolderRepository } from '../FolderRepository.js'
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 
 const WORKSPACE_ID = 'workspace-folder-repo'
 

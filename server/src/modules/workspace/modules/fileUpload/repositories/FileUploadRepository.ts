@@ -1,6 +1,6 @@
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { CreateFileUploadSessionData } from '../types.js'
-import { FileUploadSession } from '@generated/prisma/client.js'
+import { FileUploadSession } from '@/generated/prisma/client.js'
 
 export class FileUploadRepository {
     static isUploaded(session: FileUploadSession) {

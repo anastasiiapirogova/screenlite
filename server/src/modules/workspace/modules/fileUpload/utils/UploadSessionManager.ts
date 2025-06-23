@@ -1,6 +1,6 @@
-import { prisma } from '@config/prisma.js'
-import { MultipartFileUploader } from '@config/storage.js'
-import { FileUploadSession } from '@generated/prisma/client.js'
+import { prisma } from '@/config/prisma.js'
+import { MultipartFileUploader } from '@/config/storage.js'
+import { FileUploadSession } from '@/generated/prisma/client.js'
 
 export class UploadSessionManager {
     static async updateSession(

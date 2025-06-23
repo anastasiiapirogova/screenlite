@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import { FileNotFoundError } from '../../services/storage/errors.js'
-import { Storage } from '@config/storage.js'
+import { Storage } from '@/config/storage.js'
 import { normalize, extname } from 'path'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 
 interface Range {
     start: number

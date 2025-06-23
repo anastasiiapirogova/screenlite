@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { CreateScreenData } from '../types.js'
 
 export class ScreenRepository {

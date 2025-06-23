@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { updateScheduleValidationSchema } from '../schemas/scheduleValidationSchemas.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { addPlaylistUpdatedJob } from '@modules/workspace/modules/playlist/utils/addPlaylistUpdatedJob.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { addPlaylistUpdatedJob } from '@/modules/workspace/modules/playlist/utils/addPlaylistUpdatedJob.js'
 
 export const updatePlaylistSchedule = async (req: Request, res: Response) => {
     const workspace = req.workspace!

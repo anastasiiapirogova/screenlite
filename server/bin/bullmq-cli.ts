@@ -1,7 +1,6 @@
 #!/usr/bin/env tsx
-
-import { listJobs } from 'cli/listJobs.js'
-import { getAllQueueNames } from 'cli/utils.js'
+import { listJobs } from '../src/cli/listJobs.js'
+import { getAllQueueNames } from '../src/cli/utils.js'
 import { Command } from 'commander'
 
 const program = new Command()

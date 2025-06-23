@@ -1,5 +1,5 @@
-import { MultipartFileUploaderService } from '@modules/workspace/modules/fileUpload/services/multipartFileUploader/MultipartFileUploaderService.js'
-import { StorageService } from '@services/storage/StorageService.js'
+import { MultipartFileUploaderService } from '@/modules/workspace/modules/fileUpload/services/multipartFileUploader/MultipartFileUploaderService.js'
+import { StorageService } from '@/services/storage/StorageService.js'
 
 const storageInstance = StorageService.getInstance()
 

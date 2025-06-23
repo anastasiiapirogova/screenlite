@@ -1,5 +1,5 @@
-import { PlaylistItem } from '@generated/prisma/client.js'
-import { ComparablePlaylistItem } from 'types.js'
+import { PlaylistItem } from '@/generated/prisma/client.js'
+import { ComparablePlaylistItem } from '@/types.js'
 
 export const mapPlaylistItemsToComparable = (items: PlaylistItem[]) => {
     return items.map(item => {

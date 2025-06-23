@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import crypto from 'crypto'
 
 // Some characters are excluded because they can be easily confused with others

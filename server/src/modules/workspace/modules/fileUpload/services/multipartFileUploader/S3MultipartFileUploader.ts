@@ -1,8 +1,8 @@
 import { S3Client, CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand, AbortMultipartUploadCommand } from '@aws-sdk/client-s3'
-import { FileUploadSession } from '@generated/prisma/client.js'
+import { FileUploadSession } from '@/generated/prisma/client.js'
 import { MultipartFileUploaderProviderInterface } from './MultipartFileUploaderInterface.js'
-import { getRedisClient } from '@config/redis.js'
-import { Buckets, s3Client } from '@config/s3Client.js'
+import { getRedisClient } from '@/config/redis.js'
+import { Buckets, s3Client } from '@/config/s3Client.js'
 import { Request } from 'express'
 
 export class S3MultipartFileUploader implements MultipartFileUploaderProviderInterface {

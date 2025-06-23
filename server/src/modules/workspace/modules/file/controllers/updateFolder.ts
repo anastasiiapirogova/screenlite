@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { updateFolderSchema } from '../schemas/folderSchemas.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { FolderRepository } from '../repositories/FolderRepository.js'
 
 export const updateFolder = async (req: Request, res: Response) => {

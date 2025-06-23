@@ -4,7 +4,7 @@ import path from 'path'
 import { FileNotFoundError } from '../errors.js'
 import { stat } from 'fs/promises'
 import { StorageProviderInterface } from './StorageProviderInterface.js'
-import { STORAGE_UPLOADS_DIR } from '@config/files.js'
+import { STORAGE_UPLOADS_DIR } from '@/config/files.js'
 
 export class LocalStorageProvider implements StorageProviderInterface {
     private readonly uploadsDir: string

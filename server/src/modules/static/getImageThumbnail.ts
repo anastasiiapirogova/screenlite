@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 import { Readable } from 'stream'
 import sharp from 'sharp'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import mime from 'mime'
-import { Storage } from '@config/storage.js'
+import { Storage } from '@/config/storage.js'
 import { FileNotFoundError } from '../../services/storage/errors.js'
 import { normalize } from 'path'
 

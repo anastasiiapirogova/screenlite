@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.js'
+import { prisma } from '@/config/prisma.js'
 import { calculatePlaylistSize } from '../utils/calculatePlaylistSize.js'
 
 export const recalculatePlaylistSizeJob = async (playlistId: string) => {

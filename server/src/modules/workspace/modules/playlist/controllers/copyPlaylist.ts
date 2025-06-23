@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { copyPlaylistSchema } from '../schemas/playlistSchemas.js'
 import { PlaylistCopyService } from '../services/PlaylistCopyService.js'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.js'

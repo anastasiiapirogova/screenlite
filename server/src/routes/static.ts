@@ -1,7 +1,7 @@
 import express, { RequestHandler } from 'express'
 import { asyncHandler } from '../utils/asyncHandler.js'
-import { getImageThumbnail } from '@modules/static/getImageThumbnail.js'
-import { getFile } from '@modules/static/getFile.js'
+import { getImageThumbnail } from '@/modules/static/getImageThumbnail.js'
+import { getFile } from '@/modules/static/getFile.js'
 
 const router = express.Router()
 

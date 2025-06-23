@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { FolderRepository } from '../repositories/FolderRepository.js'
 import { getFolderSchema } from '../schemas/folderSchemas.js'
 

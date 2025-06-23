@@ -1,4 +1,4 @@
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { NextFunction, Request, Response } from 'express'
 
 export type EnforceWorkspacePolicyParams = {

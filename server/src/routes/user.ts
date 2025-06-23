@@ -1,10 +1,10 @@
-import { userUpdateMulterMiddleware } from '@config/multer.js'
+import { userUpdateMulterMiddleware } from '@/config/multer.js'
 import { createRoute, createUnprotectedRoute, HttpMethod } from './utils.js'
 
-import SessionController from '@modules/session/controllers/index.js'
-import UserController from '@modules/user/controllers/index.js'
-import AuthController from '@modules/auth/controllers/index.js'
-import WorkspaceUserInvitationController from '@modules/workspace/modules/workspaceUserInvitation/controllers/index.js'
+import SessionController from '@/modules/session/controllers/index.js'
+import UserController from '@/modules/user/controllers/index.js'
+import AuthController from '@/modules/auth/controllers/index.js'
+import WorkspaceUserInvitationController from '@/modules/workspace/modules/workspaceUserInvitation/controllers/index.js'
 
 // =======================
 // Unprotected Routes

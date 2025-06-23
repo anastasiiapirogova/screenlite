@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { prisma } from '@config/prisma.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { prisma } from '@/config/prisma.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 
 export const getPlaylistLayoutPlaylists = async (req: Request, res: Response) => {
     const { playlistLayoutId } = req.params

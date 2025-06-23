@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { updateFileSchema } from '../schemas/fileSchemas.js'
 import { FileRepository } from '../repositories/FileRepository.js'
-import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
+import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.js'
 import { addFileUpdatedJob } from '../utils/addFileUpdatedJob.js'
 
 const updatePlaylists = (

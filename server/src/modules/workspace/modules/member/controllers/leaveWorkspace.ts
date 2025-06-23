@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { MemberRepository } from '../repositories/MemberRepository.js'
 
 export const leaveWorkspace = async (req: Request, res: Response) => {

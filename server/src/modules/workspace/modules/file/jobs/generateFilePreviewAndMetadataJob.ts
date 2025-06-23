@@ -1,7 +1,7 @@
-import { prisma } from '@config/prisma.js'
-import { StorageService } from '@services/storage/StorageService.js'
+import { prisma } from '@/config/prisma.js'
+import { StorageService } from '@/services/storage/StorageService.js'
 import { FileProcessingService } from '../services/FileProcessingService.js'
-import { FileNotFoundError } from '@services/storage/errors.js'
+import { FileNotFoundError } from '@/services/storage/errors.js'
 
 export const generateFilePreviewAndMetadataJob = async (fileId: string, attemptsMade: number) => {
     const file = await prisma.file.findFirst({

@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
 import { z } from 'zod'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
-import { removeUndefinedFromObject } from '@utils/removeUndefinedFromObject.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.js'
 import { updateUserSchema, userIdSchema, userProfilePhotoSchema } from '../schemas/userSchemas.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { UserPolicy } from '../policies/userPolicy.js'
-import { StorageHelper } from '@services/StorageHelper.js'
+import { StorageHelper } from '@/services/StorageHelper.js'
 
 export const updateUser = async (req: Request, res: Response) => {
     const user = req.user!

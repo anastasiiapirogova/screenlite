@@ -1,5 +1,5 @@
+import { PaginationMeta } from '@/types.js'
 import { Request, Response } from 'express'
-import { PaginationMeta } from 'types.js'
 import { ZodIssue } from 'zod'
 
 export class ResponseHandler {
@@ -26,6 +26,11 @@ export class ResponseHandler {
 
     static ok(res: Response, data?: Record<string, unknown>) {
         ResponseHandler.json(res, data)
+    }
+
+    static conflict(req: Request, res: Response, message?: string) {
+        req.resume()
+        res.status(409).send(message || 'Conflict')
     }
 
     static tooManyRequests(req: Request, res: Response) {

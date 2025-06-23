@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { restoreFilesSchema } from '../schemas/fileSchemas.js'
 import { FileRestoreService } from '../services/FileRestoreService.js'
 

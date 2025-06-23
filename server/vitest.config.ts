@@ -4,13 +4,8 @@ import path from 'path'
 export default defineConfig({
     resolve: {
         alias: {
-            '@config': path.resolve(__dirname, './src/config'),
-            '@modules': path.resolve(__dirname, './src/modules'),
-            '@utils': path.resolve(__dirname, './src/utils'),
-            '@services': path.resolve(__dirname, './src/services'),
-            '@generated': path.resolve(__dirname, './src/generated'),
-            '@schemas': path.resolve(__dirname, './src/schemas'),
-            '*': path.resolve(__dirname, './src/*'),
+            '@': path.resolve(__dirname, './src'),
+            '@workspaceModules': path.resolve(__dirname, './src/modules/workspace'),
         },
     },
     test: {

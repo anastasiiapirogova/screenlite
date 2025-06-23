@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { Request, Response, NextFunction } from 'express'
 import multer, { memoryStorage, MulterError } from 'multer'
 

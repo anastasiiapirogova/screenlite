@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { prisma } from '@config/prisma.js'
-import { Prisma } from '@generated/prisma/client.js'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { prisma } from '@/config/prisma.js'
+import { Prisma } from '@/generated/prisma/client.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { workspaceScreensSchema } from '../schemas/screenSchemas.js'
 import { getDeviceStatusClause } from '../utils/getDeviceStatusClause.js'
 

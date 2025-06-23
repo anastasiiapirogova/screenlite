@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.js'
 import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
 import { deleteWorkspaceSchema } from '../schemas/workspaceSchemas.js'
 
