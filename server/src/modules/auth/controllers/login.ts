@@ -4,7 +4,7 @@ import { SessionRepository } from '@/modules/session/repositories/SessionReposit
 import { UserRepository } from '@/modules/user/repositories/UserRepository.js'
 import { loginSchema } from '../schemas/authSchemas.js'
 import { rateLimiter } from '@/config/rateLimiter.js'
-import { setRateLimitHeaders } from '@/utils/setRateLimiterHeaders.js'
+import { setRateLimitHeaders } from '@/utils/rateLimiter/setRateLimiterHeaders.js'
 import { getIpAndUserAgent } from '@/modules/user/utils/getIpAndUserAgent.js'
 import { UserService } from '@/modules/user/utils/UserService.js'
 import { generateOpaqueToken } from '@/modules/user/utils/generateOpaqueToken.js'
