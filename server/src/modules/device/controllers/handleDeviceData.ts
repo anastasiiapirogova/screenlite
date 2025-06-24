@@ -1,43 +1,50 @@
 import { Socket } from 'socket.io'
 import { z } from 'zod'
-import { initNewDevice } from '../utils/initNewDevice.js'
-import { storeDeviceTelemetry } from '../utils/storeDeviceTelemetry.js'
 import { DeviceRepository } from '../repositories/DeviceRepository.js'
+import { DeviceService } from '../services/DeviceService.js'
+import { DeviceTelemetryService } from '../services/DeviceTelemetryService.js'
+import { deviceDataSchema } from '../schemas/deviceSchemas.js'
 
-const DeviceDataSchema = z.object({
-    token: z.string().nullable(),
-    localIpAddress: z.string(),
-    macAddress: z.string(),
-    softwareVersion: z.string(),
-    screenResolutionWidth: z.number(),
-    screenResolutionHeight: z.number(),
-    platform: z.string(),
-    hostname: z.string(),
-    timezone: z.string(),
-    totalMemory: z.number(),
-    freeMemory: z.number(),
-    osRelease: z.string()
-})
+export type DeviceData = z.infer<typeof deviceDataSchema>
 
-export type DeviceData = z.infer<typeof DeviceDataSchema>;
+export const handleDeviceData = async (rawData: unknown, socket: Socket) => {
+    const validationResult = deviceDataSchema.safeParse(rawData)
 
-export const handleDeviceData = async (data: unknown, socket: Socket) => {
-    const parsedData = DeviceDataSchema.safeParse(data)
-
-    if (!parsedData.success) {
-        socket.emit('error', { handle: 'deviceData', errors: parsedData.error.errors })
+    if (!validationResult.success) {
+        socket.emit('error', { 
+            handle: 'deviceData', 
+            errors: validationResult.error.errors 
+        })
         return
     }
 
-    const { token } = parsedData.data
+    const deviceData = validationResult.data
+    const { token: existingToken } = deviceData
 
-    let response: { token: string }
+    try {
+        let deviceToken: string
 
-    if (await DeviceRepository.doesDeviceTokenExist(token)) {
-        response = await storeDeviceTelemetry(token!, parsedData.data, socket)
-    } else {
-        response = await initNewDevice(parsedData.data, socket)
+        if (await DeviceRepository.isDeviceTokenValid(existingToken)) {
+            deviceToken = existingToken!
+        } else {
+            const newDevice = await DeviceService.initNewDevice()
+
+            deviceToken = newDevice.token
+        }
+
+        const deviceResponse = await DeviceTelemetryService.storeDeviceTelemetry(
+            deviceToken, 
+            deviceData, 
+            socket
+        )
+
+        return deviceResponse
+    } catch (error) {
+        socket.emit('error', { 
+            handle: 'deviceData', 
+            message: 'Failed to process device data',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        })
+        return
     }
-
-    return { token: response.token }
 }
