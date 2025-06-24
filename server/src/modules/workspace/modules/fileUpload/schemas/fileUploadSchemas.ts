@@ -2,6 +2,7 @@ import { fileNameSchema } from '@/modules/workspace/modules/file/schemas/fileSch
 import { z } from 'zod'
 import { FileService } from '@/modules/workspace/modules/file/services/FileService.js'
 import mime from 'mime'
+import { MAX_UPLOAD_FILE_SIZE } from '@/config/files.js'
 
 const validateMimeType = (name: string, providedMime?: string) => {
     const mimeType = providedMime || mime.getType(name)
@@ -18,7 +19,7 @@ export const createFileUploadSessionSchema = z.object({
         })
             .int('FILE_SIZE_IS_INVALID')
             .positive('FILE_SIZE_IS_INVALID')
-            .max(2_147_483_648, 'FILE_SIZE_TOO_LARGE') // 2GB max
+            .max(MAX_UPLOAD_FILE_SIZE, 'FILE_SIZE_TOO_LARGE')
     ),
     mimeType: z.string({ invalid_type_error: 'MIME_TYPE_IS_INVALID' }).optional(),
     folderId: z.string().optional(),

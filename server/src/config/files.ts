@@ -11,9 +11,14 @@ export const supportedMimeTypes = [
     'video/webm'
 ]
 
+const GB = 1024 * 1024 * 1024
+const MB = 1024 * 1024
+
 export const MAX_FOLDER_DEPTH = 10
 
-export const MAX_UPLOAD_FILE_PART_SIZE = 100 * 1024 * 1024
+export const MAX_UPLOAD_FILE_SIZE = 5 * GB
+
+export const MAX_UPLOAD_FILE_PART_SIZE = 100 * MB
 
 export const STORAGE_BASE_DIR = process.env.STORAGE_BASE_DIR || 'storage'
 
