@@ -1,4 +1,5 @@
 import { prisma } from '@/config/prisma.js'
+import { Prisma } from '@/generated/prisma/client.js'
 import crypto from 'crypto'
 
 // Some characters are excluded because they can be easily confused with others
@@ -7,16 +8,26 @@ export const CONNECTION_CODE_CHARACTERS = 'BCDFGHJKMPQRTVWXY346789'
 const CODE_LENGTH = 6
 
 export class DeviceRepository {
-    static async doesDeviceTokenExist(token: string | null): Promise<boolean> {
+    static async findDeviceByToken(token: string | null) {
+        if (!token) {
+            return null
+        }
+    
+        return await prisma.device.findUnique({
+            where: { token },
+        })
+    }
+
+    static async isDeviceTokenValid(token: string | null): Promise<boolean> {
         if (!token) {
             return false
         }
     
-        const device = await prisma.device.findUnique({
+        const count = await prisma.device.count({
             where: { token },
         })
     
-        return device !== null
+        return count > 0
     }
 
     static async generateConnectionCode(): Promise<string> {
@@ -65,9 +76,54 @@ export class DeviceRepository {
     }
 
     static async findByConnectionCode(connectionCode: string) {
-        return await prisma.device.findFirst({
+        return await prisma.device.findUnique({
             where: {
                 connectionCode: connectionCode,
+            }
+        })
+    }
+
+    static async setDeviceOnlineStatus(token: string, status: boolean, createdAt?: Date) {
+        const device = await prisma.device.findUnique({
+            where: { token },
+            select: { id: true }
+        })
+
+        if (!device) {
+            return
+        }
+
+        await prisma.device.update({
+            where: {
+                id: device.id
+            },
+            data: {
+                isOnline: status,
+                statusLog: {
+                    create: {
+                        isOnline: status,
+                        createdAt: createdAt || Prisma.skip,
+                    }
+                },
+            },
+        })
+    }
+
+    static async findDeviceByConnectionCode(connectionCode: string) {
+        return await prisma.device.findUnique({
+            where: { connectionCode },
+            select: { id: true }
+        })
+    }
+
+    static async createDevice(token: string, connectionCode: string) {
+        return await prisma.device.create({
+            data: {
+                token,
+                connectionCode,
+            },
+            include: {
+                screen: true
             }
         })
     }
