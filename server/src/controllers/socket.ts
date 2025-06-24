@@ -1,67 +1,156 @@
-import { Server as SocketServer } from 'socket.io'
+import { Server as SocketServer, Socket, Namespace } from 'socket.io'
 import { Server as HTTPServer } from 'http'
 import { createAdapter } from '@socket.io/redis-adapter'
 import { getRedisClient } from '@/config/redis.js'
 import { handleDeviceData } from '../modules/device/controllers/handleDeviceData.js'
 import { getDeviceSocketConnectionInfoByToken, removeDeviceSocketConnectionInfoBySocketId, storeDeviceSocketConnectionInfo } from '../modules/device/utils/deviceSocketConnection.js'
-import { setDeviceOnlineStatus } from '@/modules/device/utils/setDeviceOnlineStatus.js'
 import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.js'
+import { DeviceRepository } from '@/modules/device/repositories/DeviceRepository.js'
 
-let io: SocketServer
+class DeviceConnectionManager {
+    private io: SocketServer
+    private deviceNamespace: Namespace
 
-const redis = getRedisClient()
+    constructor(io: SocketServer) {
+        this.io = io
+        this.deviceNamespace = io.of('/devices')
+        this.setupEventHandlers()
+    }
 
-export const initSocketIo = (server: HTTPServer) => {
-    const pubClient = redis.duplicate()
-    const subClient = pubClient.duplicate()
+    private setupEventHandlers(): void {
+        this.deviceNamespace.on('connection', (socket: Socket) => {
+            this.handleConnection(socket)
+        })
+    }
 
-    io = new SocketServer(server, {
-        cors: {
-            origin: '*',
-            methods: ['GET'],
-            credentials: true,
-        },
-        transports: ['websocket'],
-        adapter: createAdapter(pubClient, subClient)
-    })
-
-    const deviceNamespace = io.of('/devices')
-
-    deviceNamespace.on('connection', (socket) => {
+    private async handleConnection(socket: Socket): Promise<void> {
         socket.on('deviceData', async (data) => {
+            await this.handleDeviceData(socket, data)
+        })
+
+        socket.on('disconnect', async () => {
+            await this.handleDisconnect(socket)
+        })
+
+        socket.on('error', (error) => {
+            console.error('Socket error:', error)
+        })
+    }
+
+    private async handleDeviceData(socket: Socket, data: unknown): Promise<void> {
+        try {
             const result = await handleDeviceData(data, socket)
 
             if (!result) return
 
             const { token } = result
 
-            const hasAlreadyBeenConnected = await getDeviceSocketConnectionByToken(token)
+            await this.processDeviceConnection(token, socket)
+        } catch (error) {
+            console.error('Error handling device data:', error)
+            socket.emit('error', { message: 'Failed to process device data' })
+        }
+    }
 
-            await storeDeviceSocketConnectionInfo(token, socket)
+    private async processDeviceConnection(token: string, socket: Socket): Promise<void> {
+        const hasAlreadyBeenConnected = await this.getDeviceSocketConnectionByToken(token)
 
-            if (!hasAlreadyBeenConnected) {
-                setDeviceOnlineStatus(token, true)
+        await storeDeviceSocketConnectionInfo(token, socket)
 
-                addSendNewStateToDeviceJob(token)
-            }
-        })
+        if (!hasAlreadyBeenConnected) {
+            await this.initializeNewDeviceConnection(token)
+        }
+    }
 
-        socket.on('disconnect', async () => {
+    private async initializeNewDeviceConnection(token: string): Promise<void> {
+        try {
+            await DeviceRepository.setDeviceOnlineStatus(token, true)
+            await addSendNewStateToDeviceJob(token)
+        } catch (error) {
+            console.error('Error initializing device connection:', error)
+        }
+    }
+
+    private async handleDisconnect(socket: Socket): Promise<void> {
+        try {
             const token = await removeDeviceSocketConnectionInfoBySocketId(socket.id)
 
             if (token) {
-                setDeviceOnlineStatus(token, false)
+                await DeviceRepository.setDeviceOnlineStatus(token, false)
             }
-        })
-    })
+        } catch (error) {
+            console.error('Error handling disconnect:', error)
+        }
+    }
+
+    public async getDeviceSocketConnectionByToken(token: string): Promise<Socket | null> {
+        try {
+            const id = await getDeviceSocketConnectionInfoByToken(token)
+
+            if (!id) return null
+
+            return this.deviceNamespace.sockets.get(id) || null
+        } catch (error) {
+            console.error('Error getting device socket connection:', error)
+            return null
+        }
+    }
+
+    public getNamespace(): Namespace {
+        return this.deviceNamespace
+    }
 }
 
-export const getIoInstance = () => io
+class SocketIOServer {
+    private io: SocketServer
+    private deviceConnectionManager: DeviceConnectionManager
 
-export const getDeviceSocketConnectionByToken = async (token: string) => {
-    const id = await getDeviceSocketConnectionInfoByToken(token)
+    constructor(server: HTTPServer) {
+        this.io = this.createSocketServer(server)
+        this.deviceConnectionManager = new DeviceConnectionManager(this.io)
+    }
 
-    if (!id) return null
+    private createSocketServer(server: HTTPServer): SocketServer {
+        const redis = getRedisClient()
+        const pubClient = redis.duplicate()
+        const subClient = pubClient.duplicate()
 
-    return io.of('/devices').sockets.get(id)
+        return new SocketServer(server, {
+            cors: {
+                origin: '*',
+                methods: ['GET'],
+                credentials: true,
+            },
+            transports: ['websocket'],
+            adapter: createAdapter(pubClient, subClient)
+        })
+    }
+
+    public getIoInstance(): SocketServer {
+        return this.io
+    }
+
+    public getDeviceConnectionManager(): DeviceConnectionManager {
+        return this.deviceConnectionManager
+    }
+}
+
+let socketServer: SocketIOServer
+
+export const initSocketIo = (server: HTTPServer): void => {
+    socketServer = new SocketIOServer(server)
+}
+
+export const getIoInstance = (): SocketServer => {
+    if (!socketServer) {
+        throw new Error('Socket.IO server not initialized. Call initSocketIo first.')
+    }
+    return socketServer.getIoInstance()
+}
+
+export const getDeviceSocketConnectionByToken = async (token: string): Promise<Socket | null> => {
+    if (!socketServer) {
+        throw new Error('Socket.IO server not initialized. Call initSocketIo first.')
+    }
+    return socketServer.getDeviceConnectionManager().getDeviceSocketConnectionByToken(token)
 }
