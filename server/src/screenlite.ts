@@ -2,8 +2,8 @@ import { GracefulShutdown } from './types.js'
 import { initPrisma } from './config/prisma.js'
 import { initSocketIo } from './controllers/socket.js'
 import { closeWorkers } from '@/bullmq/workers.js'
-import './config/rateLimiter.js'
 import { server } from '@/config/server.js'
+import './config/rateLimiter.js'
 import './config/storage.js'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,25 +11,118 @@ import './config/storage.js'
     return this.toString()
 }
 
-const gracefulShutdown: GracefulShutdown = async (signal) => {
-    console.log(`Received ${signal}, closing server...`)
-    await closeWorkers()
-    process.exit(0)
-}
+class Screenlite {
+    private isShuttingDown = false
+    private readonly port: number
 
-const bootstrap = async () => {
-    try {
-        await initPrisma()
-    } catch (error) {
-        console.error('Error during bootstrap:', error)
-        await closeWorkers()
-        process.exit(1)
+    constructor(port: number = 3000) {
+        this.port = port
+        this.setupGracefulShutdown()
     }
 
-    initSocketIo(server)
+    async bootstrap(): Promise<void> {
+        try {
+            console.log('Starting Screenlite...')
+            
+            await this.initializeDatabase()
+            this.initializeSocketIo()
+            await this.startServer()
+            
+            console.log('Screenlite bootstrap completed successfully')
+        } catch (error) {
+            console.error('Screenlite bootstrap failed:', error)
+            await this.shutdown(1)
+        }
+    }
+
+    private async initializeDatabase(): Promise<void> {
+        console.log('Initializing database connection...')
+        await initPrisma()
+        console.log('Database connection established')
+    }
+
+    private initializeSocketIo(): void {
+        console.log('Initializing Socket.IO...')
+        initSocketIo(server)
+        console.log('Socket.IO initialized')
+    }
+
+    private async startServer(): Promise<void> {
+        console.log(`Starting HTTP server on port ${this.port}...`)
+        
+        return new Promise((resolve, reject) => {
+            server.listen(this.port, () => {
+                console.log(`HTTP server running on port ${this.port}`)
+                resolve()
+            })
+
+            server.on('error', (error) => {
+                console.error('Server failed to start:', error)
+                reject(error)
+            })
+        })
+    }
+
+    private setupGracefulShutdown(): void {
+        const gracefulShutdown: GracefulShutdown = async (signal) => {
+            if (this.isShuttingDown) {
+                console.log('Shutdown already in progress, ignoring signal:', signal)
+                return
+            }
+
+            this.isShuttingDown = true
+            console.log(`Received ${signal}, initiating graceful shutdown...`)
+            
+            try {
+                await this.shutdown(0)
+            } catch (error) {
+                console.error('Error during graceful shutdown:', error)
+                process.exit(1)
+            }
+        }
+
+        process.on('SIGINT', () => gracefulShutdown('SIGINT'))
+        process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))
+        
+        process.on('uncaughtException', async (error) => {
+            console.error('Uncaught Exception:', error)
+            await this.shutdown(1)
+        })
+
+        process.on('unhandledRejection', async (reason, promise) => {
+            console.error('Unhandled Promise Rejection at:', promise, 'reason:', reason)
+            await this.shutdown(1)
+        })
+    }
+
+    private async shutdown(exitCode: number): Promise<void> {
+        try {
+            console.log('Closing Screenlite components...')
+            
+            await closeWorkers()
+            console.log('Workers closed')
+            
+            server.close(() => {
+                console.log('HTTP server closed')
+                console.log('Screenlite shutdown completed')
+                process.exit(exitCode)
+            })
+
+            setTimeout(() => {
+                console.error('Graceful shutdown timeout, forcing exit')
+                process.exit(exitCode)
+            }, 10000)
+
+        } catch (error) {
+            console.error('Error during shutdown:', error)
+            process.exit(exitCode)
+        }
+    }
 }
 
-process.on('SIGINT', () => gracefulShutdown('SIGINT'))
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))
+const screenlite = new Screenlite()
 
-bootstrap()
+screenlite.bootstrap().catch((error) => {
+    console.error('Failed to start Screenlite:', error)
+    process.exit(1)
+})
