@@ -5,15 +5,21 @@ import { Folder } from '../types'
 import { FolderCardBody } from './FolderCardBody'
 import { useNavigate } from 'react-router'
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
+import { useSelectionStore } from '@stores/useSelectionStore'
+import { useShallow } from 'zustand/react/shallow'
 
 interface PlaylistSectionItemCardProps extends React.HTMLAttributes<HTMLDivElement> {
 	folder: Folder
 	isDragging?: boolean
 }
 
-export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>(({ folder, isDragging, ...props }, ref) => {
+export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>(({ folder, isDragging, onClick, ...props }, ref) => {
     const navigate = useNavigate()
     const routes = useWorkspaceRoutes()
+    const { isSelected } = useSelectionStore(useShallow((state) => ({
+        isSelected: state.isSelected,
+    })))
+    const selected = isSelected(folder.id)
 
     return (
         <div
@@ -21,19 +27,23 @@ export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProp
                 navigate(routes.folder(folder.id))
             } }
             { ...props }
+            data-entity="folder"
             className={ [
-                'cursor-default p-3',
-                isDragging ? 'bg-gray-100' : 'hover:bg-gray-100',
+                'cursor-default p-3 outline-none',
+                !selected && !isDragging && 'hover:bg-gray-100',
+                selected && 'bg-blue-100',
+                (isDragging && selected) && 'opacity-50'
             ].join(' ') }
             ref={ ref }
+            onClick={ onClick }
         >
             { createElement(FolderCardBody, { folder }) }
         </div>
     )
 })
 
-export const DraggableFolderCard = (props: { folder: Folder }) => {
-    const { folder } = props
+export const DraggableFolderCard = (props: { folder: Folder, onClick?: (e: React.MouseEvent) => void }) => {
+    const { folder, onClick } = props
 
     const { setNodeRef: setDroppableRef, isOver } = useDroppable({
         id: folder.id,
@@ -47,7 +57,7 @@ export const DraggableFolderCard = (props: { folder: Folder }) => {
         id: folder.id,
         data: {
             folder,
-            action: 'sort',
+            action: 'dragFolder',
             modifiers: []
         }
     })
@@ -66,6 +76,7 @@ export const DraggableFolderCard = (props: { folder: Folder }) => {
             <FolderCard
                 folder={ folder }
                 ref={ setNodeRef }
+                onClick={ onClick }
                 { ...attributes }
                 { ...listeners }
             />
