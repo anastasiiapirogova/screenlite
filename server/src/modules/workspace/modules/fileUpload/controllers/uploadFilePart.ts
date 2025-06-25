@@ -4,7 +4,6 @@ import { MultipartFileUploader } from '@/config/storage.js'
 import { UploadSessionManager } from '../utils/UploadSessionManager.js'
 import { FileUploadSessionValidator } from '../utils/FileUploadSessionValidator.js'
 import { ContentLengthValidator } from '../utils/ContentLengthValidator.js'
-import { FileRepository } from '../../file/repositories/FileRepository.js'
 import { addCompleteMultipartUploadJob } from '../utils/addCompleteMultipartUploadJob.js'
 import { Readable } from 'stream'
 import { UploadLockService } from '../services/UploadLockService.js'
@@ -47,9 +46,7 @@ export const uploadFilePart = async (req: Request, res: Response): Promise<void>
         )
 
         if(updatedSession.completedAt) {
-            const file = await FileRepository.createFileFromFileUploadSession(updatedSession)
-
-            addCompleteMultipartUploadJob(updatedSession, file.id)
+            addCompleteMultipartUploadJob(updatedSession)
         }
 
         ResponseHandler.json(res, {
