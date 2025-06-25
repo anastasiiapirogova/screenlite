@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 
-export const useSelection = <T,>(initialSelectedItems: T[] = [], key?: keyof T) => {
+export const useSelection = <T>(initialSelectedItems: T[] = [], key?: keyof T) => {
     const [selectedItems, setSelectedItems] = useState<T[]>(initialSelectedItems)
 
     const isSelected = useCallback(
