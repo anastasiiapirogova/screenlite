@@ -1,56 +1,76 @@
 import { FileUploadingData } from '../types'
 import { Button } from '@/shared/ui/buttons/Button'
 import { fileUploadService } from '../services/FileUploadService'
-
-const ResumeButton = ({ onClick }: { onClick: () => void }) => (
-    <div onClick={ onClick }>
-        Resume
-    </div>
-)
-
-const ErrorResumeButton = ({ onClick }: { onClick: () => void }) => (
-    <div onClick={ onClick }>
-        Resume
-    </div>
-)
+import { TbPlayerPlay, TbPlayerPause, TbX, TbRotate } from 'react-icons/tb'
 
 export const FileUploadingControls = ({ data }: { data: FileUploadingData }) => {
-    const { id, status, session } = data
+    const { id, status, session, error } = data
 
     const isPaused = status === 'paused'
+    const isUploading = status === 'uploading'
+    const hasError = status === 'error' || error
 
-    const isUploaded = session && session.uploaded === session.size
-
-    if(isUploaded) {
-        return null
-    }
-
-    const MainControl = () => {
-        if(isPaused) {
-            if(session) {
-                return (
-                    <ErrorResumeButton onClick={ () => fileUploadService.restartUploading(id) } />
-                )
-            }
-			
-            if(session) {
-                return (
-                    <ResumeButton onClick={ () => fileUploadService.resumeFile(id) } />
-                )
-            }
+    const handleResume = () => {
+        if (hasError && !session) {
+            fileUploadService.restartUploading(id)
+        } else if (session) {
+            fileUploadService.resumeFile(id)
         }
-
-        return null
     }
 
-    const cancel = async () => {
+    const handlePause = () => {
+        fileUploadService.pauseUpload(id)
+    }
+
+    const handleCancel = () => {
         fileUploadService.cancelUpload(id)
     }
 
     return (
-        <div>
-            <MainControl />
-            <Button onClick={ cancel }>Cancel</Button>
+        <div className="flex items-center gap-2">
+            { hasError && (
+                <Button
+                    onClick={ handleResume }
+                    size="small"
+                    color="primary"
+                    icon={ TbRotate }
+                >
+                    Retry
+                </Button>
+            ) }
+
+            { isPaused && !hasError && (
+                <Button
+                    onClick={ handleResume }
+                    size="small"
+                    color="primary"
+                    icon={ TbPlayerPlay }
+                >
+                    Resume
+                </Button>
+            ) }
+
+            { isUploading && (
+                <Button
+                    onClick={ handlePause }
+                    size="small"
+                    color="secondary"
+                    variant="outline"
+                    icon={ TbPlayerPause }
+                >
+                    Pause
+                </Button>
+            ) }
+
+            <Button
+                onClick={ handleCancel }
+                size="small"
+                color="danger"
+                variant="ghost"
+                icon={ TbX }
+            >
+                Cancel
+            </Button>
         </div>
     )
 }
