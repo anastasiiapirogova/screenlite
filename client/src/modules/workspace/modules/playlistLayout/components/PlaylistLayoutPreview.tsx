@@ -64,7 +64,6 @@ export const PlaylistLayoutPreview = ({ playlistLayout, highlightedSectionId }: 
                 overflow: 'hidden',
             } }
         >
-            { /* Scaled and centered layout container */ }
             <div
                 className='flex items-center justify-center bg-stripes-neutral'
                 style={ {
@@ -76,7 +75,6 @@ export const PlaylistLayoutPreview = ({ playlistLayout, highlightedSectionId }: 
                     backgroundColor: 'lightgray',
                 } }
             >
-                { /* Render layout sections inside the scaled container */ }
                 { playlistLayout.sections.map((section) => (
                     <div
                         key={ section.id }
