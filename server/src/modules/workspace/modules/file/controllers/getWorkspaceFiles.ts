@@ -15,6 +15,8 @@ export const getWorkspaceFiles = async (req: Request, res: Response) => {
 
     const { page, limit, search, deleted, folderId } = parsedData.data
 
+    const folderIdParsed = search ? Prisma.skip : folderId ? folderId : null
+
     const whereClause: Prisma.FileWhereInput = {
         workspaceId: reqWorkspace.id,
         name: search ? {
@@ -24,7 +26,7 @@ export const getWorkspaceFiles = async (req: Request, res: Response) => {
         deletedAt: deleted ? {
             not: null
         } : null,
-        folderId: folderId !== undefined ? folderId : Prisma.skip,
+        folderId: folderIdParsed,
     }
 
     const [files, total] = await Promise.all([
