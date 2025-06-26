@@ -1,7 +1,7 @@
 import { createElement, forwardRef } from 'react'
 import React from 'react'
 import { useDraggable, useDroppable } from '@dnd-kit/core'
-import { Folder } from '../types'
+import { FolderWithChildrenCount } from '../types'
 import { FolderCardBody } from './FolderCardBody'
 import { useNavigate } from 'react-router'
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
@@ -9,15 +9,16 @@ import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
 
 interface PlaylistSectionItemCardProps extends React.HTMLAttributes<HTMLDivElement> {
-	folder: Folder
-	isDragging?: boolean
+	folder: FolderWithChildrenCount
+	isOver?: boolean
 }
 
-export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>(({ folder, isDragging, onClick, ...props }, ref) => {
+export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>(({ folder, onClick, isOver, ...props }, ref) => {
     const navigate = useNavigate()
     const routes = useWorkspaceRoutes()
-    const { isSelected } = useSelectionStore(useShallow((state) => ({
+    const { isSelected, isDragging } = useSelectionStore(useShallow((state) => ({
         isSelected: state.isSelected,
+        isDragging: state.isDragging,
     })))
     const selected = isSelected(folder.id)
 
@@ -29,10 +30,11 @@ export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProp
             { ...props }
             data-entity="folder"
             className={ [
-                'cursor-default p-3 outline-none',
-                !selected && !isDragging && 'hover:bg-gray-100',
-                selected && 'bg-blue-100',
-                (isDragging && selected) && 'opacity-50'
+                'cursor-default p-4 outline-none rounded-xl transition-all duration-200 border',
+                !selected && !isDragging && 'hover:bg-gray-50',
+                selected && 'bg-blue-50 border-blue-200',
+                (isDragging && selected) && 'opacity-50',
+                isOver && !selected && 'bg-gray-100'
             ].join(' ') }
             ref={ ref }
             onClick={ onClick }
@@ -42,7 +44,7 @@ export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProp
     )
 })
 
-export const DraggableFolderCard = (props: { folder: Folder, onClick?: (e: React.MouseEvent) => void }) => {
+export const DraggableFolderCard = (props: { folder: FolderWithChildrenCount, onClick?: (e: React.MouseEvent) => void }) => {
     const { folder, onClick } = props
 
     const { setNodeRef: setDroppableRef, isOver } = useDroppable({
@@ -71,12 +73,12 @@ export const DraggableFolderCard = (props: { folder: Folder, onClick?: (e: React
         <div
             ref={ setDroppableRef }
             style={ style }
-            className={ isOver ? 'bg-gray-100' : '' }
         >
             <FolderCard
                 folder={ folder }
                 ref={ setNodeRef }
                 onClick={ onClick }
+                isOver={ isOver }
                 { ...attributes }
                 { ...listeners }
             />

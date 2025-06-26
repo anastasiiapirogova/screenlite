@@ -11,16 +11,17 @@ import { WorkspaceFile } from '../types'
 
 interface FileListProps {
 	search: string
+    folderId?: string
 }
 
-const SuspenseFileList = ({ search }: FileListProps) => {
+const SuspenseFileList = ({ search, folderId }: FileListProps) => {
     const workspace = useWorkspace()
     const { data } = useSuspenseQuery(workspaceFilesQuery({
         id: workspace.id,
         filters: {
             search,
             deleted: false,
-            folderId: null
+            folderId: folderId || null
         }
     }))
 
@@ -58,7 +59,7 @@ const SuspenseFileList = ({ search }: FileListProps) => {
     }
 
     return (
-        <div>
+        <div className='flex flex-col gap-1'>
             {
                 files.map(
                     (file: WorkspaceFile, idx: number) => (
@@ -74,7 +75,7 @@ const SuspenseFileList = ({ search }: FileListProps) => {
     )
 }
 
-export const FileList = () => {
+export const FileList = ({ folderId }: { folderId?: string }) => {
     const { searchTerm } = useRouterSearch()
     const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
@@ -87,7 +88,10 @@ export const FileList = () => {
             ) }
             >
                 <Suspense fallback={ <>Loading</> }>
-                    <SuspenseFileList search={ debouncedSearchTerm } />
+                    <SuspenseFileList 
+                        search={ debouncedSearchTerm } 
+                        folderId={ folderId }
+                    />
                 </Suspense>
             </ErrorBoundary>
         </QueryErrorResetBoundary>

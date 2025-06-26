@@ -7,7 +7,7 @@ import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { DraggableFolderCard } from './FolderCard'
 import { workspaceFoldersQuery } from '../api/workspaceFolders'
 import { useSelectionStore } from '@stores/useSelectionStore'
-import { Folder } from '../types'
+import { FolderWithChildrenCount } from '../types'
 
 type FileListProps = {
 	search: string
@@ -26,10 +26,10 @@ const SuspenseFolderList = ({ search, parentId }: FileListProps) => {
         }
     }))
 
-    const { isSelected, unselectItem, setSelectedItems } = useSelectionStore()
+    const { isSelected, unselectItem, setSelectedItems, selectItem } = useSelectionStore()
     const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
 
-    const handleFolderClick = (folder: Folder, index: number, event: React.MouseEvent) => {
+    const handleFolderClick = (folder: FolderWithChildrenCount, index: number, event: React.MouseEvent) => {
         const isCtrl = event.ctrlKey || event.metaKey
         const isShift = event.shiftKey
         const alreadySelected = isSelected(folder.id)
@@ -47,24 +47,20 @@ const SuspenseFolderList = ({ search, parentId }: FileListProps) => {
             if (alreadySelected) {
                 unselectItem(folder.id)
             } else {
-                setSelectedItems({
-                    [folder.id]: { item: folder, entity: 'folder' }
-                })
+                selectItem({ item: folder, entity: 'folder' })
             }
             setLastSelectedIndex(index)
         } else {
-            if (!alreadySelected) {
-                setSelectedItems({
-                    [folder.id]: { item: folder, entity: 'folder' }
-                })
-            }
+            setSelectedItems({
+                [folder.id]: { item: folder, entity: 'folder' }
+            })
             setLastSelectedIndex(index)
         }
     }
 
     return (
         <div className='flex flex-wrap justify-between gap-5'>
-            { folders.map((folder: Folder, idx: number) => (
+            { folders.map((folder: FolderWithChildrenCount, idx: number) => (
                 <DraggableFolderCard
                     folder={ folder }
                     key={ folder.id }

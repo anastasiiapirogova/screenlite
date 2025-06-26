@@ -24,9 +24,9 @@ export const FileCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>
             { ...props }
             data-entity="file"
             className={ [
-                'cursor-default p-3 outline-none',
-                !selected && !isDragging && 'hover:bg-gray-100',
-                selected && 'bg-blue-100',
+                'cursor-default p-4 outline-none rounded-xl transition-all duration-200 border',
+                !selected && !isDragging && 'hover:bg-gray-50',
+                selected && 'bg-blue-50 border-blue-200',
                 (isDragging && selected) && 'opacity-50'
             ].join(' ') }
             ref={ ref }
