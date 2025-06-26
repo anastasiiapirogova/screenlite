@@ -12,6 +12,9 @@ model File {
     height                 Int?
     duration               Int?
     defaultDuration        Int?
+    videoBitrate           Int?
+    audioBitrate           Int?
+    videoFrameRate         Float?
     codec                  String?
     processingStatus       String?
     folderId               String?

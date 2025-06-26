@@ -36,6 +36,8 @@ export class FileProcessingService {
         height: number
         duration: number
         codec: string
+        videoBitrate: number
+        videoFrameRate: number
     }> {
         return new Promise((resolve, reject) => {
             const ffprobe = spawn('ffprobe', args)
@@ -64,8 +66,10 @@ export class FileProcessingService {
                     const height = stream.height ?? 0
                     const duration = format.duration ? Math.round(parseFloat(format.duration) * 1000) : 0
                     const codec = stream.codec_name
+                    const videoBitrate = stream.bit_rate ? parseInt(stream.bit_rate) : 0
+                    const videoFrameRate = stream.r_frame_rate ? parseFloat(stream.r_frame_rate) : 0
 
-                    resolve({ width, height, duration, codec })
+                    resolve({ width, height, duration, codec, videoBitrate, videoFrameRate })
                 } catch (err) {
                     reject(err)
                 }
@@ -78,11 +82,13 @@ export class FileProcessingService {
         height: number
         duration: number
         codec: string
+        videoBitrate: number
+        videoFrameRate: number
     }> {
         const args = [
             '-v', 'error',
             '-select_streams', 'v:0',
-            '-show_entries', 'stream=width,height,codec_name,codec_type',
+            '-show_entries', 'stream=width,height,codec_name,codec_type,bit_rate,r_frame_rate',
             '-show_entries', 'format=duration,format_name',
             '-of', 'json',
             url
