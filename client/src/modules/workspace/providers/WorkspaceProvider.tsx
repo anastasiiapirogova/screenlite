@@ -7,11 +7,14 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { WorkspaceErrorHandler } from '../components/WorkspaceErrorHandler'
 import { workspaceEntityCountsQuery } from '../api/queries/workspaceEntityCountsQuery'
 import { WorkspaceLoadingStatePage } from '../pages/WorkspaceLoadingStatePage'
+import { useWorkspaceUploadQueueCleanup } from '../modules/file/hooks/useWorkspaceUploadQueueCleanup'
 
 const WorkspaceProviderContent = () => {
     const params = useParams<{ workspaceSlug: string }>()
     const { data: workspace } = useSuspenseQuery(workspaceQuery(params.workspaceSlug!))
     const { data: entityCounts } = useSuspenseQuery(workspaceEntityCountsQuery(workspace.id))
+
+    useWorkspaceUploadQueueCleanup()
 
     return (
         <WorkspaceContext.Provider value={ { ...workspace, _count: entityCounts } }>
