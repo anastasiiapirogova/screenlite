@@ -91,6 +91,13 @@ export type Folder = {
     parentId: string | null;
 }
 
+export type FolderWithChildrenCount = Folder & {
+    _count: {
+        files: number
+        subfolders: number
+    }
+}
+
 export type ParentFolderTreeResult = {
     id: string
     name: string
