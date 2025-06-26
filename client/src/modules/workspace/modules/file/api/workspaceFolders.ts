@@ -1,5 +1,5 @@
 import axios from '@config/axios'
-import { Folder } from '@workspaceModules/file/types'
+import { FolderWithChildrenCount } from '@workspaceModules/file/types'
 
 export type WorkspaceFoldersRequestData = {
     id: string
@@ -11,7 +11,7 @@ export type WorkspaceFoldersRequestData = {
 }
 
 type WorkspaceFoldersRequestResponse = {
-    folders: Folder[]
+    folders: FolderWithChildrenCount[]
 }
 
 export const workspaceFoldersRequest = async (data: WorkspaceFoldersRequestData) => {
