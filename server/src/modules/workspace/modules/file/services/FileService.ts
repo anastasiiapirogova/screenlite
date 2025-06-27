@@ -1,4 +1,4 @@
-import { supportedMimeTypes } from '@/config/files.js'
+import { supportedMimeTypes } from '@/config/files.ts'
 
 export class FileService {
     static isValidMimeType(mimeType: string): boolean {

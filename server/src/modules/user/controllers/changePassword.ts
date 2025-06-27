@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { changePasswordSchema } from '../schemas/userSchemas.js'
-import { UserRepository } from '../repositories/UserRepository.js'
-import { UserPolicy } from '../policies/userPolicy.js'
-import { UserService } from '../utils/UserService.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { changePasswordSchema } from '../schemas/userSchemas.ts'
+import { UserRepository } from '../repositories/UserRepository.ts'
+import { UserPolicy } from '../policies/userPolicy.ts'
+import { UserService } from '../utils/UserService.ts'
 
 export const changePassword = async (req: Request, res: Response) => {
     const user = req.user!

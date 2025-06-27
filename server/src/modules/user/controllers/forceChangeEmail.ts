@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { UserRepository } from '../repositories/UserRepository.js'
-import { UserPolicy } from '../policies/userPolicy.js'
-import { changeEmailSchema } from '../schemas/userSchemas.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { UserRepository } from '../repositories/UserRepository.ts'
+import { UserPolicy } from '../policies/userPolicy.ts'
+import { changeEmailSchema } from '../schemas/userSchemas.ts'
 
 export const forceChangeEmail = async (req: Request, res: Response) => {
     const user = req.user!

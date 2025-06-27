@@ -1,13 +1,13 @@
-import { changePassword } from './changePassword.js'
-import { updateUser } from './updateUser.js'
-import { userWorkspaces } from './userWorkspaces.js'
-import { verifyEmail } from './verifyEmail.js'
-import { deleteUser } from './deleteUser.js'
-import { forceChangeEmail } from './forceChangeEmail.js'
-import { getTotpSetupData } from './getTotpSetupData.js'
-import { enableTwoFa } from './enableTwoFa.js'
-import { disableTwoFa } from './disableTwoFa.js'
-import { verifyTwoFa } from './verifyTwoFa.js'
+import { changePassword } from './changePassword.ts'
+import { updateUser } from './updateUser.ts'
+import { userWorkspaces } from './userWorkspaces.ts'
+import { verifyEmail } from './verifyEmail.ts'
+import { deleteUser } from './deleteUser.ts'
+import { forceChangeEmail } from './forceChangeEmail.ts'
+import { getTotpSetupData } from './getTotpSetupData.ts'
+import { enableTwoFa } from './enableTwoFa.ts'
+import { disableTwoFa } from './disableTwoFa.ts'
+import { verifyTwoFa } from './verifyTwoFa.ts'
 
 export {
     changePassword,

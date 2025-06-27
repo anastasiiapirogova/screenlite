@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { MemberRepository } from '../repositories/MemberRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { MemberRepository } from '../repositories/MemberRepository.ts'
 
 export const leaveWorkspace = async (req: Request, res: Response) => {
     const user = req.user!

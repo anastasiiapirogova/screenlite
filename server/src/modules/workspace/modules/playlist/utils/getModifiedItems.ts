@@ -1,4 +1,4 @@
-import { ComparablePlaylistItem } from '@/types.js'
+import { ComparablePlaylistItem } from '@/types.ts'
 
 const keysToCompare: (keyof ComparablePlaylistItem)[] = [
     'duration',

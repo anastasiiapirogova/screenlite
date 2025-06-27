@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { WorkspaceRepository } from '../repositories/WorkspaceRepository.ts'
 
 export const getWorkspaceEntityCounts = async (req: Request, res: Response) => {
     const workspace = req.workspace!

@@ -1,6 +1,6 @@
 import { Redis } from 'ioredis'
-import { RateLimiter, RateLimiterOptions, RateLimitResponse } from './RateLimiter.js'
-import { getRedisClient } from '@/config/redis.js'
+import { RateLimiter, RateLimiterOptions, RateLimitResponse } from './RateLimiter.ts'
+import { getRedisClient } from '@/config/redis.ts'
 import { Request } from 'express'
 
 export type NamedRateLimitConfig = {

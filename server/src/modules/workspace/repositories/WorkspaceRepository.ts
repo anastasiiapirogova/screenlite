@@ -1,7 +1,7 @@
-import { prisma } from '@/config/prisma.js'
-import { getRedisClient, redisKeys } from '@/config/redis.js'
-import { UpdateWorkspaceData } from '../types.js'
-import { WORKSPACE_ROLES } from '../accessControl/roles.js'
+import { prisma } from '@/config/prisma.ts'
+import { getRedisClient, redisKeys } from '@/config/redis.ts'
+import { UpdateWorkspaceData } from '../types.ts'
+import { WORKSPACE_ROLES } from '../accessControl/roles.ts'
 
 export type ScreenStatusCount = { online: number, offline: number, notConnected: number }
 

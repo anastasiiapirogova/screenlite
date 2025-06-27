@@ -1,10 +1,10 @@
 import { Readable } from 'stream'
 import fs from 'fs'
 import path from 'path'
-import { FileNotFoundError } from '../errors.js'
+import { FileNotFoundError } from '../errors.ts'
 import { stat } from 'fs/promises'
-import { StorageProviderInterface } from './StorageProviderInterface.js'
-import { STORAGE_UPLOADS_DIR } from '@/config/files.js'
+import { StorageProviderInterface } from './StorageProviderInterface.ts'
+import { STORAGE_UPLOADS_DIR } from '@/config/files.ts'
 
 export class LocalStorageProvider implements StorageProviderInterface {
     private readonly uploadsDir: string

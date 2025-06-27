@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
-import { WorkspaceRepository } from '@/modules/workspace/repositories/WorkspaceRepository.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { exclude } from '@/utils/exclude.js'
-import { PermissionService } from '@/modules/workspace/accessControl/services/PermissionService.js'
-import { WorkspaceRole } from '@/modules/workspace/modules/member/types.js'
+import { WorkspaceRepository } from '@/modules/workspace/repositories/WorkspaceRepository.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { exclude } from '@/utils/exclude.ts'
+import { PermissionService } from '@/modules/workspace/accessControl/services/PermissionService.ts'
+import { WorkspaceRole } from '@/modules/workspace/modules/member/types.ts'
 
 export const workspaceMiddleware = async (
     req: Request,

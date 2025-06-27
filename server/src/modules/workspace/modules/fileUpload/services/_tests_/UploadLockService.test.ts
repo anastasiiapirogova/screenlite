@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest'
-import { UploadLockService } from '../UploadLockService.js'
-import { getRedisClient } from '@/config/redis.js'
-import { FileUploadSession } from '@/generated/prisma/client.js'
+import { UploadLockService } from '../UploadLockService.ts'
+import { getRedisClient } from '@/config/redis.ts'
+import { FileUploadSession } from '@/generated/prisma/client.ts'
 
 ;(BigInt.prototype as { toJSON?: () => string }).toJSON = function () {
     return this.toString()

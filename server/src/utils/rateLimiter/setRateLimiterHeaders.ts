@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import { RateLimitResponse } from './RateLimiter.js'
+import { RateLimitResponse } from './RateLimiter.ts'
 
 export const setRateLimitHeaders = (res: Response, rateLimitResponse: RateLimitResponse) => {
     if (rateLimitResponse.allowed) {

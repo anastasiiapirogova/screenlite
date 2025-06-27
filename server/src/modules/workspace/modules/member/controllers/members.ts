@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { Prisma } from '@/generated/prisma/client.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { workspaceMembersSchema } from '../schemas/memberSchemas.js'
-import { prisma } from '@/config/prisma.js'
+import { Prisma } from '@/generated/prisma/client.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { workspaceMembersSchema } from '../schemas/memberSchemas.ts'
+import { prisma } from '@/config/prisma.ts'
 
 export const members = async (req: Request, res: Response) => {
     const workspace = req.workspace!

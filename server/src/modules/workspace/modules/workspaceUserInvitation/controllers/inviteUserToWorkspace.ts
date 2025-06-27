@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { inviteUserToWorkspaceSchema } from '../schemas/workspaceUserInvitationSchemas.js'
-import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.js'
-import { UserRepository } from '@/modules/user/repositories/UserRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { inviteUserToWorkspaceSchema } from '../schemas/workspaceUserInvitationSchemas.ts'
+import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.ts'
+import { UserRepository } from '@/modules/user/repositories/UserRepository.ts'
 
 export const inviteUserToWorkspace = async (req: Request, res: Response) => {
     const user = req.user!

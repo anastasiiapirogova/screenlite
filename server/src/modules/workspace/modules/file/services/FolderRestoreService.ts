@@ -1,5 +1,5 @@
-import { prisma } from '@/config/prisma.js'
-import { FolderRepository } from '../repositories/FolderRepository.js'
+import { prisma } from '@/config/prisma.ts'
+import { FolderRepository } from '../repositories/FolderRepository.ts'
 
 type RestoreFoldersResult = {
     restoredFolders: string[]

@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import { updatePlaylistItemsSchema } from '../schemas/playlistItemSchemas.js'
-import { mapPlaylistItemsToComparable } from '../utils/mapPlaylistItemsToComparable.js'
-import { processPlaylistItemsToCreate } from '../utils/processPlaylistItemsToCreate.js'
-import { fixOrderOfPlaylistItems } from '../utils/fixOrderOfPlaylistItems.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { processPlaylistItems } from '../utils/processPlaylistItems.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
-import { addPlaylistItemsUpdatedJob } from '../utils/addPlaylistItemsUpdatedJob.js'
+import { updatePlaylistItemsSchema } from '../schemas/playlistItemSchemas.ts'
+import { mapPlaylistItemsToComparable } from '../utils/mapPlaylistItemsToComparable.ts'
+import { processPlaylistItemsToCreate } from '../utils/processPlaylistItemsToCreate.ts'
+import { fixOrderOfPlaylistItems } from '../utils/fixOrderOfPlaylistItems.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { processPlaylistItems } from '../utils/processPlaylistItems.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
+import { addPlaylistItemsUpdatedJob } from '../utils/addPlaylistItemsUpdatedJob.ts'
 
 export const updatePlaylistItems = async (req: Request, res: Response) => {
     const validation = await updatePlaylistItemsSchema.safeParseAsync(req.body)

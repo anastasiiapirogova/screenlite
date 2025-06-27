@@ -1,4 +1,4 @@
-import { PlaylistItemType } from '../types.js'
+import { PlaylistItemType } from '../types.ts'
 
 export class PlaylistItemRepository {
     static TYPE: Record<string, PlaylistItemType> = {

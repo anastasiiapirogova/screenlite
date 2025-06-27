@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { prisma } from '@/config/prisma.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.js'
-import { deleteScreensSchema } from '../schemas/screenSchemas.js'
+import { prisma } from '@/config/prisma.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { deleteScreensSchema } from '../schemas/screenSchemas.ts'
 
 export const deleteScreens = async (req: Request, res: Response) => {
     const workspace = req.workspace!

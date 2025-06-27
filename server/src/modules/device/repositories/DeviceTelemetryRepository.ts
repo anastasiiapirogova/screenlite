@@ -1,5 +1,5 @@
-import { prisma } from '@/config/prisma.js'
-import { DeviceData } from '../types.js'
+import { prisma } from '@/config/prisma.ts'
+import { DeviceData } from '../types.ts'
 
 export class DeviceTelemetryRepository {
     static async createTelemetry(token: string, data: DeviceData, publicIp: string) {

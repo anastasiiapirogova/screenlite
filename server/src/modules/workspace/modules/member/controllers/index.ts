@@ -1,7 +1,7 @@
-import { members } from './members.js'
-import { leaveWorkspace } from './leaveWorkspace.js'
-import { removeMember } from './removeMember.js'
-import { updateMember } from './updateMember.js'
+import { members } from './members.ts'
+import { leaveWorkspace } from './leaveWorkspace.ts'
+import { removeMember } from './removeMember.ts'
+import { updateMember } from './updateMember.ts'
 
 export {
     members,

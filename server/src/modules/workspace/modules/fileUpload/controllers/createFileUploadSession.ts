@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { MultipartFileUploader } from '@/config/storage.js'
-import { createFileUploadSessionSchema } from '../schemas/fileUploadSchemas.js'
-import { FolderRepository } from '@/modules/workspace/modules/file/repositories/FolderRepository.js'
-import { FileService } from '@/modules/workspace/modules/file/services/FileService.js'
-import { FileRepository } from '@/modules/workspace/modules/file/repositories/FileRepository.js'
-import { prisma } from '@/config/prisma.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { MultipartFileUploader } from '@/config/storage.ts'
+import { createFileUploadSessionSchema } from '../schemas/fileUploadSchemas.ts'
+import { FolderRepository } from '@/modules/workspace/modules/file/repositories/FolderRepository.ts'
+import { FileService } from '@/modules/workspace/modules/file/services/FileService.ts'
+import { FileRepository } from '@/modules/workspace/modules/file/repositories/FileRepository.ts'
+import { prisma } from '@/config/prisma.ts'
 
 const validateRequest = async (req: Request, res: Response) => {
     const workspace = req.workspace!

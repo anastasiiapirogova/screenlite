@@ -1,6 +1,6 @@
-import { paginationSchema } from '@/schemas/paginationSchema.js'
+import { paginationSchema } from '@/schemas/paginationSchema.ts'
 import { z } from 'zod'
-import { PlaylistStatus } from '../types.js'
+import { PlaylistStatus } from '../types.ts'
 
 const playlistIdSchema = z.string().nonempty('PLAYLIST_ID_IS_REQUIRED')
 const screenIdsSchema = z.array(z.string()).nonempty('SCREEN_IDS_ARE_REQUIRED')

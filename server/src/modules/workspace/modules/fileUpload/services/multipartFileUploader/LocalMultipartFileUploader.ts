@@ -1,12 +1,12 @@
-import { FileUploadSession } from '@/generated/prisma/client.js'
-import { MultipartFileUploaderProviderInterface } from './MultipartFileUploaderInterface.js'
+import { FileUploadSession } from '@/generated/prisma/client.ts'
+import { MultipartFileUploaderProviderInterface } from './MultipartFileUploaderInterface.ts'
 import { Readable } from 'stream'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 import { createWriteStream, createReadStream } from 'fs'
 import { v4 as uuid } from 'uuid'
 import { Request } from 'express'
-import { STORAGE_MULTIPART_UPLOADS_DIR, STORAGE_UPLOADS_DIR } from '@/config/files.js'
+import { STORAGE_MULTIPART_UPLOADS_DIR, STORAGE_UPLOADS_DIR } from '@/config/files.ts'
 
 export class LocalMultipartFileUploader implements MultipartFileUploaderProviderInterface {
     private uploadsDir: string

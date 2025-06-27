@@ -1,5 +1,5 @@
-import { prisma } from '@/config/prisma.js'
-import { CreateScreenData } from '../types.js'
+import { prisma } from '@/config/prisma.ts'
+import { CreateScreenData } from '../types.ts'
 
 export class ScreenRepository {
     static async findExtended(id: string, workspaceId?: string) {

@@ -1,5 +1,5 @@
-import { WorkspaceRole } from '../modules/member/types.js'
-import { WORKSPACE_PERMISSIONS } from './permissions.js'
+import { WorkspaceRole } from '../modules/member/types.ts'
+import { WORKSPACE_PERMISSIONS } from './permissions.ts'
 
 export const WORKSPACE_ROLES: Record<string, WorkspaceRole> = {
     OWNER: 'owner',

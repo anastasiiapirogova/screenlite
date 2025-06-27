@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
-import { updatePlaylistPlaylistLayoutSchema } from '../schemas/playlistSchemas.js'
-import { PlaylistLayoutRepository } from '@/modules/workspace/modules/playlistLayout/repositories/PlaylistLayoutRepository.js'
-import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.js'
-import { addPlaylistItemsUpdatedJob } from '../utils/addPlaylistItemsUpdatedJob.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
+import { updatePlaylistPlaylistLayoutSchema } from '../schemas/playlistSchemas.ts'
+import { PlaylistLayoutRepository } from '@/modules/workspace/modules/playlistLayout/repositories/PlaylistLayoutRepository.ts'
+import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
+import { addPlaylistItemsUpdatedJob } from '../utils/addPlaylistItemsUpdatedJob.ts'
 
 export const changePlaylistLayout = async (req: Request, res: Response) => {
     const data = req.body

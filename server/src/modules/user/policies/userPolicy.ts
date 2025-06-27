@@ -1,4 +1,4 @@
-import { SafeUser } from '@/types.js'
+import { SafeUser } from '@/types.ts'
 
 export class UserPolicy {
     static canChangePassword(user: SafeUser, targetUserId: string) {

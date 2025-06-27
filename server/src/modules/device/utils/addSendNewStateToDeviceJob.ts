@@ -1,4 +1,4 @@
-import { deviceQueue } from '@/bullmq/queues/deviceQueue.js'
+import { deviceQueue } from '@/bullmq/queues/deviceQueue.ts'
 
 export const addSendNewStateToDeviceJob = async (token: string) => {
     await deviceQueue.add(

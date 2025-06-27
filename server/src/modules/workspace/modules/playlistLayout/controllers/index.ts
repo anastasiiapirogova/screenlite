@@ -1,9 +1,9 @@
-import { workspacePlaylistLayouts } from './workspacePlaylistLayouts.js'
-import { getPlaylistLayout } from './getPlaylistLayout.js'
-import { getPlaylistLayoutPlaylists } from './getPlaylistLayoutPlaylists.js'
-import { createPlaylistLayout } from './createPlaylistLayout.js'
-import { updatePlaylistLayout } from './updatePlaylistLayout.js'
-import { deletePlaylistLayout } from './deletePlaylistLayout.js'
+import { workspacePlaylistLayouts } from './workspacePlaylistLayouts.ts'
+import { getPlaylistLayout } from './getPlaylistLayout.ts'
+import { getPlaylistLayoutPlaylists } from './getPlaylistLayoutPlaylists.ts'
+import { createPlaylistLayout } from './createPlaylistLayout.ts'
+import { updatePlaylistLayout } from './updatePlaylistLayout.ts'
+import { deletePlaylistLayout } from './deletePlaylistLayout.ts'
 
 export {
     workspacePlaylistLayouts,

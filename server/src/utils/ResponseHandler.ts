@@ -1,4 +1,4 @@
-import { PaginationMeta } from '@/types.js'
+import { PaginationMeta } from '@/types.ts'
 import { Request, Response } from 'express'
 import { ZodIssue } from 'zod'
 

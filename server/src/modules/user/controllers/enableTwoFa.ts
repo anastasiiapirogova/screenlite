@@ -1,9 +1,9 @@
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { TotpService } from '@/modules/totp/services/TotpService.js'
-import { UserRepository } from '../repositories/UserRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { TotpService } from '@/modules/totp/services/TotpService.ts'
+import { UserRepository } from '../repositories/UserRepository.ts'
 import { Request, Response } from 'express'
-import { enableTwoFaSchema } from '../schemas/userSchemas.js'
-import { SessionRepository } from '@/modules/session/repositories/SessionRepository.js'
+import { enableTwoFaSchema } from '../schemas/userSchemas.ts'
+import { SessionRepository } from '@/modules/session/repositories/SessionRepository.ts'
 
 export const enableTwoFa = async (req: Request, res: Response) => {
     const user = req.user!

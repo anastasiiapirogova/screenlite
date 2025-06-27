@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { prisma } from '@/config/prisma.js'
+import { prisma } from '@/config/prisma.ts'
 import { z } from 'zod'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 
 const requestSchema = z.object({
     fileIds: z.array(z.string())

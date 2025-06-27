@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { exclude } from '@/utils/exclude.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { ScreenRepository } from '../repositories/ScreenRepository.js'
+import { exclude } from '@/utils/exclude.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { ScreenRepository } from '../repositories/ScreenRepository.ts'
 
 export const screen = async (req: Request, res: Response) => {
     const workspace = req.workspace!

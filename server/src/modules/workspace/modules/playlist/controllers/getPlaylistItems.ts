@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { fixOrderOfPlaylistItems } from '../utils/fixOrderOfPlaylistItems.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { fixOrderOfPlaylistItems } from '../utils/fixOrderOfPlaylistItems.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 
 export const getPlaylistItems = async (req: Request, res: Response) => {
     const { playlistId } = req.params

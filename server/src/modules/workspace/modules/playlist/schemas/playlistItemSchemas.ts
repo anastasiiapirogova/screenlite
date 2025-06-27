@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { PlaylistItemRepository } from '../repositories/PlaylistItemRepository.js'
+import { PlaylistItemRepository } from '../repositories/PlaylistItemRepository.ts'
 
 export const playlistItemTypeSchema = z.enum(
     [

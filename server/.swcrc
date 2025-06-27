@@ -15,8 +15,8 @@
             "@workspaceModules/*": [
                 "src/modules/workspace/*"
             ],
-            "@": [
-                "src"
+            "@/*": [
+                "./src/*"
             ],
             "*": [
                 "node_modules"

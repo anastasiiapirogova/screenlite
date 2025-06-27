@@ -1,5 +1,5 @@
-import { SessionRepository } from '@/modules/session/repositories/SessionRepository.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { SessionRepository } from '@/modules/session/repositories/SessionRepository.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { Request, Response, NextFunction } from 'express'
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { deleteUserWorkspaceInvitationSchema } from '../schemas/workspaceUserInvitationSchemas.js'
-import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { deleteUserWorkspaceInvitationSchema } from '../schemas/workspaceUserInvitationSchemas.ts'
+import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.ts'
 
 export const deleteUserWorkspaceInvitation = async (req: Request, res: Response) => {
     const validation = deleteUserWorkspaceInvitationSchema.safeParse(req.query)

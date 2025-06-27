@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
+import { WorkspaceRepository } from '../repositories/WorkspaceRepository.ts'
 
 const reservedSlugs = [
     'create'

@@ -1,6 +1,6 @@
-import { fileUploadQueue } from '@/bullmq/queues/fileUploadQueue.js'
-import { FileUploadSession } from '@/generated/prisma/client.js'
-import { FileRepository } from '@workspaceModules/modules/file/repositories/FileRepository.js'
+import { fileUploadQueue } from '@/bullmq/queues/fileUploadQueue.ts'
+import { FileUploadSession } from '@/generated/prisma/client.ts'
+import { FileRepository } from '@workspaceModules/modules/file/repositories/FileRepository.ts'
 
 export const addCompleteMultipartUploadJob = async (fileUploadSession: FileUploadSession) => {
     const file = await FileRepository.createFileFromFileUploadSession(fileUploadSession)

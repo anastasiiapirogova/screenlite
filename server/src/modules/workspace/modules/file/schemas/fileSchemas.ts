@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { paginationSchema } from '@/schemas/paginationSchema.js'
+import { paginationSchema } from '@/schemas/paginationSchema.ts'
 
 export const fileNameSchema = z
     .string({

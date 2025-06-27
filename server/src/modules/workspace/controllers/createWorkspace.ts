@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { createWorkspaceSchema } from '../schemas/workspaceSchemas.js'
-import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
-import { exclude } from '@/utils/exclude.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { createWorkspaceSchema } from '../schemas/workspaceSchemas.ts'
+import { WorkspaceRepository } from '../repositories/WorkspaceRepository.ts'
+import { exclude } from '@/utils/exclude.ts'
 
 export const createWorkspace = async (req: Request, res: Response) => {
     const user = req.user!

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { acceptUserWorkspaceInvitationSchema } from '../schemas/workspaceUserInvitationSchemas.js'
-import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.js'
-import { prisma } from '@/config/prisma.js'
-import { MemberRepository } from '@/modules/workspace/modules/member/repositories/MemberRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { acceptUserWorkspaceInvitationSchema } from '../schemas/workspaceUserInvitationSchemas.ts'
+import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.ts'
+import { prisma } from '@/config/prisma.ts'
+import { MemberRepository } from '@/modules/workspace/modules/member/repositories/MemberRepository.ts'
 
 export const acceptUserWorkspaceInvitation = async (req: Request, res: Response) => {
     const user = req.user!

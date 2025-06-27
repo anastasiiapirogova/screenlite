@@ -1,5 +1,5 @@
-import { ComparablePlaylistItem } from '@/types.js'
-import { filterModifiedItems } from './getModifiedItems.js'
+import { ComparablePlaylistItem } from '@/types.ts'
+import { filterModifiedItems } from './getModifiedItems.ts'
 
 const getDifference = (source: ComparablePlaylistItem[], target: ComparablePlaylistItem[]) =>
     source.filter(item => !target.some(targetItem => targetItem.id === item.id))

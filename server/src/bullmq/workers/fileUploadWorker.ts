@@ -1,7 +1,7 @@
-import { bullmqConnection } from '@/config/bullmq.js'
-import { completeMultipartUploadJob } from '@/modules/workspace/modules/fileUpload/jobs/completeMultipartUploadJob.js'
+import { bullmqConnection } from '@/config/bullmq.ts'
+import { completeMultipartUploadJob } from '@/modules/workspace/modules/fileUpload/jobs/completeMultipartUploadJob.ts'
 import { Worker } from 'bullmq'
-import { fileUploadQueue } from '@/bullmq/queues/fileUploadQueue.js'
+import { fileUploadQueue } from '@/bullmq/queues/fileUploadQueue.ts'
 
 export const fileUploadWorker = new Worker(
     fileUploadQueue.name,

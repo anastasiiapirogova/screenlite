@@ -1,5 +1,5 @@
-import { prisma } from '@/config/prisma.js'
-import { addPlaylistUpdatedJobs } from '@/modules/workspace/modules/playlist/utils/addPlaylistUpdatedJobs.js'
+import { prisma } from '@/config/prisma.ts'
+import { addPlaylistUpdatedJobs } from '@/modules/workspace/modules/playlist/utils/addPlaylistUpdatedJobs.ts'
 
 export const handleFileUpdatedJob = async (fileId: string) => {
     const playlistItems = await prisma.playlistItem.findMany({

@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-import { prisma } from '@/config/prisma.js'
+import { prisma } from '@/config/prisma.ts'
 import { beforeEach } from 'node:test'
-import { Weekday } from '@/generated/prisma/client.js'
-import { PlaylistRepository } from '@workspaceModules/modules/playlist/repositories/PlaylistRepository.js'
-import { PlaylistCopyService } from '@workspaceModules/modules/playlist/services/PlaylistCopyService.js'
+import { Weekday } from '@/generated/prisma/client.ts'
+import { PlaylistRepository } from '@workspaceModules/modules/playlist/repositories/PlaylistRepository.ts'
+import { PlaylistCopyService } from '@workspaceModules/modules/playlist/services/PlaylistCopyService.ts'
 
 const WORKSPACE_ID = 'workspace-playlist-copy'
 

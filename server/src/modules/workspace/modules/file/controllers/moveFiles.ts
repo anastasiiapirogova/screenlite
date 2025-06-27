@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { FileRepository } from '../repositories/FileRepository.js'
-import { FileMoveService } from '../services/FileMoveService.js'
-import { moveFilesSchema } from '../schemas/fileSchemas.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { FileRepository } from '../repositories/FileRepository.ts'
+import { FileMoveService } from '../services/FileMoveService.ts'
+import { moveFilesSchema } from '../schemas/fileSchemas.ts'
 
 export const moveFiles = async (req: Request, res: Response) => {
     const workspace = req.workspace!

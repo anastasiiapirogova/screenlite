@@ -1,4 +1,4 @@
-import { getIpFromRequest } from '@/utils/getIpFromRequest.js'
+import { getIpFromRequest } from '@/utils/getIpFromRequest.ts'
 import { Request } from 'express'
 import { describe, expect, it } from 'vitest'
 

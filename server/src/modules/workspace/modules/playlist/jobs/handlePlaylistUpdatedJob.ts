@@ -1,7 +1,7 @@
-import { prisma } from '@/config/prisma.js'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.js'
-import { addPlaylistUpdatedJobs } from '../utils/addPlaylistUpdatedJobs.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
+import { prisma } from '@/config/prisma.ts'
+import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { addPlaylistUpdatedJobs } from '../utils/addPlaylistUpdatedJobs.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 
 const handleUpdateNestablePlaylist = async (playlistId: string) => {
     const parentPlaylists = await prisma.playlistItem.findMany({

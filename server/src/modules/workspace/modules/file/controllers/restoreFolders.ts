@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { restoreFoldersSchema } from '../schemas/folderSchemas.js'
-import { FolderRestoreService } from '../services/FolderRestoreService.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { restoreFoldersSchema } from '../schemas/folderSchemas.ts'
+import { FolderRestoreService } from '../services/FolderRestoreService.ts'
 
 export const restoreFolders = async (req: Request, res: Response) => {
     const workspace = req.workspace!

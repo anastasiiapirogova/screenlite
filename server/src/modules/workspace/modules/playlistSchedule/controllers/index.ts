@@ -1,6 +1,6 @@
-import { createPlaylistSchedule } from './createPlaylistSchedule.js'
-import { updatePlaylistSchedule } from './updatePlaylistSchedule.js'
-import { deletePlaylistSchedule } from './deletePlaylistSchedule.js'
+import { createPlaylistSchedule } from './createPlaylistSchedule.ts'
+import { updatePlaylistSchedule } from './updatePlaylistSchedule.ts'
+import { deletePlaylistSchedule } from './deletePlaylistSchedule.ts'
 
 export {
     createPlaylistSchedule,

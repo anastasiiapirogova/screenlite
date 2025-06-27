@@ -1,7 +1,7 @@
-import { authMiddleware } from './authMiddleware.js'
-import { corsMiddleware } from './corsMiddleware.js'
-import { errorHandler } from './errorHandler.js'
-import { notFoundHandler } from './notFoundHandler.js'
+import { authMiddleware } from './authMiddleware.ts'
+import { corsMiddleware } from './corsMiddleware.ts'
+import { errorHandler } from './errorHandler.ts'
+import { notFoundHandler } from './notFoundHandler.ts'
 
 export {
     authMiddleware,

@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { SessionPolicy } from '../policies/sessionPolicy.js'
-import { userSessionsSchema } from '../schemas/sessionSchema.js'
-import { Prisma } from '@/generated/prisma/client.js'
-import { prisma } from '@/config/prisma.js'
-import { parseUserAgent } from '../utils/parseUserAgent.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { SessionPolicy } from '../policies/sessionPolicy.ts'
+import { userSessionsSchema } from '../schemas/sessionSchema.ts'
+import { Prisma } from '@/generated/prisma/client.ts'
+import { prisma } from '@/config/prisma.ts'
+import { parseUserAgent } from '../utils/parseUserAgent.ts'
 
 export const getUserSessions = async (req: Request, res: Response) => {
     const { userId } = req.params

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 
 export const getPlaylistScreens = async (req: Request, res: Response) => {
     const { playlistId } = req.params

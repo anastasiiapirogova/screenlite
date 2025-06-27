@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.js'
-import { ScreenRepository } from '../repositories/ScreenRepository.js'
-import { connectDeviceSchema } from '../schemas/screenSchemas.js'
-import { DeviceRepository } from '@/modules/device/repositories/DeviceRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { ScreenRepository } from '../repositories/ScreenRepository.ts'
+import { connectDeviceSchema } from '../schemas/screenSchemas.ts'
+import { DeviceRepository } from '@/modules/device/repositories/DeviceRepository.ts'
 
 // TODO: Implement brute-force protection (e.g. rate limit by IP or screenId, track failed attempts, and temporarily block after multiple failures)
 export const connectDevice = async (req: Request, res: Response) => {

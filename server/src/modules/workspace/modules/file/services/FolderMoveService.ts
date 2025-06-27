@@ -1,6 +1,6 @@
-import { Folder } from '@/generated/prisma/client.js'
-import { FolderRepository } from '../repositories/FolderRepository.js'
-import { MAX_FOLDER_DEPTH } from '@/config/files.js'
+import { Folder } from '@/generated/prisma/client.ts'
+import { FolderRepository } from '../repositories/FolderRepository.ts'
+import { MAX_FOLDER_DEPTH } from '@/config/files.ts'
 
 type MovableFolder = {
     id: string

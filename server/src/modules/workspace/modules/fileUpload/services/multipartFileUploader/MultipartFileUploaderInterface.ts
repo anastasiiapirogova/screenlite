@@ -1,4 +1,4 @@
-import { FileUploadSession } from '@/generated/prisma/client.js'
+import { FileUploadSession } from '@/generated/prisma/client.ts'
 import { Request } from 'express'
 
 export interface MultipartFileUploaderProviderInterface {

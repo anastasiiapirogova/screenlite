@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { restoreFilesSchema } from '../schemas/fileSchemas.js'
-import { FileRestoreService } from '../services/FileRestoreService.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { restoreFilesSchema } from '../schemas/fileSchemas.ts'
+import { FileRestoreService } from '../services/FileRestoreService.ts'
 
 export const restoreFiles = async (req: Request, res: Response) => {
     const workspace = req.workspace!

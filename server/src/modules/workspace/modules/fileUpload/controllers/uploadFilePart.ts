@@ -1,12 +1,12 @@
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { Request, Response } from 'express'
-import { MultipartFileUploader } from '@/config/storage.js'
-import { UploadSessionManager } from '../utils/UploadSessionManager.js'
-import { FileUploadSessionValidator } from '../utils/FileUploadSessionValidator.js'
-import { ContentLengthValidator } from '../utils/ContentLengthValidator.js'
-import { addCompleteMultipartUploadJob } from '../utils/addCompleteMultipartUploadJob.js'
+import { MultipartFileUploader } from '@/config/storage.ts'
+import { UploadSessionManager } from '../utils/UploadSessionManager.ts'
+import { FileUploadSessionValidator } from '../utils/FileUploadSessionValidator.ts'
+import { ContentLengthValidator } from '../utils/ContentLengthValidator.ts'
+import { addCompleteMultipartUploadJob } from '../utils/addCompleteMultipartUploadJob.ts'
 import { Readable } from 'stream'
-import { UploadLockService } from '../services/UploadLockService.js'
+import { UploadLockService } from '../services/UploadLockService.ts'
 
 export const uploadFilePart = async (req: Request, res: Response): Promise<void> => {
     if(!(req instanceof Readable)) {

@@ -1,17 +1,17 @@
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import express from 'express'
-import { uploadFilePart } from '../uploadFilePart.js'
-import { getRedisClient } from '@/config/redis.js'
-import { WORKSPACE_ROLES } from '@workspaceModules/accessControl/roles.js'
+import { uploadFilePart } from '../uploadFilePart.ts'
+import { getRedisClient } from '@/config/redis.ts'
+import { WORKSPACE_ROLES } from '@workspaceModules/accessControl/roles.ts'
 
-vi.mock('@/config/storage.js', () => ({
+vi.mock('@/config/storage.ts', () => ({
     MultipartFileUploader: {
         uploadPart: vi.fn().mockResolvedValue(undefined)
     }
 }))
 
-vi.mock('../../utils/UploadSessionManager.js', () => ({
+vi.mock('../../utils/UploadSessionManager.ts', () => ({
     UploadSessionManager: {
         updateSession: vi.fn().mockResolvedValue({
             id: 'test-session-id',
@@ -23,7 +23,7 @@ vi.mock('../../utils/UploadSessionManager.js', () => ({
     }
 }))
 
-vi.mock('../../utils/FileUploadSessionValidator.js', () => ({
+vi.mock('../../utils/FileUploadSessionValidator.ts', () => ({
     FileUploadSessionValidator: {
         validate: vi.fn().mockResolvedValue({
             id: 'test-session-id',
@@ -37,13 +37,13 @@ vi.mock('../../utils/FileUploadSessionValidator.js', () => ({
     }
 }))
 
-vi.mock('../../utils/ContentLengthValidator.js', () => ({
+vi.mock('../../utils/ContentLengthValidator.ts', () => ({
     ContentLengthValidator: {
         validate: vi.fn().mockReturnValue(100)
     }
 }))
 
-vi.mock('../../../file/repositories/FileRepository.js', () => ({
+vi.mock('../../../file/repositories/FileRepository.ts', () => ({
     FileRepository: {
         createFileFromFileUploadSession: vi.fn().mockResolvedValue({
             id: 'test-file-id'
@@ -51,7 +51,7 @@ vi.mock('../../../file/repositories/FileRepository.js', () => ({
     }
 }))
 
-vi.mock('../../utils/addCompleteMultipartUploadJob.js', () => ({
+vi.mock('../../utils/addCompleteMultipartUploadJob.ts', () => ({
     addCompleteMultipartUploadJob: vi.fn()
 }))
 
@@ -149,7 +149,7 @@ describe('uploadFilePart controller', () => {
         const sessionId = 'concurrent-test-session'
         const uploadId = 'concurrent-test-upload'
 
-        const { FileUploadSessionValidator } = await import('../../utils/FileUploadSessionValidator.js')
+        const { FileUploadSessionValidator } = await import('../../utils/FileUploadSessionValidator.ts')
 
         vi.mocked(FileUploadSessionValidator.validate)
             .mockResolvedValue({

@@ -1,8 +1,8 @@
-import { FileUploadSession } from '@/generated/prisma/client.js'
+import { FileUploadSession } from '@/generated/prisma/client.ts'
 import { Request, Response } from 'express'
-import { filePartUploadSchema } from '../schemas/fileUploadSchemas.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { FileUploadRepository } from '../repositories/FileUploadRepository.js'
+import { filePartUploadSchema } from '../schemas/fileUploadSchemas.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { FileUploadRepository } from '../repositories/FileUploadRepository.ts'
 
 export class FileUploadSessionValidator {
     static async validate(req: Request, res: Response): Promise<FileUploadSession | undefined> {

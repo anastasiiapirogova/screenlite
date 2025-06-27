@@ -1,7 +1,7 @@
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { UserRepository } from '../repositories/UserRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { UserRepository } from '../repositories/UserRepository.ts'
 import { Request, Response } from 'express'
-import { SessionRepository } from '@/modules/session/repositories/SessionRepository.js'
+import { SessionRepository } from '@/modules/session/repositories/SessionRepository.ts'
 
 export const disableTwoFa = async (req: Request, res: Response) => {
     const user = req.user!

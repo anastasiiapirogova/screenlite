@@ -1,8 +1,8 @@
-import { prisma } from '@/config/prisma.js'
-import { UpdateFileData } from '../types.js'
+import { prisma } from '@/config/prisma.ts'
+import { UpdateFileData } from '../types.ts'
 import { v4 as uuid } from 'uuid'
-import { File, FileUploadSession } from '@/generated/prisma/client.js'
-import { FileService } from '../services/FileService.js'
+import { File, FileUploadSession } from '@/generated/prisma/client.ts'
+import { FileService } from '../services/FileService.ts'
 
 export class FileRepository {
     static async createFileKey(workspaceId: string, filename: string) {

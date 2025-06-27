@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { prisma } from '@/config/prisma.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
-import { restorePlaylistsSchema } from '../schemas/playlistSchemas.js'
+import { prisma } from '@/config/prisma.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
+import { restorePlaylistsSchema } from '../schemas/playlistSchemas.ts'
 
 export const restorePlaylists = async (req: Request, res: Response) => {
     const user = req.user!

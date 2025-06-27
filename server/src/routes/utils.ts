@@ -1,8 +1,8 @@
 import express, { RequestHandler, Request, Response } from 'express'
-import { authMiddleware } from '../middlewares/authMiddleware.js'
-import { twoFactorAuthMiddleware } from '../middlewares/twoFactorAuthMiddleware.js'
-import { workspaceMiddleware } from '../middlewares/workspaceMiddleware.js'
-import { asyncHandler } from '../utils/asyncHandler.js'
+import { authMiddleware } from '../middlewares/authMiddleware.ts'
+import { twoFactorAuthMiddleware } from '../middlewares/twoFactorAuthMiddleware.ts'
+import { workspaceMiddleware } from '../middlewares/workspaceMiddleware.ts'
+import { asyncHandler } from '../utils/asyncHandler.ts'
 
 export const router = express.Router()
 

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { MultipartFileUploader } from '@/config/storage.js'
-import { prisma } from '@/config/prisma.js'
-import { FileUploadRepository } from '../repositories/FileUploadRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { MultipartFileUploader } from '@/config/storage.ts'
+import { prisma } from '@/config/prisma.ts'
+import { FileUploadRepository } from '../repositories/FileUploadRepository.ts'
 
 export const cancelFileUploading = async (req: Request, res: Response) => {
     const user = req.user!

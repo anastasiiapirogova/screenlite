@@ -1,11 +1,11 @@
 import { Server as SocketServer, Socket, Namespace } from 'socket.io'
 import { Server as HTTPServer } from 'http'
 import { createAdapter } from '@socket.io/redis-adapter'
-import { getRedisClient } from '@/config/redis.js'
-import { handleDeviceData } from '../modules/device/controllers/handleDeviceData.js'
-import { getDeviceSocketConnectionInfoByToken, removeDeviceSocketConnectionInfoBySocketId, storeDeviceSocketConnectionInfo } from '../modules/device/utils/deviceSocketConnection.js'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.js'
-import { DeviceRepository } from '@/modules/device/repositories/DeviceRepository.js'
+import { getRedisClient } from '@/config/redis.ts'
+import { handleDeviceData } from '../modules/device/controllers/handleDeviceData.ts'
+import { getDeviceSocketConnectionInfoByToken, removeDeviceSocketConnectionInfoBySocketId, storeDeviceSocketConnectionInfo } from '../modules/device/utils/deviceSocketConnection.ts'
+import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { DeviceRepository } from '@/modules/device/repositories/DeviceRepository.ts'
 
 class DeviceConnectionManager {
     private io: SocketServer

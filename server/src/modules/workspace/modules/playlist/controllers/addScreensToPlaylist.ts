@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
-import { addScreensToPlaylistSchema } from '../schemas/playlistSchemas.js'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.js'
-import { ScreenRepository } from '@/modules/workspace/modules/screen/repositories/ScreenRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
+import { addScreensToPlaylistSchema } from '../schemas/playlistSchemas.ts'
+import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { ScreenRepository } from '@/modules/workspace/modules/screen/repositories/ScreenRepository.ts'
 
 export const addScreensToPlaylist = async (req: Request, res: Response) => {
     const validation = await addScreensToPlaylistSchema.safeParseAsync(req.body)

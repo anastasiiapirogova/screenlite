@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { prisma } from '@/config/prisma.js'
-import { Prisma } from '@/generated/prisma/client.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { getWorkspaceLayoutsSchema } from '../schemas/playlistLayoutSchemas.js'
+import { prisma } from '@/config/prisma.ts'
+import { Prisma } from '@/generated/prisma/client.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { getWorkspaceLayoutsSchema } from '../schemas/playlistLayoutSchemas.ts'
 
 export const workspacePlaylistLayouts = async (req: Request, res: Response) => {
     const workspace = req.workspace!

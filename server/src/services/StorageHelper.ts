@@ -1,5 +1,5 @@
 import sharp from 'sharp'
-import { StorageService } from './storage/StorageService.js'
+import { StorageService } from './storage/StorageService.ts'
 
 export class StorageHelper {
     public static async uploadAndProcessImage(key: string, imageBuffer: Buffer, options?: {

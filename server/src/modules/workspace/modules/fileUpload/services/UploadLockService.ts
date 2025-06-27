@@ -1,5 +1,5 @@
-import { getRedisClient } from '@/config/redis.js'
-import { FileUploadSession } from '@/generated/prisma/client.js'
+import { getRedisClient } from '@/config/redis.ts'
+import { FileUploadSession } from '@/generated/prisma/client.ts'
 import { v4 as uuid } from 'uuid'
 
 const redis = getRedisClient()

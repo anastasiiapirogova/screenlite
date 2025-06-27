@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { updateFolderSchema } from '../schemas/folderSchemas.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { FolderRepository } from '../repositories/FolderRepository.js'
+import { updateFolderSchema } from '../schemas/folderSchemas.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { FolderRepository } from '../repositories/FolderRepository.ts'
 
 export const updateFolder = async (req: Request, res: Response) => {
     const workspace = req.workspace!

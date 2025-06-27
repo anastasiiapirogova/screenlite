@@ -1,4 +1,4 @@
-import { getRedisClient } from '@/config/redis.js'
+import { getRedisClient } from '@/config/redis.ts'
 import { Socket } from 'socket.io'
 
 const redis = getRedisClient()

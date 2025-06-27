@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
-import { deleteWorkspaceSchema } from '../schemas/workspaceSchemas.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { WorkspaceRepository } from '../repositories/WorkspaceRepository.ts'
+import { deleteWorkspaceSchema } from '../schemas/workspaceSchemas.ts'
 
 export const deleteWorkspace = async (req: Request, res: Response) => {
     const workspace = req.workspace!

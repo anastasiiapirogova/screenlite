@@ -1,9 +1,9 @@
 import { Socket } from 'socket.io'
 import { z } from 'zod'
-import { DeviceRepository } from '../repositories/DeviceRepository.js'
-import { DeviceService } from '../services/DeviceService.js'
-import { DeviceTelemetryService } from '../services/DeviceTelemetryService.js'
-import { deviceDataSchema } from '../schemas/deviceSchemas.js'
+import { DeviceRepository } from '../repositories/DeviceRepository.ts'
+import { DeviceService } from '../services/DeviceService.ts'
+import { DeviceTelemetryService } from '../services/DeviceTelemetryService.ts'
+import { deviceDataSchema } from '../schemas/deviceSchemas.ts'
 
 export type DeviceData = z.infer<typeof deviceDataSchema>
 

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { PlaylistLayoutRepository } from '../repositories/PlaylistLayoutRepository.js'
-import { prisma } from '@/config/prisma.js'
-import { addPlaylistUpdatedJobs } from '@/modules/workspace/modules/playlist/utils/addPlaylistUpdatedJobs.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { PlaylistLayoutRepository } from '../repositories/PlaylistLayoutRepository.ts'
+import { prisma } from '@/config/prisma.ts'
+import { addPlaylistUpdatedJobs } from '@/modules/workspace/modules/playlist/utils/addPlaylistUpdatedJobs.ts'
 
 export const deletePlaylistLayout = async (req: Request, res: Response) => {
     const { playlistLayoutId } = req.params

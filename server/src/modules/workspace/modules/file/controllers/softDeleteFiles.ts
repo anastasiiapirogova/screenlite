@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { deleteFilesSchema } from '../schemas/fileSchemas.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { prisma } from '@/config/prisma.js'
-import { Prisma } from '@/generated/prisma/client.js'
-import { FileRepository } from '../repositories/FileRepository.js'
+import { deleteFilesSchema } from '../schemas/fileSchemas.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { prisma } from '@/config/prisma.ts'
+import { Prisma } from '@/generated/prisma/client.ts'
+import { FileRepository } from '../repositories/FileRepository.ts'
 
 export const softDeleteFiles = async (req: Request, res: Response) => {
     const workspace = req.workspace!

@@ -1,7 +1,7 @@
-import { bullmqConnection } from '@/config/bullmq.js'
-import { sendNewStateToDeviceJob } from '@/modules/device/jobs/sendNewStateToDeviceJob.js'
+import { bullmqConnection } from '@/config/bullmq.ts'
+import { sendNewStateToDeviceJob } from '@/modules/device/jobs/sendNewStateToDeviceJob.ts'
 import { Worker } from 'bullmq'
-import { deviceQueue } from '@/bullmq/queues/deviceQueue.js'
+import { deviceQueue } from '@/bullmq/queues/deviceQueue.ts'
 
 export const deviceQueueWorker = new Worker(
     deviceQueue.name,

@@ -1,7 +1,7 @@
-import { createGuestRoute, HttpMethod } from './utils.js'
-import AuthController from '@/modules/auth/controllers/index.js'
-import UserController from '@/modules/user/controllers/index.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { createGuestRoute, HttpMethod } from './utils.ts'
+import AuthController from '@/modules/auth/controllers/index.ts'
+import UserController from '@/modules/user/controllers/index.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { Request, Response } from 'express'
 
 const health = async (req: Request, res: Response) => {

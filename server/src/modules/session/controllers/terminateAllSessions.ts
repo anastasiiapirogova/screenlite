@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { SessionRepository } from '../repositories/SessionRepository.js'
-import { SessionPolicy } from '../policies/sessionPolicy.js'
-import { terminateAllSessionsSchema } from '../schemas/sessionSchema.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { SessionRepository } from '../repositories/SessionRepository.ts'
+import { SessionPolicy } from '../policies/sessionPolicy.ts'
+import { terminateAllSessionsSchema } from '../schemas/sessionSchema.ts'
 
 export const terminateAllSessions = async (req: Request, res: Response) => {
     const parsedData = terminateAllSessionsSchema.safeParse(req.body)

@@ -6,9 +6,9 @@ import {
 } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { Readable } from 'stream'
-import { s3Client, Buckets, createBuckets } from '@/config/s3Client.js'
-import { FileNotFoundError } from '../errors.js'
-import { StorageProviderInterface } from './StorageProviderInterface.js'
+import { s3Client, Buckets, createBuckets } from '@/config/s3Client.ts'
+import { FileNotFoundError } from '../errors.ts'
+import { StorageProviderInterface } from './StorageProviderInterface.ts'
 
 export class S3StorageProvider implements StorageProviderInterface {
     private readonly bucket: string

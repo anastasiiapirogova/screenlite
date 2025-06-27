@@ -1,6 +1,6 @@
-import { prisma } from '@/config/prisma.js'
-import { AddMemberData } from '../types.js'
-import { WORKSPACE_ROLES } from '@/modules/workspace/accessControl/roles.js'
+import { prisma } from '@/config/prisma.ts'
+import { AddMemberData } from '../types.ts'
+import { WORKSPACE_ROLES } from '@/modules/workspace/accessControl/roles.ts'
 
 export class MemberRepository {
     static async removeMember(workspaceId: string, userId: string) {

@@ -1,4 +1,4 @@
-import { Weekday } from '@/generated/prisma/client.js'
+import { Weekday } from '@/generated/prisma/client.ts'
 
 export type CreateScheduleData = {
     startAt: string

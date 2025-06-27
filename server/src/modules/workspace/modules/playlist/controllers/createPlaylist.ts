@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { newPlaylistSchema } from '../schemas/playlistSchemas.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { WorkspaceRepository } from '@/modules/workspace/repositories/WorkspaceRepository.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
+import { newPlaylistSchema } from '../schemas/playlistSchemas.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { WorkspaceRepository } from '@/modules/workspace/repositories/WorkspaceRepository.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 
 export const createPlaylist = async (req: Request, res: Response) => {
     const validation = await newPlaylistSchema.safeParseAsync(req.body)

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { prisma } from '@/config/prisma.js'
-import { Prisma } from '@/generated/prisma/client.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { workspaceScreensSchema } from '../schemas/screenSchemas.js'
-import { getDeviceStatusClause } from '../utils/getDeviceStatusClause.js'
+import { prisma } from '@/config/prisma.ts'
+import { Prisma } from '@/generated/prisma/client.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { workspaceScreensSchema } from '../schemas/screenSchemas.ts'
+import { getDeviceStatusClause } from '../utils/getDeviceStatusClause.ts'
 
 export const workspaceScreens = async (req: Request, res: Response) => {
     const workspace = req.workspace!

@@ -1,8 +1,8 @@
 import { Readable } from 'stream'
-import { S3StorageProvider } from './providers/S3StorageProvider.js'
-import { LocalStorageProvider } from './providers/LocalStorageProvider.js'
-import { StorageProviderInterface } from './providers/StorageProviderInterface.js'
-import { STORAGE_TYPE } from '@/config/screenlite.js'
+import { S3StorageProvider } from './providers/S3StorageProvider.ts'
+import { LocalStorageProvider } from './providers/LocalStorageProvider.ts'
+import { StorageProviderInterface } from './providers/StorageProviderInterface.ts'
+import { STORAGE_TYPE } from '@/config/screenlite.ts'
 
 export class StorageService {
     private static instance: StorageService

@@ -1,8 +1,8 @@
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { TotpService } from '@/modules/totp/services/TotpService.js'
-import { UserRepository } from '../repositories/UserRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { TotpService } from '@/modules/totp/services/TotpService.ts'
+import { UserRepository } from '../repositories/UserRepository.ts'
 import { Request, Response } from 'express'
-import { APP_NAME } from '@/config/screenlite.js'
+import { APP_NAME } from '@/config/screenlite.ts'
 
 export const getTotpSetupData = async (req: Request, res: Response) => {
     const user = req.user!

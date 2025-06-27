@@ -1,4 +1,4 @@
-import { fileQueue } from '@/bullmq/queues/fileQueue.js'
+import { fileQueue } from '@/bullmq/queues/fileQueue.ts'
 
 export const addFileUpdatedJob = async (fileId: string) => {
     await fileQueue.add(

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { ScreenRepository } from '../repositories/ScreenRepository.js'
-import { createScreenSchema } from '../schemas/screenSchemas.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { ScreenRepository } from '../repositories/ScreenRepository.ts'
+import { createScreenSchema } from '../schemas/screenSchemas.ts'
 
 export const createScreen = async (req: Request, res: Response) => {
     const workspace = req.workspace!

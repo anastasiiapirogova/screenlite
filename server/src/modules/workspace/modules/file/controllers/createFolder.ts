@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { createFolderSchema } from '../schemas/folderSchemas.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { FolderRepository } from '../repositories/FolderRepository.js'
-import { MAX_FOLDER_DEPTH } from '@/config/files.js'
+import { createFolderSchema } from '../schemas/folderSchemas.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { FolderRepository } from '../repositories/FolderRepository.ts'
+import { MAX_FOLDER_DEPTH } from '@/config/files.ts'
 
 export const createFolder = async (req: Request, res: Response) => {
     const workspace = req.workspace!

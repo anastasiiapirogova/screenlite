@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { createPlaylistLayoutSchema } from '../schemas/playlistLayoutSchemas.js'
-import { PlaylistLayoutRepository } from '../repositories/PlaylistLayoutRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { createPlaylistLayoutSchema } from '../schemas/playlistLayoutSchemas.ts'
+import { PlaylistLayoutRepository } from '../repositories/PlaylistLayoutRepository.ts'
 
 export const createPlaylistLayout = async (req: Request, res: Response) => {
     const workspace = req.workspace!

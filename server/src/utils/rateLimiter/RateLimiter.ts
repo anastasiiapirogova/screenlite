@@ -1,6 +1,6 @@
-import { getRedisClient } from '@/config/redis.js'
+import { getRedisClient } from '@/config/redis.ts'
 import { Redis } from 'ioredis'
-import { toSeconds } from '../toSeconds.js'
+import { toSeconds } from '../toSeconds.ts'
 
 const DEFAULT_PREFIX = 'rate_limit:'
 

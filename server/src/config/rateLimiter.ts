@@ -1,5 +1,5 @@
-import { authRateLimiterConfig } from '@/modules/auth/authRateLimiterConfig.js'
-import { RateLimiterManager } from '@/utils/rateLimiter/RateLimiterManager.js'
+import { authRateLimiterConfig } from '@/modules/auth/authRateLimiterConfig.ts'
+import { RateLimiterManager } from '@/utils/rateLimiter/RateLimiterManager.ts'
 
 export const rateLimiter = new RateLimiterManager()
 

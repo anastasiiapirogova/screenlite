@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io'
-import { getIpFromSocket } from '../helpers/getIpFromSocket.js'
-import { DeviceData } from '../types.js'
-import { DeviceTelemetryRepository } from '../repositories/DeviceTelemetryRepository.js'
+import { getIpFromSocket } from '../helpers/getIpFromSocket.ts'
+import { DeviceData } from '../types.ts'
+import { DeviceTelemetryRepository } from '../repositories/DeviceTelemetryRepository.ts'
 
 export class DeviceTelemetryService {
     static async storeDeviceTelemetry(token: string, data: DeviceData, socket: Socket) {

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { prisma } from '@/config/prisma.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
-import { addPlaylistUpdatedJobs } from '../utils/addPlaylistUpdatedJobs.js'
-import { deletePlaylistsSchema } from '../schemas/playlistSchemas.js'
+import { prisma } from '@/config/prisma.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
+import { addPlaylistUpdatedJobs } from '../utils/addPlaylistUpdatedJobs.ts'
+import { deletePlaylistsSchema } from '../schemas/playlistSchemas.ts'
 
 export const softDeletePlaylists = async (req: Request, res: Response) => {
     const user = req.user!

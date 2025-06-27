@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { prisma } from '@/config/prisma.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { userInvitationsSchema } from '../schemas/workspaceUserInvitationSchemas.js'
-import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.js'
+import { prisma } from '@/config/prisma.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { userInvitationsSchema } from '../schemas/workspaceUserInvitationSchemas.ts'
+import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.ts'
 
 export const userInvitations = async (req: Request, res: Response) => {
     const currentUser = req.user!

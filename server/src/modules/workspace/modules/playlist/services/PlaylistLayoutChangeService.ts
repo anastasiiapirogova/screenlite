@@ -1,5 +1,5 @@
-import type { Prisma, PlaylistLayoutSection } from '@/generated/prisma/client.js'
-import { prisma } from '@/config/prisma.js'
+import type { Prisma, PlaylistLayoutSection } from '@/generated/prisma/client.ts'
+import { prisma } from '@/config/prisma.ts'
 
 type PlaylistItemWithSection = Prisma.PlaylistItemGetPayload<{
     include: { playlistLayoutSection: true }

@@ -1,10 +1,10 @@
-import { GracefulShutdown } from './types.js'
-import { initPrisma } from './config/prisma.js'
-import { initSocketIo } from './controllers/socket.js'
-import { closeWorkers } from '@/bullmq/workers.js'
-import { server } from '@/config/server.js'
-import './config/rateLimiter.js'
-import './config/storage.js'
+import { GracefulShutdown } from './types.ts'
+import { initPrisma } from './config/prisma.ts'
+import { initSocketIo } from './controllers/socket.ts'
+import { closeWorkers } from '@/bullmq/workers.ts'
+import { server } from '@/config/server.ts'
+import './config/rateLimiter.ts'
+import './config/storage.ts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {

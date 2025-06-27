@@ -1,5 +1,5 @@
-import { prisma } from '@/config/prisma.js'
-import { CreateFolderData, FolderTreeResult, ParentFolderTreeResult, UpdateFolderData } from '../types.js'
+import { prisma } from '@/config/prisma.ts'
+import { CreateFolderData, FolderTreeResult, ParentFolderTreeResult, UpdateFolderData } from '../types.ts'
 
 export class FolderRepository {
     static async createFolder(data: CreateFolderData) {

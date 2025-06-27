@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { Prisma } from '@/generated/prisma/client.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { prisma } from '@/config/prisma.js'
-import { userWorkspacesSchema } from '../schemas/userSchemas.js'
-import { UserPolicy } from '../policies/userPolicy.js'
+import { Prisma } from '@/generated/prisma/client.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { prisma } from '@/config/prisma.ts'
+import { userWorkspacesSchema } from '../schemas/userSchemas.ts'
+import { UserPolicy } from '../policies/userPolicy.ts'
 
 export const userWorkspaces = async (req: Request, res: Response) => {
     const { userId } = req.params

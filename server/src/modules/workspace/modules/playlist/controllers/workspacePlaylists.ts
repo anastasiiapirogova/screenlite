@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
-import { prisma } from '@/config/prisma.js'
-import { Prisma } from '@/generated/prisma/client.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { exclude } from '@/utils/exclude.js'
-import { getPlaylistStatusClause } from '../utils/getPlaylistStatusClause.js'
-import { getWorkspacePlaylistsSchema } from '../schemas/playlistSchemas.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
+import { prisma } from '@/config/prisma.ts'
+import { Prisma } from '@/generated/prisma/client.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { exclude } from '@/utils/exclude.ts'
+import { getPlaylistStatusClause } from '../utils/getPlaylistStatusClause.ts'
+import { getWorkspacePlaylistsSchema } from '../schemas/playlistSchemas.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 
 export const workspacePlaylists = async (req: Request, res: Response) => {
     const workspace = req.workspace!

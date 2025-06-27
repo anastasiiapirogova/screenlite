@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { cancelUserWorkspaceInvitationSchema } from '../schemas/workspaceUserInvitationSchemas.js'
-import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { cancelUserWorkspaceInvitationSchema } from '../schemas/workspaceUserInvitationSchemas.ts'
+import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.ts'
 
 export const cancelUserWorkspaceInvitation = async (req: Request, res: Response) => {
     const validation = cancelUserWorkspaceInvitationSchema.safeParse(req.query)

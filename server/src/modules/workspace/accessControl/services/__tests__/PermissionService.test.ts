@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { WorkspaceRole } from '@/modules/workspace/modules/member/types.js'
-import { WORKSPACE_PERMISSIONS } from '../../permissions.js'
-import { PermissionService } from '../PermissionService.js'
+import { WorkspaceRole } from '@/modules/workspace/modules/member/types.ts'
+import { WORKSPACE_PERMISSIONS } from '../../permissions.ts'
+import { PermissionService } from '../PermissionService.ts'
 
 describe('PermissionService', () => {
     const { workspace, member, screen, playlist } = WORKSPACE_PERMISSIONS

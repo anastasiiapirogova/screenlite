@@ -1,4 +1,4 @@
-import { DeviceRepository } from '../repositories/DeviceRepository.js'
+import { DeviceRepository } from '../repositories/DeviceRepository.ts'
 
 export class DeviceService {
     private static async generateUniqueConnectionCode(): Promise<string> {

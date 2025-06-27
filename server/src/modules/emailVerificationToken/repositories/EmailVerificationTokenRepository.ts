@@ -1,5 +1,5 @@
-import { prisma } from '@/config/prisma.js'
-import { getEmailVerificationToken } from '@/modules/emailVerificationToken/utils/getEmailVerificationToken.js'
+import { prisma } from '@/config/prisma.ts'
+import { getEmailVerificationToken } from '@/modules/emailVerificationToken/utils/getEmailVerificationToken.ts'
 
 export class EmailVerificationTokenRepository {
     static async createEmailVerificationToken(userId: string, newEmail: string | null) {

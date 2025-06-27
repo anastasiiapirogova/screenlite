@@ -1,6 +1,6 @@
-import { WorkspaceRole } from '@/modules/workspace/modules/member/types.js'
-import { WORKSPACE_PERMISSIONS_ARRAY } from '../permissions.js'
-import { WORKSPACE_ROLES_PERMISSIONS } from '../roles.js'
+import { WorkspaceRole } from '@/modules/workspace/modules/member/types.ts'
+import { WORKSPACE_PERMISSIONS_ARRAY } from '../permissions.ts'
+import { WORKSPACE_ROLES_PERMISSIONS } from '../roles.ts'
 
 export class PermissionService {
     static getPermissionsStatus(

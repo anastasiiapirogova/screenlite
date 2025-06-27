@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { EmailVerificationTokenRepository } from '@/modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.js'
-import { UserRepository } from '../repositories/UserRepository.js'
-import { verifyEmailSchema } from '../schemas/userSchemas.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { EmailVerificationTokenRepository } from '@/modules/emailVerificationToken/repositories/EmailVerificationTokenRepository.ts'
+import { UserRepository } from '../repositories/UserRepository.ts'
+import { verifyEmailSchema } from '../schemas/userSchemas.ts'
 
 const isNewEmailTaken = async (newEmail: string) => {
     const user = await UserRepository.findUserByEmail(newEmail)

@@ -1,10 +1,10 @@
-import { prisma } from '@/config/prisma.js'
-import { Playlist, Prisma } from '@/generated/prisma/client.js'
-import { excludeFromArray } from '@/utils/exclude.js'
-import { ComparablePlaylistItem } from '@/types.js'
-import { CreatePlaylistData } from '../types.js'
-import { CreateScheduleData } from '@workspaceModules/modules/playlistSchedule/types.js'
-import { PlaylistLayoutChangeService } from '../services/PlaylistLayoutChangeService.js'
+import { prisma } from '@/config/prisma.ts'
+import { Playlist, Prisma } from '@/generated/prisma/client.ts'
+import { excludeFromArray } from '@/utils/exclude.ts'
+import { ComparablePlaylistItem } from '@/types.ts'
+import { CreatePlaylistData } from '../types.ts'
+import { CreateScheduleData } from '@workspaceModules/modules/playlistSchedule/types.ts'
+import { PlaylistLayoutChangeService } from '../services/PlaylistLayoutChangeService.ts'
 
 export class PlaylistRepository {
     static TYPE = {

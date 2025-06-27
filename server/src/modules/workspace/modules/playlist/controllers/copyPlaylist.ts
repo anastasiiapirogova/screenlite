@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { copyPlaylistSchema } from '../schemas/playlistSchemas.js'
-import { PlaylistCopyService } from '../services/PlaylistCopyService.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { copyPlaylistSchema } from '../schemas/playlistSchemas.ts'
+import { PlaylistCopyService } from '../services/PlaylistCopyService.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 
 export const copyPlaylist = async (req: Request, res: Response) => {
     const { playlistId } = req.params

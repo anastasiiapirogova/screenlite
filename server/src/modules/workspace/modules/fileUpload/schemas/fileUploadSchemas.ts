@@ -1,8 +1,8 @@
-import { fileNameSchema } from '@/modules/workspace/modules/file/schemas/fileSchemas.js'
+import { fileNameSchema } from '@/modules/workspace/modules/file/schemas/fileSchemas.ts'
 import { z } from 'zod'
-import { FileService } from '@/modules/workspace/modules/file/services/FileService.js'
+import { FileService } from '@/modules/workspace/modules/file/services/FileService.ts'
 import mime from 'mime'
-import { MAX_UPLOAD_FILE_SIZE } from '@/config/files.js'
+import { MAX_UPLOAD_FILE_SIZE } from '@/config/files.ts'
 
 const validateMimeType = (name: string, providedMime?: string) => {
     const mimeType = providedMime || mime.getType(name)

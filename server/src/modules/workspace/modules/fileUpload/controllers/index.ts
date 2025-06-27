@@ -1,6 +1,6 @@
-import { createFileUploadSession } from './createFileUploadSession.js'
-import { cancelFileUploading } from './cancelFileUploading.js'
-import { uploadFilePart } from './uploadFilePart.js'
+import { createFileUploadSession } from './createFileUploadSession.ts'
+import { cancelFileUploading } from './cancelFileUploading.ts'
+import { uploadFilePart } from './uploadFilePart.ts'
 
 export {
     createFileUploadSession,

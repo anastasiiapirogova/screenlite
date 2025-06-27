@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { beforeEach, describe, it, vi, expect } from 'vitest'
 import { ZodIssue } from 'zod'
-import { ResponseHandler } from '../ResponseHandler.js'
+import { ResponseHandler } from '../ResponseHandler.ts'
 
 describe('ResponseHandler', () => {
     let mockRes: Partial<Response>

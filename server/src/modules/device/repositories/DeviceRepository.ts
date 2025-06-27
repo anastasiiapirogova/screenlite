@@ -1,5 +1,5 @@
-import { prisma } from '@/config/prisma.js'
-import { Prisma } from '@/generated/prisma/client.js'
+import { prisma } from '@/config/prisma.ts'
+import { Prisma } from '@/generated/prisma/client.ts'
 import crypto from 'crypto'
 
 // Some characters are excluded because they can be easily confused with others

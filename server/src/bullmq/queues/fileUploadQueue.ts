@@ -1,4 +1,4 @@
-import { bullmqConnection } from '@/config/bullmq.js'
+import { bullmqConnection } from '@/config/bullmq.ts'
 import { Queue } from 'bullmq'
 
 export const fileUploadQueue = new Queue('fileUploadQueue', {

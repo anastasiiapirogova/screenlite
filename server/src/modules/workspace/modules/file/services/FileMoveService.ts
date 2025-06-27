@@ -1,5 +1,5 @@
-import { Folder } from '@/generated/prisma/client.js'
-import { FolderRepository } from '../repositories/FolderRepository.js'
+import { Folder } from '@/generated/prisma/client.ts'
+import { FolderRepository } from '../repositories/FolderRepository.ts'
 
 type MovableFile = {
     id: string

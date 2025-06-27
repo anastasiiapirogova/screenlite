@@ -1,5 +1,5 @@
-import { playlistQueue } from '@/bullmq/queues/playlistQueue.js'
-import { addPlaylistUpdatedJob } from './addPlaylistUpdatedJob.js'
+import { playlistQueue } from '@/bullmq/queues/playlistQueue.ts'
+import { addPlaylistUpdatedJob } from './addPlaylistUpdatedJob.ts'
 
 export const addPlaylistItemsUpdatedJob = async (playlistId: string) => {
     addPlaylistUpdatedJob({ playlistId })

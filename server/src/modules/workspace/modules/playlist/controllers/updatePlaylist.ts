@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.js'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.js'
-import { updatePlaylistSchema } from '../schemas/playlistSchemas.js'
-import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.js'
-import { getModifiedPlaylistFields } from '../utils/getModifiedPlaylistFields.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
+import { updatePlaylistSchema } from '../schemas/playlistSchemas.ts'
+import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
+import { getModifiedPlaylistFields } from '../utils/getModifiedPlaylistFields.ts'
 
 const doesUpdateAffectScreens = (deletedAt: Date | null, updatedFields: Record<string, unknown>) => {
     if(deletedAt) return false

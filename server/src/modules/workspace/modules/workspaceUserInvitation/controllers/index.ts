@@ -1,9 +1,9 @@
-import { workspaceUserInvitations } from './workspaceUserInvitations.js'
-import { userInvitations } from './userInvitations.js'
-import { inviteUserToWorkspace } from './inviteUserToWorkspace.js'
-import { acceptUserWorkspaceInvitation } from './acceptUserWorkspaceInvitation.js'
-import { cancelUserWorkspaceInvitation } from './cancelUserWorkspaceInvitation.js'
-import { deleteUserWorkspaceInvitation } from './deleteUserWorkspaceInvitation.js'
+import { workspaceUserInvitations } from './workspaceUserInvitations.ts'
+import { userInvitations } from './userInvitations.ts'
+import { inviteUserToWorkspace } from './inviteUserToWorkspace.ts'
+import { acceptUserWorkspaceInvitation } from './acceptUserWorkspaceInvitation.ts'
+import { cancelUserWorkspaceInvitation } from './cancelUserWorkspaceInvitation.ts'
+import { deleteUserWorkspaceInvitation } from './deleteUserWorkspaceInvitation.ts'
 
 export {
     workspaceUserInvitations,

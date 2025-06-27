@@ -1,5 +1,5 @@
-import { Prisma } from '@/generated/prisma/client.js'
-import { PlaylistStatus } from '../types.js'
+import { Prisma } from '@/generated/prisma/client.ts'
+import { PlaylistStatus } from '../types.ts'
 
 export const getPlaylistStatusClause = (
     status?: PlaylistStatus[]

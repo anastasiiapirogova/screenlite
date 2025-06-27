@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { createScheduleValidationSchema } from '../schemas/scheduleValidationSchemas.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { PlaylistRepository } from '@/modules/workspace/modules/playlist/repositories/PlaylistRepository.js'
-import { addPlaylistUpdatedJob } from '@/modules/workspace/modules/playlist/utils/addPlaylistUpdatedJob.js'
+import { createScheduleValidationSchema } from '../schemas/scheduleValidationSchemas.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { PlaylistRepository } from '@/modules/workspace/modules/playlist/repositories/PlaylistRepository.ts'
+import { addPlaylistUpdatedJob } from '@/modules/workspace/modules/playlist/utils/addPlaylistUpdatedJob.ts'
 
 export const createPlaylistSchedule = async (req: Request, res: Response) => {
     const workspace = req.workspace!

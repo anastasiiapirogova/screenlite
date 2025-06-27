@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
-import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.js'
-import { updateWorkspaceSchema, workspacePictureSchema } from '../schemas/workspaceSchemas.js'
-import { WorkspaceRepository } from '../repositories/WorkspaceRepository.js'
-import { StorageHelper } from '@/services/StorageHelper.js'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
+import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.ts'
+import { updateWorkspaceSchema, workspacePictureSchema } from '../schemas/workspaceSchemas.ts'
+import { WorkspaceRepository } from '../repositories/WorkspaceRepository.ts'
+import { StorageHelper } from '@/services/StorageHelper.ts'
 
 export const updateWorkspace = async (req: Request, res: Response) => {
     const { name, slug, workspaceId } = req.body

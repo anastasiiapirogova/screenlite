@@ -1,5 +1,5 @@
-import { MAX_UPLOAD_FILE_PART_SIZE } from '@/config/files.js'
-import { ResponseHandler } from '@/utils/ResponseHandler.js'
+import { MAX_UPLOAD_FILE_PART_SIZE } from '@/config/files.ts'
+import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { Request, Response } from 'express'
 
 const MIN_PART_SIZE = 5n * 1024n * 1024n // 5MB

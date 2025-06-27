@@ -1,4 +1,4 @@
-import { getIpFromSocket } from '../getIpFromSocket.js'
+import { getIpFromSocket } from '../getIpFromSocket.ts'
 import { Socket } from 'socket.io'
 import { describe, expect, it, beforeEach } from 'vitest'
 
