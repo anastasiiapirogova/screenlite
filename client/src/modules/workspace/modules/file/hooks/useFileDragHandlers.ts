@@ -45,17 +45,19 @@ export const useFileDragHandlers = () => {
 
         if (!over || selectedItems[over.id]) return
 
+        const targetFolderId = over.id === 'root' ? null : over.id as string | null
+
         if (event.active.data.current?.action === 'dragFile') {
             moveFiles.mutate({
                 fileIds: Object.keys(selectedItems),
-                targetFolderId: over.id as string | null,
+                targetFolderId,
                 workspaceId: workspace.id,
                 sourceFolderId: params.folderId || null
             })
         } else if (event.active.data.current?.action === 'dragFolder') {
             moveFolders.mutate({
                 folderIds: Object.keys(selectedItems),
-                targetFolderId: over.id as string | null,
+                targetFolderId,
                 workspaceId: workspace.id,
                 sourceParentId: params.folderId || null
             })

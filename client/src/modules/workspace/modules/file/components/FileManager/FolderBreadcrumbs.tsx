@@ -1,7 +1,7 @@
 import { ParentFolderTreeResult } from '../../types'
-import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
 import { Button } from '@shared/ui/buttons/Button'
 import { TbChevronRight } from 'react-icons/tb'
+import { useDroppable } from '@dnd-kit/core'
 
 interface FolderBreadcrumbsProps {
     folder?: {
@@ -10,9 +10,27 @@ interface FolderBreadcrumbsProps {
     }
 }
 
-export const FolderBreadcrumbs = ({ folder }: FolderBreadcrumbsProps) => {
-    const routes = useWorkspaceRoutes()
+const DroppableBreadcrumbButton = ({ folderId, children }: { folderId: string, children: React.ReactNode }) => {
+    const { setNodeRef, isOver } = useDroppable({
+        id: folderId,
+    })
 
+    return (
+        <div ref={ setNodeRef }>
+            <Button
+                to={ folderId === 'root' ? '/files' : `/files/folders/${folderId}` }
+                color='secondary'
+                variant="soft"
+                size='small'
+                className={ isOver ? 'bg-blue-50 border-blue-200' : '' }
+            >
+                { children }
+            </Button>
+        </div>
+    )
+}
+
+export const FolderBreadcrumbs = ({ folder }: FolderBreadcrumbsProps) => {
     // If no folder, we're on root page - just show Files
     if (!folder) {
         return (
@@ -28,14 +46,9 @@ export const FolderBreadcrumbs = ({ folder }: FolderBreadcrumbsProps) => {
     if (parentFolders.length === 0) {
         return (
             <div className='flex items-center gap-2 text-sm text-gray-600'>
-                <Button
-                    to={ routes.files }
-                    color='secondary'
-                    variant="soft"
-                    size='small'
-                >
+                <DroppableBreadcrumbButton folderId="root">
                     Files
-                </Button>
+                </DroppableBreadcrumbButton>
                 <TbChevronRight size={ 16 } />
                 <span className='font-medium text-gray-900'>{ currentFolderName }</span>
             </div>
@@ -46,14 +59,9 @@ export const FolderBreadcrumbs = ({ folder }: FolderBreadcrumbsProps) => {
     if (parentFolders.length === 1) {
         return (
             <div className='flex items-center gap-2 text-sm text-gray-600'>
-                <Button
-                    to={ routes.files }
-                    color='secondary'
-                    variant="soft"
-                    size='small'
-                >
+                <DroppableBreadcrumbButton folderId="root">
                     Files
-                </Button>
+                </DroppableBreadcrumbButton>
                 <TbChevronRight size={ 16 } />
                 <span className='font-medium text-gray-900'>{ currentFolderName }</span>
             </div>
@@ -65,25 +73,15 @@ export const FolderBreadcrumbs = ({ folder }: FolderBreadcrumbsProps) => {
     
     return (
         <div className='flex items-center gap-2 text-sm text-gray-600'>
-            <Button
-                to={ routes.files }
-                color='secondary'
-                variant="soft"
-                size='small'
-            >
+            <DroppableBreadcrumbButton folderId="root">
                 Files
-            </Button>
+            </DroppableBreadcrumbButton>
             <TbChevronRight size={ 16 } />
             <span className='text-gray-500'>...</span>
             <TbChevronRight size={ 16 } />
-            <Button
-                to={ routes.folder(parent.id) }
-                color='secondary'
-                variant="soft"
-                size='small'
-            >
+            <DroppableBreadcrumbButton folderId={ parent.id }>
                 { parent.name }
-            </Button>
+            </DroppableBreadcrumbButton>
             <TbChevronRight size={ 16 } />
             <span className='font-medium text-gray-900'>{ currentFolderName }</span>
         </div>
