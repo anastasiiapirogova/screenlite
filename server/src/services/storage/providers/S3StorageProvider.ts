@@ -107,6 +107,12 @@ export class S3StorageProvider implements StorageProviderInterface {
     }
 
     public async getFileSize(key: string): Promise<number> {
+        const exists = await this.checkFileExists(key)
+        
+        if (!exists) {
+            throw new FileNotFoundError(key)
+        }
+
         const command = new HeadObjectCommand({
             Bucket: this.bucket,
             Key: key
@@ -114,10 +120,6 @@ export class S3StorageProvider implements StorageProviderInterface {
 
         const response = await s3Client.send(command)
 
-        if (!response.ContentLength) {
-            throw new FileNotFoundError(key)
-        }
-
-        return response.ContentLength
+        return response.ContentLength || 0
     }
 } 
