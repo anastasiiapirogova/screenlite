@@ -1,7 +1,7 @@
 import { WorkspaceFile } from '../types'
-import { getFileThumbnailSrc } from '../utils/getFileThumbnailSrc'
 import { useState } from 'react'
 import { TbFile } from 'react-icons/tb'
+import { StorageService } from '@/utils/StorageService'
 
 const getFileTypeColor = (mimeType: string, type: string) => {
     if (type === 'image' || mimeType.startsWith('image/')) return 'bg-green-50 text-green-600'
@@ -23,7 +23,7 @@ export const FileThumbnail = ({ file }: { file: WorkspaceFile }) => {
     if (shouldShowPreview) {
         return (
             <img
-                src={ getFileThumbnailSrc(file.previewPath || file.path) }
+                src={ StorageService.getFileThumbnailSrc(file.previewPath || file.path) }
                 alt={ file.name }
                 className="w-full h-full object-contain"
                 onError={ () => setImgError(true) }

@@ -1,4 +1,4 @@
-import { getFileThumbnailSrc } from '@workspaceModules/file/utils/getFileThumbnailSrc'
+import { StorageService } from '@/utils/StorageService'
 import React from 'react'
 
 type UserAvatarProps = {
@@ -43,7 +43,7 @@ export const UserAvatar = ({
         >
             { profilePhoto ? (
                 <img
-                    src={ getFileThumbnailSrc(profilePhoto) }
+                    src={ StorageService.getFileThumbnailSrc(profilePhoto) }
                     alt={ `${name}'s avatar` }
                     className="w-full h-full object-cover rounded-full block"
                 />

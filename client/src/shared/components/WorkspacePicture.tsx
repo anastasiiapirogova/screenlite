@@ -1,4 +1,4 @@
-import { getFileThumbnailSrc } from '@workspaceModules/file/utils/getFileThumbnailSrc'
+import { StorageService } from '@/utils/StorageService'
 
 interface Props {
 	name?: string
@@ -16,7 +16,7 @@ export const WorkspacePicture = ({ name, picture, size = 40 }: Props) => {
         >
             { picture ? (
                 <img
-                    src={ getFileThumbnailSrc(picture) }
+                    src={ StorageService.getFileThumbnailSrc(picture) }
                     alt={ `${name} workspace picture` }
                     className="object-cover w-full h-full"
                 />
