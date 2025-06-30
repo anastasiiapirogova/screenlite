@@ -1,6 +1,7 @@
 import { WorkspaceFilesPage } from './pages/WorkspaceFilesPage'
 import { WorkspaceFileUploadPage } from './pages/WorkspaceFileUploadPage'
 import { WorkspaceFolderPage } from './pages/WorkspaceFolderPage'
+import { WorkspaceFilePage } from './pages/WorkspaceFilePage'
 
 export const workspaceFileRoutes = {
     path: 'files',
@@ -12,6 +13,10 @@ export const workspaceFileRoutes = {
         {
             path: 'upload',
             element: <WorkspaceFileUploadPage />
+        },
+        {
+            path: ':fileId',
+            element: <WorkspaceFilePage />
         },
         {
             path: 'folders',
