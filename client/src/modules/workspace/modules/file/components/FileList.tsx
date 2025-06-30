@@ -8,6 +8,7 @@ import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { workspaceFilesQuery } from '../api/workspaceFiles'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { WorkspaceFile } from '../types'
+import { FilePreviewModal } from './FilePreviewModal'
 
 interface FileListProps {
 	search: string
@@ -28,6 +29,7 @@ const SuspenseFileList = ({ search, folderId }: FileListProps) => {
     const { data: files } = data
     const { isSelected, selectItem, unselectItem, setSelectedItems } = useSelectionStore()
     const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
+    const [previewedFile, setPreviewedFile] = useState<WorkspaceFile | null>(null)
 
     const handleFileClick = (file: WorkspaceFile, index: number, event: React.MouseEvent) => {
         const isCtrl = event.ctrlKey || event.metaKey
@@ -58,20 +60,32 @@ const SuspenseFileList = ({ search, folderId }: FileListProps) => {
         }
     }
 
+    const handleFileDoubleClick = (file: WorkspaceFile) => {
+        setPreviewedFile(file)
+    }
+
     return (
-        <div className='flex flex-col gap-1'>
-            {
-                files.map(
-                    (file: WorkspaceFile, idx: number) => (
-                        <DraggableFileCard
-                            file={ file }
-                            key={ file.id }
-                            onClick={ (e: React.MouseEvent) => handleFileClick(file, idx, e) }
-                        />
+        <>
+            <div className='flex flex-col gap-1'>
+                {
+                    files.map(
+                        (file: WorkspaceFile, idx: number) => (
+                            <DraggableFileCard
+                                file={ file }
+                                key={ file.id }
+                                onClick={ (e: React.MouseEvent) => handleFileClick(file, idx, e) }
+                                onDoubleClick={ () => handleFileDoubleClick(file) }
+                            />
+                        )
                     )
-                )
-            }
-        </div>
+                }
+            </div>
+            <FilePreviewModal
+                open={ true }
+                file={ previewedFile }
+                onClose={ () => setPreviewedFile(null) }
+            />
+        </>
     )
 }
 

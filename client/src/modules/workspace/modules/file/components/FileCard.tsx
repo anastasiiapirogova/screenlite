@@ -11,7 +11,7 @@ interface PlaylistSectionItemCardProps extends React.HTMLAttributes<HTMLDivEleme
 	isDragging?: boolean
 }
 
-export const FileCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>(({ file, onClick, ...props }, ref) => {
+export const FileCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>(({ file, onClick, onDoubleClick, ...props }, ref) => {
     const { isSelected, isDragging } = useSelectionStore(useShallow((state) => ({
         isSelected: state.isSelected,
         isDragging: state.isDragging,
@@ -31,14 +31,15 @@ export const FileCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>
             ].join(' ') }
             ref={ ref }
             onClick={ onClick }
+            onDoubleClick={ onDoubleClick }
         >
             { createElement(FileCardBody, { file }) }
         </div>
     )
 })
 
-export const DraggableFileCard = (props: { file: WorkspaceFile, onClick?: (e: React.MouseEvent) => void }) => {
-    const { file, onClick } = props
+export const DraggableFileCard = (props: { file: WorkspaceFile, onClick?: (e: React.MouseEvent) => void, onDoubleClick?: (e: React.MouseEvent) => void }) => {
+    const { file, onClick, onDoubleClick } = props
 
     const {
         attributes,
@@ -64,6 +65,7 @@ export const DraggableFileCard = (props: { file: WorkspaceFile, onClick?: (e: Re
             ref={ setNodeRef }
             style={ style }
             onClick={ onClick }
+            onDoubleClick={ onDoubleClick }
             { ...attributes }
             { ...listeners }
         />
