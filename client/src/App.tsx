@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider } from 'react-router'
 import { router } from './router'
+import { GlobalContextMenu } from '@shared/components/GlobalContextMenu'
 
 export const Router = () => {
     return (
@@ -24,6 +25,7 @@ export const App = () => {
             <QueryClientProvider client={ queryClientConfig }>
                 <Router />
                 <DevTools />
+                <GlobalContextMenu />
             </QueryClientProvider>
         </StrictMode>
     )
