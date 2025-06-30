@@ -41,8 +41,13 @@ function validateFilePath(filePath: string): string {
 
 const isValidImageFile = (filePath: string): boolean => {
     const mimeType = mime.getType(filePath)
-
-    return mimeType ? mimeType.startsWith('image/') : false
+    
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.tiff', '.svg', '.avif']
+    const fileExtension = filePath.toLowerCase().substring(filePath.lastIndexOf('.'))
+    
+    return mimeType ? 
+        mimeType.startsWith('image/') && allowedExtensions.includes(fileExtension) : 
+        allowedExtensions.includes(fileExtension)
 }
 
 const generateImageThumbnail = async (
@@ -54,7 +59,25 @@ const generateImageThumbnail = async (
         ...options
     }
 
-    const transformer = sharp()
+    const imageBuffer = await new Promise<Buffer>((resolve, reject) => {
+        const chunks: Buffer[] = []
+
+        imageStream.on('data', chunk => chunks.push(chunk))
+        imageStream.on('end', () => resolve(Buffer.concat(chunks)))
+        imageStream.on('error', reject)
+    })
+
+    try {
+        const metadata = await sharp(imageBuffer).metadata()
+
+        if (!metadata.format) {
+            throw new Error('Unsupported image format')
+        }
+    } catch {
+        throw new Error('Invalid or unsupported image format')
+    }
+
+    const transformer = sharp(imageBuffer)
         .resize({
             width,
             height,
@@ -71,7 +94,6 @@ const generateImageThumbnail = async (
         transformer.on('data', chunk => chunks.push(chunk))
         transformer.on('end', () => resolve(Buffer.concat(chunks)))
         transformer.on('error', reject)
-        imageStream.pipe(transformer)
     })
 }
 
@@ -83,6 +105,16 @@ export const getImageThumbnail = async (req: Request, res: Response) => {
 
         if (!isValidImageFile(filePath)) {
             return ResponseHandler.notFound(req, res)
+        }
+
+        // Check file size before processing to prevent memory issues
+        const fileSize = await Storage.getFileSize(filePath)
+        const MAX_IMAGE_SIZE = 50 * 1024 * 1024
+
+        if (fileSize > MAX_IMAGE_SIZE) {
+            return ResponseHandler.validationError(req, res, {
+                message: 'Image file too large for thumbnail generation'
+            })
         }
 
         const stream = await Storage.createReadStream(filePath)
@@ -99,6 +131,11 @@ export const getImageThumbnail = async (req: Request, res: Response) => {
         if (error instanceof Error && error.message === 'Invalid file path') {
             return ResponseHandler.validationError(req, res, {
                 message: 'Invalid file path'
+            })
+        }
+        if (error instanceof Error && error.message === 'Invalid or unsupported image format') {
+            return ResponseHandler.validationError(req, res, {
+                message: 'Invalid or unsupported image format'
             })
         }
         throw error
