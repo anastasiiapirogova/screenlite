@@ -11,6 +11,9 @@ import { FilesDndContext } from '../components/FilesDndContext'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
 import { useEffect, useRef } from 'react'
+import { useFileViewerModal } from '../hooks/useFileViewerModal'
+import { FilePreviewModal } from '../components/FilePreviewModal'
+import { WorkspaceFile } from '../types'
 
 export const WorkspaceFilesPage = () => {
     const { searchTerm, setSearchTerm } = useRouterSearch()
@@ -19,6 +22,7 @@ export const WorkspaceFilesPage = () => {
         clearSelection: state.clearSelection,
     })))
     const filesPageContentRef = useRef<HTMLDivElement>(null)
+    const { modalFile, openModal, closeModal } = useFileViewerModal()
 
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
@@ -28,6 +32,13 @@ export const WorkspaceFilesPage = () => {
             if (!currentEntity || !filesPageContentRef.current) return
 
             const isInsideFilesPage = filesPageContentRef.current.contains(target)
+            
+            const isClickOnContextMenu = target.closest('[data-floating-ui-portal]') ||
+                                        target.closest('[data-floating-ui]')
+            
+            if (isClickOnContextMenu) {
+                return
+            }
             
             if (!isInsideFilesPage) {
                 clearSelection()
@@ -49,6 +60,10 @@ export const WorkspaceFilesPage = () => {
             document.removeEventListener('mousedown', handleClick)
         }
     }, [getEntity, clearSelection])
+
+    const handleFileDoubleClick = (file: WorkspaceFile) => {
+        openModal(file)
+    }
 
     return (
         <FilesDndContext>
@@ -85,11 +100,17 @@ export const WorkspaceFilesPage = () => {
                             <FolderList />
                             <div className='mt-10'>
                             </div>
-                            <FileList />
+                            <FileList onFileDoubleClick={ handleFileDoubleClick } />
                         </div>
                     </ScrollArea>
                 </LayoutBodyContainer>
             </div>
+
+            <FilePreviewModal
+                open={ !!modalFile }
+                file={ modalFile }
+                onClose={ closeModal }
+            />
         </FilesDndContext>
     )
 }

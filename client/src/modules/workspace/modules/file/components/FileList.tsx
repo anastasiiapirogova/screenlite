@@ -3,19 +3,20 @@ import { DraggableFileCard } from './FileCard'
 import { useDebounce } from '@uidotdev/usehooks'
 import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
 import { ErrorBoundary } from 'react-error-boundary'
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useCallback } from 'react'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { workspaceFilesQuery } from '../api/workspaceFiles'
 import { useSelectionStore } from '@stores/useSelectionStore'
+import { useContextMenuStore } from '@stores/useContextMenuStore'
 import { WorkspaceFile } from '../types'
-import { FilePreviewModal } from './FilePreviewModal'
 
 interface FileListProps {
 	search: string
     folderId?: string
+    onFileDoubleClick?: (file: WorkspaceFile) => void
 }
 
-const SuspenseFileList = ({ search, folderId }: FileListProps) => {
+const SuspenseFileList = ({ search, folderId, onFileDoubleClick }: FileListProps) => {
     const workspace = useWorkspace()
     const { data } = useSuspenseQuery(workspaceFilesQuery({
         id: workspace.id,
@@ -29,7 +30,7 @@ const SuspenseFileList = ({ search, folderId }: FileListProps) => {
     const { data: files } = data
     const { isSelected, selectItem, unselectItem, setSelectedItems } = useSelectionStore()
     const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
-    const [previewedFile, setPreviewedFile] = useState<WorkspaceFile | null>(null)
+    const { openContextMenu } = useContextMenuStore()
 
     const handleFileClick = (file: WorkspaceFile, index: number, event: React.MouseEvent) => {
         const isCtrl = event.ctrlKey || event.metaKey
@@ -60,36 +61,42 @@ const SuspenseFileList = ({ search, folderId }: FileListProps) => {
         }
     }
 
-    const handleFileDoubleClick = (file: WorkspaceFile) => {
-        setPreviewedFile(file)
-    }
+    const handleFileDoubleClick = useCallback((file: WorkspaceFile) => {
+        onFileDoubleClick?.(file)
+    }, [onFileDoubleClick])
+
+    const handleFileContextMenu = useCallback((file: WorkspaceFile, event: React.MouseEvent) => {
+        const isFileSelected = isSelected(file.id)
+        
+        if (!isFileSelected) {
+            setSelectedItems({
+                [file.id]: { item: file, entity: 'file' }
+            })
+        }
+        
+        openContextMenu('file', file, event.clientX, event.clientY)
+    }, [openContextMenu, isSelected, setSelectedItems])
 
     return (
-        <>
-            <div className='flex flex-col gap-1'>
-                {
-                    files.map(
-                        (file: WorkspaceFile, idx: number) => (
-                            <DraggableFileCard
-                                file={ file }
-                                key={ file.id }
-                                onClick={ (e: React.MouseEvent) => handleFileClick(file, idx, e) }
-                                onDoubleClick={ () => handleFileDoubleClick(file) }
-                            />
-                        )
+        <div className='flex flex-col gap-1'>
+            {
+                files.map(
+                    (file: WorkspaceFile, idx: number) => (
+                        <DraggableFileCard
+                            file={ file }
+                            key={ file.id }
+                            onClick={ (e: React.MouseEvent) => handleFileClick(file, idx, e) }
+                            onDoubleClick={ () => handleFileDoubleClick(file) }
+                            onContextMenu={ (e: React.MouseEvent) => handleFileContextMenu(file, e) }
+                        />
                     )
-                }
-            </div>
-            <FilePreviewModal
-                open={ true }
-                file={ previewedFile }
-                onClose={ () => setPreviewedFile(null) }
-            />
-        </>
+                )
+            }
+        </div>
     )
 }
 
-export const FileList = ({ folderId }: { folderId?: string }) => {
+export const FileList = ({ folderId, onFileDoubleClick }: { folderId?: string, onFileDoubleClick?: (file: WorkspaceFile) => void }) => {
     const { searchTerm } = useRouterSearch()
     const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
@@ -105,6 +112,7 @@ export const FileList = ({ folderId }: { folderId?: string }) => {
                     <SuspenseFileList 
                         search={ debouncedSearchTerm } 
                         folderId={ folderId }
+                        onFileDoubleClick={ onFileDoubleClick }
                     />
                 </Suspense>
             </ErrorBoundary>
