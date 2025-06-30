@@ -18,6 +18,9 @@ import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
 import { useEffect, useRef } from 'react'
 import { FolderBreadcrumbs } from '../components/FolderBreadcrumbs'
+import { FilePreviewModal } from '../components/FilePreviewModal'
+import { useFileViewerModal } from '../hooks/useFileViewerModal'
+import { WorkspaceFile } from '../types'
 
 const WorkspaceFolder = ({ data }: { data: WorkspaceFolderRequestResponse }) => {
     const { searchTerm, setSearchTerm } = useRouterSearch()
@@ -26,6 +29,7 @@ const WorkspaceFolder = ({ data }: { data: WorkspaceFolderRequestResponse }) => 
         clearSelection: state.clearSelection,
     })))
     const folderPageContentRef = useRef<HTMLDivElement>(null)
+    const { modalFile, openModal, closeModal } = useFileViewerModal()
 
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
@@ -56,6 +60,10 @@ const WorkspaceFolder = ({ data }: { data: WorkspaceFolderRequestResponse }) => 
             document.removeEventListener('mousedown', handleClick)
         }
     }, [getEntity, clearSelection])
+
+    const handleFileDoubleClick = (file: WorkspaceFile) => {
+        openModal(file)
+    }
 
     return (
         <FilesDndContext>
@@ -101,11 +109,20 @@ const WorkspaceFolder = ({ data }: { data: WorkspaceFolderRequestResponse }) => 
                             <FolderList parentId={ data.folder.id }/>
                             <div className='mt-10'>
                             </div>
-                            <FileList folderId={ data.folder.id }/>
+                            <FileList
+                                folderId={ data.folder.id }
+                                onFileDoubleClick={ handleFileDoubleClick }
+                            />
                         </div>
                     </ScrollArea>
                 </LayoutBodyContainer>
             </div>
+
+            <FilePreviewModal
+                open={ !!modalFile }
+                file={ modalFile }
+                onClose={ closeModal }
+            />
         </FilesDndContext>
     )
 }
