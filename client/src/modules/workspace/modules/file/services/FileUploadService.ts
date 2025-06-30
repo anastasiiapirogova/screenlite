@@ -52,7 +52,7 @@ export class FileUploadService {
         return this.currentlyUploading.has(id)
     }
 
-    addFiles(files: File[], workspaceId: string) {
+    addFiles(files: File[], workspaceId: string, folderId: string | null = null) {
         if (this.isDestroyed) return
 
         const addedFiles: FileUploadingData[] = []
@@ -62,6 +62,7 @@ export class FileUploadService {
                 id: crypto.randomUUID(),
                 file,
                 workspaceId,
+                folderId,
                 session: null,
                 progress: 0,
                 status: 'pending',
@@ -236,7 +237,7 @@ export class FileUploadService {
                 name: fileData.file.name,
                 size: fileData.file.size,
                 mimeType: fileData.file.type,
-                folderId: undefined,
+                folderId: fileData.folderId || undefined,
             })
 
             clearTimeout(timeoutId)

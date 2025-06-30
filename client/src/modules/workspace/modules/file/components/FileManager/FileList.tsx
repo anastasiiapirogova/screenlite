@@ -1,14 +1,14 @@
 import { useRouterSearch } from '@shared/hooks/useRouterSearch'
-import { DraggableFileCard } from './FileCard'
+import { DraggableFileCard } from '../FileCard'
 import { useDebounce } from '@uidotdev/usehooks'
 import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Suspense, useState, useCallback } from 'react'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
-import { workspaceFilesQuery } from '../api/workspaceFiles'
+import { workspaceFilesQuery } from '../../api/workspaceFiles'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { useContextMenuStore } from '@stores/useContextMenuStore'
-import { WorkspaceFile } from '../types'
+import { WorkspaceFile } from '../../types'
 
 interface FileListProps {
 	search: string

@@ -40,6 +40,7 @@ export type FileUploadingData = {
 	session: FileUploadSession | null
 	file: File
 	workspaceId: string
+	folderId: string | null
 	progress: number
 	status: UploadStatus
 	error: FileUploadError | null

@@ -1,17 +1,30 @@
-import { ParentFolderTreeResult } from '../types'
+import { ParentFolderTreeResult } from '../../types'
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
 import { Button } from '@shared/ui/buttons/Button'
 import { TbChevronRight } from 'react-icons/tb'
 
 interface FolderBreadcrumbsProps {
-    parentFolders: ParentFolderTreeResult[]
-    currentFolderName: string
+    folder?: {
+        name: string
+        parentFolders: ParentFolderTreeResult[]
+    }
 }
 
-export const FolderBreadcrumbs = ({ parentFolders, currentFolderName }: FolderBreadcrumbsProps) => {
+export const FolderBreadcrumbs = ({ folder }: FolderBreadcrumbsProps) => {
     const routes = useWorkspaceRoutes()
 
-    // If no parent folders, just show Home > Current
+    // If no folder, we're on root page - just show Files
+    if (!folder) {
+        return (
+            <div className='flex items-center gap-2 text-sm text-gray-600'>
+                <span className='font-medium text-gray-900'>Files</span>
+            </div>
+        )
+    }
+
+    const { name: currentFolderName, parentFolders } = folder
+
+    // If no parent folders, show Files > Current
     if (parentFolders.length === 0) {
         return (
             <div className='flex items-center gap-2 text-sm text-gray-600'>
@@ -21,7 +34,7 @@ export const FolderBreadcrumbs = ({ parentFolders, currentFolderName }: FolderBr
                     variant="soft"
                     size='small'
                 >
-                    Home
+                    Files
                 </Button>
                 <TbChevronRight size={ 16 } />
                 <span className='font-medium text-gray-900'>{ currentFolderName }</span>
@@ -29,10 +42,8 @@ export const FolderBreadcrumbs = ({ parentFolders, currentFolderName }: FolderBr
         )
     }
 
-    // If there's only one parent, show Home > Parent > Current
+    // If there's only one parent, show Files > Current
     if (parentFolders.length === 1) {
-        const parent = parentFolders[0]
-
         return (
             <div className='flex items-center gap-2 text-sm text-gray-600'>
                 <Button
@@ -41,16 +52,7 @@ export const FolderBreadcrumbs = ({ parentFolders, currentFolderName }: FolderBr
                     variant="soft"
                     size='small'
                 >
-                    Home
-                </Button>
-                <TbChevronRight size={ 16 } />
-                <Button
-                    to={ routes.folder(parent.id) }
-                    color='secondary'
-                    variant="soft"
-                    size='small'
-                >
-                    { parent.name }
+                    Files
                 </Button>
                 <TbChevronRight size={ 16 } />
                 <span className='font-medium text-gray-900'>{ currentFolderName }</span>
@@ -58,8 +60,8 @@ export const FolderBreadcrumbs = ({ parentFolders, currentFolderName }: FolderBr
         )
     }
 
-    // If there are multiple parents, show Home > ... > Parent > Current
-    const parent = parentFolders[parentFolders.length - 1] // Last parent (immediate parent)
+    // If there are multiple parents, show Files > ... > Parent > Current
+    const parent = parentFolders[parentFolders.length - 1]
     
     return (
         <div className='flex items-center gap-2 text-sm text-gray-600'>
@@ -69,7 +71,7 @@ export const FolderBreadcrumbs = ({ parentFolders, currentFolderName }: FolderBr
                 variant="soft"
                 size='small'
             >
-                Home
+                Files
             </Button>
             <TbChevronRight size={ 16 } />
             <span className='text-gray-500'>...</span>

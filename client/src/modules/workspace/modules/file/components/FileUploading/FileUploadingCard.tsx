@@ -1,4 +1,4 @@
-import { FileUploadingData } from '../types'
+import { FileUploadingData } from '../../types'
 import { FileUploadingControls } from './FileUploadingControls'
 import { TbFile, TbCheck, TbX, TbAlertCircle, TbPlayerPause, TbUpload } from 'react-icons/tb'
 import { twMerge } from 'tailwind-merge'

@@ -4,10 +4,10 @@ import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query
 import { ErrorBoundary } from 'react-error-boundary'
 import { Suspense, useState } from 'react'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
-import { DraggableFolderCard } from './FolderCard'
-import { workspaceFoldersQuery } from '../api/workspaceFolders'
+import { DraggableFolderCard } from '../FolderCard'
+import { workspaceFoldersQuery } from '../../api/workspaceFolders'
 import { useSelectionStore } from '@stores/useSelectionStore'
-import { FolderWithChildrenCount } from '../types'
+import { FolderWithChildrenCount } from '../../types'
 
 type FileListProps = {
 	search: string

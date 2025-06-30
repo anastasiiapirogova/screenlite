@@ -1,6 +1,6 @@
-import { FileUploadingData } from '../types'
+import { FileUploadingData } from '../../types'
 import { Button } from '@/shared/ui/buttons/Button'
-import { fileUploadService } from '../services/FileUploadService'
+import { fileUploadService } from '../../services/FileUploadService'
 import { TbPlayerPlay, TbPlayerPause, TbX, TbRotate } from 'react-icons/tb'
 
 export const FileUploadingControls = ({ data }: { data: FileUploadingData }) => {

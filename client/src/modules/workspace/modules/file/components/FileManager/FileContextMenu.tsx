@@ -1,5 +1,5 @@
 import { ContextMenu } from '@shared/ui/ContextMenu'
-import { WorkspaceFile } from '../types'
+import { WorkspaceFile } from '../../types'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
 

@@ -1,5 +1,5 @@
 import { useContextMenuStore } from '@stores/useContextMenuStore'
-import { FileContextMenu } from '@modules/workspace/modules/file/components/FileContextMenu'
+import { FileContextMenu } from '@workspaceModules/file/components/FileManager/FileContextMenu'
 
 export const GlobalContextMenu = () => {
     const { open, anchorPoint, type, data, closeContextMenu } = useContextMenuStore()

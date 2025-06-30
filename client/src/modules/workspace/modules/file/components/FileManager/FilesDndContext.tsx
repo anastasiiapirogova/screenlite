@@ -1,8 +1,8 @@
 import { DndContext, DragOverlay, PointerSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
 import { ReactNode } from 'react'
-import { snapLeftTopToCursor } from '../utils/snapLeftTopToCursor'
+import { snapLeftTopToCursor } from '../../utils/snapLeftTopToCursor'
 import { useDragStore } from '@stores/useDragStore'
-import { useFileDragHandlers } from '../hooks/useFileDragHandlers'
+import { useFileDragHandlers } from '../../hooks/useFileDragHandlers'
 import { DragOverlayContent } from './DragOverlayContent'
 
 export const FilesDndContext = ({ children }: { children: ReactNode }) => {
