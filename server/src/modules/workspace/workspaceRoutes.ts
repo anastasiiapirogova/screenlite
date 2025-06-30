@@ -290,6 +290,13 @@ createWorkspaceRoute({
 })
 
 createWorkspaceRoute({
+    method: HttpMethod.GET,
+    path: '/files/:fileId',
+    handler: FileController.getFile,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.view })
+})
+
+createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/files/uploadSessions',
     handler: FileUploadController.createFileUploadSession,

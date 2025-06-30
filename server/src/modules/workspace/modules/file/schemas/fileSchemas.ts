@@ -55,3 +55,7 @@ export const moveFilesSchema = z.object({
 export const restoreFilesSchema = z.object({
     fileIds: z.array(z.string().nonempty('FILE_ID_IS_REQUIRED')).min(1, 'AT_LEAST_ONE_FILE_ID_IS_REQUIRED')
 })
+
+export const getFileSchema = z.object({
+    fileId: z.string().nonempty('FILE_ID_IS_REQUIRED'),
+})

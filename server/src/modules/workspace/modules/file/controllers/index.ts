@@ -12,6 +12,7 @@ import { restoreFolders } from '@/modules/workspace/modules/file/controllers/res
 import { emptyTrash } from '@/modules/workspace/modules/file/controllers/emptyTrash.ts'
 import { forceDeleteFiles } from '@/modules/workspace/modules/file/controllers/forceDeleteFiles.ts'
 import { forceDeleteFolders } from '@/modules/workspace/modules/file/controllers/forceDeleteFolders.ts'
+import { getFile } from '@/modules/workspace/modules/file/controllers/getFile.ts'
 
 export {
     createFolder,
@@ -28,6 +29,7 @@ export {
     softDeleteFiles,
     softDeleteFolders,
     updateFolder,
+    getFile,
 }
 
 export default {
@@ -45,4 +47,5 @@ export default {
     softDeleteFiles,
     softDeleteFolders,
     updateFolder,
+    getFile,
 }
