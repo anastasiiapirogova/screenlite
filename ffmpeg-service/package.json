@@ -1,0 +1,22 @@
+{
+  "name": "ffmpeg-service",
+  "version": "0.0.1",
+  "description": "Sandboxed FFmpeg service for secure video processing",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "cors": "^2.8.5",
+    "helmet": "^8.1.0",
+    "axios": "^1.10.0"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "author": "514sid",
+  "license": "MIT"
+} 
