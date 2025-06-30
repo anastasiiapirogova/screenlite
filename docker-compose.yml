@@ -3,7 +3,8 @@ services:
   server:
     build:
       context: ./server
-      dockerfile: Dockerfile.dev
+      dockerfile: ./docker/Dockerfile.dev
+    container_name: screenlite-server
     ports:
       - "3000:3000"
     volumes:
@@ -47,7 +48,7 @@ services:
   ffmpeg-service:
     build:
       context: ./ffmpeg-service
-      dockerfile: Dockerfile
+      dockerfile: ./docker/Dockerfile.dev
     container_name: screenlite-ffmpeg-service
     environment:
       - NODE_ENV=production
@@ -94,7 +95,8 @@ services:
   client:
     build:
       context: ./client
-      dockerfile: Dockerfile.dev
+      dockerfile: ./docker/Dockerfile.dev
+    container_name: screenlite-client
     ports:
       - "3001:3001"
     volumes:
@@ -115,6 +117,7 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
+    container_name: screenlite-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -133,6 +136,7 @@ services:
   # Redis Service
   redis:
     image: redis:7-alpine
+    container_name: screenlite-redis
     ports:
       - "6379:6379"
     volumes:
@@ -147,6 +151,7 @@ services:
   # MinIO Service
   minio:
     image: minio/minio
+    container_name: screenlite-minio
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: screenlite

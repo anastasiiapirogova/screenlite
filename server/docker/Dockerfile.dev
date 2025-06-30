@@ -5,14 +5,16 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     wget \
+    openssl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
+COPY prisma ./prisma
 
-RUN npm ci
+RUN npm install
 
 COPY . .
 
-EXPOSE 3001
+EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm run db:deploy && npm run dev"]
