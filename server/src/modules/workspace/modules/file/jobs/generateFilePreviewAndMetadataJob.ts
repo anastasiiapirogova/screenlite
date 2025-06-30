@@ -1,7 +1,8 @@
 import { prisma } from '@/config/prisma.ts'
 import { StorageService } from '@/services/storage/StorageService.ts'
-import { FileProcessingService } from '../services/FileProcessingService.ts'
 import { FileNotFoundError } from '@/services/storage/errors.ts'
+import { FFmpegService } from '@/services/ffmpeg/FFmpegService.ts'
+import { FileProcessingService } from '@/services/FileProcessingService.ts'
 
 export const generateFilePreviewAndMetadataJob = async (fileId: string, attemptsMade: number) => {
     const file = await prisma.file.findFirst({
@@ -15,8 +16,9 @@ export const generateFilePreviewAndMetadataJob = async (fileId: string, attempts
     try {
         if(file.type === 'video') {
             const url = await storageService.getFileUrl(file.path)
-            const metadata = await FileProcessingService.getVideoMetadata(url)
-            const preview = await FileProcessingService.getVideoPreview(url)
+            const ffmpegService = FFmpegService.getInstance()
+            const metadata = await ffmpegService.getVideoMetadata(url)
+            const preview = await ffmpegService.getVideoPreview(url)
             const previewPath = `previews/${file.id}.png`
 
             await storageService.uploadFile(previewPath, preview, 'image/png')
