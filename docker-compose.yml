@@ -156,6 +156,9 @@ services:
       - "9001:9001"
     volumes:
       - minio_data:/data
+    networks:
+      - default
+      - ffmpeg-network
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9001/minio/health/live" ]
       interval: 30s

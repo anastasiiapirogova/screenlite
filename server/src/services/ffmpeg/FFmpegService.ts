@@ -40,7 +40,6 @@ export class FFmpegService {
         try {
             const response = await this.client.post('/preview', {
                 url,
-                outputFormat: 'png'
             }, {
                 responseType: 'arraybuffer'
             })

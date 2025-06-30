@@ -17,7 +17,6 @@ Content-Type: application/json
 
 {
   "url": "https://example.com/video.mp4",
-  "outputFormat": "png"
 }
 ```
 Generates a preview image from the first frame of a video.
