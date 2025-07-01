@@ -38,7 +38,7 @@ jobs:
         
         # Wait for FFmpeg service
         echo "Waiting for FFmpeg service..."
-        timeout 60 bash -c 'until curl -f http://localhost:3002/health; do sleep 2; done'
+        timeout 60 bash -c 'until docker compose exec -T ffmpeg-service curl -f http://localhost:3002/health; do sleep 2; done'
         
         # Wait for server to be healthy
         echo "Waiting for server..."
