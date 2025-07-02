@@ -1,9 +1,7 @@
 import { ButtonElement } from '@/types'
-import { createFolderRequest, CreateFolderRequestData } from '@workspaceModules/file/api/createFolder'
-import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { cloneElement } from 'react'
-import { FolderWithChildrenCount } from '@workspaceModules/file/types'
+import { useState } from 'react'
+import { Modal } from '@shared/ui/modal/Modal'
+import { CreateFolderModal } from '../modals/CreateFolderModal'
 
 type Props = {
     children: ButtonElement
@@ -11,56 +9,23 @@ type Props = {
 }
 
 export const CreateFolderButton = ({ children, parentId }: Props) => {
-    const { id } = useWorkspace()
-    const queryClient = useQueryClient()
-
-    const { mutate, isPending } = useMutation({
-        mutationFn: (data: CreateFolderRequestData) => createFolderRequest(data),
-        onSuccess: async (createdFolder) => {
-            const queryKey = ['workspaceFolders', { 
-                id, 
-                filters: { 
-                    search: '',
-                    deleted: false,
-                    parentId 
-                } 
-            }]
-            
-            queryClient.setQueryData(queryKey, (oldData: FolderWithChildrenCount[] | undefined) => {
-                if (!oldData) return oldData
-                
-                const newFolder: FolderWithChildrenCount = {
-                    ...createdFolder,
-                    _count: {
-                        files: 0,
-                        subfolders: 0
-                    }
-                }
-                
-                return [...oldData, newFolder]
-            })
-
-            queryClient.invalidateQueries({
-                queryKey: ['workspaceFolders', { id, filters: { parentId } }],
-            })
-        },
-        onError: (error) => {
-            console.log(error)
-        }
-    })
-
-    const data: CreateFolderRequestData = {
-        name: 'New folder',
-        parentId,
-        workspaceId: id
-    }
+    const [open, setOpen] = useState(false)
 
     const Component = children
 
     return (
-        cloneElement(Component, {
-            onClick: () => mutate(data),
-            disabled: isPending
-        })
+        <Modal
+            open={ open }
+            title="Create folder"
+            onOpenChange={ setOpen }
+            trigger={ Component }
+        >
+            <div className='max-w-[500px]'>
+                <CreateFolderModal 
+                    onClose={ () => setOpen(false) }
+                    parentId={ parentId }
+                />
+            </div>
+        </Modal>
     )
 }
