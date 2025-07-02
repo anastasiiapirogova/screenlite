@@ -1,10 +1,10 @@
 import { createElement, forwardRef } from 'react'
 import React from 'react'
-import { useDraggable } from '@dnd-kit/core'
 import { FileCardBody } from './FileCardBody'
 import { WorkspaceFile } from '../types'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
+import { DraggableWrapper } from '@shared/components/DraggableWrapper'
 
 interface PlaylistSectionItemCardProps extends React.HTMLAttributes<HTMLDivElement> {
 	file: WorkspaceFile
@@ -47,34 +47,18 @@ export const FileCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>
 export const DraggableFileCard = (props: { file: WorkspaceFile, onClick?: (e: React.MouseEvent) => void, onDoubleClick?: (e: React.MouseEvent) => void, onContextMenu?: (e: React.MouseEvent) => void }) => {
     const { file, onClick, onDoubleClick, onContextMenu } = props
 
-    const {
-        attributes,
-        listeners,
-        setNodeRef
-    } = useDraggable({
-        id: file.id,
-        data: {
-            file,
-            action: 'dragFile',
-            modifiers: [],
-        }
-    })
-
-    const style: React.CSSProperties = {
-        touchAction: 'none',
-        userSelect: 'none',
-    }
-	
     return (
-        <FileCard
-            file={ file }
-            ref={ setNodeRef }
-            style={ style }
-            onClick={ onClick }
-            onDoubleClick={ onDoubleClick }
-            onContextMenu={ onContextMenu }
-            { ...attributes }
-            { ...listeners }
-        />
+        <DraggableWrapper
+            id={ file.id }
+            data={ { file } }
+            action="dragFile"
+        >
+            <FileCard
+                file={ file }
+                onClick={ onClick }
+                onDoubleClick={ onDoubleClick }
+                onContextMenu={ onContextMenu }
+            />
+        </DraggableWrapper>
     )
 }

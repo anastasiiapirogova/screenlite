@@ -1,12 +1,13 @@
 import { createElement, forwardRef } from 'react'
 import React from 'react'
-import { useDraggable, useDroppable } from '@dnd-kit/core'
 import { FolderWithChildrenCount } from '../types'
 import { FolderCardBody } from './FolderCardBody'
 import { useNavigate } from 'react-router'
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
+import { DraggableWrapper } from '@shared/components/DraggableWrapper'
+import { DroppableWrapper } from '@shared/components/DroppableWrapper'
 
 interface PlaylistSectionItemCardProps extends React.HTMLAttributes<HTMLDivElement> {
 	folder: FolderWithChildrenCount
@@ -47,41 +48,21 @@ export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProp
 export const DraggableFolderCard = (props: { folder: FolderWithChildrenCount, onClick?: (e: React.MouseEvent) => void }) => {
     const { folder, onClick } = props
 
-    const { setNodeRef: setDroppableRef, isOver } = useDroppable({
-        id: folder.id,
-    })
-
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-    } = useDraggable({
-        id: folder.id,
-        data: {
-            folder,
-            action: 'dragFolder',
-            modifiers: []
-        }
-    })
-
-    const style: React.CSSProperties = {
-        touchAction: 'none',
-        userSelect: 'none',
-    }
-	
     return (
-        <div
-            ref={ setDroppableRef }
-            style={ style }
+        <DroppableWrapper
+            id={ folder.id }
+            isOverClassName="bg-gray-100"
         >
-            <FolderCard
-                folder={ folder }
-                ref={ setNodeRef }
-                onClick={ onClick }
-                isOver={ isOver }
-                { ...attributes }
-                { ...listeners }
-            />
-        </div>
+            <DraggableWrapper
+                id={ folder.id }
+                data={ { folder } }
+                action="dragFolder"
+            >
+                <FolderCard
+                    folder={ folder }
+                    onClick={ onClick }
+                />
+            </DraggableWrapper>
+        </DroppableWrapper>
     )
 }
