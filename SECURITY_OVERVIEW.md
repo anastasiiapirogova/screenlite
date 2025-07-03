@@ -29,11 +29,15 @@ The application enforces **strong password requirements** by default to help pro
 
 The application supports **Two-Factor Authentication (2FA)** using TOTP (Time-Based One-Time Password). Users can enable 2FA for an extra layer of security to protect their accounts against unauthorized access.
 
-Currently, disabling 2FA **does not require an additional 2FA confirmation**, as a successful login with 2FA enabled already confirms ownership of the account. This is an intentional design decision aimed at balancing security and user experience. However, this approach is **still under review** and may change in the future — for example, by requiring re-authentication or 2FA confirmation before disabling, if it’s deemed to significantly improve security without degrading usability.
+Currently, disabling 2FA **does not require an additional 2FA confirmation**, as a successful login with 2FA enabled already confirms ownership of the account. This is an intentional design decision aimed at balancing security and user experience. However, this approach is **still under review** and may change in the future — for example, by requiring re-authentication or 2FA confirmation before disabling, if it's deemed to significantly improve security without degrading usability.
 
 ## Session Management
 
 Users have the ability to **view active sessions** associated with their account, including details like device and IP address. They can **revoke any active session** at any time to maintain control over their account access and improve security.
+
+## Media Processing Isolation (FFmpeg)
+
+For media processing tasks, **FFmpeg** is executed in a separate, isolated container. This design ensures that potentially risky or resource-intensive operations are sandboxed away from the main application server, reducing the attack surface and improving overall system stability. The main server communicates with the FFmpeg container exclusively via **HTTP requests**, ensuring a clear separation of concerns and minimizing the risk of privilege escalation or container breakout attacks.
 
 ## CSRF Protection
 
