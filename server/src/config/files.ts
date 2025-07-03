@@ -8,7 +8,8 @@ export const supportedMimeTypes = [
     'video/mp4',
     'video/mkv',
     'video/x-matroska',
-    'video/webm'
+    'video/webm',
+    'video/quicktime'
 ]
 
 const GB = 1024 * 1024 * 1024
