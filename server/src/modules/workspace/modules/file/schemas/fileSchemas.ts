@@ -44,7 +44,6 @@ export const deleteFilesSchema = z.object({
 export const getWorkspaceFilesSchema = paginationSchema.extend({
     search: z.string().optional(),
     folderId: z.string().nullable().optional(),
-    deleted: z.enum(['true', 'false']).transform((value) => value === 'true').optional(),
 })
 
 export const moveFilesSchema = z.object({

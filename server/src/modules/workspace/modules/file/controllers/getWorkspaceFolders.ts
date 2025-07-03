@@ -13,7 +13,7 @@ export const getWorkspaceFolders = async (req: Request, res: Response) => {
         return ResponseHandler.zodError(req, res, parsedData.error.errors)
     }
 
-    const { search, deleted, parentId } = parsedData.data
+    const { search, parentId } = parsedData.data
 
     const parentIdParsed = search ? Prisma.skip : parentId ? parentId : null
 
@@ -23,9 +23,7 @@ export const getWorkspaceFolders = async (req: Request, res: Response) => {
             contains: search,
             mode: Prisma.QueryMode.insensitive,
         } : Prisma.skip,
-        deletedAt: deleted ? {
-            not: null
-        } : null,
+        deletedAt: null,
         parentId: parentIdParsed,
     }
 

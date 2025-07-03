@@ -28,7 +28,6 @@ export const deleteFoldersSchema = z.object({
 
 export const getWorkspaceFoldersSchema = z.object({
     search: z.string().optional(),
-    deleted: z.enum(['true', 'false']).transform((value) => value === 'true').optional(),
     parentId: z.string().nullable().optional(),
 })
 
