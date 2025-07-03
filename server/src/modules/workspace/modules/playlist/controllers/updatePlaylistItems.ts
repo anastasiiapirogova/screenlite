@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { updatePlaylistItemsSchema } from '../schemas/playlistItemSchemas.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
-import { addRecalculatePlaylistSizeJob } from '../utils/addPlaylistItemsUpdatedJob.ts'
+import { addRecalculatePlaylistSizeJob } from '../utils/addRecalculatePlaylistSizeJob.ts'
 import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
 import { UpdatePlaylistItemsService } from '../services/UpdatePlaylistItemsService.ts'
 
@@ -53,7 +53,7 @@ export const updatePlaylistItems = async (req: Request, res: Response) => {
     addRecalculatePlaylistSizeJob(playlistId)
 
     if(playlist.isPublished) {
-        addPlaylistUpdatedJob({ playlistId })
+        addPlaylistUpdatedJob({ playlistId, context: 'playlist items updated' })
     }
 
     ResponseHandler.json(res, {

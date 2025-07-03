@@ -19,7 +19,7 @@ export const deletePlaylistLayout = async (req: Request, res: Response) => {
         }
     })
 
-    addPlaylistUpdatedJobs(playlistLayout.playlists.map((p) => p.id))
+    addPlaylistUpdatedJobs(playlistLayout.playlists.map((p) => p.id), 'playlist layout deleted')
 
     return ResponseHandler.ok(res)
 }

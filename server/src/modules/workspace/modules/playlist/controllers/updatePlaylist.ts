@@ -55,7 +55,7 @@ export const updatePlaylist = async (req: Request, res: Response) => {
     const updatedPlaylist = await PlaylistRepository.update(playlistId, modifiedFields)
 
     if(doesUpdateAffectScreens(playlist.deletedAt, modifiedFields)) {
-        addPlaylistUpdatedJob({ playlistId: playlist.id })
+        addPlaylistUpdatedJob({ playlistId: playlist.id, context: 'playlist metadata updated' })
     }
 
     ResponseHandler.json(res, {

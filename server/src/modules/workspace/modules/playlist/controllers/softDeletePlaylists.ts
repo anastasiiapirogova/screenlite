@@ -47,7 +47,7 @@ export const softDeletePlaylists = async (req: Request, res: Response) => {
 
     // Only playlists that have been published are processed because draft playlists are not cached by devices,
     // so the device state won't change when an unpublished playlist is deleted.
-    addPlaylistUpdatedJobs(publishedPlaylistIds)
+    addPlaylistUpdatedJobs(publishedPlaylistIds, 'playlist soft deleted')
 
     ResponseHandler.json(res, {
         playlistIds: updatedPlaylistIds

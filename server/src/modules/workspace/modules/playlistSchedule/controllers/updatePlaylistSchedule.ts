@@ -62,7 +62,7 @@ export const updatePlaylistSchedule = async (req: Request, res: Response) => {
     })
 
     if(updatedPlaylist.isPublished && !updatedPlaylist.deletedAt) {
-        addPlaylistUpdatedJob({ playlistId: updatedPlaylist.id })
+        addPlaylistUpdatedJob({ playlistId: updatedPlaylist.id, context: 'playlist schedule updated' })
     }
 
     ResponseHandler.json(res, {

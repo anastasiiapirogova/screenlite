@@ -110,7 +110,7 @@ export const updatePlaylistLayout = async (req: Request, res: Response) => {
             }
         })
 
-        addPlaylistUpdatedJobs(playlists.map(playlist => playlist.id))
+        addPlaylistUpdatedJobs(playlists.map(playlist => playlist.id), 'playlist layout updated')
     }
 
     ResponseHandler.json(res, {

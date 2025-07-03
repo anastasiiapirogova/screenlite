@@ -34,7 +34,7 @@ export const deletePlaylistSchedule = async (req: Request, res: Response) => {
     const updatedPlaylist = await PlaylistRepository.deleteSchedule(schedule.playlistId, scheduleId)
 
     if(updatedPlaylist.isPublished && !updatedPlaylist.deletedAt) {
-        addPlaylistUpdatedJob({ playlistId: updatedPlaylist.id })
+        addPlaylistUpdatedJob({ playlistId: updatedPlaylist.id, context: 'playlist schedule deleted' })
     }
 
     ResponseHandler.json(res, {

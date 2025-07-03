@@ -23,7 +23,7 @@ const handleUpdateNestablePlaylist = async (playlistId: string) => {
 
     const playlistIds = [...new Set(parentPlaylists.map(item => item.playlist.id))]
 
-    addPlaylistUpdatedJobs(playlistIds)
+    addPlaylistUpdatedJobs(playlistIds, 'playlist updated (cascade)')
 }
 
 const handleUpdateStandardPlaylist = async (playlistId: string) => {
