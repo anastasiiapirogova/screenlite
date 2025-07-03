@@ -3,12 +3,14 @@ import { handlePlaylistUpdatedJob } from '@/modules/workspace/modules/playlist/j
 import { recalculatePlaylistSizeJob } from '@/modules/workspace/modules/playlist/jobs/recalculatePlaylistSizeJob.ts'
 import { Job, Worker } from 'bullmq'
 import { playlistQueue, PlaylistQueueJobData } from '@/bullmq/queues/playlistQueue.ts'
+import { info, error } from '@/utils/logger.ts'
 
 const processor = async (job: Job<PlaylistQueueJobData>) => {
     const { playlistId } = job.data
 
+    info(`Started job: ${job.name}, playlistId: ${playlistId}`, { category: 'playlistQueueWorker' })
     try {
-        if (job.name === 'playlistItemsUpdated') {
+        if (job.name === 'recalculatePlaylistSize') {
             if (playlistId) {
                 await recalculatePlaylistSizeJob(playlistId)
             }
@@ -19,8 +21,9 @@ const processor = async (job: Job<PlaylistQueueJobData>) => {
                 await handlePlaylistUpdatedJob(playlistId)
             }
         }
-    } catch (error) {
-        console.error(`Error processing job ${job.name} for playlist ${playlistId}:`, error)
+        info(`Completed job: ${job.name}, playlistId: ${playlistId}`, { category: 'playlistQueueWorker' })
+    } catch (err) {
+        error(`Error processing job: ${job.name}, playlistId: ${playlistId}`, err, { category: 'playlistQueueWorker' })
         throw error
     }
 }
