@@ -8,7 +8,7 @@ export const FileSelectorFileCard = ({ file }: { file: WorkspaceFile }) => {
     const { addItemsToCurrentLayoutSection } = usePlaylistContentManagerStorage()
 
     const addItem = () => {
-        addItemsToCurrentLayoutSection('File', file)
+        addItemsToCurrentLayoutSection('file', file)
     }
 
     return (
