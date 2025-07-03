@@ -5,8 +5,18 @@ type PlaylistItemsRequestResponse = {
     items: PlaylistItem[]
 }
 
-export const playlistItemsRequest = async (id: string) => {
-    const response = await axios.get<PlaylistItemsRequestResponse>(`/playlists/${id}/items`)
+export type PlaylistItemsRequestData = {
+    playlistId: string
+    workspaceId: string
+}
+
+export const playlistItemsRequest = async (data: PlaylistItemsRequestData) => {
+    const response = await axios.get<PlaylistItemsRequestResponse>(`/workspaces/${data.workspaceId}/playlists/${data.playlistId}/items`)
 
     return response.data.items
 }
+
+export const playlistItemsQuery = (data: PlaylistItemsRequestData) => ({
+    queryKey: ['playlistItems', data],
+    queryFn: async () => playlistItemsRequest(data),
+})
