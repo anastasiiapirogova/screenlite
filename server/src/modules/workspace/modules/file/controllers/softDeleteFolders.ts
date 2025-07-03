@@ -4,6 +4,7 @@ import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { FolderRepository } from '../repositories/FolderRepository.ts'
 import { prisma } from '@/config/prisma.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
+import { addFileSoftDeletedJobs } from '../utils/addFileSoftDeletedJobs.ts'
 
 export const softDeleteFolders = async (req: Request, res: Response) => {
     const workspace = req.workspace!
@@ -92,7 +93,14 @@ export const softDeleteFolders = async (req: Request, res: Response) => {
             }
         })
 
-        return ResponseHandler.ok(res)
+        if (fileIds.length > 0) {
+            addFileSoftDeletedJobs(fileIds)
+        }
+
+        return ResponseHandler.ok(res, {
+            deletedFolderIds: allFolderIds,
+            deletedFileIds: fileIds
+        })
     } catch (error) {
         console.error('Error during folders deletion:', error)
         return ResponseHandler.serverError(req, res)
