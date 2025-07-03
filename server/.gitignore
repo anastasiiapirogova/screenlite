@@ -9,3 +9,4 @@ prisma/dev.db
 tmp
 /src/generated/prisma
 /storage
+/logs
