@@ -11,8 +11,8 @@ services:
       - ./server:/app
       - /app/node_modules
       - /app/src/generated/prisma
-      - /app/tmp
       - screenlite_storage:/app/storage
+      - screenlite_server_logs:/app/logs
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/screenlite
@@ -181,6 +181,8 @@ volumes:
   minio_data:
     driver: local
   ffmpeg_logs:
+    driver: local
+  screenlite_server_logs:
     driver: local
 
 networks:
