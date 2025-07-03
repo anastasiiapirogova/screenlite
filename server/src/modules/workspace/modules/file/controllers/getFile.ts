@@ -14,8 +14,6 @@ export const getFile = async (req: Request, res: Response) => {
 
     const { fileId } = validation.data
 
-    console.log(fileId)
-
     const file = await FileRepository.findById(fileId, workspace.id)
 
     if (!file) {
