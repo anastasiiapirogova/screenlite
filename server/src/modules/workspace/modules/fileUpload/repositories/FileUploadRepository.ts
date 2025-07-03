@@ -1,6 +1,7 @@
 import { prisma } from '@/config/prisma.ts'
 import { CreateFileUploadSessionData } from '../types.ts'
 import { FileUploadSession } from '@/generated/prisma/client.ts'
+import { MultipartFileUploader } from '@/config/storage.ts'
 
 export class FileUploadRepository {
     static isUploaded(session: FileUploadSession) {
@@ -49,6 +50,26 @@ export class FileUploadRepository {
             where: {
                 id,
             },
+        })
+    }
+
+    static async updateSession(
+        session: FileUploadSession,
+        contentLength: bigint
+    ): Promise<FileUploadSession> {
+        return await prisma.$transaction(async (tx) => {
+            const updatedSession = await tx.fileUploadSession.update({
+                where: { id: session.id },
+                data: {
+                    uploaded: session.uploaded + contentLength,
+                    uploadedParts: session.uploadedParts + 1,
+                    completedAt: session.uploaded + contentLength === session.size ? new Date() : null,
+                },
+            })
+
+            await MultipartFileUploader.confirmPartUpload(updatedSession, updatedSession.uploadedParts)
+
+            return updatedSession
         })
     }
 }

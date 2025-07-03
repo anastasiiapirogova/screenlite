@@ -8,11 +8,11 @@ import { WORKSPACE_ROLES } from '@workspaceModules/accessControl/roles.ts'
 vi.mock('@/config/storage.ts', () => ({
     MultipartFileUploader: {
         uploadPart: vi.fn().mockResolvedValue(undefined)
-    }
+    },
 }))
 
-vi.mock('../../utils/UploadSessionManager.ts', () => ({
-    UploadSessionManager: {
+vi.mock('../../repositories/FileUploadRepository.ts', () => ({
+    FileUploadRepository: {
         updateSession: vi.fn().mockResolvedValue({
             id: 'test-session-id',
             uploadId: 'test-upload-id',

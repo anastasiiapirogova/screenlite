@@ -1,12 +1,12 @@
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { Request, Response } from 'express'
 import { MultipartFileUploader } from '@/config/storage.ts'
-import { UploadSessionManager } from '../utils/UploadSessionManager.ts'
 import { FileUploadSessionValidator } from '../utils/FileUploadSessionValidator.ts'
 import { ContentLengthValidator } from '../utils/ContentLengthValidator.ts'
 import { addCompleteMultipartUploadJob } from '../utils/addCompleteMultipartUploadJob.ts'
 import { Readable } from 'stream'
 import { UploadLockService } from '../services/UploadLockService.ts'
+import { FileUploadRepository } from '../repositories/FileUploadRepository.ts'
 
 export const uploadFilePart = async (req: Request, res: Response): Promise<void> => {
     if(!(req instanceof Readable)) {
@@ -40,7 +40,7 @@ export const uploadFilePart = async (req: Request, res: Response): Promise<void>
             partNumber
         )
 
-        const updatedSession = await UploadSessionManager.updateSession(
+        const updatedSession = await FileUploadRepository.updateSession(
             fileUploadSession,
             contentLength
         )
@@ -52,15 +52,6 @@ export const uploadFilePart = async (req: Request, res: Response): Promise<void>
         ResponseHandler.json(res, {
             fileUploadSession: updatedSession
         })
-    } catch (error: unknown) {
-        if (error instanceof Error && error.message === 'UPLOAD_IDLE_TIMEOUT') {
-            ResponseHandler.validationError(req, res, {
-                file: 'UPLOAD_IDLE_TIMEOUT'
-            })
-            return
-        }
-
-        throw error
     } finally {
         if (lockAcquired.acquired && lockAcquired.lockValue) {
             try {
