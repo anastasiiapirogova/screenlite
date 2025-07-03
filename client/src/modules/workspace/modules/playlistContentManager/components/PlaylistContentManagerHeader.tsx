@@ -1,4 +1,3 @@
-import { playlistItemsQuery } from '@modules/workspace/modules/playlist/api/queries/playlistItemsQuery'
 import { updatePlaylistItemsRequest, UpdatePlaylistItemsRequestData } from '@modules/workspace/modules/playlist/api/requests/updatePlaylistItemsRequest'
 import { usePlaylist } from '@modules/workspace/modules/playlist/hooks/usePlaylist'
 import { PlaylistItem } from '@modules/workspace/modules/playlist/types'
@@ -8,21 +7,24 @@ import { usePlaylistContentManagerStorage } from '@stores/usePlaylistContentMana
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { TbChevronLeft } from 'react-icons/tb'
 import { useNavigate } from 'react-router'
+import { playlistItemsQuery } from '@workspaceModules/playlist/api/requests/playlistItemsRequest'
+import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 
 export const PlaylistContentManagerHeader = () => {
     const queryClient = useQueryClient()
+    const workspace = useWorkspace()
     const { items, clearState, isModified, setItems } = usePlaylistContentManagerStorage()
     const routes = useWorkspaceRoutes()
     const playlist = usePlaylist()
     const navigate = useNavigate()
-    const queryKey = playlistItemsQuery(playlist.id).queryKey
+    const queryKey = playlistItemsQuery({ playlistId: playlist.id, workspaceId: workspace.id }).queryKey
 
     const closeContentManager = async () => {
         await navigate(routes.playlist(playlist.id), { replace: true })
         
         setTimeout(() => {
             if (isModified) {
-                queryClient.invalidateQueries({ queryKey: playlistItemsQuery(playlist.id).queryKey })
+                queryClient.invalidateQueries({ queryKey: queryKey })
             }
 
             clearState()
@@ -60,6 +62,7 @@ export const PlaylistContentManagerHeader = () => {
 
         mutate({
             playlistId: playlist.id,
+            workspaceId: workspace.id,
             items: items,
         })
     }
