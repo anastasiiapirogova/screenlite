@@ -2,9 +2,10 @@ import { prisma } from '@/config/prisma.ts'
 import { Playlist, Prisma } from '@/generated/prisma/client.ts'
 import { excludeFromArray } from '@/utils/exclude.ts'
 import { ComparablePlaylistItem } from '@/types.ts'
-import { CreatePlaylistData } from '../types.ts'
+import { CreatePlaylistData, PlaylistStatus } from '../types.ts'
 import { CreateScheduleData } from '@workspaceModules/modules/playlistSchedule/types.ts'
 import { PlaylistLayoutChangeService } from '../services/PlaylistLayoutChangeService.ts'
+import { PlaylistItemRepository } from './PlaylistItemRepository.ts'
 
 export class PlaylistRepository {
     static TYPE = {
@@ -24,6 +25,38 @@ export class PlaylistRepository {
                 screens: true,
                 items: true,
             }
+        }
+    }
+
+    static getPlaylistStatusClause(
+        status?: PlaylistStatus[]
+    ) {
+        if (!status || status.length === 0) {
+            return { deletedAt: null }
+        }
+    
+        const isPublished = status.includes(PlaylistStatus.published)
+        const isDraft = status.includes(PlaylistStatus.draft)
+        const isDeleted = status.includes(PlaylistStatus.deleted)
+    
+        if (isPublished && isDraft && isDeleted) return {}
+    
+        if (isDeleted && (isPublished || isDraft)) {
+            return {
+                OR: [
+                    { isPublished: isPublished ? true : isDraft ? false : Prisma.skip },
+                    { deletedAt: { not: null } },
+                ],
+            }
+        }
+    
+        if (isDeleted) {
+            return { deletedAt: { not: null } }
+        }
+    
+        return {
+            isPublished: isPublished && !isDraft ? true : isDraft && !isPublished ? false : Prisma.skip,
+            deletedAt: null,
         }
     }
 
@@ -365,5 +398,82 @@ export class PlaylistRepository {
                 },
             },
         })
+    }
+
+    static async calculatePlaylistSize(playlistId: string): Promise<bigint> {
+        const playlistItems = await prisma.playlistItem.findMany({
+            where: {
+                playlistId,
+            },
+            select: {
+                type: true,
+                fileId: true,
+                nestedPlaylistId: true,
+                nestedPlaylist: {
+                    select: {
+                        size: true
+                    }
+                }
+            },
+            distinct: ['fileId', 'nestedPlaylistId'],
+        })
+    
+        if (playlistItems.length === 0) {
+            return BigInt(0)
+        }
+    
+        let totalSize = BigInt(0)
+    
+        const fileIds = playlistItems
+            .filter(item => item.type === PlaylistItemRepository.TYPE.FILE)
+            .map(item => item.fileId)
+            .filter((fileId): fileId is string => fileId !== null)
+    
+        if (fileIds.length > 0) {
+            const fileSizes = await prisma.file.aggregate({
+                _sum: {
+                    size: true,
+                },
+                where: {
+                    id: {
+                        in: fileIds,
+                    },
+                    deletedAt: null,
+                },
+            })
+    
+            totalSize += fileSizes._sum.size || BigInt(0)
+        }
+    
+        const nestedPlaylistSizes = playlistItems
+            .filter(item => 
+                item.type === PlaylistItemRepository.TYPE.NESTED_PLAYLIST && 
+                item.nestedPlaylist !== null
+            )
+            .map(item => item.nestedPlaylist!.size)
+    
+        totalSize += nestedPlaylistSizes.reduce((sum, size) => sum + size, BigInt(0))
+    
+        return totalSize
+    }
+    
+    static orderItems(items: ComparablePlaylistItem[]) {
+        const groupedItems = new Map<string, ComparablePlaylistItem[]>()
+    
+        for (const item of items) {
+            const sectionId = item.playlistLayoutSectionId
+    
+            if (!groupedItems.has(sectionId)) groupedItems.set(sectionId, [])
+                groupedItems.get(sectionId)!.push(item)
+        }
+    
+        for (const group of groupedItems.values()) {
+            group.sort((a, b) => a.order - b.order)
+            for (let i = 0; i < group.length; i++) {
+                group[i].order = i + 1
+            }
+        }
+    
+        return Array.from(groupedItems.values()).flat()
     }
 }
