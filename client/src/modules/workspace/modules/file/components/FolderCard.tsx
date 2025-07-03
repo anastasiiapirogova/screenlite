@@ -2,8 +2,6 @@ import { createElement, forwardRef } from 'react'
 import React from 'react'
 import { FolderWithChildrenCount } from '../types'
 import { FolderCardBody } from './FolderCardBody'
-import { useNavigate } from 'react-router'
-import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
 import { DraggableWrapper } from '@shared/components/DraggableWrapper'
@@ -12,11 +10,11 @@ import { DroppableWrapper } from '@shared/components/DroppableWrapper'
 interface PlaylistSectionItemCardProps extends React.HTMLAttributes<HTMLDivElement> {
 	folder: FolderWithChildrenCount
 	isOver?: boolean
+	onContextMenu?: (e: React.MouseEvent) => void
+	onDoubleClick?: (e: React.MouseEvent) => void
 }
 
-export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>(({ folder, onClick, isOver, ...props }, ref) => {
-    const navigate = useNavigate()
-    const routes = useWorkspaceRoutes()
+export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProps>(({ folder, onClick, isOver, onContextMenu, onDoubleClick, ...props }, ref) => {
     const { isSelected, isDragging } = useSelectionStore(useShallow((state) => ({
         isSelected: state.isSelected,
         isDragging: state.isDragging,
@@ -25,9 +23,7 @@ export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProp
 
     return (
         <div
-            onDoubleClick={ () => {
-                navigate(routes.folder(folder.id))
-            } }
+            onDoubleClick={ onDoubleClick }
             { ...props }
             data-entity="folder"
             className={ [
@@ -39,14 +35,15 @@ export const FolderCard = forwardRef<HTMLDivElement, PlaylistSectionItemCardProp
             ].join(' ') }
             ref={ ref }
             onClick={ onClick }
+            onContextMenu={ onContextMenu }
         >
             { createElement(FolderCardBody, { folder }) }
         </div>
     )
 })
 
-export const DraggableFolderCard = (props: { folder: FolderWithChildrenCount, onClick?: (e: React.MouseEvent) => void }) => {
-    const { folder, onClick } = props
+export const DraggableFolderCard = (props: { folder: FolderWithChildrenCount, onClick?: (e: React.MouseEvent) => void, onContextMenu?: (e: React.MouseEvent) => void, onDoubleClick?: (e: React.MouseEvent) => void }) => {
+    const { folder, onClick, onContextMenu, onDoubleClick } = props
 
     return (
         <DroppableWrapper
@@ -61,6 +58,8 @@ export const DraggableFolderCard = (props: { folder: FolderWithChildrenCount, on
                 <FolderCard
                     folder={ folder }
                     onClick={ onClick }
+                    onContextMenu={ onContextMenu }
+                    onDoubleClick={ onDoubleClick }
                 />
             </DraggableWrapper>
         </DroppableWrapper>
