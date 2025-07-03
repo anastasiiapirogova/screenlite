@@ -1,9 +1,7 @@
-import { useRouterSearch } from '@shared/hooks/useRouterSearch'
 import { DraggableFileCard } from '../FileCard'
-import { useDebounce } from '@uidotdev/usehooks'
 import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
 import { ErrorBoundary } from 'react-error-boundary'
-import { Suspense, useState, useCallback } from 'react'
+import { Suspense, useCallback } from 'react'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { workspaceFilesQuery } from '../../api/workspaceFiles'
 import { useSelectionStore } from '@stores/useSelectionStore'
@@ -28,38 +26,8 @@ const SuspenseFileList = ({ search, folderId, onFileDoubleClick }: FileListProps
     }))
 
     const { data: files } = data
-    const { isSelected, selectItem, unselectItem, setSelectedItems } = useSelectionStore()
-    const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
+    const { isSelected, setSelectedItems, handleItemClick } = useSelectionStore()
     const { openContextMenu } = useContextMenuStore()
-
-    const handleFileClick = (file: WorkspaceFile, index: number, event: React.MouseEvent) => {
-        const isCtrl = event.ctrlKey || event.metaKey
-        const isShift = event.shiftKey
-        const alreadySelected = isSelected(file.id)
-
-        if (isShift && lastSelectedIndex !== null) {
-            const start = Math.min(lastSelectedIndex, index)
-            const end = Math.max(lastSelectedIndex, index)
-
-            const selectedItems = files.slice(start, end + 1).map((file) => ({
-                [file.id]: { item: file, entity: 'file' }
-            }))
-
-            setSelectedItems(Object.assign({}, ...selectedItems))
-        } else if (isCtrl) {
-            if (alreadySelected) {
-                unselectItem(file.id)
-            } else {
-                selectItem({ item: file, entity: 'file' })
-            }
-            setLastSelectedIndex(index)
-        } else {
-            setSelectedItems({
-                [file.id]: { item: file, entity: 'file' }
-            })
-            setLastSelectedIndex(index)
-        }
-    }
 
     const handleFileDoubleClick = useCallback((file: WorkspaceFile) => {
         onFileDoubleClick?.(file)
@@ -85,7 +53,7 @@ const SuspenseFileList = ({ search, folderId, onFileDoubleClick }: FileListProps
                         <DraggableFileCard
                             file={ file }
                             key={ file.id }
-                            onClick={ (e: React.MouseEvent) => handleFileClick(file, idx, e) }
+                            onClick={ (e: React.MouseEvent) => handleItemClick(file, idx, e, files, 'file') }
                             onDoubleClick={ () => handleFileDoubleClick(file) }
                             onContextMenu={ (e: React.MouseEvent) => handleFileContextMenu(file, e) }
                         />
@@ -97,9 +65,6 @@ const SuspenseFileList = ({ search, folderId, onFileDoubleClick }: FileListProps
 }
 
 export const FileList = ({ folderId, onFileDoubleClick }: { folderId?: string, onFileDoubleClick?: (file: WorkspaceFile) => void }) => {
-    const { searchTerm } = useRouterSearch()
-    const debouncedSearchTerm = useDebounce(searchTerm, 300)
-
     return (
         <QueryErrorResetBoundary>
             <ErrorBoundary fallbackRender={ () => (
@@ -110,7 +75,7 @@ export const FileList = ({ folderId, onFileDoubleClick }: { folderId?: string, o
             >
                 <Suspense fallback={ <>Loading</> }>
                     <SuspenseFileList 
-                        search={ debouncedSearchTerm } 
+                        search={ '' } 
                         folderId={ folderId }
                         onFileDoubleClick={ onFileDoubleClick }
                     />
