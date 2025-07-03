@@ -7,7 +7,7 @@ import { ScrollArea } from '@shared/ui/ScrollArea'
 import { FilesDndContext } from '../components/FileManager/FilesDndContext'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { useFileViewerModal } from '../hooks/useFileViewerModal'
 import { FilePreviewModal } from '../components/FilePreviewModal'
 import { WorkspaceFile, ParentFolderTreeResult, FolderWithChildrenCount } from '../types'
@@ -115,6 +115,10 @@ export const WorkspaceFilesPage = () => {
     const handleFolderDoubleClick = (folder: FolderWithChildrenCount) => {
         navigate(routes.folder(folder.id))
     }
+    
+    useEffect(() => {
+        clearSelection()
+    }, [folderId, clearSelection])
     
     if (folderId && !isSuccess) {
         return (
