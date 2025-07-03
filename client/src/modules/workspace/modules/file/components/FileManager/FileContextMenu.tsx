@@ -2,6 +2,10 @@ import { ContextMenu } from '@shared/ui/ContextMenu'
 import { WorkspaceFile } from '../../types'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
+import { deleteFilesRequest, DeleteFilesRequestData } from '@workspaceModules/file/api/deleteFiles'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useConfirmationDialogStore } from '@stores/useConfirmationDialogStore'
+import { PaginationMeta } from '@/types'
 
 interface FileContextMenuProps {
     anchorPoint: { x: number; y: number }
@@ -15,6 +19,42 @@ export const FileContextMenu = ({ anchorPoint, open, onClose, data }: FileContex
         isSelected: state.isSelected,
         getSelectedItems: state.getSelectedItems,
     })))
+
+    const confirm = useConfirmationDialogStore((state) => state.confirm)
+    const queryClient = useQueryClient()
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: (data: DeleteFilesRequestData) => deleteFilesRequest(data),
+        onSuccess: async (_data, variables) => {
+            const allWorkspaceFilesQueries = queryClient.getQueriesData({ queryKey: ['workspaceFiles', { id: variables.workspaceId }] })
+            
+            allWorkspaceFilesQueries.forEach(([queryKey, data]) => {
+                const filesData = data as { data: WorkspaceFile[]; meta: PaginationMeta } | undefined
+                
+                if (filesData?.data) {
+                    const updatedFiles = filesData.data.filter(file => 
+                        !filesToActOn.some(deletedFile => deletedFile.id === file.id)
+                    )
+                    
+                    queryClient.setQueryData(queryKey, {
+                        ...filesData,
+                        data: updatedFiles,
+                        meta: {
+                            ...filesData.meta,
+                            total: Math.max(0, filesData.meta.total - filesToActOn.length)
+                        }
+                    })
+                }
+            })
+            
+            queryClient.invalidateQueries({ queryKey: ['workspaceFolders'] })
+            
+            queryClient.invalidateQueries({ queryKey: ['workspaceEntityCounts'] })
+        },
+        onError: (error) => {
+            console.log(error)
+        }
+    })
 
     const clickedFile = data as WorkspaceFile
 
@@ -32,6 +72,28 @@ export const FileContextMenu = ({ anchorPoint, open, onClose, data }: FileContex
 
     const isSingle = filesToActOn.length === 1
 
+    const handleDelete = async () => {
+        const fileCount = filesToActOn.length
+        const fileText = fileCount === 1 ? 'file' : 'files'
+
+        const confirmed = await confirm({
+            title: `Delete ${fileText}`,
+            message: `Are you sure you want to delete ${fileCount} ${fileText}?`,
+            confirmText: 'Delete',
+            cancelText: 'Cancel',
+            variant: 'danger'
+        })
+
+        if (confirmed) {
+            const deleteData: DeleteFilesRequestData = {
+                fileIds: filesToActOn.map(file => file.id),
+                workspaceId: filesToActOn[0].workspaceId
+            }
+
+            mutate(deleteData)
+        }
+    }
+
     const options = [
         ...(isSingle ? [
             { label: 'Open', action: () => console.log('Open', filesToActOn) },
@@ -39,7 +101,7 @@ export const FileContextMenu = ({ anchorPoint, open, onClose, data }: FileContex
             { label: 'Download', action: () => console.log('Download', filesToActOn) },
         ] : []),
         { label: 'Move', action: () => console.log('Move', filesToActOn) },
-        { label: 'Trash', action: () => console.log('Trash', filesToActOn) },
+        { label: 'Delete', action: handleDelete, disabled: isPending },
     ]
 
     return (

@@ -5,8 +5,8 @@ import { Suspense, useCallback } from 'react'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { workspaceFilesQuery } from '../../api/workspaceFiles'
 import { useSelectionStore } from '@stores/useSelectionStore'
-import { useContextMenuStore } from '@stores/useContextMenuStore'
 import { WorkspaceFile } from '../../types'
+import { useContextMenuStore } from '@stores/useContextMenuStore'
 
 interface FileListProps {
 	search: string
