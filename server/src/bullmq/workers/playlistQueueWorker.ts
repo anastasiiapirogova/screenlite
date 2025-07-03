@@ -3,30 +3,26 @@ import { handlePlaylistUpdatedJob } from '@/modules/workspace/modules/playlist/j
 import { recalculatePlaylistSizeJob } from '@/modules/workspace/modules/playlist/jobs/recalculatePlaylistSizeJob.ts'
 import { Job, Worker } from 'bullmq'
 import { playlistQueue, PlaylistQueueJobData } from '@/bullmq/queues/playlistQueue.ts'
-import { info, error } from '@/utils/logger.ts'
+import { createWorkerProcessor } from './workerFactory.ts'
 
-const processor = async (job: Job<PlaylistQueueJobData>) => {
-    const { playlistId } = job.data
-
-    info(`Started job: ${job.name}, playlistId: ${playlistId}`, { category: 'playlistQueueWorker' })
-    try {
-        if (job.name === 'recalculatePlaylistSize') {
-            if (playlistId) {
-                await recalculatePlaylistSizeJob(playlistId)
-            }
+const handlers: Record<string, (job: Job<PlaylistQueueJobData>) => Promise<void>> = {
+    playlistItemsUpdated: async (job) => {
+        if (job.data.playlistId) {
+            await recalculatePlaylistSizeJob(job.data.playlistId)
         }
-
-        if (job.name === 'playlistUpdated') {
-            if (playlistId) {
-                await handlePlaylistUpdatedJob(playlistId)
-            }
+    },
+    playlistUpdated: async (job) => {
+        if (job.data.playlistId) {
+            await handlePlaylistUpdatedJob(job.data.playlistId)
         }
-        info(`Completed job: ${job.name}, playlistId: ${playlistId}`, { category: 'playlistQueueWorker' })
-    } catch (err) {
-        error(`Error processing job: ${job.name}, playlistId: ${playlistId}`, err, { category: 'playlistQueueWorker' })
-        throw error
     }
 }
+
+const processor = createWorkerProcessor<PlaylistQueueJobData>({
+    handlers,
+    category: 'playlistQueueWorker',
+    getLogContext: (job) => `playlistId: ${job.data.playlistId}`
+})
 
 export const playlistQueueWorker = new Worker(
     playlistQueue.name,
