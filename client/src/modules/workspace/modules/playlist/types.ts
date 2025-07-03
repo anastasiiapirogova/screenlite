@@ -96,7 +96,7 @@ export type RemoveScreensFromPlaylistRequestData = {
 	screenIds: string[]
 }
 
-export type PlaylistItemType = 'File' | 'NestedPlaylist'
+export type PlaylistItemType = 'file' | 'nested_playlist'
 
 export type PlaylistItem = {
 	id: string
