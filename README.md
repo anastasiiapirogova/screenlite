@@ -9,11 +9,9 @@ Screenlite is currently **in public development** and **not ready for production
 
 **The client-side experience is partially broken** — you can explore the interface, but expect bugs, errors, and incomplete features.
 
-I am currently working on the file management module (last updated on 2025-06-26):
+I am currently working on the file management module (last updated on 2025-07-03):
 
 - Moving files/folders to trash, clearing trash, and force deletes
-- Auto-updating playlists when related files are deleted
-
 - Resumable multipart uploads (DONE)
 - Drag and drop file management (DONE)
 - Video previews with ffmpeg (DONE)
@@ -21,6 +19,7 @@ I am currently working on the file management module (last updated on 2025-06-26
 - Support for local and S3 storage (DONE)
 - Serving static content to clients (DONE)
 - Optimized thumbnail generation with ETags (DONE)
+- Auto-updating playlists when related files are deleted (DONE)
 
 [Check progress in the feature list](FEATURES.md)
 
