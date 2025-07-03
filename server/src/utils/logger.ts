@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-const DEFAULT_LOG_DIR = path.resolve(process.cwd(), 'log')
+const DEFAULT_LOG_DIR = path.resolve(process.cwd(), 'logs')
 const DEFAULT_CATEGORY = 'app'
 
 function ensureLogDir(logDir: string) {
