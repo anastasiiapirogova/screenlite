@@ -1,14 +1,17 @@
 import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { playlistLayoutPlaylistsQuery } from '../api/queries/playlistLayoutPlaylistsQuery'
 import { usePlaylistLayout } from '../hooks/usePlaylistLayout'
 import { Link } from 'react-router'
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
+import { playlistLayoutPlaylistsQuery } from '@workspaceModules/playlistLayout/api/requests/playlistLayoutPlaylistsRequest'
 
 const PlaylistsList = () => {
-    const { id } = usePlaylistLayout()
-    const { data: playlists } = useSuspenseQuery(playlistLayoutPlaylistsQuery(id))
+    const { id, workspaceId } = usePlaylistLayout()
+    const { data: playlists } = useSuspenseQuery(playlistLayoutPlaylistsQuery({
+        playlistLayoutId: id,
+        workspaceId: workspaceId
+    }))
     const routes = useWorkspaceRoutes()
 
     return (

@@ -20,20 +20,41 @@ type Props = {
     isDragging?: boolean
 } & React.HTMLAttributes<HTMLDivElement>
 
-export const PlaylistLayoutSectionCard = forwardRef<HTMLDivElement, Props>(({ section, isDragging, ...props }, ref) => {
-    return (
-        <div
-            { ...props }
-            className={ [
-                'p-3',
-                isDragging ? 'bg-blue-50' : 'hover:bg-gray-100',
-            ].join(' ') }
-            ref={ ref }
-        >
-            { section.name }
-        </div>
-    )
-})
+export const PlaylistLayoutSectionCard = forwardRef<HTMLDivElement, Props>(
+    ({ section, isDragging, ...props }, ref) => {
+        const { sections } = usePlaylistLayoutEditorStorage()
+        const isVisible = sections ? isSectionVisible(section.id, sections) : false
+
+        return (
+            <div
+                { ...props }
+                className={ [
+                    'p-4 rounded-lg border shadow-sm transition-all',
+                    isDragging ? 'bg-blue-100 border-blue-300 shadow-lg scale-[1.01]' : 'bg-white hover:bg-gray-50',
+                ].join(' ') }
+                ref={ ref }
+            >
+                <div className="flex items-center gap-3">
+                    <TbMenu className="w-5 h-5 text-neutral-400 cursor-grab" />
+                    <div className="flex-1">
+                        <div className="font-semibold text-lg text-gray-900">{ section.name }</div>
+                        <div className="text-xs text-gray-500 flex gap-2 items-center mt-1">
+                            { prettyResolution(section) }
+                            <span className="inline-block bg-gray-200 rounded px-2 py-0.5 text-xs font-medium">x: { section.top } y: { section.left }</span>
+                        </div>
+                    </div>
+                    <span className={
+                        'text-xs font-semibold px-2 py-0.5 rounded ' +
+                            (isVisible ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500')
+                    }
+                    >
+                        { isVisible ? 'Visible' : 'Not visible' }
+                    </span>
+                </div>
+            </div>
+        )
+    }
+)
 
 const SectionEditForm = ({ section }: { section: PlaylistLayoutEditorLayoutSection }) => {
     const { updateSection } = usePlaylistLayoutEditorStorage()
@@ -55,7 +76,7 @@ const SectionEditForm = ({ section }: { section: PlaylistLayoutEditorLayoutSecti
     }, [fields, updateSection, section.id])
 
     return (
-        <div className='p-5 pt-0'>
+        <div className='p-5 pt-0 grid grid-cols-1 md:grid-cols-2 gap-4'>
             <InputLabelGroup
                 label='Name'
                 name='name'
@@ -67,7 +88,7 @@ const SectionEditForm = ({ section }: { section: PlaylistLayoutEditorLayoutSecti
                         <Input
                             { ...field }
                             type='text'
-                            placeholder='John Doe'
+                            placeholder='Section name'
                         />
                     ) }
                 />
@@ -84,7 +105,7 @@ const SectionEditForm = ({ section }: { section: PlaylistLayoutEditorLayoutSecti
                         <Input
                             { ...field }
                             type='number'
-                            placeholder='John Doe'
+                            placeholder='e.g. 1920'
                         />
                     ) }
                 />
@@ -101,7 +122,7 @@ const SectionEditForm = ({ section }: { section: PlaylistLayoutEditorLayoutSecti
                         <Input
                             { ...field }
                             type='number'
-                            placeholder='John Doe'
+                            placeholder='e.g. 1080'
                         />
                     ) }
                 />
@@ -118,7 +139,7 @@ const SectionEditForm = ({ section }: { section: PlaylistLayoutEditorLayoutSecti
                         <Input
                             { ...field }
                             type='number'
-                            placeholder='John Doe'
+                            placeholder='e.g. 0'
                         />
                     ) }
                 />
@@ -135,7 +156,7 @@ const SectionEditForm = ({ section }: { section: PlaylistLayoutEditorLayoutSecti
                         <Input
                             { ...field }
                             type='number'
-                            placeholder='John Doe'
+                            placeholder='e.g. 0'
                         />
                     ) }
                 />
@@ -180,7 +201,8 @@ export const PlaylistLayoutSortableSectionCard = (props: { section: PlaylistLayo
         <Accordion.Item
             ref={ setNodeRef }
             className={ twMerge(
-                'overflow-hidden bg-neutral-50 hover:bg-neutral-100 rounded-lg',
+                'overflow-hidden bg-white hover:bg-neutral-50 rounded-lg border shadow-sm transition-all',
+                isDragging && 'bg-blue-100 border-blue-300 shadow-lg scale-[1.01] opacity-80',
             ) }
             style={ style }
             value={ section.id }
@@ -193,24 +215,32 @@ export const PlaylistLayoutSortableSectionCard = (props: { section: PlaylistLayo
                     asChild
                 >
                     <div className='flex grow justify-between items-center gap-5'>
-                        <div className='flex gap-2 items-center'>
+                        <div className='flex gap-3 items-center'>
                             <div
                                 { ...attributes }
                                 { ...listeners }
-                                className='cursor-grab'
+                                className='cursor-grab p-1 rounded hover:bg-gray-200 transition-colors'
+                                tabIndex={ 0 }
+                                aria-label="Drag section"
                             >
                                 <TbMenu className='w-5 h-5 text-neutral-400'/>
                             </div>
                             <div>
-                                <div className='text-left'>
+                                <div className='text-left font-semibold text-lg text-gray-900'>
                                     { section.name }
                                 </div>
-                                { prettyResolution(section) }
-                                x: { section.top } y: { section.left }
+                                <div className="text-xs text-gray-500 flex gap-2 items-center mt-1">
+                                    { prettyResolution(section) }
+                                    <span className="inline-block bg-gray-200 rounded px-2 py-0.5 text-xs font-medium">x: { section.top } y: { section.left }</span>
+                                </div>
                             </div>
-                            <div>
+                            <span className={
+                                'text-xs font-semibold px-2 py-0.5 rounded ' +
+                                    (isVisible ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500')
+                            }
+                            >
                                 { isVisible ? 'Visible' : 'Not visible' }
-                            </div>
+                            </span>
                         </div>
                         <Button
                             onClick={ () => removeSection(section.id) }
@@ -218,6 +248,7 @@ export const PlaylistLayoutSortableSectionCard = (props: { section: PlaylistLayo
                             variant='soft'
                             size='squareSmall'
                             icon={ TbX }
+                            aria-label="Remove section"
                         />
                     </div>
                 </Accordion.Trigger>

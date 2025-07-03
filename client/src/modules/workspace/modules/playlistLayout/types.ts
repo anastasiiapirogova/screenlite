@@ -12,7 +12,9 @@ export type PlaylistLayout = {
 	_count: {
 		playlists: number
 	}
-};
+}
+
+export type PlaylistLayoutListItem = Omit<PlaylistLayout, 'sections'>
 
 export type PlaylistLayoutSection = {
 	id: string

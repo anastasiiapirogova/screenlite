@@ -5,10 +5,7 @@ import { DroppableWrapper } from '@shared/components/DroppableWrapper'
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
 
 interface FolderBreadcrumbsProps {
-    folder?: {
-        name: string
-        parentFolders: ParentFolderTreeResult[]
-    }
+    folderData?: { folder: { name: string }, parentFolders: ParentFolderTreeResult[] }
 }
 
 const DroppableBreadcrumbButton = ({ folderId, children }: { folderId: string, children: React.ReactNode }) => {
@@ -31,9 +28,9 @@ const DroppableBreadcrumbButton = ({ folderId, children }: { folderId: string, c
     )
 }
 
-export const FolderBreadcrumbs = ({ folder }: FolderBreadcrumbsProps) => {
+export const FolderBreadcrumbs = ({ folderData }: FolderBreadcrumbsProps) => {
     // If no folder, we're on root page - just show Files
-    if (!folder) {
+    if (!folderData) {
         return (
             <div className='flex items-center gap-2 text-sm text-gray-600'>
                 <span className='font-medium text-gray-900'>Files</span>
@@ -41,7 +38,7 @@ export const FolderBreadcrumbs = ({ folder }: FolderBreadcrumbsProps) => {
         )
     }
 
-    const { name: currentFolderName, parentFolders } = folder
+    const { folder: { name: currentFolderName }, parentFolders } = folderData
 
     // If no parent folders, show Files > Current
     if (parentFolders.length === 0) {

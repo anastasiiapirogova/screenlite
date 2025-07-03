@@ -2,13 +2,18 @@ import { Outlet, useParams } from 'react-router'
 import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { playlistLayoutQuery } from '../api/queries/playlistLayoutQuery'
 import { PlaylistLayoutContext } from '../contexts/PlaylistLayoutContext'
+import { playlistLayoutQuery } from '@workspaceModules/playlistLayout/api/requests/playlistLayoutRequest'
+import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 
 const PlaylistLayoutProviderContent = () => {
     const params = useParams<{ playlistLayoutId: string }>()
+    const workspace = useWorkspace()
 
-    const { data: screen } = useSuspenseQuery(playlistLayoutQuery(params.playlistLayoutId!))
+    const { data: screen } = useSuspenseQuery(playlistLayoutQuery({
+        playlistLayoutId: params.playlistLayoutId!,
+        workspaceId: workspace.id
+    }))
 
     return (
         <PlaylistLayoutContext.Provider value={ screen }>

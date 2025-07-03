@@ -5,11 +5,11 @@ import { ModalClose } from '@shared/ui/modal/Modal'
 import { usePlaylist } from '@modules/workspace/modules/playlist/hooks/usePlaylist'
 import { Suspense, useState } from 'react'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
-import { workspacePlaylistLayoutsQuery } from '@modules/workspace/modules/playlistLayout/api/queries/workspacePlaylistLayoutsQuery'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useDebounce } from '@uidotdev/usehooks'
 import { Input } from '@shared/ui/input/Input'
 import { changePlaylistLayoutRequest, ChangePlaylistLayoutRequestData } from '@modules/workspace/modules/playlist/api/requests/changePlaylistLayoutRequest'
+import { workspacePlaylistLayoutsQuery } from '@workspaceModules/playlistLayout/api/requests/workspacePlaylistLayoutsRequest'
 
 const PlaylistLayoutsList = ({ search, selectedLayoutId, selectLayout }: { search: string, selectedLayoutId: string | undefined, selectLayout: (id: string) => void }) => {
     const workspace = useWorkspace()

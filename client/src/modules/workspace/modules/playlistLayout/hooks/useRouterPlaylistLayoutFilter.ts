@@ -1,50 +1,70 @@
+import { switchSearchParam } from '@shared/helpers/switchSearchParam'
+import { updateSearchParam } from '@shared/helpers/updateSearchParam'
+import { useDeepMemo } from '@shared/hooks/useDeepMemo'
 import { useDebounce } from '@uidotdev/usehooks'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router'
 
 export const useRouterPlaylistLayoutFilter = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
-    const setFilter = (filterType: 'page' | 'limit' | 'search', value: string | string[]) => {
-        setSearchParams(params => {
-            if (Array.isArray(value)) {
-                if (value.length > 0) {
-                    params.set(filterType, value.join(','))
-                } else {
-                    params.delete(filterType)
-                }
-            } else {
-                if (value) {
-                    params.set(filterType, value)
-                } else {
-                    params.delete(filterType)
-                }
-            }
+    const setFilter = useCallback((filterType: 'status' | 'type' | 'page' | 'limit' | 'search' | 'has_screens'  | 'has_content', value: string | string[]) => {
+        setSearchParams(params => updateSearchParam(params, filterType, value))
+    }, [setSearchParams])
 
-            if(filterType !== 'page') {
-                params.delete('page')
-            }
+    const switchFilter = useCallback((filterType: 'status' | 'type' | 'has_screens' | 'has_content', value: string) => {
+        setFilter(filterType, switchSearchParam(filterType, value))
+    }, [setFilter])
 
-            return params
-        })
-    }
+    const clearFilters = useCallback(() => {
+        setSearchParams({})
+    }, [setSearchParams])
 
-    const page = useMemo(() => searchParams.get('page') || '1', [searchParams])
-    const limit = useMemo(() => searchParams.get('limit') || '10', [searchParams])
-    const search = useMemo(() => searchParams.get('search') || '', [searchParams])
+    const { 
+        status, 
+        type, 
+        has_screens, 
+        has_content, 
+        page, 
+        limit, 
+        search 
+    } = useDeepMemo(() => ({
+        status: searchParams.get('status')?.split(',') || [],
+        type: searchParams.get('type')?.split(',') || [],
+        has_screens: searchParams.get('has_screens')?.split(',') || [],
+        has_content: searchParams.get('has_content')?.split(',') || [],
+        page: searchParams.get('page') || '1',
+        limit: searchParams.get('limit') || '20',
+        search: searchParams.get('search') || '',
+    }), [searchParams])
 
-    const filters = {
+    const debouncedSearch = useDebounce(search, 300)
+
+    const hasFilters = useMemo(() => (
+        status.length > 0 || 
+        type.length > 0 || 
+        has_screens.length > 0 || 
+        search.length > 0 || 
+        has_content.length > 0
+    ), [status, type, has_screens, search, has_content])
+
+    const filters = useMemo(() => ({
+        status,
+        type,
+        has_screens,
+        has_content,
         page: parseInt(page, 10),
         limit: parseInt(limit, 10),
-        search: useDebounce(search, 300),
-    }
+        search: debouncedSearch,
+    }), [status, type, has_screens, has_content, page, limit, debouncedSearch])
 
     return {
         filters,
         ...filters,
         search,
-        setSearch: (search: string) => setFilter('search', search),
-        setPage: (page: number) => setFilter('page', page.toString()),
-        setLimit: (limit: number) => setFilter('limit', limit.toString()),
+        hasFilters,
+        switchFilter,
+        setFilter,
+        clearFilters,
     }
 }

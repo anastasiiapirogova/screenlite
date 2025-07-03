@@ -15,6 +15,8 @@ type State = {
     initializedAt: Date | null
     isModified: boolean
     initialLayoutData: PlaylistLayout | null
+    pastSections: PlaylistLayoutEditorLayoutSection[][]
+    futureSections: PlaylistLayoutEditorLayoutSection[][]
 }
 
 type Action = {
@@ -34,10 +36,17 @@ const emptyState = {
     resolution: null,
     initializedAt: null,
     isModified: false,
-    initialLayoutData: null
+    initialLayoutData: null,
+    pastSections: [],
+    futureSections: [],
 }
 
-export const usePlaylistLayoutEditorStorage = create<State & Action>()(
+export const usePlaylistLayoutEditorStorage = create<State & Action & {
+    undo: () => void,
+    redo: () => void,
+    canUndo: boolean,
+    canRedo: boolean,
+}>()(
     devtools(
         (set, get) => ({
             ...emptyState,
@@ -59,19 +68,21 @@ export const usePlaylistLayoutEditorStorage = create<State & Action>()(
                 set((state) => {
                     const sections = state.sections
                     const playlistLayoutId = state.initialLayoutData?.id
-    
+
                     if (!sections || !playlistLayoutId) return state
-    
+
                     const zIndex = sections.length + 1
-    
+
                     const newSection = {
                         ...section,
                         id: uuidv4(),
                         playlistLayoutId,
                         zIndex,
                     }
-    
+
                     return {
+                        pastSections: [...state.pastSections, sections],
+                        futureSections: [],
                         sections: [...sections, newSection],
                     }
                 })
@@ -85,6 +96,8 @@ export const usePlaylistLayoutEditorStorage = create<State & Action>()(
                     initialLayoutData,
                     isModified: false,
                     initializedAt: new Date(),
+                    pastSections: [],
+                    futureSections: [],
                 })
             },
 
@@ -98,13 +111,15 @@ export const usePlaylistLayoutEditorStorage = create<State & Action>()(
             clearState: () => set(emptyState),
 
             reorderLayoutSections: (sections) => {
-                set(() => {
+                set((state) => {
                     const reorderedSections = sections.map((section, index) => ({
                         ...section,
                         zIndex: sections.length - index,
                     }))
-    
+
                     return {
+                        pastSections: state.sections ? [...state.pastSections, state.sections] : state.pastSections,
+                        futureSections: [],
                         sections: reorderedSections,
                     }
                 })
@@ -114,10 +129,12 @@ export const usePlaylistLayoutEditorStorage = create<State & Action>()(
             removeSection: (id) => {
                 set((state) => {
                     const sections = state.sections
-    
+
                     if (!sections) return state
-    
+
                     return {
+                        pastSections: [...state.pastSections, sections],
+                        futureSections: [],
                         sections: sections.filter((section) => section.id !== id),
                     }
                 })
@@ -126,7 +143,7 @@ export const usePlaylistLayoutEditorStorage = create<State & Action>()(
 
             updateSection: (section) => {
                 const sections = get().sections
-    
+
                 if (!sections) return
 
                 const sectionIndex = sections.findIndex((currentSection) => currentSection.id === section.id)
@@ -145,21 +162,68 @@ export const usePlaylistLayoutEditorStorage = create<State & Action>()(
                     ...data,
                 }
 
-                sections[sectionIndex] = updatedSection
+                const newSections = [...sections]
 
-                set({
-                    sections: [...sections],
-                })
+                newSections[sectionIndex] = updatedSection
+
+                set((state) => ({
+                    pastSections: [...state.pastSections, sections],
+                    futureSections: [],
+                    sections: newSections,
+                }))
 
                 get().checkLayoutModified()
             },
 
             setSections: (sections) => {
-                set({ sections })
-            }
+                set((state) => ({
+                    pastSections: state.sections ? [...state.pastSections, state.sections] : state.pastSections,
+                    futureSections: [],
+                    sections,
+                }))
+            },
+
+            undo: () => {
+                set((state) => {
+                    if (state.pastSections.length === 0 || !state.sections) return state
+                    const previous = state.pastSections[state.pastSections.length - 1]
+                    const newPast = state.pastSections.slice(0, -1)
+
+                    return {
+                        sections: previous,
+                        pastSections: newPast,
+                        futureSections: [state.sections, ...state.futureSections],
+                    }
+                })
+                get().checkLayoutModified()
+            },
+
+            redo: () => {
+                set((state) => {
+                    if (state.futureSections.length === 0 || !state.sections) return state
+                    const next = state.futureSections[0]
+                    const newFuture = state.futureSections.slice(1)
+
+                    return {
+                        sections: next,
+                        pastSections: [...state.pastSections, state.sections],
+                        futureSections: newFuture,
+                    }
+                })
+                get().checkLayoutModified()
+            },
         }),
         {
             name: 'playlist-layout-editor-storage',
         }
     )
 )
+
+export const usePlaylistLayoutEditorHistory = () => {
+    const canUndo = usePlaylistLayoutEditorStorage((state) => state.pastSections.length > 0)
+    const canRedo = usePlaylistLayoutEditorStorage((state) => state.futureSections.length > 0)
+    const undo = usePlaylistLayoutEditorStorage((state) => state.undo)
+    const redo = usePlaylistLayoutEditorStorage((state) => state.redo)
+
+    return { canUndo, canRedo, undo, redo }
+}

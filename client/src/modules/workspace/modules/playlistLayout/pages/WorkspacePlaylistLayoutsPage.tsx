@@ -1,110 +1,137 @@
+import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
+import { ScrollArea } from '@shared/ui/ScrollArea'
+import { useQuery } from '@tanstack/react-query'
 import { useWorkspace } from '@/modules/workspace/hooks/useWorkspace'
-import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
-import { ErrorBoundary } from 'react-error-boundary'
-import { Suspense, useEffect } from 'react'
-import { ListPageHeader } from '@shared/components/ListPageHeader'
-import { workspacePlaylistLayoutsQuery } from '../api/queries/workspacePlaylistLayoutsQuery'
-import { Link } from 'react-router'
-import { useWorkspaceRoutes } from '@/modules/workspace/hooks/useWorkspaceRoutes'
-import { CreatePlaylistLayoutButton } from '../components/CreatePlaylistLayoutButton'
-import { InnerSidebarLayout } from '@shared/layouts/InnerSidebarLayout'
 import { useSearchCountStore } from '@stores/useSearchCountStore'
-import { Button } from '@shared/ui/buttons/Button'
+import { useShallow } from 'zustand/react/shallow'
 import { WorkspacePlaylistLayoutsPageSidebar } from '../components/WorkspacePlaylistLayoutsPageSidebar'
 import { useRouterPlaylistLayoutFilter } from '../hooks/useRouterPlaylistLayoutFilter'
-import { useShallow } from 'zustand/react/shallow'
+import { Button } from '@shared/ui/buttons/Button'
+import { CreatePlaylistLayoutButton } from '../components/CreatePlaylistLayoutButton'
 import { EmptyState } from '@shared/ui/EmptyState'
-import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
+import { useWorkspaceRoutes } from '@/modules/workspace/hooks/useWorkspaceRoutes'
+import { useEffect } from 'react'
+import type { PlaylistLayoutListItem } from '../types'
+import { workspacePlaylistLayoutsQuery, type WorkspacePlaylistLayoutsRequestResponse } from '../api/requests/workspacePlaylistLayoutsRequest'
+import { Link } from 'react-router'
 
-const PlaylistLayoutsList = () => {
+const WorkspacePlaylistLayoutsLayoutCard = ({ layout }: { layout: PlaylistLayoutListItem }) => {
     const routes = useWorkspaceRoutes()
-    const workspace = useWorkspace()
-    const { setPlaylistLayoutCount } = useSearchCountStore()
-    const { filters } = useRouterPlaylistLayoutFilter()
-
-    const { data } = useSuspenseQuery(workspacePlaylistLayoutsQuery({
-        workspaceId: workspace.id,
-        filters
-    }))
-
-    const { meta, data: playlistLayouts } = data
-
-    const { total } = meta
-
-    useEffect(() => {
-        setPlaylistLayoutCount(total)
-    }, [total, setPlaylistLayoutCount])
 
     return (
-        <div>
-            {
-                playlistLayouts.map(
-                    playlistLayout => (
-                        <div key={ playlistLayout.id }>
-                            <Link
-                                to={ routes.playlistLayout(playlistLayout.id) }
-                                className='block p-3 hover:bg-neutral-50'
-                            >
-                                { playlistLayout.name }
-                            </Link>
-                        </div>
-                    )
-                )
-            }
+        <Link
+            to={ routes.playlistLayout(layout.id) }
+            className='block w-full hover:bg-neutral-50 p-4 rounded-xl transition-colors border border-neutral-200'
+        >
+            <div className='flex items-center justify-between'>
+                <div className='text-xl font-medium h-10 flex items-center'>
+                    { layout.name }
+                </div>
+                <div className='text-neutral-500 text-sm'>
+                    { layout.resolutionWidth }x{ layout.resolutionHeight }
+                </div>
+            </div>
+            <div className='flex gap-5 text-sm mt-2'>
+                <div>
+                    { layout._count.playlists } playlists
+                </div>
+            </div>
+        </Link>
+    )
+}
+
+const WorkspacePlaylistLayoutsPageHeader = () => {
+    const { playlistLayoutCount } = useSearchCountStore()
+
+    return (
+        <div className='mb-7'>
+            <div className='flex items-center justify-between'>
+                <div className='text-3xl font-bold'>Layouts</div>
+                <div className='flex items-center gap-2'>
+                    <span className='text-neutral-500'>{ playlistLayoutCount }</span>
+                    <CreatePlaylistLayoutButton>
+                        <Button variant='soft'>Create layout</Button>
+                    </CreatePlaylistLayoutButton>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const WorkspacePlaylistLayoutsPageList = ({ data }: { data: WorkspacePlaylistLayoutsRequestResponse }) => {
+    const setPlaylistLayoutCount = useSearchCountStore(useShallow(state => state.setPlaylistLayoutCount))
+
+    useEffect(() => {
+        if (data?.meta) {
+            setPlaylistLayoutCount(data.meta.total)
+        }
+    }, [data, setPlaylistLayoutCount])
+
+    const { data: layouts } = data
+
+    if (!layouts.length) {
+        return <div>No layouts found</div>
+    }
+
+    return (
+        <div className='flex flex-col gap-2'>
+            { layouts.map((layout: PlaylistLayoutListItem) => (
+                <WorkspacePlaylistLayoutsLayoutCard
+                    key={ layout.id }
+                    layout={ layout }
+                />
+            )) }
         </div>
     )
 }
 
 export const WorkspacePlaylistLayoutsPage = () => {
-    const { playlistLayoutCount } = useSearchCountStore(useShallow((state) => state))
     const workspace = useWorkspace()
-    
-    if(workspace._count.layouts === 0) {
+    const { filters } = useRouterPlaylistLayoutFilter()
+    const { data, isLoading } = useQuery(workspacePlaylistLayoutsQuery({
+        workspaceId: workspace.id,
+        filters
+    }))
+
+    if (workspace._count.layouts === 0) {
         return (
             <LayoutBodyContainer>
                 <div className='flex grow'>
                     <EmptyState
                         description='Create a layout to display your playlists.'
                         header='No layouts'
-                        primaryAction={
+                        primaryAction={ (
                             <CreatePlaylistLayoutButton>
                                 <Button>
                                     Create layout
                                 </Button>
                             </CreatePlaylistLayoutButton>
-                        }
+                        ) }
                     />
                 </div>
             </LayoutBodyContainer>
         )
     }
-    
+
     return (
-        <div className='flex flex-col grow max-w-(--breakpoint-xl) mx-auto w-full px-10 gap-5'>
-            <ListPageHeader
-                title='Layouts'
-                count={ playlistLayoutCount }
-            >
-                <CreatePlaylistLayoutButton>
-                    <Button variant='soft'>
-                        Create layout
-                    </Button>
-                </CreatePlaylistLayoutButton>
-            </ListPageHeader>
-            <InnerSidebarLayout sidebar={ <WorkspacePlaylistLayoutsPageSidebar /> }>
-                <QueryErrorResetBoundary>
-                    <ErrorBoundary fallbackRender={ () => (
-                        <div>
-                            There was an error!
-                        </div>
-                    ) }
-                    >
-                        <Suspense fallback={ <>Loading</> }>
-                            <PlaylistLayoutsList />
-                        </Suspense>
-                    </ErrorBoundary>
-                </QueryErrorResetBoundary>
-            </InnerSidebarLayout>
+        <div className='flex gap-2 grow'>
+            <div className='w-[325px] shrink-0'>
+                <LayoutBodyContainer>
+                    <WorkspacePlaylistLayoutsPageSidebar />
+                </LayoutBodyContainer>
+            </div>
+            <LayoutBodyContainer>
+                <ScrollArea verticalMargin={ 24 }>
+                    <div className='p-7'>
+                        <WorkspacePlaylistLayoutsPageHeader />
+                        { isLoading || !data ? (
+                            <div>Loading...</div>
+                        ) : (
+                            <WorkspacePlaylistLayoutsPageList data={ data } />
+                        ) }
+                    </div>
+                </ScrollArea>
+            </LayoutBodyContainer>
         </div>
     )
 }

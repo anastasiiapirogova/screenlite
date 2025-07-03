@@ -8,12 +8,14 @@ import { usePlaylistLayoutEditorStorage } from '@stores/usePlaylistLayoutEditorS
 import { useMutation } from '@tanstack/react-query'
 import { updatePlaylistLayoutRequest, UpdatePlaylistLayoutRequestData } from '@modules/workspace/modules/playlistLayout/api/requests/updatePlaylistLayoutRequest'
 import { useSetPlaylistLayoutQueryData } from '@modules/workspace/modules/playlistLayout/hooks/useSetPlaylistLayoutQueryData'
+import { usePlaylistLayoutEditorHistory } from '@stores/usePlaylistLayoutEditorStorage'
 
 export const WorkspacePlaylistLayoutEditorLayout = ({ children }: { children: ReactNode }) => {
     const routes = useWorkspaceRoutes()
     const layout = usePlaylistLayout()
     const navigate = useNavigate()
     const { sections, resolution, isModified, initStorage, setInitialLayoutData } = usePlaylistLayoutEditorStorage()
+    const { canUndo, canRedo, undo, redo } = usePlaylistLayoutEditorHistory()
 
     const setPlaylistLayoutQueryData = useSetPlaylistLayoutQueryData()
 
@@ -31,7 +33,7 @@ export const WorkspacePlaylistLayoutEditorLayout = ({ children }: { children: Re
     const { mutate, isPending } = useMutation({
         mutationFn: (data: UpdatePlaylistLayoutRequestData) => updatePlaylistLayoutRequest(data),
         onSuccess: async (playlistLayout) => {
-            setPlaylistLayoutQueryData(playlistLayout.id, playlistLayout)
+            setPlaylistLayoutQueryData(playlistLayout.id, layout.workspaceId, playlistLayout)
             setInitialLayoutData(playlistLayout)
         },
         onError: (error) => {
@@ -56,7 +58,23 @@ export const WorkspacePlaylistLayoutEditorLayout = ({ children }: { children: Re
                     icon={ TbChevronLeft }
                     size='squareLarge'
                 />
-                <div className='flex gap-2'>
+                <div className='flex gap-2 items-center'>
+                    <Button
+                        onClick={ undo }
+                        disabled={ !canUndo }
+                        variant='soft'
+                        size='squareSmall'
+                    >
+                        Undo
+                    </Button>
+                    <Button
+                        onClick={ redo }
+                        disabled={ !canRedo }
+                        variant='soft'
+                        size='squareSmall'
+                    >
+                        Redo
+                    </Button>
                     { isModified ? (
                         <>
                             <Button onClick={ revertChanges }>

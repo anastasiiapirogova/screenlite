@@ -6,7 +6,7 @@ import { useSetPlaylistQueryData } from '../../hooks/useSetPlaylistQueryData'
 import { Button } from '@shared/ui/buttons/Button'
 
 export const SwitchPlaylistStatusButton = () => {
-    const { id, isPublished } = usePlaylist()
+    const { id, isPublished, workspaceId } = usePlaylist()
     const setPlaylistQueryData = useSetPlaylistQueryData()
 
     const { mutate, isPending } = useMutation({
@@ -24,6 +24,7 @@ export const SwitchPlaylistStatusButton = () => {
     })
 
     const switchStatus = () => mutate({
+        workspaceId: workspaceId,
         playlistId: id,
         isPublished: !isPublished
     })

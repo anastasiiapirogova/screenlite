@@ -1,8 +1,8 @@
 import { PaginatedRequestFilter, PaginatedResponse } from '@/types'
 import axios from '@config/axios'
-import { PlaylistLayout } from '../../types'
+import { PlaylistLayoutListItem } from '../../types'
 
-type WorkspacePlaylistLayoutsRequestResponse = PaginatedResponse<PlaylistLayout>
+export type WorkspacePlaylistLayoutsRequestResponse = PaginatedResponse<PlaylistLayoutListItem>
 
 export type WorkspacePlaylistLayoutsRequestFilters = PaginatedRequestFilter & {
     search?: string | null
@@ -20,3 +20,8 @@ export const workspacePlaylistLayoutsRequest = async (data: WorkspacePlaylistLay
 
     return response.data
 }
+
+export const workspacePlaylistLayoutsQuery = (data: WorkspacePlaylistLayoutsRequestData) => ({
+    queryKey: ['workspacePlaylistLayouts', data],
+    queryFn: async () => workspacePlaylistLayoutsRequest(data)
+})

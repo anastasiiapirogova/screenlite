@@ -16,7 +16,6 @@ import { useQuery } from '@tanstack/react-query'
 import { useDeferredLoading } from '@shared/hooks/useDeferredLoading'
 import { workspaceFolderQuery } from '../api/workspaceFolder'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
-import { DeleteFoldersButton } from '../components/buttons/DeleteFoldersButton'
 import { FolderBreadcrumbs } from '../components/FileManager/FolderBreadcrumbs'
 import { useFilesPageClickHandler } from '../hooks/useFilesPageClickHandler'
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
@@ -34,32 +33,20 @@ const Sidebar = () => {
 }
 
 type MainContentProps = {
-    parentId?: string
-    folderData?: { folder: { name: string }, parentFolders: ParentFolderTreeResult[] }
     folderId?: string
+    folderData?: { folder: { name: string }, parentFolders: ParentFolderTreeResult[] }
     filesPageContentRef: React.RefObject<HTMLDivElement>
     handleFileDoubleClick: (file: WorkspaceFile) => void
     handleFolderDoubleClick: (folder: FolderWithChildrenCount) => void
 }
 
-const MainContent = ({ parentId, folderData, folderId, filesPageContentRef, handleFileDoubleClick, handleFolderDoubleClick }: MainContentProps) => {
+const MainContent = ({ folderId, folderData, filesPageContentRef, handleFileDoubleClick, handleFolderDoubleClick }: MainContentProps) => {
     return (
         <LayoutBodyContainer>
             <div className='flex items-center justify-between p-7 border-b border-gray-100'>
-                <FolderBreadcrumbs folder={ folderData
-                    ? {
-                        name: folderData.folder.name,
-                        parentFolders: folderData.parentFolders
-                    }
-                    : undefined }
-                />
+                <FolderBreadcrumbs folderData={ folderData }/>
                 <div className='flex items-center gap-2'>
-                    { folderId && (
-                        <DeleteFoldersButton folderIds={ folderId }>
-                            <Button>Delete folder</Button>
-                        </DeleteFoldersButton>
-                    ) }
-                    <CreateFolderButton parentId={ parentId || null }>
+                    <CreateFolderButton parentId={ folderId || null }>
                         <Button>Create folder</Button>
                     </CreateFolderButton>
                 </div>
@@ -70,12 +57,12 @@ const MainContent = ({ parentId, folderData, folderId, filesPageContentRef, hand
                     ref={ filesPageContentRef }
                 >
                     <FolderList
-                        parentId={ parentId }
+                        parentId={ folderId }
                         onFolderDoubleClick={ handleFolderDoubleClick }
                     />
                     <div className='mt-10'></div>
                     <FileList
-                        folderId={ parentId }
+                        folderId={ folderId }
                         onFileDoubleClick={ handleFileDoubleClick }
                     />
                 </div>
@@ -100,6 +87,7 @@ export const WorkspaceFilesPage = () => {
         ...workspaceFolderQuery({ folderId: folderId!, workspaceId: workspace.id }),
         enabled: !!folderId
     })
+
     const deferredIsLoading = useDeferredLoading(isLoading, { delay: 0, minDuration: 500 })
     
     useFilesPageClickHandler({
@@ -129,17 +117,24 @@ export const WorkspaceFilesPage = () => {
             </LayoutBodyContainer>
         )
     }
-    
-    const parentId = folderId || undefined
+
+    if (folderData && folderData.folder.deletedAt) {
+        return (
+            <LayoutBodyContainer>
+                <div className='flex grow items-center justify-center'>
+                    This folder has been deleted
+                </div>
+            </LayoutBodyContainer>
+        )
+    }
     
     return (
         <FilesDndContext>
             <div className='flex gap-2 grow'>
                 <Sidebar />
                 <MainContent
-                    parentId={ parentId }
-                    folderData={ folderData }
                     folderId={ folderId }
+                    folderData={ folderData }
                     filesPageContentRef={ filesPageContentRef }
                     handleFileDoubleClick={ handleFileDoubleClick }
                     handleFolderDoubleClick={ handleFolderDoubleClick }

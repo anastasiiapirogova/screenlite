@@ -1,12 +1,15 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { playlistLayoutQuery } from '../api/queries/playlistLayoutQuery'
 import { GetPlaylistLayoutQueryData } from '../types'
+import { playlistLayoutQuery } from '@workspaceModules/playlistLayout/api/requests/playlistLayoutRequest'
 
 export const useSetPlaylistLayoutQueryData = () => {
     const queryClient = useQueryClient()
 
-    return (playlistId: string, partialData: Partial<GetPlaylistLayoutQueryData>) => {
-        const query = playlistLayoutQuery(playlistId)
+    return (playlistLayoutId: string, workspaceId: string, partialData: Partial<GetPlaylistLayoutQueryData>) => {
+        const query = playlistLayoutQuery({
+            playlistLayoutId,
+            workspaceId
+        })
         
         queryClient.setQueryData(query.queryKey, (oldData: GetPlaylistLayoutQueryData | undefined) => {
             return {

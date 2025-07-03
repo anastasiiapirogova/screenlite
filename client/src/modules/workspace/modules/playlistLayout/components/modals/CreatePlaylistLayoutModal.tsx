@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router'
 import { useWorkspaceRoutes } from '@/modules/workspace/hooks/useWorkspaceRoutes'
 import { CreatePlaylistLayoutRequestData } from '@modules/workspace/modules/playlistLayout/types.js'
 import { createPlaylistLayoutRequest } from '@modules/workspace/modules/playlistLayout/api/requests/createPlaylistLayoutRequest.js'
-import { playlistLayoutQuery } from '@modules/workspace/modules/playlistLayout/api/queries/playlistLayoutQuery.js'
 import { Button } from '@shared/ui/buttons/Button'
 import { ModalClose } from '@shared/ui/modal/Modal'
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
@@ -14,6 +13,7 @@ import { Input } from '@shared/ui/input/Input'
 import { InputError } from '@shared/ui/input/InputError'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 import { useRefetchWorkspaceEntityCounts } from '@modules/workspace/hooks/useRefetchWorkspaceEntityCounts'
+import { playlistLayoutQuery } from '@workspaceModules/playlistLayout/api/requests/playlistLayoutRequest'
 
 export const CreatePlaylistLayoutModal = () => {
     const workspace = useWorkspace()
@@ -39,7 +39,10 @@ export const CreatePlaylistLayoutModal = () => {
     const { mutate, isPending } = useMutation({
         mutationFn: (data: CreatePlaylistLayoutRequestData) => createPlaylistLayoutRequest(data),
         onSuccess: async (playlistLayout) => {
-            queryClient.setQueryData(playlistLayoutQuery(playlistLayout.id).queryKey, playlistLayout)
+            queryClient.setQueryData(playlistLayoutQuery({
+                playlistLayoutId: playlistLayout.id,
+                workspaceId: workspace.id
+            }).queryKey, playlistLayout)
             refetchEntityCounts()
             navigate(routes.playlistLayout(playlistLayout.id))
         },

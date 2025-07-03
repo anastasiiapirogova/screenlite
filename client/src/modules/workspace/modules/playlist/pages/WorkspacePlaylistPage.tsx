@@ -12,70 +12,72 @@ import { twMerge } from 'tailwind-merge'
 import { SwitchPlaylistStatusButton } from '../components/buttons/SwitchPlaylistStatusButton'
 import { RestorePlaylistButton } from '../components/buttons/RestorePlaylistButton'
 
-const Items = () => {
+const ItemsCard = () => {
     const { _count, id } = usePlaylist()
     const routes = useWorkspaceRoutes()
     const itemCount = _count.items
 
     return (
-        <div className='p-5 border rounded-2xl'>
-            <div className='text-xl font-semibold'>
-                Content
+        <EntityPageCard
+            title="Items"
+            className="h-full flex flex-col justify-between"
+        >
+            <div className="flex flex-col gap-2 grow justify-center">
+                <span className="text-4xl font-bold">{ itemCount }</span>
+                <span className="text-lg text-neutral-500">{ pluralize('item', itemCount) }</span>
             </div>
-            <div className='flex gap-2 text-lg justify-between min-h-12 grow items-center'>
-                { itemCount === 0 ? (
-                    <div>
-                        Playlist is empty
-                    </div>
-                ) : (
-                    <div>
-                        { pluralize('item', itemCount, true) }
-                    </div>
-                ) }
+            <div className="mt-4">
+                <Button
+                    color='secondary'
+                    variant='soft'
+                    to={ routes.playlistContentManager(id) }
+                    className="w-full"
+                >
+                    Manage content
+                </Button>
             </div>
-            <Button
-                color='secondary'
-                variant='soft'
-                to={ routes.playlistContentManager(id) }
-            >
-                Manage content
-            </Button>
-        </div>
+        </EntityPageCard>
     )
 }
 
-const Size = () => {
+const LayoutCard = () => {
+    return (
+        <PlaylistPageLayoutCard />
+    )
+}
+
+const SizeCard = () => {
     const { size } = usePlaylist()
 
     return (
-        <div className='p-5 border rounded-2xl'>
-            <div className='text-xl font-semibold'>
-                Size
-            </div>
-            <div className='flex gap-2 text-lg justify-between min-h-12 grow items-center'>
-                { prettySize(size) }
-            </div>
-        </div>
+        <EntityPageCard
+            title="Size"
+            className="h-full flex flex-col justify-center items-start"
+        >
+            <span className="text-4xl font-bold">{ prettySize(size) }</span>
+            <span className="text-lg text-neutral-500 mt-2">Total size</span>
+        </EntityPageCard>
     )
 }
 
-const Status = () => {
+const StatusCard = () => {
     const { isPublished } = usePlaylist()
 
     return (
-        <EntityPageCard title="Status">
-            <div className={
-                twMerge(
-                    'flex h-16 items-center',
-                    isPublished ? 'text-blue-500' : 'text-neutral-500'
-                )
-            }
-            >
-                {
-                    isPublished ? 'Published' : 'Draft'
-                }
+        <EntityPageCard
+            title="Status"
+            className="h-full flex flex-col justify-between"
+        >
+            <div className="flex flex-col gap-2 grow justify-center">
+                <span className={ twMerge(
+                    'text-2xl font-semibold',
+                    isPublished ? 'text-blue-500' : 'text-neutral-400'
+                ) }
+                >
+                    { isPublished ? 'Published' : 'Draft' }
+                </span>
             </div>
-            <div>
+            <div className="mt-4">
                 <SwitchPlaylistStatusButton />
             </div>
         </EntityPageCard>
@@ -84,8 +86,8 @@ const Status = () => {
 
 export const WorkspacePlaylistPage = () => {
     return (
-        <div>
-            <div className='flex gap-2 justify-end'>
+        <div className='p-7'>
+            <div className='flex gap-2 justify-end mb-5'>
                 <EditPlaylistDetailsButton>
                     <Button
                         color='secondary'
@@ -119,15 +121,11 @@ export const WorkspacePlaylistPage = () => {
                     </Button>
                 </RestorePlaylistButton>
             </div>
-            <div className='flex gap-5 mt-5'>
-                <PlaylistPageLayoutCard />
-                <div className='w-1/2'>
-                    <Items />
-                    <Status />
-                </div>
-                <div className='w-1/2'>
-                    <Size />
-                </div>
+            <div className='grid grid-cols-2 gap-5'>
+                <ItemsCard />
+                <LayoutCard />
+                <SizeCard />
+                <StatusCard />
             </div>
         </div>
     )

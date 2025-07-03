@@ -5,6 +5,8 @@ import { twMerge } from 'tailwind-merge'
 
 type SquareSize = 'squareLarge' | 'squareBase' | 'squareSmall'
 
+type ButtonStatus = 'idle' | 'pending' | 'success' | 'failed'
+
 type ButtonProps = {
     size?: 'large' | 'base' | 'small' | SquareSize;
     color?: 'danger' | 'primary' | 'secondary';
@@ -16,7 +18,23 @@ type ButtonProps = {
     iconPosition?: 'left' | 'right'
     pill?: boolean
     to?: string
+    status?: ButtonStatus
+    statusText?: {
+        idle?: string
+        pending?: string
+        success?: string
+        failed?: string
+    }
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
+
+export type CustomButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+	status?: 'success' | 'pending' | 'idle'
+	statusText?: {
+		success?: string
+		pending?: string
+		idle?: string
+	}
+}
 
 const baseStyles = 'flex items-center justify-center gap-2 rounded-sm transition-colors focus:outline-hidden cursor-pointer disabled:cursor-default font-medium'
 
@@ -82,6 +100,8 @@ export const Button = ({
     icon,
     onClick,
     pill = true,
+    status = 'idle',
+    statusText,
     ...props
 }: ButtonProps) => {
     const navigate = useNavigate()
@@ -95,6 +115,12 @@ export const Button = ({
         iconPosition === 'right' ? 'flex-row-reverse' : 'flex-row',
         className,
     )
+
+    let displayText = children
+    
+    if (statusText && status && statusText[status]) {
+        displayText = statusText[status]
+    }
 
     const onClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (props.to) {
@@ -119,7 +145,7 @@ export const Button = ({
             {
                 children && (
                     <span className='flex grow justify-center'>
-                        { children }
+                        { displayText }
                     </span>
                 )
             }
