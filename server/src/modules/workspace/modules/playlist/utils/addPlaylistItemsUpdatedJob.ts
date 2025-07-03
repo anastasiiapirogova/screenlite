@@ -1,14 +1,11 @@
 import { playlistQueue } from '@/bullmq/queues/playlistQueue.ts'
-import { addPlaylistUpdatedJob } from './addPlaylistUpdatedJob.ts'
 
-export const addPlaylistItemsUpdatedJob = async (playlistId: string) => {
-    addPlaylistUpdatedJob({ playlistId })
-
+export const addRecalculatePlaylistSizeJob = async (playlistId: string) => {
     await playlistQueue.add(
-        'playlistItemsUpdated',
+        'recalculatePlaylistSize',
         { playlistId },
         {
-            deduplication: { id: `playlistItemsUpdated-${playlistId}` },
+            deduplication: { id: `recalculatePlaylistSize-${playlistId}` },
         },
     )
 }

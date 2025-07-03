@@ -1,8 +1,8 @@
 import { prisma } from '@/config/prisma.ts'
-import { calculatePlaylistSize } from '../utils/calculatePlaylistSize.ts'
+import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 
 export const recalculatePlaylistSizeJob = async (playlistId: string) => {
-    const newPlaylistSize = await calculatePlaylistSize(playlistId)
+    const newPlaylistSize = await PlaylistRepository.calculatePlaylistSize(playlistId)
 
     await prisma.playlist.update({
         where: {
