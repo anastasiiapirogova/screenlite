@@ -27,6 +27,7 @@ export const getWorkspaceFiles = async (req: Request, res: Response) => {
             not: null
         } : null,
         folderId: folderIdParsed,
+        forceDeleteRequestedAt: null
     }
 
     const [files, total] = await Promise.all([
