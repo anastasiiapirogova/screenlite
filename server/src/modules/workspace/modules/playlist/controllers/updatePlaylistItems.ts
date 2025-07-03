@@ -1,17 +1,17 @@
 import { Request, Response } from 'express'
 import { updatePlaylistItemsSchema } from '../schemas/playlistItemSchemas.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
+import { PlaylistItemsUpdateService } from '../services/PlaylistItemUpdateService.ts'
 import { addRecalculatePlaylistSizeJob } from '../utils/addRecalculatePlaylistSizeJob.ts'
 import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
-import { UpdatePlaylistItemsService } from '../services/UpdatePlaylistItemsService.ts'
+import { prisma } from '@/config/prisma.ts'
 
 export const updatePlaylistItems = async (req: Request, res: Response) => {
-    const { playlistId: playlistIdParam } = req.params
+    const { playlistId } = req.params
     const { items: bodyItems } = req.body
 
     const validation = await updatePlaylistItemsSchema.safeParseAsync({
-        playlistId: playlistIdParam,
+        playlistId,
         items: bodyItems
     })
 
@@ -19,44 +19,57 @@ export const updatePlaylistItems = async (req: Request, res: Response) => {
         return ResponseHandler.zodError(req, res, validation.error.errors)
     }
 
-    const { playlistId, items } = validation.data
+    const { items } = validation.data
 
-    const playlist = await PlaylistRepository.getWithItems(playlistId)
+    const playlist = await prisma.playlist.findUnique({
+        where: { id: playlistId },
+        include: {
+            items: true,
+            layout: {
+                include: {
+                    sections: {
+                        select: {
+                            id: true,
+                        }
+                    }
+                }
+            }
+        }
+    })
 
     if (!playlist) {
         return ResponseHandler.notFound(req, res)
     }
 
-    const currentItems = UpdatePlaylistItemsService.mapToComparable(playlist.items)
+    const playlistLayoutSectionIds = playlist.layout?.sections.map(section => section.id) || []
+    
+    const processedItems = await PlaylistItemsUpdateService.processItems(
+        playlist.items,
+        items,
+        playlist.workspaceId,
+        playlistLayoutSectionIds
+    )
 
-    const submittedItems = PlaylistRepository.orderItems(items)
-
-    const {
-        itemsToDelete,
-        itemsToCreate,
-        itemsToUpdate,
-        itemsCount
-    } = await UpdatePlaylistItemsService.processItems({
-        currentItems,
-        submittedItems,
-        workspaceId: playlist.workspaceId
-    })
-
-    if (itemsCount === 0) {
+    if (processedItems.itemsCount === 0) {
         return ResponseHandler.json(res, {
             items: playlist.items
         })
     }
 
-    const result = await PlaylistRepository.updateItems(playlistId, itemsToDelete, itemsToCreate, itemsToUpdate)
+    const updatedPlaylist = await PlaylistItemsUpdateService.applyChanges(
+        playlistId,
+        processedItems
+    )
 
-    addRecalculatePlaylistSizeJob(playlistId)
-
+    if (processedItems.itemsToDelete.length > 0 || processedItems.itemsToCreate.length > 0) {
+        addRecalculatePlaylistSizeJob(playlistId)
+    }
+    
     if(playlist.isPublished) {
         addPlaylistUpdatedJob({ playlistId, context: 'playlist items updated' })
     }
 
     ResponseHandler.json(res, {
-        items: PlaylistRepository.orderItems(result.items)
+        items: updatedPlaylist.items
     })
 }
