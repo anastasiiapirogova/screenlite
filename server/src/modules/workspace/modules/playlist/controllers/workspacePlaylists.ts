@@ -3,7 +3,6 @@ import { prisma } from '@/config/prisma.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { exclude } from '@/utils/exclude.ts'
-import { getPlaylistStatusClause } from '../utils/getPlaylistStatusClause.ts'
 import { getWorkspacePlaylistsSchema } from '../schemas/playlistSchemas.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 
@@ -30,7 +29,7 @@ export const workspacePlaylists = async (req: Request, res: Response) => {
             contains: search,
             mode: 'insensitive' as Prisma.QueryMode,
         } : Prisma.skip,
-        ...getPlaylistStatusClause(status),
+        ...PlaylistRepository.getPlaylistStatusClause(status),
         type: typeIsSet ? {
             in: type,
         } : Prisma.skip,
