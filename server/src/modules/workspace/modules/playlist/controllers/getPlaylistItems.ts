@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { fixOrderOfPlaylistItems } from '../utils/fixOrderOfPlaylistItems.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 
 export const getPlaylistItems = async (req: Request, res: Response) => {
@@ -13,6 +12,6 @@ export const getPlaylistItems = async (req: Request, res: Response) => {
     }
 
     ResponseHandler.json(res, {
-        items: fixOrderOfPlaylistItems(playlist.items)
+        items: PlaylistRepository.orderItems(playlist.items)
     })
 }

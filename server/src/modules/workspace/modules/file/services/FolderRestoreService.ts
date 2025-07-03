@@ -1,5 +1,6 @@
 import { prisma } from '@/config/prisma.ts'
 import { FolderRepository } from '../repositories/FolderRepository.ts'
+import { addFileUpdatedJobs } from '../utils/addFileUpdatedJobs.ts'
 
 type RestoreFoldersResult = {
     restoredFolders: string[]
@@ -29,10 +30,16 @@ export class FolderRestoreService {
 
         const validParentIds = await this.getValidParentIds(deletedFolders)
         
-        await this.restoreDeletedFolders(deletedFolders, validParentIds)
+        const restoredFolders = deletedFolders.map(f => f.id)
+        
+        const restoredFileIds = await this.restoreDeletedFolders(deletedFolders, validParentIds)
+
+        if (restoredFileIds.length > 0) {
+            addFileUpdatedJobs(restoredFileIds)
+        }
 
         return {
-            restoredFolders: deletedFolders.map(f => f.id),
+            restoredFolders,
             alreadyRestoredFolders: undeletedFolders.length > 0 ? undeletedFolders.map(f => f.id) : undefined,
             notFoundFolders: notFoundFolders.length > 0 ? notFoundFolders : undefined
         }
@@ -94,7 +101,11 @@ export class FolderRestoreService {
         const filesToRestore = await prisma.file.findMany({
             where: {
                 folderId: { in: [...rootFoldersData.map(folder => folder.id), ...subfolders.map(subfolder => subfolder.id)] },
-                deletedAt: { not: null }
+                deletedAt: { not: null },
+                forceDeleteRequestedAt: null
+            },
+            select: {
+                id: true
             }
         })
 
@@ -112,5 +123,7 @@ export class FolderRestoreService {
                 data: { deletedAt: null, folderIdBeforeDeletion: null }
             }))
         ])
+
+        return filesToRestore.map(file => file.id)
     }
 } 

@@ -1,4 +1,5 @@
 import { prisma } from '@/config/prisma.ts'
+import { addFileUpdatedJobs } from '../utils/addFileUpdatedJobs.ts'
 
 type RestoreFilesResult = {
     restoredFiles: string[]
@@ -30,8 +31,14 @@ export class FileRestoreService {
 
         await this.restoreDeletedFiles(deletedFiles, validFolderIds)
 
+        const restoredFileIds = deletedFiles.map(f => f.id)
+        
+        if (restoredFileIds.length > 0) {
+            addFileUpdatedJobs(restoredFileIds)
+        }
+
         return {
-            restoredFiles: deletedFiles.map(f => f.id),
+            restoredFiles: restoredFileIds,
             alreadyRestoredFiles: undeletedFiles.length > 0 ? undeletedFiles.map(f => f.id) : undefined,
             notFoundFiles: notFoundFiles.length > 0 ? notFoundFiles : undefined
         }
@@ -41,7 +48,8 @@ export class FileRestoreService {
         return prisma.file.findMany({
             where: {
                 id: { in: fileIds },
-                workspaceId
+                workspaceId,
+                forceDeleteRequestedAt: null
             },
             select: {
                 id: true,

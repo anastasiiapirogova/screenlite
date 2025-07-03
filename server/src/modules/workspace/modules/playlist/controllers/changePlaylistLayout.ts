@@ -4,7 +4,7 @@ import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 import { updatePlaylistPlaylistLayoutSchema } from '../schemas/playlistSchemas.ts'
 import { PlaylistLayoutRepository } from '@/modules/workspace/modules/playlistLayout/repositories/PlaylistLayoutRepository.ts'
 import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
-import { addPlaylistItemsUpdatedJob } from '../utils/addPlaylistItemsUpdatedJob.ts'
+import { addRecalculatePlaylistSizeJob } from '../utils/addPlaylistItemsUpdatedJob.ts'
 
 export const changePlaylistLayout = async (req: Request, res: Response) => {
     const data = req.body
@@ -43,7 +43,7 @@ export const changePlaylistLayout = async (req: Request, res: Response) => {
     try {
         const updatedPlaylist = await PlaylistRepository.updateLayoutPreservingItems(playlistId, playlistLayoutId)
         
-        addPlaylistItemsUpdatedJob(playlistId)
+        addRecalculatePlaylistSizeJob(playlistId)
         addPlaylistUpdatedJob({ playlistId })
 
         ResponseHandler.json(res, {

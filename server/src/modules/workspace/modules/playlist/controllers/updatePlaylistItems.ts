@@ -1,15 +1,19 @@
 import { Request, Response } from 'express'
 import { updatePlaylistItemsSchema } from '../schemas/playlistItemSchemas.ts'
-import { mapPlaylistItemsToComparable } from '../utils/mapPlaylistItemsToComparable.ts'
-import { processPlaylistItemsToCreate } from '../utils/processPlaylistItemsToCreate.ts'
-import { fixOrderOfPlaylistItems } from '../utils/fixOrderOfPlaylistItems.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { processPlaylistItems } from '../utils/processPlaylistItems.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
-import { addPlaylistItemsUpdatedJob } from '../utils/addPlaylistItemsUpdatedJob.ts'
+import { addRecalculatePlaylistSizeJob } from '../utils/addPlaylistItemsUpdatedJob.ts'
+import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
+import { UpdatePlaylistItemsService } from '../services/UpdatePlaylistItemsService.ts'
 
 export const updatePlaylistItems = async (req: Request, res: Response) => {
-    const validation = await updatePlaylistItemsSchema.safeParseAsync(req.body)
+    const { playlistId: playlistIdParam } = req.params
+    const { items: bodyItems } = req.body
+
+    const validation = await updatePlaylistItemsSchema.safeParseAsync({
+        playlistId: playlistIdParam,
+        items: bodyItems
+    })
 
     if (!validation.success) {
         return ResponseHandler.zodError(req, res, validation.error.errors)
@@ -23,11 +27,20 @@ export const updatePlaylistItems = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(req, res)
     }
 
-    const currentItems = mapPlaylistItemsToComparable(playlist.items)
+    const currentItems = UpdatePlaylistItemsService.mapToComparable(playlist.items)
 
-    const submittedItems = fixOrderOfPlaylistItems(items)
+    const submittedItems = PlaylistRepository.orderItems(items)
 
-    const { itemsToDelete, itemsToCreate, itemsToUpdate, itemsCount } = processPlaylistItems(currentItems, submittedItems)
+    const {
+        itemsToDelete,
+        itemsToCreate,
+        itemsToUpdate,
+        itemsCount
+    } = await UpdatePlaylistItemsService.processItems({
+        currentItems,
+        submittedItems,
+        workspaceId: playlist.workspaceId
+    })
 
     if (itemsCount === 0) {
         return ResponseHandler.json(res, {
@@ -35,13 +48,15 @@ export const updatePlaylistItems = async (req: Request, res: Response) => {
         })
     }
 
-    const processedItemsToCreate = await processPlaylistItemsToCreate(itemsToCreate, playlist.workspaceId)
+    const result = await PlaylistRepository.updateItems(playlistId, itemsToDelete, itemsToCreate, itemsToUpdate)
 
-    const result = await PlaylistRepository.updateItems(playlistId, itemsToDelete, processedItemsToCreate, itemsToUpdate)
+    addRecalculatePlaylistSizeJob(playlistId)
 
-    addPlaylistItemsUpdatedJob(playlist.id)
+    if(playlist.isPublished) {
+        addPlaylistUpdatedJob({ playlistId })
+    }
 
     ResponseHandler.json(res, {
-        items: fixOrderOfPlaylistItems(result.items)
+        items: PlaylistRepository.orderItems(result.items)
     })
 }
