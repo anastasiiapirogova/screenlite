@@ -21,5 +21,5 @@ export const handleFileUpdatedJob = async (fileId: string) => {
 
     const playlistIds = [...new Set(playlistItems.map(item => item.playlist.id))]
 
-    addPlaylistUpdatedJobs(playlistIds)
+    addPlaylistUpdatedJobs(playlistIds, 'file updated')
 }

@@ -3,6 +3,7 @@ import { Queue } from 'bullmq'
 
 export type PlaylistQueueJobData = {
     playlistId?: string
+    context?: string
 }
 
 export const playlistQueue = new Queue<PlaylistQueueJobData>('playlistQueue', {

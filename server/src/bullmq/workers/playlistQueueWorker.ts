@@ -6,7 +6,7 @@ import { playlistQueue, PlaylistQueueJobData } from '@/bullmq/queues/playlistQue
 import { createWorkerProcessor } from './workerFactory.ts'
 
 const handlers: Record<string, (job: Job<PlaylistQueueJobData>) => Promise<void>> = {
-    playlistItemsUpdated: async (job) => {
+    recalculatePlaylistSize: async (job) => {
         if (job.data.playlistId) {
             await recalculatePlaylistSizeJob(job.data.playlistId)
         }
@@ -21,7 +21,7 @@ const handlers: Record<string, (job: Job<PlaylistQueueJobData>) => Promise<void>
 const processor = createWorkerProcessor<PlaylistQueueJobData>({
     handlers,
     category: 'playlistQueueWorker',
-    getLogContext: (job) => `playlistId: ${job.data.playlistId}`
+    getLogContext: (job) => `playlistId: ${job.data.playlistId}${job.data.context ? ', context: ' + job.data.context : ''}`
 })
 
 export const playlistQueueWorker = new Worker(
