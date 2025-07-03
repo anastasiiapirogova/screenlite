@@ -30,12 +30,16 @@ export const FileContextMenu = ({ anchorPoint, open, onClose, data }: FileContex
         }
     })()
 
+    const isSingle = filesToActOn.length === 1
+
     const options = [
-        { label: 'Download', action: () => console.log('Download', filesToActOn) },
-        { label: 'Open', action: () => console.log('Open', filesToActOn) },
-        { label: 'Trash', action: () => console.log('Trash', filesToActOn) },
+        ...(isSingle ? [
+            { label: 'Open', action: () => console.log('Open', filesToActOn) },
+            { label: 'Rename', action: () => console.log('Rename', filesToActOn) },
+            { label: 'Download', action: () => console.log('Download', filesToActOn) },
+        ] : []),
         { label: 'Move', action: () => console.log('Move', filesToActOn) },
-        { label: 'Rename', action: () => console.log('Rename', filesToActOn) },
+        { label: 'Trash', action: () => console.log('Trash', filesToActOn) },
     ]
 
     return (
