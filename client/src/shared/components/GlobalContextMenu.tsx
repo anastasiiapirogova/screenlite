@@ -1,5 +1,6 @@
 import { useContextMenuStore } from '@stores/useContextMenuStore'
 import { FileContextMenu } from '@workspaceModules/file/components/FileManager/FileContextMenu'
+import { FolderContextMenu } from '@workspaceModules/file/components/FileManager/FolderContextMenu'
 
 export const GlobalContextMenu = () => {
     const { open, anchorPoint, type, data, closeContextMenu } = useContextMenuStore()
@@ -17,8 +18,14 @@ export const GlobalContextMenu = () => {
                 />
             )
         case 'folder':
-            // TODO: Add FolderContextMenu
-            return null
+            return (
+                <FolderContextMenu
+                    anchorPoint={ anchorPoint }
+                    open={ open }
+                    onClose={ closeContextMenu }
+                    data={ data }
+                />
+            )
         case 'playlist':
             // TODO: Add PlaylistContextMenu
             return null
