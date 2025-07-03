@@ -1,7 +1,6 @@
 import { WorkspaceFile } from '@workspaceModules/file/types'
 import { PlaylistContentManagerItem, PlaylistItemType } from '@workspaceModules/playlist/types'
-import { arePlaylistItemsEqual } from '@workspaceModules/playlistContentManager/helpers/arePlaylistItemsEqual'
-import { mapFileToPlaylistItem } from '@workspaceModules/playlistContentManager/helpers/mapFileToPlaylistItem'
+import { PlaylistContentService } from '@workspaceModules/playlistContentManager/services/PlaylistContentService'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -59,7 +58,7 @@ export const usePlaylistContentManagerStorage = create<State & Action>()(
 
                 if (currentItems === null) return
 
-                const isModified = !arePlaylistItemsEqual(initialItems, currentItems)
+                const isModified = !PlaylistContentService.arePlaylistItemsEqual(initialItems, currentItems)
 
                 set({ isModified })
             },
@@ -128,8 +127,8 @@ export const usePlaylistContentManagerStorage = create<State & Action>()(
 
                 const newItems = (() => {
                     switch (type) {
-                        case 'File':
-                            return mapFileToPlaylistItem(itemsArray, sectionId, maxOrder)
+                        case 'file':
+                            return PlaylistContentService.mapFileToPlaylistItem(itemsArray, sectionId, maxOrder)
                         default:
                             return []
                     }
