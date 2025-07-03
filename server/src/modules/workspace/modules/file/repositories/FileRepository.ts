@@ -2,7 +2,6 @@ import { prisma } from '@/config/prisma.ts'
 import { UpdateFileData } from '../types.ts'
 import { v4 as uuid } from 'uuid'
 import { File, FileUploadSession } from '@/generated/prisma/client.ts'
-import { FileService } from '../services/FileService.ts'
 
 export class FileRepository {
     static async createFileKey(workspaceId: string, filename: string) {
@@ -74,7 +73,6 @@ export class FileRepository {
 
     static async createFileFromFileUploadSession(session: FileUploadSession) {
         const mimeType = session.mimeType
-        const fileName = FileService.sanitizeFileName(session.name)
     
         let fileType: 'video' | 'image' | 'audio' | undefined
     
@@ -86,12 +84,11 @@ export class FileRepository {
             fileType = 'audio'
         }
     
-        const uniqueName = session.path.split('/').pop() || fileName
     
         const file = await prisma.file.create({
             data: {
-                name: fileName,
-                extension: uniqueName.split('.').pop() || '',
+                name: session.name,
+                extension: session.path.split('.').pop() || '',
                 size: session.size,
                 mimeType: mimeType,
                 workspaceId: session.workspaceId,

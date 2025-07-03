@@ -8,26 +8,14 @@ export class FileService {
     static shortenFileName(fileName: string, maxLength: number): string {
         const dotIndex = fileName.lastIndexOf('.')
         const nameWithoutExtension = dotIndex !== -1 ? fileName.slice(0, dotIndex) : fileName
+        const extension = dotIndex !== -1 ? fileName.slice(dotIndex) : ''
 
         if (nameWithoutExtension.length <= maxLength) {
-            return nameWithoutExtension
+            return fileName
         }
 
-        const shortenedName = nameWithoutExtension.slice(0, maxLength)
+        const shortenedName = nameWithoutExtension.slice(0, maxLength) + extension
 
         return shortenedName
-    }
-
-    static sanitizeFileName(fileName: string): string {
-        const maxLength = 255
-        const extensionIndex = fileName.lastIndexOf('.')
-
-        if (extensionIndex === -1) {
-            return fileName.substring(0, maxLength)
-        }
-
-        const namePart = fileName.substring(0, extensionIndex)
-
-        return namePart.substring(0, maxLength)
     }
 }
