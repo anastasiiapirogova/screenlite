@@ -6,7 +6,7 @@ export type DeleteFoldersRequestData = {
 }
 
 export const deleteFoldersRequest = async (data: DeleteFoldersRequestData) => {
-    const response = await axios.post(`/workspaces/${data.workspaceId}/folders/delete`, { data })
+    const response = await axios.post(`/workspaces/${data.workspaceId}/folders/delete`, data)
 
     return response.data
 }
