@@ -5,6 +5,8 @@ import { prettySize } from '@shared/helpers/prettySize'
 import { TbCalendar } from 'react-icons/tb'
 import { StorageService } from '@/utils/StorageService'
 import { ButtonSpinner } from '@shared/ui/buttons/ButtonSpinner'
+import { useQuery } from '@tanstack/react-query'
+import { filePlaylistsQuery } from '../api/filePlaylists'
 
 interface FilePreviewModalProps {
     open: boolean
@@ -27,6 +29,30 @@ const formatDate = (dateString: string) => {
     })
 }
 
+const Playlists = ({ fileId, workspaceId }: { fileId: string, workspaceId: string }) => {
+    const { data: playlists } = useQuery(
+        filePlaylistsQuery({ fileId, workspaceId })
+    )
+
+    if (!playlists?.length) {
+        return (
+            <div className='text-sm text-gray-500'>Not used in any playlists</div>
+        )
+    }
+
+    return (
+        <div className='flex flex-col gap-2'>
+            <div className='text-sm font-medium text-gray-900'>Used in playlists</div>
+            { playlists?.map((playlist) => (
+                <div key={ playlist.id }>
+                    <div className='text-sm font-medium text-gray-900'>{ playlist.name }</div>
+                    <div className='text-sm text-gray-500'>{ playlist.isPublished ? 'Published' : 'Unpublished' }</div>
+                </div>
+            )) }
+        </div>
+    )
+}
+
 export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({ open, file, onClose }) => {
     const [fileLoading, setFileLoading] = React.useState(true)
 
@@ -43,7 +69,7 @@ export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({ open, file, 
             showClose
             fullscreenWithMargin
         >
-            <div className="flex flex-row gap-8 min-h-[400px]">
+            <div className="flex flex-row grow gap-8 min-h-[400px]">
                 <div className="flex items-center justify-center grow bg-black overflow-hidden relative">
                     { fileLoading && (
                         <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -68,7 +94,7 @@ export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({ open, file, 
                         />
                     ) }
                 </div>
-                <div className="flex flex-col gap-3 min-w-0 w-[325px]">
+                <div className="flex flex-col gap-3 min-w-0 w-[325px] shrink-0">
                     <div>
                         <div
                             className="text-lg font-semibold text-gray-900 truncate"
@@ -87,6 +113,10 @@ export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({ open, file, 
                         <TbCalendar size={ 14 } />
                         <span>Created: { formatDate(file.createdAt) }</span>
                     </div>
+                    <Playlists
+                        fileId={ file.id }
+                        workspaceId={ file.workspaceId }
+                    />
                 </div>
             </div>
         </Modal>

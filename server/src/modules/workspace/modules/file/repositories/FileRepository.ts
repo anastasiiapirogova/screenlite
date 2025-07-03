@@ -103,4 +103,22 @@ export class FileRepository {
     
         return file
     }
+
+    static async findPlaylistsByFileId(fileId: string) {
+        const items = await prisma.playlistItem.findMany({
+            where: { fileId },
+            select: {
+                playlist: {
+                    select: {
+                        id: true,
+                        name: true,
+                        isPublished: true,
+                    }
+                }
+            },
+            distinct: ['playlistId']
+        })
+
+        return items.map(item => item.playlist)
+    }
 }

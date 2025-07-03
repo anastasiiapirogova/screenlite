@@ -59,3 +59,7 @@ export const restoreFilesSchema = z.object({
 export const getFileSchema = z.object({
     fileId: z.string().nonempty('FILE_ID_IS_REQUIRED'),
 })
+
+export const getFilePlaylistsSchema = z.object({
+    fileId: z.string().nonempty('FILE_ID_IS_REQUIRED'),
+})
