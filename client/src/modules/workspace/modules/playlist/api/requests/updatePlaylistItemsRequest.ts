@@ -3,6 +3,7 @@ import { PlaylistContentManagerItem, PlaylistItem } from '@modules/workspace/mod
 
 export type UpdatePlaylistItemsRequestData = {
     playlistId: string
+    workspaceId: string
     items: PlaylistContentManagerItem[]
 }
 
@@ -11,7 +12,7 @@ export type UpdatePlaylistItemsRequestResponse = {
 }
 
 export const updatePlaylistItemsRequest = async (data: UpdatePlaylistItemsRequestData) => {
-    const response = await axios.post<UpdatePlaylistItemsRequestResponse>('/playlists/updateItems', data)
+    const response = await axios.put<UpdatePlaylistItemsRequestResponse>(`/workspaces/${data.workspaceId}/playlists/${data.playlistId}/items`, data)
 
     return response.data.items
 }
