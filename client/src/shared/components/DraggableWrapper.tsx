@@ -1,5 +1,6 @@
 import { useDraggable } from '@dnd-kit/core'
 import { ReactElement } from 'react'
+import { twMerge } from 'tailwind-merge'
 
 interface DraggableWrapperProps {
     id: string
@@ -40,7 +41,10 @@ export const DraggableWrapper = ({
         <div
             ref={ setNodeRef }
             style={ style }
-            className={ className }
+            className={ twMerge([
+                className,
+                'focus:outline-none'
+            ]) }
             { ...attributes }
             { ...listeners }
         >
