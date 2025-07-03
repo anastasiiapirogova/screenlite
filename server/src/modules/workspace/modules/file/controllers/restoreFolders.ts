@@ -19,4 +19,4 @@ export const restoreFolders = async (req: Request, res: Response) => {
         message: result.restoredFolders.length > 0 ? 'FOLDERS_RESTORED' : 'NO_FOLDERS_TO_RESTORE',
         ...result
     })
-} 
+}
