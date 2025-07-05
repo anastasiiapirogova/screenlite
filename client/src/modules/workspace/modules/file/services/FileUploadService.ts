@@ -3,6 +3,7 @@ import { createFileUploadSessionRequest } from '../api/createFileUploadSession'
 import { uploadFilePartRequest } from '../api/uploadFilePart'
 import axios, { AxiosError } from 'axios'
 import { cancelFileUploading } from '../utils/cancelFileUploading'
+import { v4 as uuidv4 } from 'uuid'
 
 const DEFAULT_CONFIG: FileUploadConfig = {
     chunkSize: 20 * 1024 * 1024,
@@ -59,7 +60,7 @@ export class FileUploadService {
 
         files.forEach(file => {
             addedFiles.push({
-                id: crypto.randomUUID(),
+                id: uuidv4(),
                 file,
                 workspaceId,
                 folderId,
