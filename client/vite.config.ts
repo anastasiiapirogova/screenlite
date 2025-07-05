@@ -15,12 +15,12 @@ export default defineConfig({
         },
     },
     server: {
-        port: 3001,
-        host: true,
+        port: parseInt(process.env.VITE_PORT || '3001'),
+        host: '0.0.0.0',
         hmr: {
             protocol: 'ws',
-            host: 'localhost',
-            port: 3001
+            host: '0.0.0.0',
+            port: parseInt(process.env.VITE_PORT || '3001')
         }
     }
 })
