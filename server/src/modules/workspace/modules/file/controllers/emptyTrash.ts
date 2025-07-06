@@ -32,6 +32,14 @@ export const emptyTrash = async (req: Request, res: Response) => {
             }
         })
 
+        await tx.playlistItem.deleteMany({
+            where: {
+                fileId: {
+                    in: fileIds
+                }
+            }
+        })
+
         await tx.folder.deleteMany({
             where: {
                 workspaceId: workspace.id,
