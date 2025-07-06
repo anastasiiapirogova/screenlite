@@ -64,13 +64,7 @@ export class DeviceRepository {
                     orderBy: {
                         createdAt: 'desc'
                     }
-                },
-                statusLog: {
-                    take: 1,
-                    orderBy: {
-                        createdAt: 'desc'
-                    }
-                },
+                }
             }
         })
     }
@@ -83,7 +77,7 @@ export class DeviceRepository {
         })
     }
 
-    static async setDeviceOnlineStatus(token: string, status: boolean, createdAt?: Date) {
+    static async setDeviceOnlineStatus(token: string, status: boolean) {
         const device = await prisma.device.findUnique({
             where: { token },
             select: { id: true }
@@ -98,13 +92,7 @@ export class DeviceRepository {
                 id: device.id
             },
             data: {
-                isOnline: status,
-                statusLog: {
-                    create: {
-                        isOnline: status,
-                        createdAt: createdAt || Prisma.skip,
-                    }
-                },
+                onlineAt: status ? new Date() : Prisma.skip,
             },
         })
     }

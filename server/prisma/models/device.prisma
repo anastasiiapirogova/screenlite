@@ -5,11 +5,10 @@ model Device {
     connectionCode String   @unique
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
-    isOnline       Boolean  @default(false)
+    onlineAt       DateTime @default(now())
 
     screen    Screen?           @relation(fields: [screenId], references: [id], onDelete: SetNull)
     telemetry DeviceTelemetry[]
-    statusLog DeviceStatus[]
 
     @@index([token])
     @@index([connectionCode])

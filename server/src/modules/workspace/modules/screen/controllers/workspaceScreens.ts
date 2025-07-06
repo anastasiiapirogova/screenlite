@@ -47,7 +47,7 @@ export const workspaceScreens = async (req: Request, res: Response) => {
                 device: {
                     select: {
                         id: true,
-                        isOnline: true,
+                        onlineAt: true
                     }
                 },
                 _count: {

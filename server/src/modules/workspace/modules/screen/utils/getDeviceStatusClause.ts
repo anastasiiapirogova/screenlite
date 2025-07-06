@@ -5,8 +5,10 @@ const getDeviceConnectionClause = (isConnected?: boolean, isNotConnected?: boole
 }
 
 const getIsOnlineClause = (isOnline?: boolean, isOffline?: boolean) => {
-    if (isOnline && !isOffline) return { isOnline: true }
-    if (isOffline && !isOnline) return { isOnline: false }
+    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000)
+    
+    if (isOnline && !isOffline) return { onlineAt: { gte: twoMinutesAgo } }
+    if (isOffline && !isOnline) return { onlineAt: { lt: twoMinutesAgo } }
     return false
 }
 

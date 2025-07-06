@@ -17,8 +17,7 @@ export const screen = async (req: Request, res: Response) => {
         ...screen.device,
         token: null,
         screenId: null,
-        telemetry: screen.device.telemetry && screen.device.telemetry.length > 0 ? screen.device.telemetry[0] : undefined,
-        status: screen.device.statusLog && screen.device.statusLog.length > 0 ? screen.device.statusLog[0] : undefined
+        telemetry: screen.device.telemetry && screen.device.telemetry.length > 0 ? screen.device.telemetry[0] : undefined
     } : null
 
     return ResponseHandler.json(res, {

@@ -228,8 +228,8 @@ export class WorkspaceRepository {
 
         const screenStatusCount = await prisma.$queryRaw<ScreenStatusCountRawQueryReturn[]>`
 			SELECT 
-				COUNT(CASE WHEN d."isOnline" = true THEN 1 END) AS "online",
-				COUNT(CASE WHEN d."isOnline" = false THEN 1 END) AS "offline",
+				COUNT(CASE WHEN d."onlineAt" >= NOW() - INTERVAL '2 minutes' THEN 1 END) AS "online",
+				COUNT(CASE WHEN d."onlineAt" < NOW() - INTERVAL '2 minutes' THEN 1 END) AS "offline",
 				COUNT(CASE WHEN d."screenId" IS NULL THEN 1 END) AS "notConnected"
 			FROM "Screen" s
 			LEFT JOIN "Device" d ON s."id" = d."screenId"

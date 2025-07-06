@@ -16,13 +16,7 @@ export class ScreenRepository {
                             orderBy: {
                                 createdAt: 'desc'
                             }
-                        },
-                        statusLog: {
-                            take: 1,
-                            orderBy: {
-                                createdAt: 'desc'
-                            }
-                        },
+                        }
                     }
                 },
                 _count: {
