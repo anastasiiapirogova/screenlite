@@ -10,26 +10,47 @@ const requestSchema = z.object({
 
 export const forceDeleteFiles = async (req: Request, res: Response) => {
     const workspace = req.workspace!
-    
+
     const result = requestSchema.safeParse(req.body)
 
     if (!result.success) {
         return ResponseHandler.zodError(req, res, result.error.errors)
     }
 
-    const { fileIds } = result.data
+    const { fileIds: fileIdsToDelete } = result.data
 
-    await prisma.file.updateMany({
+    const filesToDelete = await prisma.file.findMany({
         where: {
-            id: { in: fileIds },
+            id: { in: fileIdsToDelete },
             workspaceId: workspace.id,
             deletedAt: { not: null }
         },
-        data: {
-            forceDeleteRequestedAt: new Date(),
-            folderId: null,
-            folderIdBeforeDeletion: null,
+        select: {
+            id: true
         }
+    })
+
+    const fileIds = filesToDelete.map(file => file.id)
+
+    await prisma.$transaction(async (tx) => {
+        await tx.file.updateMany({
+            where: {
+                id: { in: fileIds }
+            },
+            data: {
+                forceDeleteRequestedAt: new Date(),
+                folderId: null,
+                folderIdBeforeDeletion: null,
+            }
+        })
+
+        await tx.playlistItem.deleteMany({
+            where: {
+                fileId: {
+                    in: fileIds
+                }
+            }
+        })
     })
 
     addFileForceDeletedJobs(fileIds)
