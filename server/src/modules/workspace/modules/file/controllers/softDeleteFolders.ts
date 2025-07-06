@@ -18,7 +18,7 @@ export const softDeleteFolders = async (req: Request, res: Response) => {
     const { folderIds } = validation.data
 
     const foldersToDelete = await FolderRepository.findActiveFoldersByIds(folderIds, workspace.id)
-    
+
     if (!foldersToDelete.length) {
         return ResponseHandler.ok(res)
     }
@@ -31,14 +31,9 @@ export const softDeleteFolders = async (req: Request, res: Response) => {
         })
     }
 
-    const allSubfolderPromises = folderIds.map(id => FolderRepository.findFolderSubtreeById(id))
+    const subfolders = await FolderRepository.findUniqueSubfolderIdsByRootIds(folderIds)
+    const allFolderIds = [...folderIds, ...subfolders.map(folder => folder.id)]
 
-    const allSubfolders = await Promise.all(allSubfolderPromises)
-    
-    const subfolderIds = [...new Set(allSubfolders.flat().map(folder => folder.id))]
-    
-    const allFolderIds = [...folderIds, ...subfolderIds]
-    
     const files = await prisma.file.findMany({
         where: {
             folderId: {
@@ -54,11 +49,10 @@ export const softDeleteFolders = async (req: Request, res: Response) => {
 
     const fileIds = files.map(file => file.id)
 
-    try {
-        await prisma.$transaction(async (tx) => {
-            const now = new Date()
+    await prisma.$transaction(async (tx) => {
+        const now = new Date()
 
-            await tx.$executeRaw`
+        await tx.$executeRaw`
                 UPDATE "Folder"
                 SET "parentIdBeforeDeletion" = "parentId",
                     "parentId" = NULL,
@@ -66,43 +60,39 @@ export const softDeleteFolders = async (req: Request, res: Response) => {
                 WHERE "id" IN (${Prisma.join(folderIds)})
             `
 
-            if (subfolderIds.length > 0) {
-                await tx.folder.updateMany({
-                    where: {
-                        id: {
-                            in: subfolderIds
-                        }
-                    },
-                    data: {
-                        deletedAt: now
+        if (subfolders.length > 0) {
+            await tx.folder.updateMany({
+                where: {
+                    id: {
+                        in: subfolders.map(folder => folder.id)
                     }
-                })
-            }
-
-            if (fileIds.length > 0) {
-                await tx.file.updateMany({
-                    where: {
-                        id: {
-                            in: fileIds
-                        }
-                    },
-                    data: {
-                        deletedAt: now
-                    }
-                })
-            }
-        })
-
-        if (fileIds.length > 0) {
-            addFileSoftDeletedJobs(fileIds)
+                },
+                data: {
+                    deletedAt: now
+                }
+            })
         }
 
-        return ResponseHandler.ok(res, {
-            deletedFolderIds: allFolderIds,
-            deletedFileIds: fileIds
-        })
-    } catch (error) {
-        console.error('Error during folders deletion:', error)
-        return ResponseHandler.serverError(req, res)
+        if (fileIds.length > 0) {
+            await tx.file.updateMany({
+                where: {
+                    id: {
+                        in: fileIds
+                    }
+                },
+                data: {
+                    deletedAt: now
+                }
+            })
+        }
+    })
+
+    if (fileIds.length > 0) {
+        addFileSoftDeletedJobs(fileIds)
     }
+
+    return ResponseHandler.ok(res, {
+        deletedFolderIds: allFolderIds,
+        deletedFileIds: fileIds
+    })
 }
