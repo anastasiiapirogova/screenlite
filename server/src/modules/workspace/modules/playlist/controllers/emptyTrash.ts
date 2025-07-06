@@ -12,5 +12,8 @@ export const emptyTrash = async (req: Request, res: Response) => {
         }
     })
 
+    // Since we can only force delete playlists that are already deleted,
+    // there's no need to push a new state to the screens
+
     return ResponseHandler.ok(res)
-} 
+}
