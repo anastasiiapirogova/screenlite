@@ -18,7 +18,7 @@ export const softDeleteFiles = async (req: Request, res: Response) => {
     const { fileIds } = validation.data
 
     const filesToDelete = await FileRepository.findActiveFilesByIds(fileIds, workspace.id)
-       
+
     if (!filesToDelete.length) {
         return ResponseHandler.ok(res)
     }
@@ -31,26 +31,21 @@ export const softDeleteFiles = async (req: Request, res: Response) => {
         })
     }
 
-    try {
-        await prisma.$transaction(async (tx) => {
-            const now = new Date()
+    await prisma.$transaction(async (tx) => {
+        const now = new Date()
 
-            await tx.$executeRaw`
+        await tx.$executeRaw`
                 UPDATE "File"
                 SET "folderIdBeforeDeletion" = "folderId",
                     "folderId" = NULL,
                     "deletedAt" = ${now}
                 WHERE "id" IN (${Prisma.join(fileIds)})
             `
-        })
+    })
 
-        addFileSoftDeletedJobs(fileIds)
+    addFileSoftDeletedJobs(fileIds)
 
-        return ResponseHandler.ok(res, {
-            deletedFileIds: fileIds
-        })
-    } catch (error) {
-        console.error('Error during files deletion:', error)
-        return ResponseHandler.serverError(req, res)
-    }
+    return ResponseHandler.ok(res, {
+        deletedFileIds: fileIds
+    })
 } 
