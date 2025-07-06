@@ -8,11 +8,9 @@ import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewSta
 import { DeviceRepository } from '@/modules/device/repositories/DeviceRepository.ts'
 
 class DeviceConnectionManager {
-    private io: SocketServer
     private deviceNamespace: Namespace
 
     constructor(io: SocketServer) {
-        this.io = io
         this.deviceNamespace = io.of('/devices')
         this.setupEventHandlers()
     }
