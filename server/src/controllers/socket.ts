@@ -5,7 +5,6 @@ import { getRedisClient } from '@/config/redis.ts'
 import { handleDeviceData } from '../modules/device/controllers/handleDeviceData.ts'
 import { getDeviceSocketConnectionInfoByToken, removeDeviceSocketConnectionInfoBySocketId, storeDeviceSocketConnectionInfo } from '../modules/device/utils/deviceSocketConnection.ts'
 import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
-import { DeviceRepository } from '@/modules/device/repositories/DeviceRepository.ts'
 
 class DeviceConnectionManager {
     private deviceNamespace: Namespace
@@ -62,7 +61,6 @@ class DeviceConnectionManager {
 
     private async initializeNewDeviceConnection(token: string): Promise<void> {
         try {
-            await DeviceRepository.setDeviceOnlineStatus(token, true)
             await addSendNewStateToDeviceJob(token)
         } catch (error) {
             console.error('Error initializing device connection:', error)
@@ -71,11 +69,7 @@ class DeviceConnectionManager {
 
     private async handleDisconnect(socket: Socket): Promise<void> {
         try {
-            const token = await removeDeviceSocketConnectionInfoBySocketId(socket.id)
-
-            if (token) {
-                await DeviceRepository.setDeviceOnlineStatus(token, false)
-            }
+            await removeDeviceSocketConnectionInfoBySocketId(socket.id)
         } catch (error) {
             console.error('Error handling disconnect:', error)
         }
