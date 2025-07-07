@@ -1,6 +1,6 @@
 import { bullmqConnection } from '@/config/bullmq.ts'
-import { handlePlaylistUpdatedJob } from '@/modules/workspace/modules/playlist/jobs/handlePlaylistUpdatedJob.ts'
-import { recalculatePlaylistSizeJob } from '@/modules/workspace/modules/playlist/jobs/recalculatePlaylistSizeJob.ts'
+import { handlePlaylistUpdatedJob } from '@/modules/playlist/jobs/handlePlaylistUpdatedJob.ts'
+import { recalculatePlaylistSizeJob } from '@/modules/playlist/jobs/recalculatePlaylistSizeJob.ts'
 import { Job, Worker } from 'bullmq'
 import { playlistQueue, PlaylistQueueJobData } from '@/bullmq/queues/playlistQueue.ts'
 import { createWorkerProcessor } from './workerFactory.ts'

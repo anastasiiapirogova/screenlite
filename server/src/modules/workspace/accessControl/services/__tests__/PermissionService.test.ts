@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { WorkspaceRole } from '@/modules/workspace/modules/member/types.ts'
+import { WorkspaceRole } from '@/modules/member/types.ts'
 import { WORKSPACE_PERMISSIONS } from '../../permissions.ts'
 import { PermissionService } from '../PermissionService.ts'
 

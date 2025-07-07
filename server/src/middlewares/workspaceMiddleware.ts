@@ -3,7 +3,7 @@ import { WorkspaceRepository } from '@/modules/workspace/repositories/WorkspaceR
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { exclude } from '@/utils/exclude.ts'
 import { PermissionService } from '@/modules/workspace/accessControl/services/PermissionService.ts'
-import { WorkspaceRole } from '@/modules/workspace/modules/member/types.ts'
+import { WorkspaceRole } from '@/modules/member/types.ts'
 
 export const workspaceMiddleware = async (
     req: Request,

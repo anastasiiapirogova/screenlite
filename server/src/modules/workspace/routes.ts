@@ -6,17 +6,6 @@ import { WORKSPACE_PERMISSIONS } from './accessControl/permissions.ts'
 
 import WorkspaceController from '@/modules/workspace/controllers/index.ts'
 
-import '@/modules/workspace/modules/file/routes.ts'
-import '@/modules/workspace/modules/folder/routes.ts'
-import '@/modules/workspace/modules/fileUpload/routes.ts'
-import '@/modules/workspace/modules/member/routes.ts'
-import '@/modules/workspace/modules/workspaceUserInvitation/routes.ts'
-import '@/modules/workspace/modules/playlist/routes.ts'
-import '@/modules/workspace/modules/playlistLayout/routes.ts'
-import '@/modules/workspace/modules/playlistSchedule/routes.ts'
-import '@/modules/workspace/modules/screen/routes.ts'
-
-// Workspace
 createRoute({
     method: HttpMethod.POST,
     path: '/workspaces',

@@ -1,4 +1,4 @@
-import { WorkspaceRole } from '../modules/member/types.ts'
+import { WorkspaceRole } from '../../member/types.ts'
 import { WORKSPACE_PERMISSIONS } from './permissions.ts'
 
 export const WORKSPACE_ROLES: Record<string, WorkspaceRole> = {

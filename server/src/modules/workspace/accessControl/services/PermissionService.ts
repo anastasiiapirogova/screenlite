@@ -1,4 +1,4 @@
-import { WorkspaceRole } from '@/modules/workspace/modules/member/types.ts'
+import { WorkspaceRole } from '@/modules/member/types.ts'
 import { WORKSPACE_PERMISSIONS_ARRAY } from '../permissions.ts'
 import { WORKSPACE_ROLES_PERMISSIONS } from '../roles.ts'
 
