@@ -2,7 +2,6 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import * as i18nextMiddleware from 'i18next-http-middleware'
 import { i18n } from './i18n.ts'
-import { staticRoutes } from '../routes/static.ts'
 import { multerErrorHandler } from './multer.ts'
 import swaggerUi from 'swagger-ui-express'
 import { specs } from '../swagger/index.ts'
@@ -27,7 +26,6 @@ app.enable('etag')
 app.disable('x-powered-by')
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs))
-app.use('/api/static', staticRoutes)
 app.use('/api', router)
 
 app.use('/api/*', Middlewares.notFoundHandler)
