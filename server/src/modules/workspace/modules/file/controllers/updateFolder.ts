@@ -21,7 +21,9 @@ export const updateFolder = async (req: Request, res: Response) => {
     const folder = await FolderRepository.findFolder(folderId, workspace.id)
 
     if (!folder) {
-        return ResponseHandler.notFound(req, res)
+        return ResponseHandler.validationError(req, res, {
+            folderId: 'FOLDER_NOT_FOUND'
+        })
     }
 
     if (folder.deletedAt) {
