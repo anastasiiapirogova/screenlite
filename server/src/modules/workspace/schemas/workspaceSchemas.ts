@@ -20,7 +20,7 @@ export const workspaceSlugSchema = z
     })
     .min(3, 'SLUG_IS_TOO_SHORT')
     .refine(async (slug: string) => {
-        const doesSlugExist = await WorkspaceRepository.findBySlug(slug)
+        const doesSlugExist = await WorkspaceRepository.slugExists(slug)
 
         return !doesSlugExist
     }, 'SLUG_ALREADY_EXISTS')
