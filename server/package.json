@@ -4,6 +4,7 @@
 	"scripts": {
 		"build": "rimraf dist && mkdir dist && npx swc src -d dist --strip-leading-paths && node scripts/fix-imports.js",
 		"db:deploy": "npx prisma migrate deploy && npx prisma generate",
+		"db:reset": "npx prisma migrate reset && npx prisma generate",
 		"dev": "[ -f .env ] && env-cmd -f .env tsx watch src/screenlite.ts || tsx watch src/screenlite.ts",
 		"lint": "eslint --fix",
 		"start": "node --env-file=.env dist/screenlite.js",
