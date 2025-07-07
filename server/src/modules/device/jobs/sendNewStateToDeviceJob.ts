@@ -20,8 +20,8 @@ const getPublishedPlaylists = async (screenId: string) => {
             screenId,
             playlist: {
                 deletedAt: null,
-                layout: {
-                    isNot: null
+                playlistLayoutId: {
+                    not: null
                 },
                 isPublished: true
             }
