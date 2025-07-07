@@ -21,4 +21,5 @@ model PlaylistItem {
     @@index([fileId])
     @@index([linkId])
     @@index([nestedPlaylistId])
+    @@index([playlistLayoutSectionId])
 }
