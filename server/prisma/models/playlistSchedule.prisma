@@ -21,4 +21,6 @@ model PlaylistSchedule {
     playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
 
     weekdays Weekday[]
+
+    @@index([playlistId])
 }
