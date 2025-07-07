@@ -28,16 +28,18 @@ model File {
     uploaderId             String?
     uploadSessionId        String?
 
-    folder               Folder?        @relation("Files", fields: [folderId], references: [id], onDelete: SetNull)
-    folderBeforeDeletion Folder?        @relation("DeletedFiles", fields: [folderIdBeforeDeletion], references: [id], onDelete: SetNull)
-    workspace            Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-    uploader             User?          @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
+    folder               Folder?            @relation("Files", fields: [folderId], references: [id], onDelete: SetNull)
+    folderBeforeDeletion Folder?            @relation("DeletedFiles", fields: [folderIdBeforeDeletion], references: [id], onDelete: SetNull)
+    workspace            Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    uploader             User?              @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
     playlistItems        PlaylistItem[]
     uploadSession        FileUploadSession? @relation(fields: [uploadSessionId], references: [id], onDelete: SetNull)
-    
+
     @@index([workspaceId])
     @@index([folderId])
     @@index([uploaderId])
     @@index([deletedAt])
     @@index([name])
+    @@index([forceDeleteRequestedAt])
+    @@index([folderIdBeforeDeletion])
 }
