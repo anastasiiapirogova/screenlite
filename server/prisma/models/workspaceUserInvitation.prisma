@@ -13,4 +13,5 @@ model WorkspaceUserInvitation {
     members UserWorkspace[]
 
     @@index([email])
+    @@index([workspaceId])
 }
