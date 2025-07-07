@@ -1,0 +1,12 @@
+model WorkspaceStorageUsage {
+    id          String   @id @default(uuid())
+    workspaceId String   @unique
+    video       BigInt   @default(0)
+    image       BigInt   @default(0)
+    audio       BigInt   @default(0)
+    other       BigInt   @default(0)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
