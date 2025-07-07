@@ -95,7 +95,7 @@ function generateRouteList() {
     routes.forEach(route => {
         const method = route.method.padEnd(6)
         const path = route.path.padEnd(80)
-        const type = route.type.padEnd(6)
+        const type = route.type.padEnd(10)
         const file = route.file.padEnd(30)
         
         console.log(`| ${method} | ${path} | ${type} | ${file} |`)
