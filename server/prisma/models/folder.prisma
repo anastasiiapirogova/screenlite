@@ -17,5 +17,9 @@ model Folder {
     deletedFiles         File[]              @relation("DeletedFiles")
     fileUploadSessions   FileUploadSession[]
 
+    @@index([name])
+    @@index([workspaceId])
     @@index([parentId])
+    @@index([parentIdBeforeDeletion])
+    @@index([deletedAt])
 }
