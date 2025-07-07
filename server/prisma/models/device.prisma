@@ -13,4 +13,5 @@ model Device {
     @@index([token])
     @@index([connectionCode])
     @@index([screenId])
+    @@index([onlineAt])
 }
