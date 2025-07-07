@@ -13,6 +13,8 @@ model DeviceTelemetry {
     timezone               String?
     totalMemory            BigInt?
     freeMemory             BigInt?
+    totalStorage           BigInt?
+    freeStorage            BigInt?
     createdAt              DateTime @default(now())
 
     device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
