@@ -21,6 +21,11 @@ export class UserRepository {
                 email,
                 name,
                 password: hashedPassword,
+                userPreferences: {
+                    create: {
+                        locale: 'en'
+                    }
+                }
             },
         })
     }
@@ -89,37 +94,42 @@ export class UserRepository {
     }
 
     static async updateUserPassword(userId: string, newPassword: string, token?: string) {
-        const hashedPassword = await await UserService.hashPassword(newPassword)
+        const hashedPassword = await UserService.hashPassword(newPassword)
 
-        await prisma.user.update({
-            where: { id: userId },
-            data: {
-                password: hashedPassword,
-                passwordUpdatedAt: new Date(),
-                sessions: token ? {
-                    updateMany: {
-                        where: {
-                            terminatedAt: null,
-                            NOT: { token },
-                        },
-                        data: {
-                            terminatedAt: new Date()
-                        }
-                    }
-                } : {
-                    updateMany: {
-                        where: {
-                            terminatedAt: null,
-                        },
-                        data: {
-                            terminatedAt: new Date()
-                        }
-                    }
+        return await prisma.$transaction(async (tx) => {
+            await tx.user.update({
+                where: { id: userId },
+                data: {
+                    password: hashedPassword,
+                    passwordUpdatedAt: new Date(),
                 },
-            },
-        })
+            })
 
-        return true
+            if (token) {
+                await tx.session.updateMany({
+                    where: {
+                        userId,
+                        terminatedAt: null,
+                        NOT: { token },
+                    },
+                    data: {
+                        terminatedAt: new Date()
+                    }
+                })
+            } else {
+                await tx.session.updateMany({
+                    where: {
+                        userId,
+                        terminatedAt: null,
+                    },
+                    data: {
+                        terminatedAt: new Date()
+                    }
+                })
+            }
+
+            return true
+        })
     }
 
     static async findUserById(id: string) {
