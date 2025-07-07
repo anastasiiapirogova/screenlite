@@ -17,4 +17,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npm run db:deploy && npm run dev"]
+CMD ["sh", "-c", "./scripts/db-deploy-with-reset.sh && npm run dev"]
