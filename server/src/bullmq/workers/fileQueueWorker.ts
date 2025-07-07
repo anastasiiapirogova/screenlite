@@ -13,9 +13,6 @@ const handlers: Record<string, (job: Job<FileQueueJobData>) => Promise<void>> = 
     fileUpdated: async (job) => {
         await handleFileUpdatedJob(job.data.fileId)
     },
-    fileSoftDeleted: async (job) => {
-        await handleFileUpdatedJob(job.data.fileId)
-    },
     fileForceDeleted: async (job) => {
         await handleFileForceDeletedJob(job.data.fileId)
     }
