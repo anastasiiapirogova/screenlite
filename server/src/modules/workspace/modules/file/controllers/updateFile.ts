@@ -5,24 +5,17 @@ import { FileRepository } from '../repositories/FileRepository.ts'
 import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.ts'
 import { addFileUpdatedJob } from '../utils/addFileUpdatedJob.ts'
 
-const updatePlaylists = (
+const addFileUpdatedJobIfAvailabilityChanged = (
     file: { id: string, availabilityStartAt: Date | null, availabilityEndAt: Date | null },
     updatedFields: { availabilityStartAt?: Date | null, availabilityEndAt?: Date | null }
 ) => {
-    const hasAvailabilityDatesUpdated = (
-        updatedFields.availabilityStartAt !== undefined &&
-        updatedFields.availabilityEndAt !== undefined
+    const hasAvailabilityDatesChanged = (
+        (updatedFields.availabilityStartAt !== undefined && file.availabilityStartAt !== updatedFields.availabilityStartAt) ||
+        (updatedFields.availabilityEndAt !== undefined && file.availabilityEndAt !== updatedFields.availabilityEndAt)
     )
 
-    if (hasAvailabilityDatesUpdated) {
-        const hasAvailabilityDatesChanged = (
-            file.availabilityStartAt !== updatedFields.availabilityStartAt ||
-            file.availabilityEndAt !== updatedFields.availabilityEndAt
-        )
-
-        if (hasAvailabilityDatesChanged) {
-            addFileUpdatedJob(file.id)
-        }
+    if (hasAvailabilityDatesChanged) {
+        addFileUpdatedJob(file.id)
     }
 }
 
@@ -44,7 +37,9 @@ export const updateFile = async (req: Request, res: Response) => {
     const file = await FileRepository.findById(fileId, workspace.id)
 
     if (!file) {
-        return ResponseHandler.notFound(req, res)
+        return ResponseHandler.validationError(req, res, {
+            fileId: 'FILE_NOT_FOUND'
+        })
     }
 
     if (file.deletedAt) {
@@ -62,7 +57,7 @@ export const updateFile = async (req: Request, res: Response) => {
 
     const updatedFile = await FileRepository.updateFileProperties(fileId, updatedFields)
 
-    updatePlaylists(file, updatedFields)
+    addFileUpdatedJobIfAvailabilityChanged(file, updatedFields)
 
     return ResponseHandler.created(res, {
         file: updatedFile
