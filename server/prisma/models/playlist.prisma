@@ -12,11 +12,19 @@ model Playlist {
     updatedAt        DateTime  @updatedAt
     deletedAt        DateTime?
 
-    workspace Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    workspace Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
     layout    PlaylistLayout? @relation(fields: [playlistLayoutId], references: [id], onDelete: SetNull)
 
     items       PlaylistItem[]
     parentItems PlaylistItem[]     @relation("PlaylistAsNestedPlaylist")
     screens     PlaylistScreen[]
     schedules   PlaylistSchedule[]
+
+    @@index([workspaceId])
+    @@index([playlistLayoutId])
+    @@index([name])
+    @@index([type])
+    @@index([isPublished])
+    @@index([priority])
+    @@index([deletedAt])
 }
