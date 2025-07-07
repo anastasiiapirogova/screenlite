@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { SessionPolicy } from '../policies/sessionPolicy.ts'
-import { userSessionsSchema } from '../schemas/sessionSchema.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
 import { prisma } from '@/config/prisma.ts'
-import { parseUserAgent } from '../utils/parseUserAgent.ts'
+import { userSessionsSchema } from '../schemas/userSchemas.ts'
+import { SessionPolicy } from '@/modules/session/policies/sessionPolicy.ts'
+import { parseUserAgent } from '@/modules/session/utils/parseUserAgent.ts'
 
-export const getUserSessions = async (req: Request, res: Response) => {
+export const getSessions = async (req: Request, res: Response) => {
     const { userId } = req.params
     const requestUser = req.user!
     const token = req.token!

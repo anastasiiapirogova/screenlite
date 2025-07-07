@@ -4,7 +4,7 @@ import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { FolderRepository } from '../repositories/FolderRepository.ts'
 import { prisma } from '@/config/prisma.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
-import { addFileUpdatedJobs } from '../utils/addFileUpdatedJobs.ts'
+import { addFileUpdatedJobs } from '@/modules/workspace/modules/file/utils/addFileUpdatedJobs.ts'
 
 export const softDeleteFolders = async (req: Request, res: Response) => {
     const workspace = req.workspace!

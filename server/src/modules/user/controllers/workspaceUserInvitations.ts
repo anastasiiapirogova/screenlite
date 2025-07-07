@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
 import { prisma } from '@/config/prisma.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { userInvitationsSchema } from '../schemas/workspaceUserInvitationSchemas.ts'
-import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.ts'
+import { workspaceUserInvitationsSchema } from '../schemas/userSchemas.ts'
+import { WorkspaceUserInvitationRepository } from '@workspaceModules/modules/workspaceUserInvitation/repositories/WorkspaceUserInvitationRepository.ts'
 
-export const userInvitations = async (req: Request, res: Response) => {
+export const workspaceUserInvitations = async (req: Request, res: Response) => {
     const currentUser = req.user!
 
-    const validation = userInvitationsSchema.safeParse(req.params)
+    const validation = workspaceUserInvitationsSchema.safeParse(req.params)
 
     if (!validation.success) {
         return ResponseHandler.zodError(req, res, validation.error.errors)

@@ -24,7 +24,7 @@ type BaseRouteOptions = {
 }
 
 type GuestRouteOptions = BaseRouteOptions
-type UnprotectedRouteOptions = BaseRouteOptions
+type TwoFaCheckDisabledRouteOptions = BaseRouteOptions
 type ProtectedRouteOptions = BaseRouteOptions
 type WorkspaceRouteOptions = BaseRouteOptions & {
     enforcePolicy?: RequestHandler
@@ -48,12 +48,12 @@ export const createRoute = ({
     router[method](path, authMiddleware, twoFactorAuthMiddleware, ...additionalMiddleware, asyncHandler(handler))
 }
 
-export const createUnprotectedRoute = ({
+export const createRouteWithoutTwoFACheck = ({
     method,
     path,
     handler,
     additionalMiddleware = [],
-}: UnprotectedRouteOptions) => {
+}: TwoFaCheckDisabledRouteOptions) => {
     router[method](path, authMiddleware, ...additionalMiddleware, asyncHandler(handler))
 }
 

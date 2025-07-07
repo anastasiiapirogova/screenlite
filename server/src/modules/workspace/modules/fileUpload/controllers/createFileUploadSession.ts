@@ -2,10 +2,10 @@ import { Request, Response } from 'express'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { MultipartFileUploader } from '@/config/storage.ts'
 import { createFileUploadSessionSchema } from '../schemas/fileUploadSchemas.ts'
-import { FolderRepository } from '@/modules/workspace/modules/file/repositories/FolderRepository.ts'
 import { FileService } from '@/modules/workspace/modules/file/services/FileService.ts'
 import { FileRepository } from '@/modules/workspace/modules/file/repositories/FileRepository.ts'
 import { prisma } from '@/config/prisma.ts'
+import { FolderRepository } from '@workspaceModules/modules/folder/repositories/FolderRepository.ts'
 
 const validateRequest = async (req: Request, res: Response) => {
     const workspace = req.workspace!

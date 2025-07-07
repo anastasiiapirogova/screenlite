@@ -5,10 +5,6 @@ export const workspaceUserInvitationsSchema = paginationSchema.extend({
     workspaceId: z.string().optional(),
 })
 
-export const userInvitationsSchema = z.object({
-    userId: z.string()
-})
-
 export const inviteUserToWorkspaceSchema = z.object({
     email: z.string().email(),
 })

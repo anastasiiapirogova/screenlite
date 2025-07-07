@@ -2,12 +2,12 @@ import { Request, Response } from 'express'
 import { prisma } from '@/config/prisma.ts'
 import { z } from 'zod'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { addFileForceDeletedJobs } from '../utils/addFileForceDeletedJobs.ts'
+import { addFileForceDeletedJobs } from '@/modules/workspace/modules/file/utils/addFileForceDeletedJobs.ts'
 import { FolderRepository } from '../repositories/FolderRepository.ts'
 
 const requestSchema = z.object({
     folderIds: z.array(z.string())
-})
+})  
 
 export const forceDeleteFolders = async (req: Request, res: Response) => {
     const workspace = req.workspace!

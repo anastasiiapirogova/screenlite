@@ -1,11 +1,11 @@
 import { prisma } from '@/config/prisma.ts'
 import { FolderRepository } from '../repositories/FolderRepository.ts'
-import { addFileUpdatedJobs } from '../utils/addFileUpdatedJobs.ts'
+import { addFileUpdatedJobs } from '@/modules/workspace/modules/file/utils/addFileUpdatedJobs.ts'
 
 type RestoreFoldersResult = {
     restoredFolders: string[]
     alreadyRestoredFolders?: string[]
-    notFoundFolders?: string[]
+    notFoundFolders?: string[]  
 }
 
 type FetchedFolder = {

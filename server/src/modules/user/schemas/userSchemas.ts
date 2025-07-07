@@ -61,3 +61,12 @@ export const enableTwoFaSchema = z.object({
 export const verifyTwoFaSchema = z.object({
     token: z.string().length(6)
 })
+
+export const workspaceUserInvitationsSchema = z.object({
+    userId: z.string()
+})
+
+export const userSessionsSchema = paginationSchema.extend({
+    search: z.string().optional(),
+    status: z.enum(['active', 'revoked']).optional(),
+})

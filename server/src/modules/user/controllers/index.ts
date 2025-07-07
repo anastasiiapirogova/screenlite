@@ -8,6 +8,9 @@ import { getTotpSetupData } from './getTotpSetupData.ts'
 import { enableTwoFa } from './enableTwoFa.ts'
 import { disableTwoFa } from './disableTwoFa.ts'
 import { verifyTwoFa } from './verifyTwoFa.ts'
+import { workspaceUserInvitations } from './workspaceUserInvitations.ts'
+import { getSessions } from './getSessions.ts'
+import { terminateAllSessions } from './terminateAllSessions.ts'
 
 export {
     changePassword,
@@ -19,7 +22,10 @@ export {
     getTotpSetupData,
     enableTwoFa,
     disableTwoFa,
-    verifyTwoFa
+    verifyTwoFa,
+    workspaceUserInvitations,
+    getSessions,
+    terminateAllSessions
 }
 
 export default {
@@ -32,5 +38,8 @@ export default {
     getTotpSetupData,
     enableTwoFa,
     disableTwoFa,
-    verifyTwoFa
+    verifyTwoFa,
+    workspaceUserInvitations,
+    getSessions,
+    terminateAllSessions
 }
