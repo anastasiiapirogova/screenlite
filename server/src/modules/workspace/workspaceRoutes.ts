@@ -291,6 +291,13 @@ createWorkspaceRoute({
 
 createWorkspaceRoute({
     method: HttpMethod.GET,
+    path: '/files/trash',
+    handler: FileController.getWorkspaceSoftDeletedFiles,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.view })
+})
+
+createWorkspaceRoute({
+    method: HttpMethod.GET,
     path: '/files/:fileId',
     handler: FileController.getFile,
     enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.view })
@@ -364,6 +371,13 @@ createWorkspaceRoute({
     method: HttpMethod.GET,
     path: '/folders',
     handler: FileController.getWorkspaceFolders,
+    enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.view })
+})
+
+createWorkspaceRoute({
+    method: HttpMethod.GET,
+    path: '/folders/trash',
+    handler: FileController.getWorkspaceSoftDeletedFolders,
     enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.file.view })
 })
 

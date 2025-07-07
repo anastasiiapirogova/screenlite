@@ -14,6 +14,8 @@ import { forceDeleteFiles } from '@/modules/workspace/modules/file/controllers/f
 import { forceDeleteFolders } from '@/modules/workspace/modules/file/controllers/forceDeleteFolders.ts'
 import { getFile } from '@/modules/workspace/modules/file/controllers/getFile.ts'
 import { getFilePlaylists } from '@/modules/workspace/modules/file/controllers/getFilePlaylists.ts'
+import { getWorkspaceSoftDeletedFolders } from '@/modules/workspace/modules/file/controllers/getWorkspaceSoftDeletedFolders.ts'
+import { getWorkspaceSoftDeletedFiles } from '@/modules/workspace/modules/file/controllers/getWorkspaceSoftDeletedFiles.ts'
 
 export {
     createFolder,
@@ -32,6 +34,8 @@ export {
     updateFolder,
     getFile,
     getFilePlaylists,
+    getWorkspaceSoftDeletedFolders,
+    getWorkspaceSoftDeletedFiles,
 }
 
 export default {
@@ -51,4 +55,6 @@ export default {
     updateFolder,
     getFile,
     getFilePlaylists,
+    getWorkspaceSoftDeletedFolders,
+    getWorkspaceSoftDeletedFiles,
 }
