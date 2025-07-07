@@ -12,19 +12,9 @@ CREATE TABLE "Device" (
     "connectionCode" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "isOnline" BOOLEAN NOT NULL DEFAULT false,
+    "onlineAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Device_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "DeviceStatus" (
-    "id" TEXT NOT NULL,
-    "deviceId" TEXT NOT NULL,
-    "isOnline" BOOLEAN NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "DeviceStatus_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -43,6 +33,8 @@ CREATE TABLE "DeviceTelemetry" (
     "timezone" TEXT,
     "totalMemory" BIGINT,
     "freeMemory" BIGINT,
+    "totalStorage" BIGINT,
+    "freeStorage" BIGINT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "DeviceTelemetry_pkey" PRIMARY KEY ("id")
@@ -74,7 +66,11 @@ CREATE TABLE "File" (
     "height" INTEGER,
     "duration" INTEGER,
     "defaultDuration" INTEGER,
-    "processingStatus" TEXT NOT NULL DEFAULT 'pending',
+    "videoBitrate" INTEGER,
+    "audioBitrate" INTEGER,
+    "videoFrameRate" DOUBLE PRECISION,
+    "codec" TEXT,
+    "processingStatus" TEXT,
     "folderId" TEXT,
     "folderIdBeforeDeletion" TEXT,
     "availabilityStartAt" TIMESTAMP(3),
@@ -84,6 +80,7 @@ CREATE TABLE "File" (
     "deletedAt" TIMESTAMP(3),
     "forceDeleteRequestedAt" TIMESTAMP(3),
     "uploaderId" TEXT,
+    "uploadSessionId" TEXT,
 
     CONSTRAINT "File_pkey" PRIMARY KEY ("id")
 );
@@ -95,14 +92,15 @@ CREATE TABLE "FileUploadSession" (
     "path" TEXT NOT NULL,
     "size" BIGINT NOT NULL,
     "uploaded" BIGINT NOT NULL DEFAULT 0,
-    "parts" INTEGER NOT NULL DEFAULT 0,
+    "uploadedParts" INTEGER NOT NULL DEFAULT 0,
     "mimeType" TEXT NOT NULL DEFAULT 'application/octet-stream',
     "workspaceId" TEXT NOT NULL,
-    "uploadId" TEXT NOT NULL,
+    "uploadId" TEXT,
     "folderId" TEXT,
-    "userId" TEXT NOT NULL,
+    "userId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "completedAt" TIMESTAMP(3),
+    "cancelledAt" TIMESTAMP(3),
 
     CONSTRAINT "FileUploadSession_pkey" PRIMARY KEY ("id")
 );
@@ -126,15 +124,19 @@ CREATE TABLE "Link" (
     "id" TEXT NOT NULL,
     "workspaceId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "path" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
     "width" INTEGER,
     "height" INTEGER,
     "defaultDuration" INTEGER,
     "availabilityStartAt" TIMESTAMP(3),
     "availabilityEndAt" TIMESTAMP(3),
+    "streamType" TEXT,
+    "streamQuality" TEXT,
+    "refreshInterval" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "deletedAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "deletedAt" TIMESTAMP(3),
     "addedById" TEXT,
 
     CONSTRAINT "Link_pkey" PRIMARY KEY ("id")
@@ -291,7 +293,7 @@ CREATE TABLE "User" (
 CREATE TABLE "UserPreferences" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "locale" TEXT NOT NULL,
+    "locale" TEXT NOT NULL DEFAULT 'en',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -357,7 +359,7 @@ CREATE INDEX "Device_connectionCode_idx" ON "Device"("connectionCode");
 CREATE INDEX "Device_screenId_idx" ON "Device"("screenId");
 
 -- CreateIndex
-CREATE INDEX "DeviceStatus_deviceId_idx" ON "DeviceStatus"("deviceId");
+CREATE INDEX "Device_onlineAt_idx" ON "Device"("onlineAt");
 
 -- CreateIndex
 CREATE INDEX "DeviceTelemetry_deviceId_idx" ON "DeviceTelemetry"("deviceId");
@@ -384,7 +386,25 @@ CREATE INDEX "File_deletedAt_idx" ON "File"("deletedAt");
 CREATE INDEX "File_name_idx" ON "File"("name");
 
 -- CreateIndex
+CREATE INDEX "File_forceDeleteRequestedAt_idx" ON "File"("forceDeleteRequestedAt");
+
+-- CreateIndex
+CREATE INDEX "File_folderIdBeforeDeletion_idx" ON "File"("folderIdBeforeDeletion");
+
+-- CreateIndex
+CREATE INDEX "Folder_name_idx" ON "Folder"("name");
+
+-- CreateIndex
+CREATE INDEX "Folder_workspaceId_idx" ON "Folder"("workspaceId");
+
+-- CreateIndex
 CREATE INDEX "Folder_parentId_idx" ON "Folder"("parentId");
+
+-- CreateIndex
+CREATE INDEX "Folder_parentIdBeforeDeletion_idx" ON "Folder"("parentIdBeforeDeletion");
+
+-- CreateIndex
+CREATE INDEX "Folder_deletedAt_idx" ON "Folder"("deletedAt");
 
 -- CreateIndex
 CREATE INDEX "Link_workspaceId_idx" ON "Link"("workspaceId");
@@ -399,6 +419,30 @@ CREATE INDEX "Link_deletedAt_idx" ON "Link"("deletedAt");
 CREATE INDEX "Link_name_idx" ON "Link"("name");
 
 -- CreateIndex
+CREATE INDEX "Link_type_idx" ON "Link"("type");
+
+-- CreateIndex
+CREATE INDEX "Playlist_workspaceId_idx" ON "Playlist"("workspaceId");
+
+-- CreateIndex
+CREATE INDEX "Playlist_playlistLayoutId_idx" ON "Playlist"("playlistLayoutId");
+
+-- CreateIndex
+CREATE INDEX "Playlist_name_idx" ON "Playlist"("name");
+
+-- CreateIndex
+CREATE INDEX "Playlist_type_idx" ON "Playlist"("type");
+
+-- CreateIndex
+CREATE INDEX "Playlist_isPublished_idx" ON "Playlist"("isPublished");
+
+-- CreateIndex
+CREATE INDEX "Playlist_priority_idx" ON "Playlist"("priority");
+
+-- CreateIndex
+CREATE INDEX "Playlist_deletedAt_idx" ON "Playlist"("deletedAt");
+
+-- CreateIndex
 CREATE INDEX "PlaylistItem_playlistId_idx" ON "PlaylistItem"("playlistId");
 
 -- CreateIndex
@@ -411,7 +455,13 @@ CREATE INDEX "PlaylistItem_linkId_idx" ON "PlaylistItem"("linkId");
 CREATE INDEX "PlaylistItem_nestedPlaylistId_idx" ON "PlaylistItem"("nestedPlaylistId");
 
 -- CreateIndex
+CREATE INDEX "PlaylistItem_playlistLayoutSectionId_idx" ON "PlaylistItem"("playlistLayoutSectionId");
+
+-- CreateIndex
 CREATE INDEX "PlaylistLayout_name_idx" ON "PlaylistLayout"("name");
+
+-- CreateIndex
+CREATE INDEX "PlaylistSchedule_playlistId_idx" ON "PlaylistSchedule"("playlistId");
 
 -- CreateIndex
 CREATE INDEX "Screen_workspaceId_idx" ON "Screen"("workspaceId");
@@ -435,19 +485,25 @@ CREATE INDEX "Session_terminatedAt_idx" ON "Session"("terminatedAt");
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "UserPreferences_userId_key" ON "UserPreferences"("userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "UserWorkspace_workspaceInvitationId_key" ON "UserWorkspace"("workspaceInvitationId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Workspace_slug_key" ON "Workspace"("slug");
 
 -- CreateIndex
+CREATE INDEX "Workspace_slug_idx" ON "Workspace"("slug");
+
+-- CreateIndex
 CREATE INDEX "WorkspaceUserInvitation_email_idx" ON "WorkspaceUserInvitation"("email");
+
+-- CreateIndex
+CREATE INDEX "WorkspaceUserInvitation_workspaceId_idx" ON "WorkspaceUserInvitation"("workspaceId");
 
 -- AddForeignKey
 ALTER TABLE "Device" ADD CONSTRAINT "Device_screenId_fkey" FOREIGN KEY ("screenId") REFERENCES "Screen"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "DeviceStatus" ADD CONSTRAINT "DeviceStatus_deviceId_fkey" FOREIGN KEY ("deviceId") REFERENCES "Device"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "DeviceTelemetry" ADD CONSTRAINT "DeviceTelemetry_deviceId_fkey" FOREIGN KEY ("deviceId") REFERENCES "Device"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -456,7 +512,7 @@ ALTER TABLE "DeviceTelemetry" ADD CONSTRAINT "DeviceTelemetry_deviceId_fkey" FOR
 ALTER TABLE "EmailVerificationToken" ADD CONSTRAINT "EmailVerificationToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "File" ADD CONSTRAINT "File_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "Folder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "File" ADD CONSTRAINT "File_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "Folder"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "File" ADD CONSTRAINT "File_folderIdBeforeDeletion_fkey" FOREIGN KEY ("folderIdBeforeDeletion") REFERENCES "Folder"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -468,13 +524,16 @@ ALTER TABLE "File" ADD CONSTRAINT "File_workspaceId_fkey" FOREIGN KEY ("workspac
 ALTER TABLE "File" ADD CONSTRAINT "File_uploaderId_fkey" FOREIGN KEY ("uploaderId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "File" ADD CONSTRAINT "File_uploadSessionId_fkey" FOREIGN KEY ("uploadSessionId") REFERENCES "FileUploadSession"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "FileUploadSession" ADD CONSTRAINT "FileUploadSession_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "Folder"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FileUploadSession" ADD CONSTRAINT "FileUploadSession_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FileUploadSession" ADD CONSTRAINT "FileUploadSession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "FileUploadSession" ADD CONSTRAINT "FileUploadSession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Folder" ADD CONSTRAINT "Folder_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace"("id") ON DELETE CASCADE ON UPDATE CASCADE;
