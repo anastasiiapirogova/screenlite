@@ -6,13 +6,13 @@ import { WORKSPACE_ROLES } from '../accessControl/roles.ts'
 export type ScreenStatusCount = { online: number, offline: number, notConnected: number }
 
 type WorkspaceWithCounts = {
-	membersCount: number
-	playlistsCount: number
-	screensCount: number
-	layoutsCount: number
-	filesCount: number
-	userInvitationsAll: number
-	userInvitationsPending: number
+    membersCount: number
+    playlistsCount: number
+    screensCount: number
+    layoutsCount: number
+    filesCount: number
+    userInvitationsAll: number
+    userInvitationsPending: number
 };
 
 type ScreenStatusCountRawQueryReturn = { online: string, offline: string, notConnected: string }
@@ -71,6 +71,8 @@ export class WorkspaceRepository {
             }
         })
     }
+
+
 
     static async findBySlugWithMember(slug: string, userId: string) {
         return await prisma.workspace.findFirst({
@@ -269,5 +271,18 @@ export class WorkspaceRepository {
                 id
             }
         })
+    }
+
+    static async slugExists(slug: string): Promise<boolean> {
+        const count = await prisma.workspace.count({
+            where: {
+                slug: {
+                    equals: slug,
+                    mode: 'insensitive',
+                },
+            },
+        })
+        
+        return count > 0
     }
 }
