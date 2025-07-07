@@ -86,9 +86,38 @@ function findRouteFiles(dir) {
 }
 
 function generateRouteList() {
+    const startTime = Date.now()
+    
     console.log('Scanning for routes...\n')
     
     findRouteFiles('./src')
+    
+    routes.sort((a, b) => {
+        if (a.path.startsWith('/workspaces') && !b.path.startsWith('/workspaces')) {
+            return 1
+        }
+        if (!a.path.startsWith('/workspaces') && b.path.startsWith('/workspaces')) {
+            return -1
+        }
+        
+        if (a.path.startsWith('/workspaces/') && b.path.startsWith('/workspaces/')) {
+            const aModule = a.path.split('/')[3] || ''
+            const bModule = b.path.split('/')[3] || ''
+            
+            if (aModule !== bModule) {
+                return aModule.localeCompare(bModule)
+            }
+        }
+        
+        const aDepth = a.path.split('/').length
+        const bDepth = b.path.split('/').length
+        
+        if (aDepth !== bDepth) {
+            return aDepth - bDepth
+        }
+        
+        return a.path.localeCompare(b.path)
+    })
     
     console.log('Route List:\n')
     
@@ -101,11 +130,15 @@ function generateRouteList() {
         console.log(`| ${method} | ${path} | ${type} | ${file} |`)
     })
     
+    const endTime = Date.now()
+    const duration = endTime - startTime
+    
     console.log('\nSummary:')
     console.log(`Total routes: ${routes.length}`)
     console.log(`Protected routes: ${routes.filter(r => r.type === 'protected').length}`)
     console.log(`Workspace routes: ${routes.filter(r => r.type === 'workspace').length}`)
     console.log(`Guest routes: ${routes.filter(r => r.type === 'guest').length}`)
+    console.log(`Generated in: ${duration}ms`)
 }
 
 generateRouteList() 
