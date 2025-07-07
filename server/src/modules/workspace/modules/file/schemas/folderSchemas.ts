@@ -1,3 +1,4 @@
+import { paginationSchema } from '@/schemas/paginationSchema.ts'
 import { z } from 'zod'
 
 const folderNameSchema = z.string().nonempty('FOLDER_NAME_IS_REQUIRED').max(100, 'FOLDER_NAME_TOO_LONG')
@@ -5,6 +6,8 @@ const folderNameSchema = z.string().nonempty('FOLDER_NAME_IS_REQUIRED').max(100,
 export const getFolderSchema = z.object({
     folderId: z.string().nonempty('FOLDER_ID_IS_REQUIRED'),
 })
+
+export const getWorkspaceSoftDeletedFoldersSchema = paginationSchema
 
 export const createFolderSchema = z.object({
     name: folderNameSchema,

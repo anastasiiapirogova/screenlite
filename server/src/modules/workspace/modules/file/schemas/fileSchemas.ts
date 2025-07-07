@@ -46,6 +46,8 @@ export const getWorkspaceFilesSchema = paginationSchema.extend({
     folderId: z.string().nullable().optional(),
 })
 
+export const getWorkspaceSoftDeletedFilesSchema = paginationSchema
+
 export const moveFilesSchema = z.object({
     targetFolderId: z.string().nullable(),
     fileIds: z.array(z.string().nonempty('FILE_ID_IS_REQUIRED')).min(1, 'AT_LEAST_ONE_FILE_ID_IS_REQUIRED'),
