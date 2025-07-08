@@ -2,9 +2,7 @@ import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { Request, Response } from 'express'
 
 export const me = async (req: Request, res: Response) => {
-    const user = req.user!
-
     return ResponseHandler.json(res, {
-        user
+        user: req.user
     })
 }
