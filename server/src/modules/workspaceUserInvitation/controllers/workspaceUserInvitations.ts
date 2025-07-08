@@ -15,7 +15,6 @@ export const workspaceUserInvitations = async (req: Request, res: Response) => {
 
     const { page, limit } = validation.data
 
-
     const where = {
         workspaceId: workspace.id,
     }
