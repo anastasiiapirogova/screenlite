@@ -54,7 +54,7 @@ export const moveFilesSchema = z.object({
 })
 
 export const restoreFilesSchema = z.object({
-    fileIds: z.array(z.string().nonempty('FILE_ID_IS_REQUIRED')).min(1, 'AT_LEAST_ONE_FILE_ID_IS_REQUIRED')
+    fileIds: z.array(z.string().nonempty('FILE_ID_IS_REQUIRED')).min(1, 'AT_LEAST_ONE_FILE_ID_IS_REQUIRED').max(100, 'MAX_100_FILES_ALLOWED')
 })
 
 export const getFileSchema = z.object({
