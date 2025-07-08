@@ -31,5 +31,7 @@ export const moveFiles = async (req: Request, res: Response) => {
 
     const updatedFiles = await FileRepository.moveFilesToFolder(fileIds, targetFolderId)
 
-    return ResponseHandler.json(res, { files: updatedFiles })
+    return ResponseHandler.json(res, {
+        files: updatedFiles
+    })
 }
