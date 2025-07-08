@@ -1,4 +1,4 @@
-import { enforceWorkspacePolicy } from '@/middlewares/enforceWorkspacePolicy.ts'
+import { enforceWorkspacePolicy } from '@workspaceModules/middlewares/enforceWorkspacePolicy.ts'
 import { createWorkspaceRoute, HttpMethod } from '@/routes/utils.ts'
 import { WORKSPACE_PERMISSIONS } from '@workspaceModules/accessControl/permissions.ts'
 import FolderController from './controllers/index.ts'

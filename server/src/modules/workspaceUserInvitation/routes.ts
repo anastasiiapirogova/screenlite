@@ -1,4 +1,4 @@
-import { enforceWorkspacePolicy } from '@/middlewares/enforceWorkspacePolicy.ts'
+import { enforceWorkspacePolicy } from '@workspaceModules/middlewares/enforceWorkspacePolicy.ts'
 import WorkspaceUserInvitationController from '@/modules/workspaceUserInvitation/controllers/index.ts'
 import { createWorkspaceRoute, HttpMethod } from '@/routes/utils.ts'
 import { WORKSPACE_PERMISSIONS } from '@workspaceModules/accessControl/permissions.ts'
@@ -24,7 +24,6 @@ createWorkspaceRoute({
     enforcePolicy: enforceWorkspacePolicy({ permission: WORKSPACE_PERMISSIONS.invitation.create })
 })
 
-// TODO: Add security checks for these routes
 createWorkspaceRoute({
     method: HttpMethod.POST,
     path: '/invitations/:workspaceUserInvitationId/accept',

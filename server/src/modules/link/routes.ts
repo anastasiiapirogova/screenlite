@@ -1,7 +1,7 @@
 import { createWorkspaceRoute, HttpMethod } from '@/routes/utils.ts'
 import { WORKSPACE_PERMISSIONS } from '@workspaceModules/accessControl/permissions.ts'
 import LinkController from './controllers/index.ts'
-import { enforceWorkspacePolicy } from '@/middlewares/enforceWorkspacePolicy.ts'
+import { enforceWorkspacePolicy } from '@workspaceModules/middlewares/enforceWorkspacePolicy.ts'
 
 createWorkspaceRoute({
     method: HttpMethod.POST,

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { WorkspaceRepository } from '@/modules/workspace/repositories/WorkspaceRepository.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { exclude } from '@/utils/exclude.ts'
 import { PermissionService } from '@/modules/workspace/accessControl/services/PermissionService.ts'
 import { WorkspaceRole } from '@/modules/member/types.ts'
+import { exclude } from '@/utils/exclude.ts'
 
 export const workspaceMiddleware = async (
     req: Request,
@@ -18,7 +18,9 @@ export const workspaceMiddleware = async (
             return ResponseHandler.notFound(req, res, 'WORKSPACE_NOT_FOUND')
         }
 
-        const workspace = workspaceId ? await WorkspaceRepository.getWithMember(workspaceId, user.id) : await WorkspaceRepository.findBySlugWithMember(workspaceSlug, user.id)
+        const workspace = workspaceId
+            ? await WorkspaceRepository.getWithMember(workspaceId, user.id)
+            : await WorkspaceRepository.findBySlugWithMember(workspaceSlug, user.id)
 
         if (!workspace) {
             return ResponseHandler.notFound(req, res, 'WORKSPACE_NOT_FOUND')
@@ -28,7 +30,7 @@ export const workspaceMiddleware = async (
             return ResponseHandler.notFound(req, res, 'WORKSPACE_DELETED')
         }
 
-        const workspaceMember = workspace.members.find(member => member.userId === user.id)
+        const workspaceMember = workspace.members[0]
 
         if (!workspaceMember) {
             return ResponseHandler.forbidden(req, res, 'NOT_A_MEMBER_OF_WORKSPACE')
@@ -38,7 +40,10 @@ export const workspaceMiddleware = async (
             ...exclude(workspace, ['members']),
             currentUserAccess: {
                 role: workspaceMember.role,
-                permissions: PermissionService.getPermissionsStatus(workspaceMember.role as WorkspaceRole, workspaceMember.permissions)
+                permissions: PermissionService.getPermissionsStatus(
+                    workspaceMember.role as WorkspaceRole,
+                    workspaceMember.permissions
+                )
             }
         }
 

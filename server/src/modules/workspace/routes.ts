@@ -1,7 +1,7 @@
 import { workspaceUpdateMulterMiddleware } from '@/config/multer.ts'
-import { workspaceMiddleware } from '@/middlewares/workspaceMiddleware.ts'
+import { workspaceMiddleware } from '@workspaceModules/middlewares/workspaceMiddleware.ts'
 import { createRoute, createWorkspaceRoute, HttpMethod } from '../../routes/utils.ts'
-import { enforceWorkspacePolicy } from '@/middlewares/enforceWorkspacePolicy.ts'
+import { enforceWorkspacePolicy } from '@workspaceModules/middlewares/enforceWorkspacePolicy.ts'
 import { WORKSPACE_PERMISSIONS } from './accessControl/permissions.ts'
 
 import WorkspaceController from '@/modules/workspace/controllers/index.ts'

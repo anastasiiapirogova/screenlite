@@ -6,11 +6,15 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     try {
         const authHeader = req.headers['authorization']
 
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        if (!authHeader || authHeader.length < 8 || authHeader.slice(0, 7) !== 'Bearer ') {
             return ResponseHandler.unauthorized(req, res)
         }
 
-        const token = authHeader.split(' ')[1]
+        const token = authHeader.slice(7)
+
+        if (!token) {
+            return ResponseHandler.unauthorized(req, res)
+        }
 
         const sessionData = await SessionRepository.getSessionData(token)
 
@@ -20,19 +24,18 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
         const { user, session } = sessionData
 
-        const hasPassedTwoFactorAuth = user.twoFactorEnabled && Boolean(session.twoFaVerifiedAt)
+        let hasPassedTwoFactorAuth = false
 
-        req.user = {
-            ...user,
-            hasPassedTwoFactorAuth
+        if (user.twoFactorEnabled) {
+            hasPassedTwoFactorAuth = Boolean(session.twoFaVerifiedAt)
         }
 
+        req.user = Object.assign({}, user, { hasPassedTwoFactorAuth })
         req.token = token
 
-        next()
+        return next()
     } catch (error) {
-        console.error('authMiddleware middleware error:', error)
-
+        console.error('authMiddleware error:', error)
         return ResponseHandler.serverError(req, res)
     }
 }
