@@ -5,7 +5,6 @@ export type WorkspaceFoldersRequestData = {
     id: string
     filters: {
         search?: string | null
-        deleted: boolean
         parentId?: string | null
     }
 }

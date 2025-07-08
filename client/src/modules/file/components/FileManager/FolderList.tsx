@@ -20,7 +20,6 @@ const SuspenseFolderList = ({ search = '', parentId, onFolderDoubleClick }: Fold
         id: workspace.id,
         filters: {
             search,
-            deleted: false,
             parentId: parentId || null
         }
     }))
