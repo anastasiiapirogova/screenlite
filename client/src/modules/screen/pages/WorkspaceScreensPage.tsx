@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
 import { WorkspaceScreensPageHeader } from '../components/workspaceScreensPage/WorkspacePlaylistsPageHeader'
@@ -6,34 +5,15 @@ import { WorkspaceScreensPageContent } from '../components/workspaceScreensPage/
 import { WorkspaceScreensPageSidebar } from '../components/WorkspaceScreensPageSidebar'
 import { WorkspaceScreensEmptyStatePage } from './WorkspaceScreensEmptyStatePage'
 import { ScrollArea } from '@shared/ui/ScrollArea'
+import { useSidebarStore } from '@stores/useSidebarStore'
 
 export const WorkspaceScreensPage = () => {
     const workspace = useWorkspace()
+    const SIDEBAR_KEY = 'workspaceScreens'
 
-    const [sidebarVisible, setSidebarVisible] = useState(true)
-    const [sidebarMounted, setSidebarMounted] = useState(true)
-
-    const toggleSidebar = () => {
-        if (sidebarVisible) {
-            setSidebarVisible(false)
-            setTimeout(() => {
-                setSidebarMounted(false)
-            }, 300)
-        } else {
-            setSidebarMounted(true)
-        }
-    }
-
-    useEffect(() => {
-        if (sidebarMounted && !sidebarVisible) {
-            const timeout = setTimeout(() => {
-                setSidebarVisible(true)
-            }, 10)
-
-            return () => clearTimeout(timeout)
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sidebarMounted])
+    const { visible: sidebarVisible, mounted: sidebarMounted } = useSidebarStore(s => s.getSidebar(SIDEBAR_KEY))
+    
+    const toggleSidebar = () => useSidebarStore.getState().toggleSidebar(SIDEBAR_KEY)
 
     if (workspace._count.screens === 0) {
         return <WorkspaceScreensEmptyStatePage />
