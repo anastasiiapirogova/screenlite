@@ -21,6 +21,6 @@ export const getFile = async (req: Request, res: Response) => {
     }
 
     return ResponseHandler.json(res, {
-        file,
+        file
     })
 }
