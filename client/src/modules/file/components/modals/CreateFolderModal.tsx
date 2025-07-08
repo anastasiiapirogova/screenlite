@@ -39,7 +39,6 @@ export const CreateFolderModal = ({ onClose, parentId }: Props) => {
                 id: workspace.id, 
                 filters: { 
                     search: '',
-                    deleted: false,
                     parentId 
                 } 
             }]
