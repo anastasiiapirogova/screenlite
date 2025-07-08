@@ -41,15 +41,6 @@ export class WorkspaceRepository {
                         }
                     }
                 }
-            },
-            include: {
-                members: {
-                    where: {
-                        user: {
-                            id: userId,
-                        },
-                    }
-                }
             }
         })
     }
