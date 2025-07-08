@@ -4,7 +4,7 @@ import { deleteUserWorkspaceInvitationSchema } from '../schemas/workspaceUserInv
 import { WorkspaceUserInvitationRepository } from '../repositories/WorkspaceUserInvitationRepository.ts'
 
 export const deleteUserWorkspaceInvitation = async (req: Request, res: Response) => {
-    const validation = deleteUserWorkspaceInvitationSchema.safeParse(req.query)
+    const validation = deleteUserWorkspaceInvitationSchema.safeParse(req.params)
 
     if (!validation.success) {
         return ResponseHandler.zodError(req, res, validation.error.errors)
@@ -20,7 +20,7 @@ export const deleteUserWorkspaceInvitation = async (req: Request, res: Response)
 
     const isPending = workspaceUserInvitation.status === WorkspaceUserInvitationRepository.STATUS.PENDING
 
-    if(!isPending) {
+    if (!isPending) {
         return ResponseHandler.validationError(req, res, {
             workspaceUserInvitationId: 'INVITATION_NOT_PENDING',
         })

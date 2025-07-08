@@ -7,8 +7,8 @@ import { MemberRepository } from '@/modules/member/repositories/MemberRepository
 
 export const acceptUserWorkspaceInvitation = async (req: Request, res: Response) => {
     const user = req.user!
-
-    const validation = acceptUserWorkspaceInvitationSchema.safeParse(req.query)
+    const workspace = req.workspace!
+    const validation = acceptUserWorkspaceInvitationSchema.safeParse(req.params)
 
     if (!validation.success) {
         return ResponseHandler.zodError(req, res, validation.error.errors)
@@ -16,15 +16,19 @@ export const acceptUserWorkspaceInvitation = async (req: Request, res: Response)
 
     const { workspaceUserInvitationId } = validation.data
 
-    const workspaceUserInvitation = await WorkspaceUserInvitationRepository.find(workspaceUserInvitationId)
+    const workspaceUserInvitation = await WorkspaceUserInvitationRepository.find(workspaceUserInvitationId, workspace.id)
 
     if (!workspaceUserInvitation) {
         return ResponseHandler.notFound(req, res)
     }
 
+    if (workspaceUserInvitation.email !== user.email) {
+        return ResponseHandler.forbidden(req, res)
+    }
+
     const isPending = workspaceUserInvitation.status === WorkspaceUserInvitationRepository.STATUS.PENDING
 
-    if(!isPending) {
+    if (!isPending) {
         return ResponseHandler.validationError(req, res, {
             workspaceUserInvitationId: 'INVITATION_NOT_PENDING',
         })

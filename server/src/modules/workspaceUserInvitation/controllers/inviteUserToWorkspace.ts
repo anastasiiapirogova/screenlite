@@ -8,7 +8,7 @@ export const inviteUserToWorkspace = async (req: Request, res: Response) => {
     const user = req.user!
     const workspace = req.workspace!
 
-    const validation = inviteUserToWorkspaceSchema.safeParse(req.query)
+    const validation = inviteUserToWorkspaceSchema.safeParse(req.body)
 
     if (!validation.success) {
         return ResponseHandler.zodError(req, res, validation.error.errors)

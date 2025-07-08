@@ -19,10 +19,11 @@ export class WorkspaceUserInvitationRepository {
         })
     }
 
-    static async find(id: string) {
+    static async find(id: string, workspaceId?: string) {
         return await prisma.workspaceUserInvitation.findUnique({
             where: {
                 id: id,
+                ...(workspaceId ? { workspaceId } : {})
             },
         })
     }

@@ -1,9 +1,7 @@
 import { paginationSchema } from '@/schemas/paginationSchema.ts'
 import { z } from 'zod'
 
-export const workspaceUserInvitationsSchema = paginationSchema.extend({
-    workspaceId: z.string().optional(),
-})
+export const workspaceUserInvitationsSchema = paginationSchema
 
 export const inviteUserToWorkspaceSchema = z.object({
     email: z.string().email(),
