@@ -23,6 +23,6 @@ export const getFilePlaylists = async (req: Request, res: Response) => {
     const playlists = await FileRepository.findPlaylistsByFileId(file.id)
 
     return ResponseHandler.json(res, {
-        playlists,
+        playlists
     })
 }
