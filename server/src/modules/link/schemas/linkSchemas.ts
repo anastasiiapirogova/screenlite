@@ -12,7 +12,6 @@ export const createLinkSchema = z.object({
     availabilityStartAt: z.date().optional(),
     availabilityEndAt: z.date().optional(),
     streamType: z.enum(['rtmp', 'hls', 'dash']).optional(),
-    streamQuality: z.enum(['low', 'medium', 'high', 'auto']).optional(),
     refreshInterval: z.number().min(1).max(3600).optional()
 }).refine((data) => {
     if (data.type === 'stream' && !data.streamType) {
@@ -39,15 +38,14 @@ export const updateLinkSchema = z.object({
         errorMap: () => ({ message: 'LINK_TYPE_MUST_BE_STREAM_OR_WEBSITE' })
     }).optional(),
     url: z.string().url('LINK_URL_MUST_BE_VALID_URL').optional(),
-    width: z.number().min(1).max(10000).optional(),
-    height: z.number().min(1).max(10000).optional(),
+    width: z.number().min(1).max(20000).optional(),
+    height: z.number().min(1).max(20000).optional(),
     defaultDuration: z.number().min(1).max(86400).optional(),
     availabilityStartAt: z.date().optional(),
     availabilityEndAt: z.date().optional(),
     streamType: z.enum(['rtmp', 'hls', 'dash']).optional(),
-    streamQuality: z.enum(['low', 'medium', 'high', 'auto']).optional(),
     refreshInterval: z.number().min(1).max(3600).optional()
-}).refine((data) => {
+}).strip().refine((data) => {
     if (data.availabilityStartAt && data.availabilityEndAt) {
         return data.availabilityStartAt < data.availabilityEndAt
     }
