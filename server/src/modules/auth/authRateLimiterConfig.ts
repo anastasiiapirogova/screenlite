@@ -1,5 +1,5 @@
 import { getIpFromRequest } from '@/utils/getIpFromRequest.ts'
-import { NamedRateLimitConfig } from '@/utils/RateLimiterManager.ts'
+import { NamedRateLimitConfig } from '@/utils/rateLimiter/RateLimiterManager.ts'
 import { Request } from 'express'
 
 export const authRateLimiterConfig: NamedRateLimitConfig[] = [
