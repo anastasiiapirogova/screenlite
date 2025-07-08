@@ -69,7 +69,6 @@ export const FolderSelectorModal = ({ open, onClose, onSelect, selectedFolderId 
         id: workspace.id,
         filters: {
             parentId: currentFolderId,
-            deleted: false
         }
     }))
 
