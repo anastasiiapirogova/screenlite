@@ -1,6 +1,7 @@
 import { updatePlaylistRequest, UpdatePlaylistRequestData } from '@modules/playlist/api/requests/updatePlaylistRequest'
 import { usePlaylist } from '@modules/playlist/hooks/usePlaylist'
 import { useSetPlaylistQueryData } from '@modules/playlist/hooks/useSetPlaylistQueryData'
+import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { EntityPageCard } from '@shared/components/EntityPageCard'
 import { Button } from '@shared/ui/buttons/Button'
 import { Input } from '@shared/ui/input/Input'
@@ -77,6 +78,7 @@ export const PlaylistPagePriorityCard = () => {
     const { editMode, setEditMode, priority, setPriority } = usePriority(initialPriority)
     const ref = useClickAway<HTMLDivElement>(() => setEditMode(false))
     const setPlaylistQueryData = useSetPlaylistQueryData()
+    const workspace = useWorkspace()
 
     const { mutate, isPending } = useMutation({
         mutationFn: (data: UpdatePlaylistRequestData) => updatePlaylistRequest(data),
@@ -97,7 +99,8 @@ export const PlaylistPagePriorityCard = () => {
 
         mutate({
             playlistId: id,
-            priority: typeof priority !== 'number' ? parseInt(priority) : priority
+            priority: typeof priority !== 'number' ? parseInt(priority) : priority,
+            workspaceId: workspace.id
         })
     }
 
