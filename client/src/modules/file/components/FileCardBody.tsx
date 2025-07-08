@@ -3,21 +3,6 @@ import { FileThumbnail } from './FileThumbnail'
 import { prettySize } from '@shared/helpers/prettySize'
 import { TbCalendar } from 'react-icons/tb'
 
-const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffDays = Math.ceil(Math.abs(now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
-
-    if (diffDays === 1) return 'Today'
-    if (diffDays === 2) return 'Yesterday'
-    if (diffDays <= 7) return `${diffDays - 1} days ago`
-    return date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
-    })
-}
-
 export const FileCardBody = ({ file }: { file: WorkspaceFile }) => {
     return (
         <div className="flex items-center gap-4 w-full">
@@ -50,7 +35,7 @@ export const FileCardBody = ({ file }: { file: WorkspaceFile }) => {
                 ) }
                 <div className="flex items-center gap-1 text-xs text-gray-400">
                     <TbCalendar size={ 12 } />
-                    <span>{ formatDate(file.createdAt) }</span>
+                    <span>{ file.createdAt }</span>
                 </div>
             </div>
         </div>
