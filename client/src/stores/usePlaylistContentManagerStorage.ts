@@ -1,6 +1,6 @@
-import { WorkspaceFile } from '@workspaceModules/file/types'
-import { PlaylistContentManagerItem, PlaylistItemType } from '@workspaceModules/playlist/types'
-import { PlaylistContentService } from '@workspaceModules/playlistContentManager/services/PlaylistContentService'
+import { WorkspaceFile } from '@modules/file/types'
+import { PlaylistContentManagerItem, PlaylistItemType } from '@modules/playlist/types'
+import { PlaylistContentService } from '@modules/playlistContentManager/services/PlaylistContentService'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 

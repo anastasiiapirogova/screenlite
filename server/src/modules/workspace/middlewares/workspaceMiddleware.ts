@@ -20,7 +20,7 @@ export const workspaceMiddleware = async (
 
         const workspace = workspaceId
             ? await WorkspaceRepository.getWithMember(workspaceId, user.id)
-            : await WorkspaceRepository.findBySlugWithMember(workspaceSlug, user.id)
+            : await WorkspaceRepository.getBySlugWithMember(workspaceSlug, user.id)
 
         if (!workspace) {
             return ResponseHandler.notFound(req, res, 'WORKSPACE_NOT_FOUND')

@@ -2,6 +2,7 @@ import { prisma } from '@/config/prisma.ts'
 import { getRedisClient, redisKeys } from '@/config/redis.ts'
 import { UpdateWorkspaceData } from '../types.ts'
 import { WORKSPACE_ROLES } from '../accessControl/roles.ts'
+import { Prisma } from '@/generated/prisma/client.ts'
 
 export type ScreenStatusCount = { online: number, offline: number, notConnected: number }
 
@@ -40,6 +41,24 @@ export class WorkspaceRepository {
                             }
                         }
                     }
+                },
+                storageUsage: {
+                    create: {
+                        audio: 0,
+                        video: 0,
+                        image: 0,
+                        other: 0,
+                    }
+                }
+            },
+            include: {
+                storageUsage: {
+                    select: {
+                        audio: true,
+                        video: true,
+                        image: true,
+                        other: true,
+                    }
                 }
             }
         })
@@ -63,24 +82,38 @@ export class WorkspaceRepository {
         })
     }
 
-
-
-    static async findBySlugWithMember(slug: string, userId: string) {
+    private static async getWorkspaceWithMember(where: Prisma.WorkspaceWhereInput, userId: string) {
         return await prisma.workspace.findFirst({
-            where: {
-                slug: {
-                    equals: slug,
-                    mode: 'insensitive',
-                },
-            },
+            where,
             include: {
                 members: {
-                    where: {
-                        userId
-                    }
+                    where: { userId }
                 },
+                storageUsage: {
+                    select: {
+                        audio: true,
+                        video: true,
+                        image: true,
+                        other: true,
+                    }
+                }
             }
         })
+    }
+
+    static async getWithMember(workspaceId: string, userId: string) {
+        return this.getWorkspaceWithMember({
+            id: workspaceId
+        }, userId)
+    }
+
+    static async getBySlugWithMember(slug: string, userId: string) {
+        return this.getWorkspaceWithMember({
+            slug: {
+                equals: slug,
+                mode: 'insensitive',
+            }
+        }, userId)
     }
 
     static async exists(workspaceId: string) {
@@ -89,21 +122,6 @@ export class WorkspaceRepository {
                 id: workspaceId,
             }
         }) > 0
-    }
-
-    static async getWithMember(workspaceId: string, userId: string) {
-        return await prisma.workspace.findFirst({
-            where: {
-                id: workspaceId
-            },
-            include: {
-                members: {
-                    where: {
-                        userId
-                    }
-                }
-            }
-        })
     }
 
     static async getMember(workspaceId: string, userId: string) {
@@ -167,7 +185,7 @@ export class WorkspaceRepository {
 					SELECT COUNT(*) FROM "PlaylistLayout" l WHERE l."workspaceId" = w.id
 				) AS "layoutsCount",
 				(
-					SELECT COUNT(*) FROM "File" f WHERE f."workspaceId" = w.id
+					SELECT COUNT(*) FROM "File" f WHERE f."workspaceId" = w.id AND f."forceDeleteRequestedAt" IS NULL
 				) AS "filesCount",
 				(
 					SELECT COUNT(*) FROM "WorkspaceUserInvitation" ui WHERE ui."workspaceId" = w.id

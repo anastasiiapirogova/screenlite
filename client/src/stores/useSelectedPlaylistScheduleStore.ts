@@ -1,4 +1,4 @@
-import { PlaylistSchedule } from '@modules/workspace/modules/playlist/types'
+import { PlaylistSchedule } from '@modules/playlist/types'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 

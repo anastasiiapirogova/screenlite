@@ -2,10 +2,10 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { PlaylistLayout } from '@modules/workspace/modules/playlistLayout/types'
 import { Resolution } from '@/types'
-import { arePlaylistLayoutSectionsEqual } from '@modules/workspace/modules/playlistLayoutEditor/helpers/arePlaylistLayoutSectionsModified'
+import { arePlaylistLayoutSectionsEqual } from '@modules/playlistLayoutEditor/helpers/arePlaylistLayoutSectionsModified'
 import { v4 as uuidv4 } from 'uuid'
 import { isEqual } from 'lodash'
-import { PlaylistLayoutEditorLayoutSection } from '@modules/workspace/modules/playlistLayoutEditor/types'
+import { PlaylistLayoutEditorLayoutSection } from '@modules/playlistLayoutEditor/types'
 
 export type NewSectionData = Omit<PlaylistLayoutEditorLayoutSection, 'id' | 'playlistLayoutId' | 'zIndex'>
 
