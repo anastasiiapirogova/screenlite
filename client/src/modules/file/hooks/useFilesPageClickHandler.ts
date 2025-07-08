@@ -1,14 +1,16 @@
-import { useEffect } from 'react'
+import { RefObject, useEffect } from 'react'
+
+type UseFilesPageClickHandlerProps = {
+    filesPageContentRef: RefObject<HTMLDivElement | null>
+    getEntity: () => string | null
+    clearSelection: () => void
+}
 
 export function useFilesPageClickHandler({
     filesPageContentRef,
     getEntity,
     clearSelection,
-}: {
-    filesPageContentRef: React.RefObject<HTMLDivElement | null>
-    getEntity: () => string | null
-    clearSelection: () => void
-}) {
+}: UseFilesPageClickHandlerProps) {
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
             const target = event.target as HTMLElement
@@ -18,8 +20,7 @@ export function useFilesPageClickHandler({
 
             const isInsideFilesPage = filesPageContentRef.current.contains(target)
 
-            const isClickOnContextMenu = target.closest('[data-floating-ui-portal]') ||
-                                        target.closest('[data-floating-ui]')
+            const isClickOnContextMenu = target.closest('[data-floating-ui-portal]') || target.closest('[data-floating-ui]')
 
             if (isClickOnContextMenu) {
                 return
@@ -41,6 +42,7 @@ export function useFilesPageClickHandler({
         }
 
         document.addEventListener('mousedown', handleClick)
+
         return () => {
             document.removeEventListener('mousedown', handleClick)
         }
