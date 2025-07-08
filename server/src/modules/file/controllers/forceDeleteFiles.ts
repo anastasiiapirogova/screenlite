@@ -21,37 +21,46 @@ export const forceDeleteFiles = async (req: Request, res: Response) => {
 
     const filesToDelete = await prisma.file.findMany({
         where: {
-            id: { in: fileIdsToDelete },
+            id: {
+                in: fileIdsToDelete
+            },
             workspaceId: workspace.id,
-            deletedAt: { not: null }
+            deletedAt: {
+                not: null
+            }
         },
         select: {
             id: true
         }
     })
 
+    if (!filesToDelete.length) {
+        return ResponseHandler.ok(res, { forceDeletedFileIds: [] })
+    }
+
     const fileIds = filesToDelete.map(file => file.id)
 
-    await prisma.$transaction(async (tx) => {
-        await tx.file.updateMany({
+    await prisma.$transaction([
+        prisma.file.updateMany({
             where: {
-                id: { in: fileIds }
+                id: {
+                    in: fileIds
+                }
             },
             data: {
                 forceDeleteRequestedAt: new Date(),
                 folderId: null,
                 folderIdBeforeDeletion: null,
             }
-        })
-
-        await tx.playlistItem.deleteMany({
+        }),
+        prisma.playlistItem.deleteMany({
             where: {
                 fileId: {
                     in: fileIds
                 }
             }
         })
-    })
+    ])
 
     addFileForceDeletedJobs(fileIds)
 
