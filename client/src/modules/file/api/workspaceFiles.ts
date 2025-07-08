@@ -8,7 +8,6 @@ export type WorkspaceFilesRequestData = {
     id: string
     filters: {
         search?: string | null
-        deleted?: boolean
         folderId?: string | null
     }
 }

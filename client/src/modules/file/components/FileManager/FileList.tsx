@@ -20,7 +20,6 @@ const SuspenseFileList = ({ search, folderId, onFileDoubleClick }: FileListProps
         id: workspace.id,
         filters: {
             search,
-            deleted: false,
             folderId: folderId || null
         }
     }))
