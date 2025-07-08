@@ -1,129 +1,128 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient, QueryKey } from '@tanstack/react-query'
 import { moveFoldersRequest, MoveFoldersRequestData } from '../api/moveFolders'
 import { FolderWithChildrenCount } from '../types'
+
+type FoldersQueryData = FolderWithChildrenCount[]
 
 export function useMoveFolders({ onSuccessMove }: { onSuccessMove?: () => void } = {}) {
     const queryClient = useQueryClient()
 
+    const getFoldersQueryKey = (
+        workspaceId: string,
+        parentId: string | null | undefined
+    ): QueryKey => [
+        'workspaceFolders',
+        {
+            id: workspaceId,
+            filters: {
+                search: '',
+                parentId: parentId || null
+            }
+        }
+    ]
+
+    const updateParentFolderCount = (
+        parentId: string | null | undefined,
+        adjustment: number,
+        workspaceId: string
+    ) => {
+        if (!parentId) return
+
+        queryClient.setQueriesData<FoldersQueryData>(
+            { queryKey: ['workspaceFolders', { id: workspaceId }] },
+            (oldData = []) => {
+                return oldData.map(folder => {
+                    if (folder.id === parentId) {
+                        return {
+                            ...folder,
+                            _count: {
+                                ...folder._count,
+                                subfolders: Math.max(0, folder._count.subfolders + adjustment)
+                            }
+                        }
+                    }
+                    return folder
+                })
+            }
+        )
+    }
+
     const moveFolders = useMutation({
         mutationFn: moveFoldersRequest,
         onMutate: async (variables: MoveFoldersRequestData & { sourceParentId?: string | null }) => {
-            await queryClient.cancelQueries({ queryKey: ['workspaceFolders'] })
-
-            const sourceQueryKey = ['workspaceFolders', { 
-                id: variables.workspaceId, 
-                filters: {
-                    search: '',
-                    deleted: false,
-                    parentId: variables.sourceParentId || null
-                }
-            }]
-
-            const targetQueryKey = ['workspaceFolders', { 
-                id: variables.workspaceId, 
-                filters: {
-                    search: '',
-                    deleted: false,
-                    parentId: variables.targetFolderId || null
-                } 
-            }]
-            
-            const previousSourceData = queryClient.getQueryData(sourceQueryKey)
-            const previousTargetData = queryClient.getQueryData(targetQueryKey)
-
-            queryClient.setQueryData(sourceQueryKey, (oldData: FolderWithChildrenCount[] | undefined) => {
-                if (!oldData) return oldData
-                
-                return oldData.filter(folder => !variables.folderIds.includes(folder.id))
+            await queryClient.cancelQueries({
+                queryKey: ['workspaceFolders', { id: variables.workspaceId }]
             })
 
-            queryClient.setQueryData(targetQueryKey, (oldData: FolderWithChildrenCount[] | undefined) => {
-                if (!oldData) return oldData
-                
-                const sourceData = queryClient.getQueryData(sourceQueryKey) as FolderWithChildrenCount[] | undefined
-                const foldersToMove = sourceData?.filter(folder => variables.folderIds.includes(folder.id)) || []
-                
-                const movedFolders = foldersToMove.map(folder => ({ ...folder, parentId: variables.targetFolderId }))
-                
-                return [...oldData, ...movedFolders]
-            })
+            const sourceQueryKey = getFoldersQueryKey(variables.workspaceId, variables.sourceParentId)
+            const targetQueryKey = getFoldersQueryKey(variables.workspaceId, variables.targetFolderId)
 
-            const allFoldersQueries = queryClient.getQueriesData({
-                queryKey: ['workspaceFolders', {
-                    id: variables.workspaceId,
-                    filters: {
-                        search: '',
-                        deleted: false
-                    }
-                }]
-            })
-            
-            if (variables.sourceParentId !== null && variables.sourceParentId !== undefined) {
-                for (const [queryKey, data] of allFoldersQueries) {
-                    const foldersData = data as FolderWithChildrenCount[]
+            const previousSourceData = queryClient.getQueryData<FoldersQueryData>(sourceQueryKey) || []
+            const previousTargetData = queryClient.getQueryData<FoldersQueryData>(targetQueryKey) || []
 
-                    if (foldersData) {
-                        const updatedFolders = foldersData.map(folder => {
-                            if (folder.id === variables.sourceParentId) {
-                                return {
-                                    ...folder,
-                                    _count: {
-                                        ...folder._count,
-                                        subfolders: Math.max(0, folder._count.subfolders - variables.folderIds.length)
-                                    }
-                                }
-                            }
-                            return folder
-                        })
+            const foldersToMove = previousSourceData.filter(folder =>
+                variables.folderIds.includes(folder.id)
+            )
 
-                        queryClient.setQueryData(queryKey, updatedFolders)
-                    }
-                }
+            queryClient.setQueryData<FoldersQueryData>(sourceQueryKey, oldData => 
+                (oldData || []).filter(f => !variables.folderIds.includes(f.id))
+            )
+
+            queryClient.setQueryData<FoldersQueryData>(targetQueryKey, oldData => [
+                ...(oldData || []),
+                ...foldersToMove.map(f => ({ ...f, parentId: variables.targetFolderId }))
+            ])
+
+            updateParentFolderCount(
+                variables.sourceParentId,
+                -variables.folderIds.length,
+                variables.workspaceId
+            )
+            updateParentFolderCount(
+                variables.targetFolderId,
+                variables.folderIds.length,
+                variables.workspaceId
+            )
+
+            return {
+                previousSourceData,
+                previousTargetData,
+                sourceQueryKey,
+                targetQueryKey,
+                foldersToMove
             }
-
-            if (variables.targetFolderId !== null && variables.targetFolderId !== undefined) {
-                for (const [queryKey, data] of allFoldersQueries) {
-                    const foldersData = data as FolderWithChildrenCount[]
-
-                    if (foldersData) {
-                        const updatedFolders = foldersData.map(folder => {
-                            if (folder.id === variables.targetFolderId) {
-                                return {
-                                    ...folder,
-                                    _count: {
-                                        ...folder._count,
-                                        subfolders: folder._count.subfolders + variables.folderIds.length
-                                    }
-                                }
-                            }
-                            return folder
-                        })
-
-                        queryClient.setQueryData(queryKey, updatedFolders)
-                    }
-                }
-            }
-
-            return { previousSourceData, previousTargetData, sourceQueryKey, targetQueryKey, allFoldersQueries }
         },
-        onError: (_err, _variables, context) => {
-            if (context?.previousSourceData) {
+        onError: (_error, variables, context) => {
+            if (!context) return
+
+            if (context.previousSourceData) {
                 queryClient.setQueryData(context.sourceQueryKey, context.previousSourceData)
             }
-            if (context?.previousTargetData) {
+
+            if (context.previousTargetData) {
                 queryClient.setQueryData(context.targetQueryKey, context.previousTargetData)
             }
-            if (context?.allFoldersQueries) {
-                context.allFoldersQueries.forEach(([queryKey, data]) => {
-                    queryClient.setQueryData(queryKey, data)
-                })
+
+            if (context.foldersToMove?.length) {
+                updateParentFolderCount(
+                    variables.sourceParentId,
+                    context.foldersToMove.length,
+                    variables.workspaceId
+                )
+                updateParentFolderCount(
+                    variables.targetFolderId,
+                    -context.foldersToMove.length,
+                    variables.workspaceId
+                )
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['workspaceFolders'] })
-            if (onSuccessMove) onSuccessMove()
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: ['workspaceFolders', { id: variables.workspaceId }]
+            })
+            onSuccessMove?.()
         }
     })
 
     return { moveFolders }
-} 
+}
