@@ -26,6 +26,12 @@ export const changePlaylistLayout = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(req, res)
     }
 
+    if (playlist.deletedAt) {
+        return ResponseHandler.validationError(req, res, {
+            playlistId: 'PLAYLIST_IS_DELETED'
+        })
+    }
+
     const layoutExists = await PlaylistLayoutRepository.existsInWorkspace(playlistLayoutId, playlist.workspaceId)
 
     if(!layoutExists) {

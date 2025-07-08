@@ -20,6 +20,12 @@ export const addScreensToPlaylist = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(req, res)
     }
 
+    if (playlist.deletedAt) {
+        return ResponseHandler.validationError(req, res, {
+            playlistId: 'PLAYLIST_IS_DELETED'
+        })
+    }
+
     if(playlist.type === PlaylistRepository.TYPE.NESTABLE) {
         return ResponseHandler.validationError(req, res, {
             playlistId: 'NESTABLE_PLAYLISTS_CANNOT_HAVE_SCREENS'

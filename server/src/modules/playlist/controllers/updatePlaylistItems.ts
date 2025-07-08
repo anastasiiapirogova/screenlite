@@ -41,6 +41,12 @@ export const updatePlaylistItems = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(req, res)
     }
 
+    if (playlist.deletedAt) {
+        return ResponseHandler.validationError(req, res, {
+            playlistId: 'PLAYLIST_IS_DELETED'
+        })
+    }
+
     const playlistLayoutSectionIds = playlist.layout?.sections.map(section => section.id) || []
     
     const processedItems = await PlaylistItemsUpdateService.processItems(

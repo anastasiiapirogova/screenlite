@@ -35,6 +35,12 @@ export const updatePlaylist = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(req, res)
     }
 
+    if (playlist.deletedAt) {
+        return ResponseHandler.validationError(req, res, {
+            playlistId: 'PLAYLIST_IS_DELETED'
+        })
+    }
+
     const updatedFields = removeUndefinedFromObject({
         priority,
         description,

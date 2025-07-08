@@ -21,6 +21,12 @@ export const copyPlaylist = async (req: Request, res: Response) => {
         return ResponseHandler.notFound(req, res)
     }
 
+    if (playlistToCopy.deletedAt) {
+        return ResponseHandler.validationError(req, res, {
+            playlistId: 'PLAYLIST_IS_DELETED'
+        })
+    }
+
     const playlist = await PlaylistCopyService.copyPlaylist(playlistToCopy)
 
     ResponseHandler.json(res, { playlist })

@@ -188,12 +188,16 @@ export class PlaylistRepository {
         })
     }
 
-    static async getWithExtendedItems(id: string) {
+    static async getWithExtendedItems(id: string, workspaceId?: string) {
         return await prisma.playlist.findUnique({
-            where: { id },
+            where: {
+                id,
+                ...(workspaceId ? { workspaceId } : {})
+            },
             select: {
                 id: true,
                 workspaceId: true,
+                deletedAt: true,
                 items: {
                     include: {
                         file: true,
@@ -217,12 +221,14 @@ export class PlaylistRepository {
         })
     }
 
-    static async getWithScreens(id: string) {
+    static async getWithScreens(id: string, workspaceId?: string) {
         return await prisma.playlist.findUnique({
             where: {
                 id: id,
+                ...(workspaceId ? { workspaceId } : {})
             },
-            include: {
+            select: {
+                deletedAt: true,
                 screens: {
                     include: {
                         screen: {
@@ -236,7 +242,7 @@ export class PlaylistRepository {
                         }
                     }
                 }
-            },
+            }
         })
     }
 
