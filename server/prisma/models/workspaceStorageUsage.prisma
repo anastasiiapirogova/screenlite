@@ -5,6 +5,7 @@ model WorkspaceStorageUsage {
     image       BigInt   @default(0)
     audio       BigInt   @default(0)
     other       BigInt   @default(0)
+    trash       BigInt   @default(0)
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 

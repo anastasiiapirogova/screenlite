@@ -1,20 +1,34 @@
 import { prisma } from '@/config/prisma.ts'
-import { getRedisClient, redisKeys } from '@/config/redis.ts'
 import { UpdateWorkspaceData } from '../types.ts'
 import { WORKSPACE_ROLES } from '../accessControl/roles.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
+import { CacheService } from '@/services/CacheService.ts'
 
 export type ScreenStatusCount = { online: number, offline: number, notConnected: number }
 
-type WorkspaceWithCounts = {
+type WorkspaceEntityCountResult = {
     membersCount: number
     playlistsCount: number
     screensCount: number
     layoutsCount: number
     filesCount: number
+    trashedFilesCount: number
     userInvitationsAll: number
     userInvitationsPending: number
-};
+}
+
+type WorkspaceEntityCount = {
+    members: number
+    playlists: number
+    screens: number
+    layouts: number
+    files: number
+    trashedFiles: number
+    invitations: {
+        all: number
+        pending: number
+    }
+}
 
 type ScreenStatusCountRawQueryReturn = { online: string, offline: string, notConnected: string }
 
@@ -48,6 +62,7 @@ export class WorkspaceRepository {
                         video: 0,
                         image: 0,
                         other: 0,
+                        trash: 0,
                     }
                 }
             },
@@ -58,6 +73,7 @@ export class WorkspaceRepository {
                         video: true,
                         image: true,
                         other: true,
+                        trash: true,
                     }
                 }
             }
@@ -169,72 +185,96 @@ export class WorkspaceRepository {
         })
     }
 
-    static async getEntityCounts(workspaceId: string) {
-        const workspaceEntityCounts: WorkspaceWithCounts[] = await prisma.$queryRaw`
-			SELECT
-				(
-					SELECT COUNT(*) FROM "UserWorkspace" m WHERE m."workspaceId" = w.id
-				) AS "membersCount",
-				(
-					SELECT COUNT(*) FROM "Playlist" p WHERE p."workspaceId" = w.id
-				) AS "playlistsCount",
-				(
-					SELECT COUNT(*) FROM "Screen" s WHERE s."workspaceId" = w.id
-				) AS "screensCount",
-				(
-					SELECT COUNT(*) FROM "PlaylistLayout" l WHERE l."workspaceId" = w.id
-				) AS "layoutsCount",
-				(
-					SELECT COUNT(*) FROM "File" f WHERE f."workspaceId" = w.id AND f."forceDeleteRequestedAt" IS NULL
-				) AS "filesCount",
-				(
-					SELECT COUNT(*) FROM "WorkspaceUserInvitation" ui WHERE ui."workspaceId" = w.id
-				) AS "userInvitationsAll",
-				(
-					SELECT COUNT(*) FROM "WorkspaceUserInvitation" ui WHERE ui."workspaceId" = w.id AND ui.status = 'pending'
-				) AS "userInvitationsPending"
-			FROM "Workspace" w
-			WHERE w.id = ${workspaceId}
-		`
+    static async calculateStorageUsage(workspaceId: string) {
+        const activeUsage = await prisma.$queryRaw<
+            Array<{ type: string, total: bigint }>
+        >`
+            SELECT "type", SUM("size") as total
+            FROM "File"
+            WHERE "workspaceId" = ${workspaceId}
+              AND "deletedAt" IS NULL
+              AND "forceDeleteRequestedAt" IS NULL
+              AND "type" IN ('video', 'image', 'audio')
+            GROUP BY "type"
+        `
 
-        const counts = workspaceEntityCounts[0] || {
+        const trashUsage = await prisma.$queryRaw<
+            Array<{ total: bigint }>
+        >`
+            SELECT SUM("size") as total
+            FROM "File"
+            WHERE "workspaceId" = ${workspaceId}
+              AND "deletedAt" IS NOT NULL
+              AND "forceDeleteRequestedAt" IS NULL
+              AND "type" IN ('video', 'image', 'audio')
+        `
+
+        const formatUsage = (usageArr: Array<{ type: string, total: bigint }>) =>
+            usageArr.reduce((acc, cur) => {
+                acc[cur.type] = Number(cur.total || 0)
+                return acc
+            }, {} as Record<string, number>)
+
+        return {
+            active: formatUsage(activeUsage),
+            trash: Number(trashUsage[0]?.total || 0),
+        }
+    }
+
+    static async getEntityCounts(workspaceId: string): Promise<WorkspaceEntityCount> {
+        const cacheKey = CacheService.keys.workspaceEntityCounts(workspaceId)
+        const cachedResult = await CacheService.get<WorkspaceEntityCount>(cacheKey)
+    
+        if (cachedResult) return cachedResult
+    
+        const [rawCounts] = await prisma.$queryRaw<WorkspaceEntityCountResult[]>`
+            SELECT
+                (SELECT COUNT(*) FROM "UserWorkspace" m WHERE m."workspaceId" = w.id) AS "membersCount",
+                (SELECT COUNT(*) FROM "Playlist" p WHERE p."workspaceId" = w.id) AS "playlistsCount",
+                (SELECT COUNT(*) FROM "Screen" s WHERE s."workspaceId" = w.id) AS "screensCount",
+                (SELECT COUNT(*) FROM "PlaylistLayout" l WHERE l."workspaceId" = w.id) AS "layoutsCount",
+                (SELECT COUNT(*) FROM "File" f WHERE f."workspaceId" = w.id AND f."forceDeleteRequestedAt" IS NULL) AS "filesCount",
+                (SELECT COUNT(*) FROM "File" f WHERE f."workspaceId" = w.id AND f."deletedAt" IS NOT NULL AND f."forceDeleteRequestedAt" IS NULL) AS "trashedFilesCount",
+                (SELECT COUNT(*) FROM "WorkspaceUserInvitation" ui WHERE ui."workspaceId" = w.id) AS "userInvitationsAll",
+                (SELECT COUNT(*) FROM "WorkspaceUserInvitation" ui WHERE ui."workspaceId" = w.id AND ui.status = 'pending') AS "userInvitationsPending"
+            FROM "Workspace" w
+            WHERE w.id = ${workspaceId}
+        `
+    
+        const counts = rawCounts ?? {
             membersCount: 0,
             playlistsCount: 0,
             screensCount: 0,
             layoutsCount: 0,
             filesCount: 0,
+            trashedFilesCount: 0,
             userInvitationsAll: 0,
             userInvitationsPending: 0,
         }
-
-        return {
+    
+        const data: WorkspaceEntityCount = {
             members: Number(counts.membersCount),
             playlists: Number(counts.playlistsCount),
             screens: Number(counts.screensCount),
             layouts: Number(counts.layoutsCount),
             files: Number(counts.filesCount),
+            trashedFiles: Number(counts.trashedFilesCount),
             invitations: {
                 all: Number(counts.userInvitationsAll),
                 pending: Number(counts.userInvitationsPending),
             },
         }
+    
+        await CacheService.set(cacheKey, data, 30)
+        return data
     }
+    
 
     static async getScreenStatusCount(workspaceId: string) {
-        const redis = getRedisClient()
-
-        const cacheKey = redisKeys.screenStatusCount(workspaceId)
-
-        const cachedResult = await redis.get(cacheKey)
+        const cachedResult = await CacheService.get<ScreenStatusCount>(CacheService.keys.screenStatusCount(workspaceId))
 
         if (cachedResult) {
-            const parsed = JSON.parse(cachedResult)
-
-            return {
-                online: Number(parsed.online),
-                offline: Number(parsed.offline),
-                notConnected: Number(parsed.notConnected),
-            } as ScreenStatusCount
+            return cachedResult
         }
 
         const screenStatusCount = await prisma.$queryRaw<ScreenStatusCountRawQueryReturn[]>`
@@ -259,7 +299,7 @@ export class WorkspaceRepository {
             }
         }
 
-        redis.setex(cacheKey, 30, JSON.stringify(result))
+        await CacheService.set(CacheService.keys.screenStatusCount(workspaceId), result, 30)
 
         return result
     }

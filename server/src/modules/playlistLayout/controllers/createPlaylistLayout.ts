@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { createPlaylistLayoutSchema } from '../schemas/playlistLayoutSchemas.ts'
 import { PlaylistLayoutRepository } from '../repositories/PlaylistLayoutRepository.ts'
+import { WorkspaceService } from '@workspaceModules/utils/WorkspaceService.ts'
 
 export const createPlaylistLayout = async (req: Request, res: Response) => {
     const workspace = req.workspace!
@@ -19,6 +20,8 @@ export const createPlaylistLayout = async (req: Request, res: Response) => {
         resolutionHeight,
         resolutionWidth
     })
+
+    await WorkspaceService.invalidateWorkspaceEntityCounts(workspace.id)
 
     return ResponseHandler.created(res, {
         playlistLayout

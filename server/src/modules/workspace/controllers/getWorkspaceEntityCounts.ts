@@ -14,6 +14,7 @@ export const getWorkspaceEntityCounts = async (req: Request, res: Response) => {
         screens: entityCounts.screens,
         layouts: entityCounts.layouts,
         files: entityCounts.files,
+        trashedFiles: entityCounts.trashedFiles,
         invitations: entityCounts.invitations,
         screenStatus: screenStatusCount,
     }
