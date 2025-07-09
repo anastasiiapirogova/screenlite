@@ -12,7 +12,6 @@ export const getWorkspaceSoftDeletedFoldersSchema = paginationSchema
 export const createFolderSchema = z.object({
     name: folderNameSchema,
     parentId: z.string().nullable().optional(),
-    workspaceId: z.string().nonempty('WORKSPACE_ID_IS_REQUIRED'),
 })
 
 export const updateFolderSchema = z.object({
