@@ -11,7 +11,3 @@ export const getRedisClient = (): Redis => {
     }
     return redisClient
 }
-
-export const redisKeys = {
-    screenStatusCount: (workspaceId: string) => `screenStatusCount:${workspaceId}`,
-}
