@@ -12,6 +12,7 @@ import '@/modules/playlist/routes.ts'
 import '@/modules/playlistLayout/routes.ts'
 import '@/modules/playlistSchedule/routes.ts'
 import '@/modules/screen/routes.ts'
+import '@/modules/config/routes.ts'
 
 import { createGuestRoute, HttpMethod, router } from './utils.ts'
 import { getImageThumbnail } from '@/modules/static/getImageThumbnail.ts'
