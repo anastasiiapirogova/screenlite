@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { WorkspaceRepository } from '../repositories/WorkspaceRepository.ts'
 
 const reservedSlugs = [
-    'create'
+    'create',
 ]
 
 const workspaceNameSchema = z
@@ -12,23 +12,33 @@ const workspaceNameSchema = z
     .max(100, 'WORKSPACE_NAME_IS_TOO_LONG')
     .nonempty('WORKSPACE_NAME_IS_REQUIRED')
 
-
 export const workspaceSlugSchema = z
     .string({
         invalid_type_error: 'SLUG_IS_INVALID',
         required_error: 'SLUG_IS_REQUIRED'
     })
     .min(3, 'SLUG_IS_TOO_SHORT')
-    .refine(async (slug: string) => {
+    .max(32, 'SLUG_IS_TOO_LONG')
+    .regex(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/, 'SLUG_HAS_INVALID_CHARACTERS')
+    .refine((slug) => {
+        return !slug.startsWith('-') && !slug.endsWith('-')
+    }, 'SLUG_CANNOT_START_OR_END_WITH_HYPHEN')
+    .refine((slug) => {
+        return !slug.includes('--')
+    }, 'SLUG_CANNOT_HAVE_CONSECUTIVE_HYPHENS')
+    .refine((slug) => {
+        return !/^\d+$/.test(slug)
+    }, 'SLUG_CANNOT_BE_ONLY_NUMBERS')
+    .refine((slug) => {
+        const isReserved = reservedSlugs.some((reservedSlug) => slug === reservedSlug)
+
+        return !isReserved
+    }, 'SLUG_IS_RESERVED')
+    .refine(async (slug) => {
         const doesSlugExist = await WorkspaceRepository.slugExists(slug)
 
         return !doesSlugExist
     }, 'SLUG_ALREADY_EXISTS')
-    .refine((name) => {
-        const isReserved = reservedSlugs.some((slug) => slug === name)
-
-        return !isReserved
-    }, 'WORKSPACE_NAME_IS_RESERVED')
 
 export const updateWorkspaceSchema = z.object({
     name: workspaceNameSchema.optional(),
