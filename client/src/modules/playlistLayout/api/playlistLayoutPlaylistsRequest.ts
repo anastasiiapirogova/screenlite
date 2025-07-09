@@ -1,5 +1,5 @@
 import axios from '@config/axios'
-import { PlaylistLayoutPlaylist } from '../../types'
+import { PlaylistLayoutPlaylist } from '../types'
 
 export type PlaylistLayoutPlaylistsRequestData = {
     playlistLayoutId: string

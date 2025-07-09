@@ -1,16 +1,16 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { User } from '../../user/types'
-import { currentUserQuery } from '../api/queries/currentUser'
+import { currentUserQuery } from '../api/currentUser'
 import { removeAuthToken, storeAuthToken } from '../helpers/authToken'
 import { AuthContext } from '../contexts/AuthContext'
 import { Outlet } from 'react-router'
-import { LoginRequestResponse } from '../api/requests/loginRequest'
-import { AppPreloader } from '@shared/components/AppPreloader'
+import { LoginRequestResponse } from '../api/login'
+import { AuthPreloader } from '@shared/components/AuthPreloader'
 
 export const AuthProvider = () => {
     const queryClient = useQueryClient()
 
-    const { data: user, error } = useQuery<User | null>(currentUserQuery())
+    const { data: user } = useQuery<User | null>(currentUserQuery())
 
     const handleLogin = (data: LoginRequestResponse) => {
         storeAuthToken(data.token)
@@ -24,7 +24,7 @@ export const AuthProvider = () => {
     }
 
     if (user === undefined) {
-        return <AppPreloader error={ error }/>
+        return <AuthPreloader />
     }
 
     const contextValue = {

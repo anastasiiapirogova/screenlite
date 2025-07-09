@@ -19,8 +19,7 @@ export const useUploadingPageLeaveInterceptor = () => {
             if (blocker.state === 'blocked') {
                 const confirmed = await confirm({
                     title: 'Leave page?',
-                    message:
-                        'You have incomplete file uploads. If you leave now, your upload progress will be lost.',
+                    message: 'You have incomplete file uploads. If you leave now, your upload progress will be lost.',
                     confirmText: 'Leave',
                     cancelText: 'Stay',
                     variant: 'danger',
@@ -37,6 +36,9 @@ export const useUploadingPageLeaveInterceptor = () => {
 
         handleBlocker()
 
-        return () => unsubscribe()
+        return () => {
+            unsubscribe()
+            fileUploadService.emptyQueue()
+        }
     }, [blocker, confirm])
 }

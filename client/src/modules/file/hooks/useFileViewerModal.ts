@@ -15,14 +15,14 @@ export const useFileViewerModal = () => {
 
         const newUrl = `/workspaces/${slug}/files/${file.id}`
 
-        window.history.replaceState(null, '', newUrl)
+        window.history.pushState(null, '', newUrl)
     }
 
     const closeModal = useCallback(() => {
         setModalFile(null)
         
         if (previousUrl) {
-            window.history.replaceState(null, '', previousUrl)
+            window.history.pushState(null, '', previousUrl)
             setPreviousUrl(null)
         }
     }, [previousUrl])

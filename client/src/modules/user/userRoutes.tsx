@@ -10,7 +10,8 @@ import {
     UserInvitationsPage,
     UserSettingsPage,
     ChangePasswordPage,
-    TwoFactorAuthPage
+    TwoFactorAuthPage,
+    UserWorkspacesPage
 } from './pages'
 
 export const userRoutes = {
@@ -22,6 +23,10 @@ export const userRoutes = {
                 {
                     path: '',
                     element: <HomePage />
+                },
+                {
+                    path: 'workspaces',
+                    element: <UserWorkspacesPage />
                 },
                 {
                     path: 'invitations',

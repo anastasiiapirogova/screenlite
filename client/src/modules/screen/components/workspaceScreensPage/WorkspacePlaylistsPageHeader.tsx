@@ -1,16 +1,14 @@
-import { ListPageHeader } from '@shared/components/ListPageHeader'
-import { useSearchCountStore } from '@stores/useSearchCountStore'
 import { Button } from '@shared/ui/buttons/Button'
 import { CreateScreenButton } from '../CreateScreenButton'
+import { useSidebarStore } from '@stores/useSidebarStore'
 
-export const WorkspaceScreensPageHeader = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
-    const { screenCount } = useSearchCountStore()
+export const WorkspaceScreensPageHeader = () => {
+    const SIDEBAR_KEY = 'workspaceScreens'
+    
+    const toggleSidebar = () => useSidebarStore.getState().toggleSidebar(SIDEBAR_KEY)
 
     return (
-        <ListPageHeader
-            title='Screens'
-            count={ screenCount }
-        >
+        <div className='flex items-center'>
             <CreateScreenButton>
                 <Button variant='soft'>
                     Create screen
@@ -22,6 +20,6 @@ export const WorkspaceScreensPageHeader = ({ toggleSidebar }: { toggleSidebar: (
             >
                 Filters
             </button>
-        </ListPageHeader>
+        </div>
     )
 }

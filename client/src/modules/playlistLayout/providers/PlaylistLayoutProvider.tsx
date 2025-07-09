@@ -3,7 +3,7 @@ import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { PlaylistLayoutContext } from '../contexts/PlaylistLayoutContext'
-import { playlistLayoutQuery } from '../api/requests/playlistLayoutRequest'
+import { playlistLayoutQuery } from '../api/playlistLayout'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 
 const PlaylistLayoutProviderContent = () => {

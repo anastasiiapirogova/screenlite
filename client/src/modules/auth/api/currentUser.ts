@@ -21,3 +21,8 @@ export const currentUserRequest = async () => {
         throw error
     }
 }
+
+export const currentUserQuery = () => ({
+    queryKey: ['currentUser'],
+    queryFn: currentUserRequest,
+})

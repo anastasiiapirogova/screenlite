@@ -4,27 +4,23 @@ import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
 import { ScrollArea } from '@shared/ui/ScrollArea'
 import { FileUploadingCard } from '../components/FileUploading/FileUploadingCard'
 import { useFileUploadState } from '../hooks/useFileUploadState'
-import { TbCheck, TbUpload, TbCloudUpload, TbFolder } from 'react-icons/tb'
+import { TbCheck, TbUpload, TbCloudUpload } from 'react-icons/tb'
 import { fileUploadService } from '../services/FileUploadService'
 import { useWorkspace } from '@/modules/workspace/hooks/useWorkspace'
 import { twMerge } from 'tailwind-merge'
-import { FolderSelectorModal } from '../components/FolderSelectorModal'
-import { Button } from '@shared/ui/buttons/Button'
-import { Folder } from '../types'
 
 export const WorkspaceFileUploadPage = () => {
     const { activeFiles, completedFiles } = useFileUploadState()
     const { id: workspaceId } = useWorkspace()
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [isDragOver, setIsDragOver] = useState(false)
-    const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null)
-    const [isFolderSelectorOpen, setIsFolderSelectorOpen] = useState(false)
 
     useUploadingPageLeaveInterceptor()
 
     const handleFiles = (files: FileList | null) => {
         if (files) {
-            fileUploadService.addFiles(Array.from(files), workspaceId, selectedFolder?.id || null)
+            fileUploadService.addFiles(Array.from(files), workspaceId, null)
+
             if (fileInputRef.current) {
                 fileInputRef.current.value = ''
             }
@@ -57,22 +53,6 @@ export const WorkspaceFileUploadPage = () => {
         fileInputRef.current?.click()
     }
 
-    const handleFolderSelect = (folderId: string | null, folder?: Folder) => {
-        setSelectedFolder(folder || null)
-    }
-
-    const handleOpenFolderSelector = () => {
-        setIsFolderSelectorOpen(true)
-    }
-
-    const getFolderDisplayText = () => {
-        if (!selectedFolder) {
-            return 'Root folder (default)'
-        }
-
-        return selectedFolder.name
-    }
-
     return (
         <LayoutBodyContainer>
             <ScrollArea verticalMargin={ 24 }>
@@ -92,30 +72,6 @@ export const WorkspaceFileUploadPage = () => {
                             multiple
                             onChange={ handleFilesChange }
                         />
-
-                        { /* Folder Selector */ }
-                        <div className="mb-6">
-                            <div className="flex items-center justify-between">
-                                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                                    Upload Destination
-                                </h3>
-                                <Button
-                                    variant="outline"
-                                    size="small"
-                                    onClick={ handleOpenFolderSelector }
-                                    className="flex items-center gap-2"
-                                >
-                                    <TbFolder className="w-4 h-4" />
-                                    Select Folder
-                                </Button>
-                            </div>
-                            <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-                                <TbFolder className="w-5 h-5 text-gray-400" />
-                                <span className="text-sm text-gray-600">
-                                    { getFolderDisplayText() }
-                                </span>
-                            </div>
-                        </div>
 
                         { isDragOver && (
                             <div className="absolute inset-0 bg-blue-500/10 z-50 flex items-center justify-center rounded-lg">
@@ -181,13 +137,6 @@ export const WorkspaceFileUploadPage = () => {
                     </div>
                 </div>
             </ScrollArea>
-
-            <FolderSelectorModal
-                open={ isFolderSelectorOpen }
-                onClose={ () => setIsFolderSelectorOpen(false) }
-                onSelect={ handleFolderSelect }
-                selectedFolderId={ selectedFolder?.id || null }
-            />
         </LayoutBodyContainer>
     )
 }

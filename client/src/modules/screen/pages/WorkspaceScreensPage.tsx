@@ -12,8 +12,6 @@ export const WorkspaceScreensPage = () => {
     const SIDEBAR_KEY = 'workspaceScreens'
 
     const { visible: sidebarVisible, mounted: sidebarMounted } = useSidebarStore(s => s.getSidebar(SIDEBAR_KEY))
-    
-    const toggleSidebar = () => useSidebarStore.getState().toggleSidebar(SIDEBAR_KEY)
 
     if (workspace._count.screens === 0) {
         return <WorkspaceScreensEmptyStatePage />
@@ -42,7 +40,7 @@ export const WorkspaceScreensPage = () => {
             ) }
 
             <LayoutBodyContainer>
-                <WorkspaceScreensPageHeader toggleSidebar={ toggleSidebar } />
+                <WorkspaceScreensPageHeader />
                 <ScrollArea verticalMargin={ 24 }>
                     <WorkspaceScreensPageContent />
                 </ScrollArea>

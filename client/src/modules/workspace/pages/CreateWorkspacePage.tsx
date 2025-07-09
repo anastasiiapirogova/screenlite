@@ -1,9 +1,8 @@
 import { Button } from '@shared/ui/buttons/Button'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
 import { createWorkspaceRequest, CreateWorkspaceRequestData } from '../api/requests/createWorkspaceRequest'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { workspaceQuery } from '../api/queries/workspaceQuery'
 import { WorkspacePicture } from '@shared/components/WorkspacePicture'
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { Input } from '@shared/ui/input/Input'
@@ -13,7 +12,6 @@ import { FullWidthSettingsPageHeader } from '@modules/user/components/FullWidthS
 
 export const CreateWorkspacePage = () => {
     const navigate = useNavigate()
-    const queryClient = useQueryClient()
 
     const {
         control,
@@ -31,7 +29,6 @@ export const CreateWorkspacePage = () => {
     const { mutate, isPending } = useMutation({
         mutationFn: (data: CreateWorkspaceRequestData) => createWorkspaceRequest(data),
         onSuccess: async (workspace) => {
-            await queryClient.setQueryData(workspaceQuery(workspace.slug).queryKey, workspace)
             navigate(`/workspaces/${workspace.slug}`)
         },
         onError: (error) => {

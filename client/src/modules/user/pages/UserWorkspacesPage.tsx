@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
 import { useCurrentUser } from '../../auth/hooks/useCurrentUser'
-import { userWorkspacesQuery } from '../api/queries/userWorkspacesQuery'
+import { userWorkspacesQuery } from '../../workspace/api/queries/userWorkspacesQuery'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Link } from 'react-router'
 import { WorkspacePicture } from '@shared/components/WorkspacePicture'
@@ -64,7 +64,7 @@ const WorkspacesList = () => {
     )
 }
 
-export const UserWorkspaces = () => {
+export const UserWorkspacesPage = () => {
     return (
         <QueryErrorResetBoundary>
             <ErrorBoundary fallbackRender={ () => (

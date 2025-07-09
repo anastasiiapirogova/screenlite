@@ -1,7 +1,6 @@
 import { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
-import { useDragStore } from '@stores/useDragStore'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 import { useParams } from 'react-router'
 import { useMoveOperations } from './useMoveOperations'
@@ -18,7 +17,6 @@ export const useFileDragHandlers = () => {
         isSelected: state.isSelected,
     })))
 
-    const { setDraggedItem } = useDragStore()
     const { moveFiles, moveFolders } = useMoveOperations()
 
     const handleDragStart = (event: DragStartEvent) => {
@@ -35,7 +33,6 @@ export const useFileDragHandlers = () => {
         }
 
         setDragging(true)
-        setDraggedItem(active)
     }
 
     const handleDragEnd = (event: DragEndEvent) => {

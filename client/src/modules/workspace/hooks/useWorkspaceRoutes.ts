@@ -20,6 +20,7 @@ export const useWorkspaceRoutes = (slug?: string) => {
             filesUpload: createRoute('files/upload'),
             members: createRoute('members'),
             folder: (folderId: string) => createRoute(`files/folders/${folderId}`),
+            file: (fileId: string) => createRoute(`files/${fileId}`),
             playlist: (playlistId: string) => createRoute(`playlists/${playlistId}`),
             playlistEditDetails: (playlistId: string) => createRoute(`playlists/${playlistId}/edit`),
             playlistLayout: (playlistLayoutId: string) => createRoute(`layouts/${playlistLayoutId}`),

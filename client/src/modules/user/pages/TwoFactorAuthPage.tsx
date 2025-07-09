@@ -10,7 +10,7 @@ import { EnableTwoFaData, enableTwoFaRequest } from '../api/requests/enableTwoFa
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { Input } from '@shared/ui/input/Input'
 import { InputError } from '@shared/ui/input/InputError'
-import { currentUserQuery } from '@modules/auth/api/queries/currentUser'
+import { currentUserQuery } from '@modules/auth/api/currentUser'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 import { Button } from '@shared/ui/buttons/Button'
 import { DisableTwoFaButton } from '../components/buttons/DisableTwoFaButton'

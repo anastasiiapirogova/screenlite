@@ -1,4 +1,4 @@
-import { CreatePlaylistLayoutRequestData, PlaylistLayout } from '../../types'
+import { CreatePlaylistLayoutRequestData, PlaylistLayout } from '../types'
 import axios from '@config/axios'
 
 type CreatePlaylistLayoutRequestResponse = {

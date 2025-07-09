@@ -1,19 +1,8 @@
-import { useSearchCountStore } from '@stores/useSearchCountStore'
-import { useShallow } from 'zustand/react/shallow'
-import { useEffect } from 'react'
 import { WorkspaceScreensResponse } from '@modules/screen/api/requests/workspaceScreensRequest'
 import { useRouterScreenFilter } from '@modules/screen/hooks/useRouterScreenFilter'
 
 export const WorkspaceScreensPageList = ({ data, isLoading }: { data?: WorkspaceScreensResponse, isLoading: boolean }) => {
-    const setscreenCount = useSearchCountStore(useShallow(state => state.setScreenCount))
-
     const { filters } = useRouterScreenFilter()
-
-    useEffect(() => {
-        if(data?.meta) {
-            setscreenCount(data.meta.total)
-        }
-    }, [data, setscreenCount])
 
     if (isLoading || !data) {
         return (

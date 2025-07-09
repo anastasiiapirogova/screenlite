@@ -1,5 +1,4 @@
 import { MainLayout } from '@/shared/layouts/MainLayout'
-import { Navigate } from 'react-router'
 import { WorkspaceProvider } from './providers/WorkspaceProvider'
 import { CreateWorkspacePage, WorkspacePage, WorkspaceSettingsPage } from './pages'
 import { workspaceFileRoutes, workspaceMemberRoutes, workspacePlaylistContentManagerRoutes, workspacePlaylistLayoutEditorRoutes, workspacePlaylistLayoutRoutes, workspacePlaylistRoutes, workspaceScreenRoutes } from '@/routes'
@@ -13,23 +12,9 @@ export const workspaceRoutes = {
             element: <FullWidthLayout />,
             children: [
                 {
-                    path: 'workspaces/create',
+                    path: '/workspaces/create',
                     element: <CreateWorkspacePage />
                 }
-            ]
-        },
-        {
-            path: '/workspaces',
-            children: [
-                {
-                    path: '',
-                    element: (
-                        <Navigate
-                            to="/"
-                            replace
-                        />
-                    ),
-                },
             ]
         },
         {

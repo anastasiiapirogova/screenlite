@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
-import { loginRequest, LoginRequestData } from '../../api/requests/loginRequest'
+import { loginRequest, LoginRequestData } from '../../api/login'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { InputError } from '@shared/ui/input/InputError'

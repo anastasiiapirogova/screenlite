@@ -10,3 +10,8 @@ export const workspaceRequest = async (slug: string) => {
 
     return response.data.workspace
 }
+
+export const workspaceQuery = (slug: string) => ({
+    queryKey: ['workspace', { slug }],
+    queryFn: async () => workspaceRequest(slug)
+})

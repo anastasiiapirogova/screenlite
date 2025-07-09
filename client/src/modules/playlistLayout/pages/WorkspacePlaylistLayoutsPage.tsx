@@ -2,17 +2,14 @@ import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
 import { ScrollArea } from '@shared/ui/ScrollArea'
 import { useQuery } from '@tanstack/react-query'
 import { useWorkspace } from '@/modules/workspace/hooks/useWorkspace'
-import { useSearchCountStore } from '@stores/useSearchCountStore'
-import { useShallow } from 'zustand/react/shallow'
 import { WorkspacePlaylistLayoutsPageSidebar } from '../components/WorkspacePlaylistLayoutsPageSidebar'
 import { useRouterPlaylistLayoutFilter } from '../hooks/useRouterPlaylistLayoutFilter'
 import { Button } from '@shared/ui/buttons/Button'
 import { CreatePlaylistLayoutButton } from '../components/CreatePlaylistLayoutButton'
 import { EmptyState } from '@shared/ui/EmptyState'
 import { useWorkspaceRoutes } from '@/modules/workspace/hooks/useWorkspaceRoutes'
-import { useEffect } from 'react'
 import type { PlaylistLayoutListItem } from '../types'
-import { workspacePlaylistLayoutsQuery, type WorkspacePlaylistLayoutsRequestResponse } from '../api/requests/workspacePlaylistLayoutsRequest'
+import { workspacePlaylistLayoutsQuery, type WorkspacePlaylistLayoutsRequestResponse } from '../api/workspacePlaylistLayoutsRequest'
 import { Link } from 'react-router'
 
 const WorkspacePlaylistLayoutsLayoutCard = ({ layout }: { layout: PlaylistLayoutListItem }) => {
@@ -41,14 +38,11 @@ const WorkspacePlaylistLayoutsLayoutCard = ({ layout }: { layout: PlaylistLayout
 }
 
 const WorkspacePlaylistLayoutsPageHeader = () => {
-    const { playlistLayoutCount } = useSearchCountStore()
-
     return (
         <div className='mb-7'>
             <div className='flex items-center justify-between'>
                 <div className='text-3xl font-bold'>Layouts</div>
                 <div className='flex items-center gap-2'>
-                    <span className='text-neutral-500'>{ playlistLayoutCount }</span>
                     <CreatePlaylistLayoutButton>
                         <Button variant='soft'>Create layout</Button>
                     </CreatePlaylistLayoutButton>
@@ -59,14 +53,6 @@ const WorkspacePlaylistLayoutsPageHeader = () => {
 }
 
 const WorkspacePlaylistLayoutsPageList = ({ data }: { data: WorkspacePlaylistLayoutsRequestResponse }) => {
-    const setPlaylistLayoutCount = useSearchCountStore(useShallow(state => state.setPlaylistLayoutCount))
-
-    useEffect(() => {
-        if (data?.meta) {
-            setPlaylistLayoutCount(data.meta.total)
-        }
-    }, [data, setPlaylistLayoutCount])
-
     const { data: layouts } = data
 
     if (!layouts.length) {

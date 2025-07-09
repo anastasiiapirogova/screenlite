@@ -4,7 +4,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { usePlaylistLayout } from '../hooks/usePlaylistLayout'
 import { Link } from 'react-router'
 import { useWorkspaceRoutes } from '@modules/workspace/hooks/useWorkspaceRoutes'
-import { playlistLayoutPlaylistsQuery } from '../api/requests/playlistLayoutPlaylistsRequest'
+import { playlistLayoutPlaylistsQuery } from '../api/playlistLayoutPlaylistsRequest'
 
 const PlaylistsList = () => {
     const { id, workspaceId } = usePlaylistLayout()

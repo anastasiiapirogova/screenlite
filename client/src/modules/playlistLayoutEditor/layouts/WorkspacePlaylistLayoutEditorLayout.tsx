@@ -6,7 +6,7 @@ import { Button } from '@shared/ui/buttons/Button.js'
 import { usePlaylistLayout } from '@modules/playlistLayout/hooks/usePlaylistLayout.js'
 import { usePlaylistLayoutEditorStorage } from '@stores/usePlaylistLayoutEditorStorage'
 import { useMutation } from '@tanstack/react-query'
-import { updatePlaylistLayoutRequest, UpdatePlaylistLayoutRequestData } from '@modules/playlistLayout/api/requests/updatePlaylistLayoutRequest'
+import { updatePlaylistLayoutRequest, UpdatePlaylistLayoutRequestData } from '@modules/playlistLayout/api/updatePlaylistLayoutRequest'
 import { useSetPlaylistLayoutQueryData } from '@modules/playlistLayout/hooks/useSetPlaylistLayoutQueryData'
 import { usePlaylistLayoutEditorHistory } from '@stores/usePlaylistLayoutEditorStorage'
 

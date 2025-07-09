@@ -1,20 +1,9 @@
-import { useSearchCountStore } from '@stores/useSearchCountStore'
 import { WorkspacePlaylistsPlaylistCard } from '../WorkspacePlaylistsPlaylistCard'
-import { useShallow } from 'zustand/react/shallow'
 import { WorkspacePlaylistsRequestResponse } from '@modules/playlist/api/requests/workspacePlaylistsRequest'
 import { useRouterPlaylistFilter } from '@modules/playlist/hooks/useRouterPlaylistFilter'
-import { useEffect } from 'react'
 
 export const WorkspacePlaylistsPageList = ({ data, isLoading }: { data?: WorkspacePlaylistsRequestResponse, isLoading: boolean }) => {
-    const setPlaylistCount = useSearchCountStore(useShallow(state => state.setPlaylistCount))
-
     const { filters } = useRouterPlaylistFilter()
-
-    useEffect(() => {
-        if(data?.meta) {
-            setPlaylistCount(data.meta.total)
-        }
-    }, [data, setPlaylistCount])
 
     if (isLoading || !data) {
         return (

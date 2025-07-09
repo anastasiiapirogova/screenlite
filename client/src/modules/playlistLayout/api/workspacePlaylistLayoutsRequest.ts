@@ -1,6 +1,6 @@
 import { PaginatedRequestFilter, PaginatedResponse } from '@/types'
 import axios from '@config/axios'
-import { PlaylistLayoutListItem } from '../../types'
+import { PlaylistLayoutListItem } from '../types'
 
 export type WorkspacePlaylistLayoutsRequestResponse = PaginatedResponse<PlaylistLayoutListItem>
 

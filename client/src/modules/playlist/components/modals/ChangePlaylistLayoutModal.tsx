@@ -9,7 +9,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { useDebounce } from '@uidotdev/usehooks'
 import { Input } from '@shared/ui/input/Input'
 import { changePlaylistLayoutRequest, ChangePlaylistLayoutRequestData } from '@modules/playlist/api/requests/changePlaylistLayoutRequest'
-import { workspacePlaylistLayoutsQuery } from '@modules/playlistLayout/api/requests/workspacePlaylistLayoutsRequest'
+import { workspacePlaylistLayoutsQuery } from '@modules/playlistLayout/api/workspacePlaylistLayoutsRequest'
 
 const PlaylistLayoutsList = ({ search, selectedLayoutId, selectLayout }: { search: string, selectedLayoutId: string | undefined, selectLayout: (id: string) => void }) => {
     const workspace = useWorkspace()

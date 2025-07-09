@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 import { User } from '../../user/types'
-import { LoginRequestResponse } from '../api/requests/loginRequest'
+import { LoginRequestResponse } from '../api/login'
 
 export type AuthContext = {
 	user: User | null | undefined

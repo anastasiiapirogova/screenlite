@@ -3,7 +3,7 @@ import { FullWidthSettingsPageHeader } from '../components/FullWidthSettingsPage
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useCurrentUser } from '@modules/auth/hooks/useCurrentUser'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { currentUserQuery } from '@modules/auth/api/queries/currentUser'
+import { currentUserQuery } from '@modules/auth/api/currentUser'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { InputError } from '@shared/ui/input/InputError'

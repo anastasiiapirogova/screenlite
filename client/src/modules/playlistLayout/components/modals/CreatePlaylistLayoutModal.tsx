@@ -5,7 +5,7 @@ import { useWorkspace } from '@/modules/workspace/hooks/useWorkspace'
 import { useNavigate } from 'react-router'
 import { useWorkspaceRoutes } from '@/modules/workspace/hooks/useWorkspaceRoutes'
 import { CreatePlaylistLayoutRequestData } from '@modules/playlistLayout/types'
-import { createPlaylistLayoutRequest } from '@modules/playlistLayout/api/requests/createPlaylistLayoutRequest.js'
+import { createPlaylistLayoutRequest } from '@modules/playlistLayout/api/createPlaylistLayoutRequest.js'
 import { Button } from '@shared/ui/buttons/Button'
 import { ModalClose } from '@shared/ui/modal/Modal'
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
@@ -13,7 +13,7 @@ import { Input } from '@shared/ui/input/Input'
 import { InputError } from '@shared/ui/input/InputError'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 import { useRefetchWorkspaceEntityCounts } from '@modules/workspace/hooks/useRefetchWorkspaceEntityCounts'
-import { playlistLayoutQuery } from '@modules/playlistLayout/api/requests/playlistLayoutRequest'
+import { playlistLayoutQuery } from '@modules/playlistLayout/api/playlistLayout'
 
 export const CreatePlaylistLayoutModal = () => {
     const workspace = useWorkspace()

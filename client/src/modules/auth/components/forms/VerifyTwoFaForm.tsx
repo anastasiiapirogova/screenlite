@@ -7,7 +7,7 @@ import { ButtonSpinner } from '@shared/ui/buttons/ButtonSpinner'
 import { Input } from '@shared/ui/input/Input'
 import { Button } from '@shared/ui/buttons/Button'
 import { VerifyTwoFaData, verifyTwoFaRequest } from '@modules/user/api/requests/verifyTwoFaRequest'
-import { currentUserQuery } from '@modules/auth/api/queries/currentUser'
+import { currentUserQuery } from '@modules/auth/api/currentUser'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 
 export const VerifyTwoFaForm = () => {

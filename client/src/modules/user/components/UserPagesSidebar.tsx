@@ -1,12 +1,17 @@
 import { SidebarItems } from '@shared/components/SidebarItems'
 import { useMemo } from 'react'
-import { TbMailForward, TbSettings, TbShieldCheck, TbWorld } from 'react-icons/tb'
+import { TbMailForward, TbSettings, TbShieldCheck, TbSmartHome, TbWorld } from 'react-icons/tb'
 
 export const UserPagesSidebar = () => {
     const menuItems = useMemo(() => [
         {
-            title: 'Workspaces',
+            title: 'Home',
             to: '/',
+            icon: TbSmartHome
+        },
+        {
+            title: 'Workspaces',
+            to: '/workspaces',
             icon: TbWorld
         },
         {

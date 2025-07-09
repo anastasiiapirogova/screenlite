@@ -1,17 +1,12 @@
 import { TbFolder, TbFile } from 'react-icons/tb'
 import { useSelectionStore } from '@stores/useSelectionStore'
 import { useShallow } from 'zustand/react/shallow'
-import { useDragStore } from '@stores/useDragStore'
 
 export const DragOverlayContent = () => {
     const { selectedItems, getEntity } = useSelectionStore(useShallow((state) => ({
         selectedItems: state.selectedItems,
         getEntity: state.getEntity,
     })))
-
-    const { draggedItem } = useDragStore()
-
-    if (!draggedItem || !draggedItem.data.current) return null
 
     const selectedCount = Object.keys(selectedItems).length
     const selectedEntity = getEntity()

@@ -3,7 +3,7 @@ import { cloneElement } from 'react'
 import { ButtonElement } from '@/types'
 import { useConfirmationDialogStore } from '@stores/useConfirmationDialogStore'
 import { disableTwoFaRequest } from '@modules/user/api/requests/disableTwoFaRequest'
-import { currentUserQuery } from '@modules/auth/api/queries/currentUser'
+import { currentUserQuery } from '@modules/auth/api/currentUser'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 
 type Props = {

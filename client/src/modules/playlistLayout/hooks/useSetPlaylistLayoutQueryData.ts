@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { GetPlaylistLayoutQueryData } from '../types'
-import { playlistLayoutQuery } from '../api/requests/playlistLayoutRequest'
+import { playlistLayoutQuery } from '../api/playlistLayout'
 
 export const useSetPlaylistLayoutQueryData = () => {
     const queryClient = useQueryClient()
