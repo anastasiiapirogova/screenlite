@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { DeviceJobProducer } from '@/bullmq/producers/DeviceJobProducer.ts'
 import { ScreenRepository } from '../repositories/ScreenRepository.ts'
 import { connectDeviceSchema } from '../schemas/screenSchemas.ts'
 import { DeviceRepository } from '@/modules/device/repositories/DeviceRepository.ts'
@@ -43,7 +43,7 @@ export const connectDevice = async (req: Request, res: Response) => {
 
     const connectedDevice = await DeviceRepository.connectScreen(device.id, screen.id)
 
-    addSendNewStateToDeviceJob(device.token)
+    await DeviceJobProducer.queueSendNewStateToDeviceJob(device.token)
 
     ResponseHandler.json(res, {
         device: connectedDevice
