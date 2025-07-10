@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { ScreenRepository } from '../repositories/ScreenRepository.ts'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { DeviceJobProducer } from '@/bullmq/producers/DeviceJobProducer.ts'
 import { disconnectDeviceSchema } from '../schemas/screenSchemas.ts'
 
 export const disconnectDevice = async (req: Request, res: Response) => {
@@ -28,7 +28,7 @@ export const disconnectDevice = async (req: Request, res: Response) => {
 
     const { token } = await ScreenRepository.disconnectDevice(screen.device.id)
 
-    addSendNewStateToDeviceJob(token)
+    await DeviceJobProducer.queueSendNewStateToDeviceJob(token)
 
     ResponseHandler.ok(res)
 }
