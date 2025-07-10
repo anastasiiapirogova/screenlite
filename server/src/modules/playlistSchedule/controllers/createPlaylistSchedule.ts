@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { createScheduleValidationSchema } from '../schemas/scheduleValidationSchemas.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { PlaylistRepository } from '@/modules/playlist/repositories/PlaylistRepository.ts'
-import { addPlaylistUpdatedJob } from '@/modules/playlist/utils/addPlaylistUpdatedJob.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 
 export const createPlaylistSchedule = async (req: Request, res: Response) => {
     const workspace = req.workspace!
@@ -38,7 +38,7 @@ export const createPlaylistSchedule = async (req: Request, res: Response) => {
     })
 
     if(updatedPlaylist.isPublished && !updatedPlaylist.deletedAt) {
-        addPlaylistUpdatedJob({ playlistId: updatedPlaylist.id, context: 'playlist schedule created' })
+        await PlaylistJobProducer.queuePlaylistUpdatedJob(updatedPlaylist.id, 'playlist schedule created')
     }
 
     ResponseHandler.created(res, {
