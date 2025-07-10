@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { prisma } from '@/config/prisma.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { addFileForceDeletedJobs } from '../utils/addFileForceDeletedJobs.ts'
+import { FileJobProducer } from '@/bullmq/producers/FileJobProducer.ts'
 
 export const emptyTrash = async (req: Request, res: Response) => {
     const workspace = req.workspace!
@@ -50,7 +50,7 @@ export const emptyTrash = async (req: Request, res: Response) => {
     })
 
     if (fileIds.length > 0) {
-        addFileForceDeletedJobs(fileIds)
+        await FileJobProducer.queueFileForceDeletedJobs(fileIds)
     }
 
     return ResponseHandler.ok(res, {
