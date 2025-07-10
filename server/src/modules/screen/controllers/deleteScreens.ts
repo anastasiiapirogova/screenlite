@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { prisma } from '@/config/prisma.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { DeviceJobProducer } from '@/bullmq/producers/DeviceJobProducer.ts'
 import { deleteScreensSchema } from '../schemas/screenSchemas.ts'
 
 export const deleteScreens = async (req: Request, res: Response) => {
@@ -43,13 +43,12 @@ export const deleteScreens = async (req: Request, res: Response) => {
         }
     })
 
-    screens.forEach(screen => {
-        const token = screen.device?.token
+    const jobs = screens
+        .map(screen => screen.device?.token)
+        .filter((token): token is string => !!token)
+        .map(token => DeviceJobProducer.queueSendNewStateToDeviceJob(token))
 
-        if (token) {
-            addSendNewStateToDeviceJob(token)
-        }
-    })
+    await Promise.all(jobs)
 
     ResponseHandler.json(res, {
         screenIds: screens.map(screen => screen.id)
