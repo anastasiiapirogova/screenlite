@@ -3,7 +3,7 @@ import { prisma } from '@/config/prisma.ts'
 import { removeScreensFromPlaylistSchema } from '../schemas/playlistSchemas.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { DeviceJobProducer } from '@/bullmq/producers/DeviceJobProducer.ts'
 
 export const removeScreensFromPlaylist = async (req: Request, res: Response) => {
     const validation = await removeScreensFromPlaylistSchema.safeParseAsync(req.body)
@@ -47,11 +47,11 @@ export const removeScreensFromPlaylist = async (req: Request, res: Response) => 
     
     const updatedPlaylistScreens = updatedPlaylist.screens.map(ps => ps.screen)
     
-    screens.forEach(screen => {
-        if (!screen.device) return
-    
-        addSendNewStateToDeviceJob(screen.device.token)
-    })
+    const jobs = screens
+        .filter(screen => screen.device)
+        .map(screen => DeviceJobProducer.queueSendNewStateToDeviceJob(screen.device!.token))
+
+    await Promise.all(jobs)
     
     ResponseHandler.json(res, {
         screens: updatedPlaylistScreens
