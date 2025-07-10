@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { prisma } from '@/config/prisma.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { addPlaylistUpdatedJob } from '@/modules/playlist/utils/addPlaylistUpdatedJob.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 import { PlaylistRepository } from '@/modules/playlist/repositories/PlaylistRepository.ts'
 import { deleteScheduleSchema } from '../schemas/scheduleValidationSchemas.ts'
 
@@ -34,7 +34,7 @@ export const deletePlaylistSchedule = async (req: Request, res: Response) => {
     const updatedPlaylist = await PlaylistRepository.deleteSchedule(schedule.playlistId, scheduleId)
 
     if(updatedPlaylist.isPublished && !updatedPlaylist.deletedAt) {
-        addPlaylistUpdatedJob({ playlistId: updatedPlaylist.id, context: 'playlist schedule deleted' })
+        await PlaylistJobProducer.queuePlaylistUpdatedJob(updatedPlaylist.id, 'playlist schedule deleted')
     }
 
     ResponseHandler.json(res, {
