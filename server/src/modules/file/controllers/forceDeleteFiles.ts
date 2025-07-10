@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { prisma } from '@/config/prisma.ts'
 import { z } from 'zod'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { addFileForceDeletedJobs } from '../utils/addFileForceDeletedJobs.ts'
+import { FileJobProducer } from '@/bullmq/producers/FileJobProducer.ts'
 
 const requestSchema = z.object({
     fileIds: z.array(z.string())
@@ -62,7 +62,7 @@ export const forceDeleteFiles = async (req: Request, res: Response) => {
         })
     ])
 
-    addFileForceDeletedJobs(fileIds)
+    await FileJobProducer.queueFileForceDeletedJobs(fileIds)
 
     return ResponseHandler.ok(res, {
         forceDeletedFileIds: fileIds
