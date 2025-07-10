@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { prisma } from '@/config/prisma.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
-import { addPlaylistUpdatedJobs } from '../utils/addPlaylistUpdatedJobs.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 import { deletePlaylistsSchema } from '../schemas/playlistSchemas.ts'
 
 export const softDeletePlaylists = async (req: Request, res: Response) => {
@@ -47,7 +47,7 @@ export const softDeletePlaylists = async (req: Request, res: Response) => {
 
     // Only playlists that have been published are processed because draft playlists are not cached by devices,
     // so the device state won't change when an unpublished playlist is deleted.
-    addPlaylistUpdatedJobs(publishedPlaylistIds, 'playlist soft deleted')
+    await PlaylistJobProducer.queuePlaylistUpdatedJobs(publishedPlaylistIds, 'playlist soft deleted')
 
     ResponseHandler.json(res, {
         playlistIds: updatedPlaylistIds
