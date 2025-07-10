@@ -13,6 +13,7 @@ model User {
     deletedAt         DateTime?
 
     emailVerificationTokens EmailVerificationToken[]
+    passwordResetTokens     PasswordResetToken[]
     sessions                Session[]
     workspaces              UserWorkspace[]
     userPreferences         UserPreferences?
