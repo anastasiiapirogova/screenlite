@@ -3,7 +3,7 @@ import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 import { updatePlaylistSchema } from '../schemas/playlistSchemas.ts'
-import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 import { getModifiedPlaylistFields } from '../utils/getModifiedPlaylistFields.ts'
 
 const doesUpdateAffectScreens = (deletedAt: Date | null, updatedFields: Record<string, unknown>) => {
@@ -61,7 +61,7 @@ export const updatePlaylist = async (req: Request, res: Response) => {
     const updatedPlaylist = await PlaylistRepository.update(playlistId, modifiedFields)
 
     if(doesUpdateAffectScreens(playlist.deletedAt, modifiedFields)) {
-        addPlaylistUpdatedJob({ playlistId: playlist.id, context: 'playlist metadata updated' })
+        await PlaylistJobProducer.queuePlaylistUpdatedJob(playlist.id, 'playlist metadata updated')
     }
 
     ResponseHandler.json(res, {
