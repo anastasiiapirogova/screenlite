@@ -1,6 +1,6 @@
 import { prisma } from '@/config/prisma.ts'
 import { FolderRepository } from '../repositories/FolderRepository.ts'
-import { addFileUpdatedJobs } from '@/modules/file/utils/addFileUpdatedJobs.ts'
+import { FileJobProducer } from '@/bullmq/producers/FileJobProducer.ts'
 
 type RestoreFoldersResult = {
     restoredFolders: string[]
@@ -35,7 +35,7 @@ export class FolderRestoreService {
         const restoredFileIds = await this.restoreDeletedFolders(deletedFolders, validParentIds)
 
         if (restoredFileIds.length > 0) {
-            addFileUpdatedJobs(restoredFileIds)
+            await FileJobProducer.queueFileUpdatedJobs(restoredFileIds)
         }
 
         return {
