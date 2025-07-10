@@ -3,8 +3,8 @@ import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 import { updatePlaylistPlaylistLayoutSchema } from '../schemas/playlistSchemas.ts'
 import { PlaylistLayoutRepository } from '@/modules/playlistLayout/repositories/PlaylistLayoutRepository.ts'
-import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
-import { addRecalculatePlaylistSizeJob } from '../utils/addRecalculatePlaylistSizeJob.ts'
+
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 
 export const changePlaylistLayout = async (req: Request, res: Response) => {
     const data = req.body
@@ -49,8 +49,8 @@ export const changePlaylistLayout = async (req: Request, res: Response) => {
     try {
         const updatedPlaylist = await PlaylistRepository.updateLayoutPreservingItems(playlistId, playlistLayoutId)
         
-        addRecalculatePlaylistSizeJob(playlistId)
-        addPlaylistUpdatedJob({ playlistId, context: 'playlist layout changed' })
+        await PlaylistJobProducer.queueRecalculatePlaylistSizeJob(playlistId)
+        await PlaylistJobProducer.queuePlaylistUpdatedJob(playlistId, 'playlist layout changed')
 
         ResponseHandler.json(res, {
             playlist: updatedPlaylist
