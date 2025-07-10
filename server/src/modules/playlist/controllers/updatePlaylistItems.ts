@@ -2,8 +2,8 @@ import { Request, Response } from 'express'
 import { updatePlaylistItemsSchema } from '../schemas/playlistItemSchemas.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { PlaylistItemsUpdateService } from '../services/PlaylistItemUpdateService.ts'
-import { addRecalculatePlaylistSizeJob } from '../utils/addRecalculatePlaylistSizeJob.ts'
-import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
+
 import { prisma } from '@/config/prisma.ts'
 
 export const updatePlaylistItems = async (req: Request, res: Response) => {
@@ -68,11 +68,11 @@ export const updatePlaylistItems = async (req: Request, res: Response) => {
     )
 
     if (processedItems.itemsToDelete.length > 0 || processedItems.itemsToCreate.length > 0) {
-        addRecalculatePlaylistSizeJob(playlistId)
+        await PlaylistJobProducer.queueRecalculatePlaylistSizeJob(playlistId)
     }
     
     if(playlist.isPublished) {
-        addPlaylistUpdatedJob({ playlistId, context: 'playlist items updated' })
+        await PlaylistJobProducer.queuePlaylistUpdatedJob(playlistId, 'playlist items updated')
     }
 
     ResponseHandler.json(res, {
