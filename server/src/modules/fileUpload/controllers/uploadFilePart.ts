@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import { MultipartFileUploader } from '@/config/storage.ts'
 import { FileUploadSessionValidator } from '../utils/FileUploadSessionValidator.ts'
 import { ContentLengthValidator } from '../utils/ContentLengthValidator.ts'
-import { addCompleteMultipartUploadJob } from '../utils/addCompleteMultipartUploadJob.ts'
+import { FileUploadJobProducer } from '@/bullmq/producers/FileUploadJobProducer.ts'
 import { Readable } from 'stream'
 import { UploadLockService } from '../services/UploadLockService.ts'
 import { FileUploadRepository } from '../repositories/FileUploadRepository.ts'
@@ -46,7 +46,7 @@ export const uploadFilePart = async (req: Request, res: Response): Promise<void>
         )
 
         if(updatedSession.completedAt) {
-            addCompleteMultipartUploadJob(updatedSession)
+            await FileUploadJobProducer.queueCompleteMultipartUploadJob(updatedSession)
         }
 
         ResponseHandler.json(res, {
