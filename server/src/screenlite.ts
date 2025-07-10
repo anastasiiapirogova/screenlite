@@ -3,6 +3,7 @@ import { initPrisma } from './config/prisma.ts'
 import { initSocketIo } from './controllers/socket.ts'
 import { closeWorkers } from '@/bullmq/workers.ts'
 import { server } from '@/config/server.ts'
+import { MailService } from '@/services/mail/MailService.ts'
 import './config/rateLimiter.ts'
 import './config/storage.ts'
 
@@ -25,6 +26,7 @@ class Screenlite {
             console.log('Starting Screenlite...')
             
             await this.initializeDatabase()
+            await this.initializeMailService()
             this.initializeSocketIo()
             await this.startServer()
             
@@ -39,6 +41,18 @@ class Screenlite {
         console.log('Initializing database connection...')
         await initPrisma()
         console.log('Database connection established')
+    }
+
+    private async initializeMailService(): Promise<void> {
+        console.log('Initializing mail service...')
+        const mailService = MailService.getInstance()
+        const isConnected = await mailService.verifyConnection()
+        
+        if (isConnected) {
+            console.log('Mail service connection verified')
+        } else {
+            console.warn('Mail service connection failed - emails may not be sent')
+        }
     }
 
     private initializeSocketIo(): void {
