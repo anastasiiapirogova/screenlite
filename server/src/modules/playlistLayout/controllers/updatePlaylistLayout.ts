@@ -6,7 +6,7 @@ import { updatePlaylistLayoutSchema } from '../schemas/playlistLayoutSchemas.ts'
 import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.ts'
 import { PlaylistLayoutSection } from '@/generated/prisma/client.ts'
 import { prisma } from '@/config/prisma.ts'
-import { addPlaylistUpdatedJobs } from '@/modules/playlist/utils/addPlaylistUpdatedJobs.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 
 type SectionData = Omit<PlaylistLayoutSection, 'playlistLayoutId'>
 
@@ -110,7 +110,7 @@ export const updatePlaylistLayout = async (req: Request, res: Response) => {
             }
         })
 
-        addPlaylistUpdatedJobs(playlists.map(playlist => playlist.id), 'playlist layout updated')
+        await PlaylistJobProducer.queuePlaylistUpdatedJobs(playlists.map(playlist => playlist.id), 'playlist layout updated')
     }
 
     ResponseHandler.json(res, {
