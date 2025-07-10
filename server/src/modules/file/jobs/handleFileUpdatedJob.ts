@@ -1,5 +1,5 @@
 import { prisma } from '@/config/prisma.ts'
-import { addPlaylistUpdatedJobs } from '@/modules/playlist/utils/addPlaylistUpdatedJobs.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 
 export const handleFileUpdatedJob = async (fileId: string) => {
     const playlistItems = await prisma.playlistItem.findMany({
@@ -21,5 +21,5 @@ export const handleFileUpdatedJob = async (fileId: string) => {
 
     const playlistIds = [...new Set(playlistItems.map(item => item.playlist.id))]
 
-    addPlaylistUpdatedJobs(playlistIds, 'file updated')
+    await PlaylistJobProducer.queuePlaylistUpdatedJobs(playlistIds, 'file updated')
 }
