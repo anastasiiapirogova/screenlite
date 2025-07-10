@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { PlaylistLayoutRepository } from '../repositories/PlaylistLayoutRepository.ts'
 import { prisma } from '@/config/prisma.ts'
-import { addPlaylistUpdatedJobs } from '@/modules/playlist/utils/addPlaylistUpdatedJobs.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 import { WorkspaceService } from '@workspaceModules/utils/WorkspaceService.ts'
 
 export const deletePlaylistLayout = async (req: Request, res: Response) => {
@@ -22,7 +22,7 @@ export const deletePlaylistLayout = async (req: Request, res: Response) => {
 
     await WorkspaceService.invalidateWorkspaceEntityCounts(playlistLayout.workspaceId)
 
-    addPlaylistUpdatedJobs(playlistLayout.playlists.map((p) => p.id), 'playlist layout deleted')
+    await PlaylistJobProducer.queuePlaylistUpdatedJobs(playlistLayout.playlists.map((p) => p.id), 'playlist layout deleted')
 
     return ResponseHandler.ok(res)
 }
