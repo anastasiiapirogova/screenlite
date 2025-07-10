@@ -4,7 +4,7 @@ import { createAdapter } from '@socket.io/redis-adapter'
 import { getRedisClient } from '@/config/redis.ts'
 import { handleDeviceData } from '../modules/device/controllers/handleDeviceData.ts'
 import { getDeviceSocketConnectionInfoByToken, removeDeviceSocketConnectionInfoBySocketId, storeDeviceSocketConnectionInfo } from '../modules/device/utils/deviceSocketConnection.ts'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { DeviceJobProducer } from '@/bullmq/producers/DeviceJobProducer.ts'
 
 class DeviceConnectionManager {
     private deviceNamespace: Namespace
@@ -61,7 +61,7 @@ class DeviceConnectionManager {
 
     private async initializeNewDeviceConnection(token: string): Promise<void> {
         try {
-            await addSendNewStateToDeviceJob(token)
+            await DeviceJobProducer.queueSendNewStateToDeviceJob(token)
         } catch (error) {
             console.error('Error initializing device connection:', error)
         }
