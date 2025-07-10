@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 import { addScreensToPlaylistSchema } from '../schemas/playlistSchemas.ts'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
+import { DeviceJobProducer } from '@/bullmq/producers/DeviceJobProducer.ts'
 import { ScreenRepository } from '@/modules/screen/repositories/ScreenRepository.ts'
 
 export const addScreensToPlaylist = async (req: Request, res: Response) => {
@@ -41,11 +41,11 @@ export const addScreensToPlaylist = async (req: Request, res: Response) => {
     const updatedPlaylistScreens = updatedPlaylist.screens.map(ps => ps.screen)
 
     if(playlist.isPublished && !playlist.deletedAt) {
-        screens.forEach(screen => {
-            if (!screen.device) return
-    
-            addSendNewStateToDeviceJob(screen.device.token)
-        })
+        const jobs = screens
+            .filter(screen => screen.device)
+            .map(screen => DeviceJobProducer.queueSendNewStateToDeviceJob(screen.device!.token))
+
+        await Promise.all(jobs)
     }
 
     ResponseHandler.json(res, {
