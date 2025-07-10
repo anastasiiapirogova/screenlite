@@ -1,5 +1,5 @@
 import { prisma } from '@/config/prisma.ts'
-import { addFileUpdatedJobs } from '../utils/addFileUpdatedJobs.ts'
+import { FileJobProducer } from '@/bullmq/producers/FileJobProducer.ts'
 
 type RestoreFilesResult = {
     restoredFiles: string[]
@@ -56,7 +56,7 @@ export class FileRestoreService {
         const restoredFileIds = deletedFiles.map(f => f.id)
 
         if (restoredFileIds.length) {
-            addFileUpdatedJobs(restoredFileIds)
+            await FileJobProducer.queueFileUpdatedJobs(restoredFileIds)
         }
 
         return {
