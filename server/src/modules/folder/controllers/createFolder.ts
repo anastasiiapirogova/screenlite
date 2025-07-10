@@ -17,14 +17,6 @@ export const createFolder = async (req: Request, res: Response) => {
 
     const parentFolder = parentId ? await FolderRepository.findFolder(parentId, workspace.id) : null
 
-    const isParentFolderDeleted = parentFolder && parentFolder.deletedAt
-
-    if (isParentFolderDeleted) {
-        return ResponseHandler.validationError(req, res, {
-            parentId: 'CANNOT_CREATE_IN_DELETED_FOLDER',
-        })
-    }
-
     const isParentFolderNotFound = parentId && !parentFolder
 
     if (isParentFolderNotFound) {
@@ -32,6 +24,14 @@ export const createFolder = async (req: Request, res: Response) => {
             parentId: 'FOLDER_NOT_FOUND',
         })
     }
+
+    const isParentFolderDeleted = parentFolder && parentFolder.deletedAt
+
+    if (isParentFolderDeleted) {
+        return ResponseHandler.validationError(req, res, {
+            parentId: 'CANNOT_CREATE_IN_DELETED_FOLDER',
+        })
+    }    
 
     const folderDepth = await FolderRepository.calculateFolderDepth(workspace.id, parentId ?? null)
 
