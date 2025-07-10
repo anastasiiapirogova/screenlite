@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { prisma } from '@/config/prisma.ts'
 import { updateScheduleValidationSchema } from '../schemas/scheduleValidationSchemas.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { addPlaylistUpdatedJob } from '@/modules/playlist/utils/addPlaylistUpdatedJob.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 
 export const updatePlaylistSchedule = async (req: Request, res: Response) => {
     const workspace = req.workspace!
@@ -62,7 +62,7 @@ export const updatePlaylistSchedule = async (req: Request, res: Response) => {
     })
 
     if(updatedPlaylist.isPublished && !updatedPlaylist.deletedAt) {
-        addPlaylistUpdatedJob({ playlistId: updatedPlaylist.id, context: 'playlist schedule updated' })
+        await PlaylistJobProducer.queuePlaylistUpdatedJob(updatedPlaylist.id, 'playlist schedule updated')
     }
 
     ResponseHandler.json(res, {
