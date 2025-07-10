@@ -24,3 +24,15 @@ createGuestRoute({
     path: '/auth/login',
     handler: AuthController.login
 })
+
+createGuestRoute({
+    method: HttpMethod.POST,
+    path: '/auth/password/forgot',
+    handler: AuthController.forgotPassword
+})
+
+createGuestRoute({
+    method: HttpMethod.POST,
+    path: '/auth/password/reset',
+    handler: AuthController.resetPassword
+})

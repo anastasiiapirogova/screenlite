@@ -21,3 +21,12 @@ export const loginSchema = z.object({
     email: emailSchema,
     password: z.string().nonempty('PASSWORD_IS_REQUIRED'),
 })
+
+export const forgotPasswordSchema = z.object({
+    email: emailSchema,
+})
+
+export const resetPasswordSchema = z.object({
+    token: z.string().nonempty('TOKEN_IS_REQUIRED'),
+    newPassword: passwordZodSchema,
+})
