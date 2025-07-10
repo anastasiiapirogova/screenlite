@@ -9,7 +9,8 @@
 		"lint": "eslint --fix",
 		"start": "node --env-file=.env dist/screenlite.js",
 		"test": "vitest --bail=1",
-		"routes:list": "node scripts/generate-route-list.js"
+		"routes:list": "node scripts/generate-route-list.js",
+		"env:sync": "node scripts/sync-env-docs.js"
 	},
 	"bin": {
 		"bullmq": "./bin/bullmq-cli.ts"
@@ -22,6 +23,7 @@
 		"@smithy/node-http-handler": "^4.0.3",
 		"@smithy/types": "^4.1.0",
 		"@socket.io/redis-adapter": "^8.3.0",
+		"@types/nodemailer": "^6.4.17",
 		"axios": "^1.10.0",
 		"bcrypt": "^5.1.1",
 		"body-parser": "^1.20.3",
@@ -36,6 +38,7 @@
 		"ioredis": "^5.6.0",
 		"mime": "^4.0.6",
 		"multer": "^2.0.1",
+		"nodemailer": "^7.0.5",
 		"pg": "^8.14.0",
 		"sharp": "^0.33.5",
 		"socket.io": "^4.8.1",
