@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { prisma } from '@/config/prisma.ts'
 import { ResponseHandler } from '@/utils/ResponseHandler.ts'
-import { addPlaylistUpdatedJob } from '../utils/addPlaylistUpdatedJob.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 import { restorePlaylistsSchema } from '../schemas/playlistSchemas.ts'
 
@@ -47,7 +47,7 @@ export const restorePlaylists = async (req: Request, res: Response) => {
         .map(playlist => playlist.id)
 
     for (const id of publishedPlaylistIds) {
-        addPlaylistUpdatedJob({ playlistId: id, context: 'playlist restored' })
+        await PlaylistJobProducer.queuePlaylistUpdatedJob(id, 'playlist restored')
     }
 
     ResponseHandler.json(res, {
