@@ -3,9 +3,9 @@ import { ResponseHandler } from '@/utils/ResponseHandler.ts'
 import { updateFileSchema } from '../schemas/fileSchemas.ts'
 import { FileRepository } from '../repositories/FileRepository.ts'
 import { removeUndefinedFromObject } from '@/utils/removeUndefinedFromObject.ts'
-import { addFileUpdatedJob } from '../utils/addFileUpdatedJob.ts'
+import { FileJobProducer } from '@/bullmq/producers/FileJobProducer.ts'
 
-const addFileUpdatedJobIfAvailabilityChanged = (
+const addFileUpdatedJobIfAvailabilityChanged = async (
     file: { id: string, availabilityStartAt: Date | null, availabilityEndAt: Date | null },
     updatedFields: { availabilityStartAt?: Date | null, availabilityEndAt?: Date | null }
 ) => {
@@ -15,7 +15,7 @@ const addFileUpdatedJobIfAvailabilityChanged = (
     )
 
     if (hasAvailabilityDatesChanged) {
-        addFileUpdatedJob(file.id)
+        await FileJobProducer.queueFileUpdatedJob(file.id)
     }
 }
 
@@ -57,7 +57,7 @@ export const updateFile = async (req: Request, res: Response) => {
 
     const updatedFile = await FileRepository.updateFileProperties(fileId, updatedFields)
 
-    addFileUpdatedJobIfAvailabilityChanged(file, updatedFields)
+    await addFileUpdatedJobIfAvailabilityChanged(file, updatedFields)
 
     return ResponseHandler.created(res, {
         file: updatedFile
