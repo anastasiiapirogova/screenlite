@@ -1,6 +1,6 @@
 import { prisma } from '@/config/prisma.ts'
-import { addSendNewStateToDeviceJob } from '@/modules/device/utils/addSendNewStateToDeviceJob.ts'
-import { addPlaylistUpdatedJobs } from '../utils/addPlaylistUpdatedJobs.ts'
+import { DeviceJobProducer } from '@/bullmq/producers/DeviceJobProducer.ts'
+import { PlaylistJobProducer } from '@/bullmq/producers/PlaylistJobProducer.ts'
 import { PlaylistRepository } from '../repositories/PlaylistRepository.ts'
 
 const handleUpdateNestablePlaylist = async (playlistId: string) => {
@@ -23,7 +23,7 @@ const handleUpdateNestablePlaylist = async (playlistId: string) => {
 
     const playlistIds = [...new Set(parentPlaylists.map(item => item.playlist.id))]
 
-    addPlaylistUpdatedJobs(playlistIds, 'playlist updated (cascade)')
+    await PlaylistJobProducer.queuePlaylistUpdatedJobs(playlistIds, 'playlist updated (cascade)')
 }
 
 const handleUpdateStandardPlaylist = async (playlistId: string) => {
@@ -42,9 +42,11 @@ const handleUpdateStandardPlaylist = async (playlistId: string) => {
         }
     })
 
-    devices.forEach(device => {
-        addSendNewStateToDeviceJob(device.token)
-    })
+    const jobs = devices.map(device => 
+        DeviceJobProducer.queueSendNewStateToDeviceJob(device.token)
+    )
+
+    await Promise.all(jobs)
 }
 
 export const handlePlaylistUpdatedJob = async (playlistId: string) => {
