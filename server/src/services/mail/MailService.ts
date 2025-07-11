@@ -1,6 +1,7 @@
-import nodemailer from 'nodemailer'
-import { createTransporter, getMailConfig } from '@/config/mail.ts'
-import { error } from '@/utils/logger.ts'
+import { MailProviderInterface } from './providers/MailProviderInterface.ts'
+import { SMTPMailProvider } from './providers/SMTPMailProvider.ts'
+import { LogMailProvider } from './providers/LogMailProvider.ts'
+import { getMailProviderType } from '@/config/mail.ts'
 import { 
     VerificationEmailTemplate, 
     WorkspaceInvitationEmailTemplate, 
@@ -21,43 +22,38 @@ export interface EmailOptions {
 
 export class MailService {
     private static instance: MailService
-    private transporter: nodemailer.Transporter
+    private provider: MailProviderInterface
     private frontendUrl: string
 
-    private constructor(frontendUrl: string) {
-        this.transporter = createTransporter()
-        this.frontendUrl = frontendUrl
+    private constructor() {
+        this.provider = this.createProvider()
+        this.frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3002'
+    }
+
+    private createProvider(): MailProviderInterface {
+        const providerType = getMailProviderType()
+        
+        switch (providerType) {
+            case 'smtp':
+                console.log('Screenlite: Mail service initialized with SMTP provider')
+                return new SMTPMailProvider()
+            case 'log':
+                console.log('Screenlite: Mail service initialized with Log provider')
+                return new LogMailProvider()
+            default:
+                throw new Error(`Invalid mail provider type: ${providerType}`)
+        }
     }
 
     static getInstance(): MailService {
         if (!MailService.instance) {
-            MailService.instance = new MailService(process.env.FRONTEND_URL || 'http://localhost:3002')
+            MailService.instance = new MailService()
         }
         return MailService.instance
     }
 
     async sendEmail(options: EmailOptions): Promise<boolean> {
-        try {
-            const config = getMailConfig()
-            const fromEmail = options.from || config.from
-            const fromName = options.fromName || config.fromName || 'Screenlite'
-            const formattedFrom = fromName ? `"${fromName}" <${fromEmail}>` : fromEmail
-
-            const mailOptions = {
-                from: formattedFrom,
-                to: options.to,
-                subject: options.subject,
-                html: options.html,
-                text: options.text,
-            }
-
-            await this.transporter.sendMail(mailOptions)
-            
-            return true
-        } catch (err) {
-            error('Failed to send email', err, { category: 'mail' })
-            return false
-        }
+        return this.provider.sendEmail(options)
     }
 
     async sendVerificationEmail(data: VerificationEmailData): Promise<boolean> {
@@ -88,12 +84,6 @@ export class MailService {
     }
 
     async verifyConnection(): Promise<boolean> {
-        try {
-            await this.transporter.verify()
-            return true
-        } catch (err) {
-            error('Mail service connection verification failed', err, { category: 'mail' })
-            return false
-        }
+        return this.provider.verifyConnection()
     }
 } 
