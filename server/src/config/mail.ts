@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer'
+import SMTPTransport from 'nodemailer/lib/smtp-transport/index.js'
 
-export type MailConfig = {
+export type MailConfig = SMTPTransport.Options & {
     host: string
     port: number
     secure: boolean
@@ -9,7 +10,6 @@ export type MailConfig = {
         pass: string
     }
     from: string
-    fromName?: string
 }
 
 export const getMailConfig = (): MailConfig => {
@@ -22,7 +22,6 @@ export const getMailConfig = (): MailConfig => {
             pass: process.env.SMTP_PASSWORD || '',
         },
         from: process.env.MAIL_FROM || 'noreply@screenlite.org',
-        fromName: process.env.MAIL_FROM_NAME || 'Screenlite',
     }
 }
 
@@ -30,4 +29,15 @@ export const createTransporter = () => {
     const config = getMailConfig()
 
     return nodemailer.createTransport(config)
+}
+
+export const getMailProviderType = (): 'smtp' | 'log' => {
+    const config = getMailConfig()
+    
+    const hasSmtpConfig = config.host && 
+                         config.host !== 'localhost' && 
+                         config.auth.user && 
+                         config.auth.pass
+    
+    return hasSmtpConfig ? 'smtp' : 'log'
 } 
