@@ -5,19 +5,17 @@
 		"build": "rimraf dist && mkdir dist && npx swc src -d dist --strip-leading-paths && node scripts/fix-imports.js",
 		"db:deploy": "npx prisma migrate deploy && npx prisma generate",
 		"db:reset": "npx prisma migrate reset && npx prisma generate",
-		"dev": "[ -f .env ] && env-cmd -f .env tsx watch src/screenlite.ts || tsx watch src/screenlite.ts",
+		"dev": "[ -f .env ] && env-cmd -f .env tsx watch src/entrypoints/http.ts || tsx watch src/entrypoints/http.ts",
 		"lint": "eslint --fix",
 		"start": "node --env-file=.env dist/screenlite.js",
 		"test": "vitest --bail=1",
 		"routes:list": "node scripts/generate-route-list.js",
 		"env:sync": "node scripts/sync-env-docs.js"
 	},
-	"bin": {
-		"bullmq": "./bin/bullmq-cli.ts"
-	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.758.0",
 		"@aws-sdk/s3-request-presigner": "^3.828.0",
+		"@fastify/formbody": "^8.0.2",
 		"@prisma/adapter-pg": "^6.11.1",
 		"@prisma/client": "^6.11.1",
 		"@smithy/node-http-handler": "^4.0.3",
@@ -30,6 +28,9 @@
 		"bullmq": "^5.43.0",
 		"cors": "^2.8.5",
 		"express": "^4.21.2",
+		"fastify": "^5.4.0",
+		"fastify-plugin": "^5.0.1",
+		"fastify-type-provider-zod": "^5.0.2",
 		"glob": "^11.0.0",
 		"helmet": "^8.1.0",
 		"i18next": "^24.2.3",
@@ -46,7 +47,7 @@
 		"swagger-ui-express": "^5.0.1",
 		"ua-parser-js": "^2.0.3",
 		"uuid": "^11.1.0",
-		"zod": "^3.24.2"
+		"zod": "^4.0.5"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.28.0",

@@ -12,9 +12,6 @@
         "keepClassNames": false,
         "baseUrl": "./",
         "paths": {
-            "@workspaceModules/*": [
-                "src/modules/workspace/*"
-            ],
             "@/*": [
                 "./src/*"
             ],

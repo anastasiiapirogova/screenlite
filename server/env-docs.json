@@ -1,90 +1,138 @@
 {
   "REDIS_HOST": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "REDIS_PORT": {
     "description": "",
-    "used": true
-  },
-  "SMTP_HOST": {
-    "description": "",
-    "used": true
-  },
-  "SMTP_PORT": {
-    "description": "",
-    "used": true
-  },
-  "SMTP_SECURE": {
-    "description": "",
-    "used": true
-  },
-  "SMTP_USER": {
-    "description": "",
-    "used": true
-  },
-  "SMTP_PASSWORD": {
-    "description": "",
-    "used": true
-  },
-  "MAIL_FROM": {
-    "description": "",
-    "used": true
-  },
-  "MAIL_FROM_NAME": {
-    "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "DATABASE_URL": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": true,
+    "files": [
+      "/app/src/services/PrismaService.ts"
+    ]
   },
   "S3_REGION": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "S3_ENDPOINT": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "S3_PORT": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "S3_ACCESS_KEY": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "S3_SECRET_KEY": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "STORAGE_TYPE": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "CORS_ORIGINS": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "NODE_ENV": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "TOTP_ENCRYPTION_KEY": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "BASE_URL": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "FFMPEG_SERVICE_URL": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   },
   "FRONTEND_URL": {
     "description": "",
-    "used": true
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
+  },
+  "CRYPTO_SECRET": {
+    "description": "",
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
+  },
+  "APP_NAME": {
+    "description": "",
+    "used": true,
+    "usedOutsideConfig": false,
+    "files": [
+      "/app/src/config.ts"
+    ]
   }
 }

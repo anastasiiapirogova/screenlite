@@ -90,7 +90,7 @@ function generateRouteList() {
     
     console.log('Scanning for routes...\n')
     
-    findRouteFiles('./src')
+    findRouteFiles('./oldsrc')
     
     routes.sort((a, b) => {
         if (a.path.startsWith('/workspaces') && !b.path.startsWith('/workspaces')) {

@@ -15,6 +15,7 @@ services:
       - screenlite_server_logs:/app/logs
     environment:
       - NODE_ENV=${NODE_ENV:-development}
+      - CRYPTO_SECRET=${CRYPTO_SECRET:-secret}
       - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/screenlite}
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
@@ -24,14 +25,10 @@ services:
       - S3_SECRET_KEY=${S3_SECRET_KEY:-screenlite}
       - S3_ENDPOINT=${S3_ENDPOINT:-http://minio}
       - S3_REGION=${S3_REGION:-us-east-1}
+      - BACKEND_URL=${BACKEND_URL:-http://localhost:3000}
       - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3001,https://screenlite.org}
       - FFMPEG_SERVICE_URL=${FFMPEG_SERVICE_URL:-http://ffmpeg-service:3002}
       - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3001}
-      - SMTP_HOST=${SMTP_HOST:-}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
-      - SMTP_PORT=${SMTP_PORT:-587}
-      - SMTP_SECURE=${SMTP_SECURE:-true}
-      - SMTP_USER=${SMTP_USER:-}
     depends_on:
       postgres:
         condition: service_healthy
@@ -49,6 +46,24 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
+
+  prisma-studio:
+    image: node:lts-alpine3.17
+    working_dir: /app
+    volumes:
+      - ./server:/app
+    command: npx prisma studio --port 5555 --browser none
+    ports:
+      - "5555:5555"
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/screenlite}
+    networks:
+      - default
+    depends_on:
+      postgres:
+        condition: service_healthy
+      server:
+        condition: service_started
 
   # Sandboxed FFmpeg Service
   ffmpeg-service:

@@ -12,8 +12,7 @@
 		"skipLibCheck": true, /* Skip type checking all .d.ts files. */
 		"baseUrl": ".",
 		"paths": {
-			"@workspaceModules/*": ["./src/modules/workspace/*"],
-			"@/*": ["./src/*"],
+			"@/*": ["src/*"],
 			"*": [
 				"node_modules",
 			],
