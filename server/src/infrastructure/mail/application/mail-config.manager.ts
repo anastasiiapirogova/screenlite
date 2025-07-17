@@ -1,6 +1,6 @@
 import { hashValue } from '@/shared/utils/crypto/crypto.utils.ts'
 import { SettingsService } from '@/modules/setting/infrastructure/services/settings.service.ts'
-import { MailConfig } from '../dto/mail-config.dto.ts'
+import { MailConfig } from '@/infrastructure/mail/dto/mail-config.dto.ts'
 
 export class MailConfigManager {
     private lastConfigHash: string | null = null
