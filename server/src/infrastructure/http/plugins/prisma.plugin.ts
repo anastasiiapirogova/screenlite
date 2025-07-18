@@ -9,19 +9,19 @@ declare module 'fastify' {
     }
 }
 
-const prismaPlugin: FastifyPluginAsync = async (server) => {
-    if (!server.config?.database?.url) {
+const prismaPlugin: FastifyPluginAsync = async (fastify) => {
+    if (!fastify.config?.database?.url) {
         throw new Error('Missing database.url in config')
     }
 
-    const prismaService = new PrismaService(server.config.database.url)
+    const prismaService = new PrismaService(fastify.config.database.url)
 
     await prismaService.connect()
 
-    server.decorate('prisma', prismaService.client)
+    fastify.decorate('prisma', prismaService.client)
   
-    server.addHook('onClose', async (server) => {
-        await server.prisma.$disconnect()
+    fastify.addHook('onClose', async (fastify) => {
+        await fastify.prisma.$disconnect()
     })
 }
 
