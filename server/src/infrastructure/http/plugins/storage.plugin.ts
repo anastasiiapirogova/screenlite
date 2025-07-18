@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
 import { StorageInterface } from '@/core/ports/storage.interface.ts'
-import { StorageFactory } from '@/infrastructure/storage/storage.factory.ts'
+import { StorageFactory } from '@/infrastructure/storage/factories/storage.factory.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -10,7 +10,7 @@ declare module 'fastify' {
 }
 
 const storagePlugin: FastifyPluginAsync = async (fastify) => {
-    if (!fastify.s3client) {
+    if (!fastify.s3Client) {
         throw new Error('S3 client not registered')
     }
 
@@ -22,7 +22,7 @@ const storagePlugin: FastifyPluginAsync = async (fastify) => {
         throw new Error('Missing backendUrl in config')
     }
 
-    const s3Client = fastify.s3client
+    const s3Client = fastify.s3Client
 
     const storage = new StorageFactory(s3Client)
 
@@ -37,5 +37,5 @@ const storagePlugin: FastifyPluginAsync = async (fastify) => {
 
 export default fp(storagePlugin, {
     name: 'storage',
-    dependencies: ['config', 's3client'],
+    dependencies: ['config', 's3Client'],
 })
