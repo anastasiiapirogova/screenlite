@@ -8,8 +8,8 @@ declare module 'fastify' {
     }
 }
 
-const configPlugin: FastifyPluginAsync = async (server) => {
-    server.decorate('config', new ConfigService())
+const configPlugin: FastifyPluginAsync = async (fastify) => {
+    fastify.decorate('config', new ConfigService())
 }
 
 export default fp(configPlugin, {
