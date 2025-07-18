@@ -4,6 +4,7 @@ import { z } from 'zod'
 export const redisSchema = z.object({
     host: z.string(),
     port: portSchema,
-    password: z.string().optional(),
     db: z.coerce.number().int().optional(),
+    password: z.string().optional(),
+    username: z.string().optional(),
 })
