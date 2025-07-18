@@ -27,7 +27,7 @@ services:
       - S3_REGION=${S3_REGION:-us-east-1}
       - BACKEND_URL=${BACKEND_URL:-http://localhost:3000}
       - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3001,https://screenlite.org}
-      - FFMPEG_SERVICE_URL=${FFMPEG_SERVICE_URL:-http://ffmpeg-service:3002}
+      - FFMPEG_SERVICE_API_URL=${FFMPEG_SERVICE_API_URL:-http://ffmpeg-service:3002}
       - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3001}
     depends_on:
       postgres:
