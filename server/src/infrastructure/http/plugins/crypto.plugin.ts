@@ -9,14 +9,14 @@ declare module 'fastify' {
     }
 }
 
-const cryptoPlugin: FastifyPluginAsync = async (server) => {
-    if (!server.config?.secrets?.cryptoSecret) {
+const cryptoPlugin: FastifyPluginAsync = async (fastify) => {
+    if (!fastify.config?.secrets?.cryptoSecret) {
         throw new Error('Missing cryptoSecret in config')
     }
 
-    const cryptoService = new NodeCryptoService(server.config.secrets.cryptoSecret)
+    const cryptoService = new NodeCryptoService(fastify.config.secrets.cryptoSecret)
 
-    server.decorate('crypto', cryptoService)
+    fastify.decorate('crypto', cryptoService)
 }
 
 export default fp(cryptoPlugin, {
