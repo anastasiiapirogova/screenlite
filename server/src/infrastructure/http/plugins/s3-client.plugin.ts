@@ -4,7 +4,7 @@ import { FastifyPluginAsync } from 'fastify'
 
 declare module 'fastify' {
     interface FastifyInstance {
-        s3client?: S3Client
+        s3Client?: S3Client
     }
 }
 
@@ -51,7 +51,7 @@ const s3ClientPlugin: FastifyPluginAsync = async (fastify) => {
         throw new Error('S3 connection check failed')
     }
 
-    fastify.decorate('s3client', s3Client)
+    fastify.decorate('s3Client', s3Client)
 
     fastify.addHook('onClose', async () => {
         fastify.log.info('Destroying S3 client')
@@ -59,6 +59,6 @@ const s3ClientPlugin: FastifyPluginAsync = async (fastify) => {
 }
 
 export default fp(s3ClientPlugin, {
-    name: 's3client',
+    name: 's3Client',
     dependencies: ['config'],
 })
