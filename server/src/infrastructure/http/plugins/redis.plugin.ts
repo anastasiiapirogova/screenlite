@@ -22,24 +22,31 @@ const redisPlugin: FastifyPluginAsync = async (fastify) => {
         db: config.db,
     }
 
-    service.registerClient('default', new Redis(baseConfig))
-  
-    service.registerClient('bullmq', new Redis({
-        ...baseConfig,
-        maxRetriesPerRequest: null
-    }))
-  
-    service.registerClient('pubsub', new Redis({
-        ...baseConfig,
-        enableOfflineQueue: false,
-        autoResubscribe: false
-    }))
+    const clients = {
+        default: new Redis(baseConfig),
+        bullmq: new Redis({
+            ...baseConfig,
+            maxRetriesPerRequest: null
+        }),
+        pub: new Redis({
+            ...baseConfig,
+            enableOfflineQueue: false,
+        }),
+        sub: new Redis({
+            ...baseConfig,
+            enableOfflineQueue: false,
+            autoResubscribe: true
+        }),
+        cache: new Redis({
+            ...baseConfig,
+            enableOfflineQueue: true,
+            commandTimeout: 100
+        })
+    }
 
-    service.registerClient('cache', new Redis({
-        ...baseConfig,
-        enableOfflineQueue: true,
-        commandTimeout: 100
-    }))
+    Object.entries(clients).forEach(([name, client]) => {
+        service.registerClient(name, client)
+    })
 
     fastify.decorate('redis', service)
   
