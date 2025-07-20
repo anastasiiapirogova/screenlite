@@ -1,6 +1,6 @@
-import { EmailOptions } from './mail-options.interface.ts'
+import { SendEmailDTO } from '@/core/dto/send-email.dto.ts'
 
-export type MailerInterface = {
-    sendEmail(options: EmailOptions): Promise<boolean>
+export type IMailer = {
+    sendEmail(options: SendEmailDTO): Promise<boolean>
     verifyConnection(): Promise<boolean>
 }

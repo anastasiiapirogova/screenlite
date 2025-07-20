@@ -1,7 +1,7 @@
 import { MultipartUpload } from '@/core/entities/multipart-upload.entity.ts'
 import { Readable } from 'stream'
 
-export type MultipartFileUploader = {
+export type IMultipartFileUploader = {
     initializeUpload(upload: MultipartUpload): Promise<void>
     uploadPart(
         upload: MultipartUpload,

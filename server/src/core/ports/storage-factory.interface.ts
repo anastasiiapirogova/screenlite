@@ -1,5 +1,5 @@
 import { S3Client } from '@aws-sdk/client-s3'
-import { StorageInterface } from './storage.interface.ts'
+import { IStorage } from './storage.interface.ts'
 
 export type StorageFactoryConfig = {
     type: 's3' | 'local'
@@ -12,6 +12,6 @@ export type StorageFactoryConfig = {
     }
 }
 
-export type StorageFactoryInterface = {
-    create(config: StorageFactoryConfig): StorageInterface
+export type IStorageFactory = {
+    create(config: StorageFactoryConfig): IStorage
 }

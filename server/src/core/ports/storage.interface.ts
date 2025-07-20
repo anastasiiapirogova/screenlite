@@ -1,6 +1,6 @@
 import { Readable } from 'stream'
 
-export type StorageInterface = {
+export type IStorage = {
     uploadFile(key: string, body: Buffer | Readable, contentType?: string): Promise<void>
     downloadFile(key: string): Promise<Readable | null>
     deleteFile(key: string): Promise<void>

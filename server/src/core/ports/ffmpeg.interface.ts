@@ -7,7 +7,7 @@ export type VideoMetadata = {
     videoFrameRate: number
 }
 
-export type FFmpegServiceInterface = {
+export type IFFmpegService = {
     healthCheck(): Promise<boolean>
     getVideoPreview(url: string): Promise<Buffer>
     getVideoMetadata(url: string): Promise<VideoMetadata>

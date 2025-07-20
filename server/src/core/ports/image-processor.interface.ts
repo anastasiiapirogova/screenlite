@@ -5,6 +5,6 @@ export type ImageMetadata = {
     height: number
 }
 
-export type ImageProcessor = {
+export type IImageProcessor = {
     getImageMetadata(readStream: Readable): Promise<ImageMetadata>
 }

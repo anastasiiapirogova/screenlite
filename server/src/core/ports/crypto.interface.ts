@@ -1,4 +1,4 @@
-export type CryptoServiceInterface = {
+export type ICryptoService = {
     encrypt(plaintext: string): string
     decrypt(ciphertext: string): string
 }
