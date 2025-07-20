@@ -38,6 +38,7 @@ export class FastifyServer {
         await this.app.register(plugins.configPlugin)
         await this.app.register(plugins.cryptoPlugin)
         await this.app.register(plugins.redisPlugin)
+        await this.app.register(plugins.messageBrokerPlugin)
         await this.app.register(plugins.s3ClientPlugin)
         await this.app.register(plugins.multipartUploadPlugin)
         await this.app.register(plugins.storagePlugin)
@@ -45,6 +46,7 @@ export class FastifyServer {
         await this.app.register(plugins.settingsPlugin)
         await this.app.register(plugins.mailPlugin)
         await this.app.register(plugins.customValidationErrorHandler)
+        await this.app.register(plugins.websocketPlugin)
     }
 
     get instance(): FastifyInstance {

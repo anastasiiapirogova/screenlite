@@ -9,6 +9,8 @@ import settingsPlugin from './settings.plugin.ts'
 import customValidationErrorHandler from './custom-validation-error-handler.plugin.ts'
 import redisPlugin from './redis.plugin.ts'
 import multipartUploadPlugin from './multipart-upload.plugin.ts'
+import websocketPlugin from './websocket.plugin.ts'
+import messageBrokerPlugin from './message-broker.plugin.ts'
 
 export default {
     configPlugin,
@@ -20,5 +22,7 @@ export default {
     settingsPlugin,
     customValidationErrorHandler,
     redisPlugin,
-    multipartUploadPlugin
+    multipartUploadPlugin,
+    websocketPlugin,
+    messageBrokerPlugin,
 }
