@@ -1,7 +1,7 @@
 import crypto from 'crypto'
-import { CryptoServiceInterface } from '@/core/ports/crypto.interface.ts'
+import { ICryptoService } from '@/core/ports/crypto.interface.ts'
 
-export class NodeCryptoService implements CryptoServiceInterface {
+export class NodeCryptoService implements ICryptoService {
     private readonly key: Buffer
     private readonly iv: Buffer
     private readonly algorithm: string
