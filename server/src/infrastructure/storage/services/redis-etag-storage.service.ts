@@ -1,7 +1,7 @@
-import { EtagStorage } from '@/core/ports/etag-storage.interface.ts'
+import { IEtagStorage } from '@/core/ports/etag-storage.interface.ts'
 import { Redis } from 'ioredis'
 
-export class RedisEtagStorage implements EtagStorage {
+export class RedisEtagStorage implements IEtagStorage {
     constructor(private redis: Redis, private prefix: string = 'multipart') {}
   
     private key(uploadId: string): string {

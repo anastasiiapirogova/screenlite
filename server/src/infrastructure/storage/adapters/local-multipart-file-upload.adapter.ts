@@ -1,11 +1,11 @@
-import { MultipartFileUploader } from '@/core/ports/multipart-file-upload.interface.ts'
+import { IMultipartFileUploader } from '@/core/ports/multipart-file-upload.interface.ts'
 import { MultipartUpload } from '@/core/entities/multipart-upload.entity.ts'
 import { Readable } from 'stream'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 import { createReadStream, createWriteStream } from 'fs'
 
-export class LocalMultipartFileUploadAdapter implements MultipartFileUploader {
+export class LocalMultipartFileUploadAdapter implements IMultipartFileUploader {
     constructor(
         private readonly uploadsDir: string,
         private readonly multipartUploadsDir: string

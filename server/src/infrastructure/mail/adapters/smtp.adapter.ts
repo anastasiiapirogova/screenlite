@@ -1,10 +1,10 @@
 import nodemailer from 'nodemailer'
-import { MailerInterface } from '@/core/ports/mailer.interface.ts'
+import { IMailer } from '@/core/ports/mailer.interface.ts'
 import { MailOptions } from 'nodemailer/lib/smtp-transport/index.js'
 import { SMTPSettings } from '@/shared/types/smtp-settings.type.ts'
-import { EmailOptions } from '@/core/ports/mail-options.interface.ts'
+import { SendEmailDTO } from '../../../core/dto/send-email.dto.ts'
 
-export class SMTPMailAdapter implements MailerInterface {
+export class SMTPMailAdapter implements IMailer {
     private transporter: nodemailer.Transporter
     private fromName: string
     private fromEmail: string
@@ -23,7 +23,7 @@ export class SMTPMailAdapter implements MailerInterface {
         this.fromEmail = settings.senderEmail
     }
 
-    async sendEmail(options: EmailOptions): Promise<boolean> {
+    async sendEmail(options: SendEmailDTO): Promise<boolean> {
         try {
             const mailOptions: MailOptions = {
                 from: this.fromName ? {

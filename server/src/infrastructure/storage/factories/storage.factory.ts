@@ -1,5 +1,5 @@
 import { S3Client } from '@aws-sdk/client-s3'
-import { StorageInterface } from '@/core/ports/storage.interface.ts'
+import { IStorage } from '@/core/ports/storage.interface.ts'
 import { S3StorageAdapter } from '@/infrastructure/storage/adapters/s3-storage.adapter.ts'
 import { LocalStorageAdapter } from '@/infrastructure/storage/adapters/local-storage.adapter.ts'
 import { StorageConfig } from '@/infrastructure/config/types/index.ts'
@@ -11,7 +11,7 @@ export class StorageFactory {
         this.s3Client = s3Client
     }
 
-    create(config: StorageConfig, backendUrl: string, bucket?: string): StorageInterface {
+    create(config: StorageConfig, backendUrl: string, bucket?: string): IStorage {
         switch (config.type) {
             case 's3':
                 if (!this.s3Client) {

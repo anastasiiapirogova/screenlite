@@ -1,4 +1,4 @@
-import { MultipartFileUploader } from '@/core/ports/multipart-file-upload.interface.ts'
+import { IMultipartFileUploader } from '@/core/ports/multipart-file-upload.interface.ts'
 import { S3MultipartFileUploadAdapter } from '@/infrastructure/storage/adapters/s3-multipart-file-upload.adapter.ts'
 import { S3Client } from '@aws-sdk/client-s3'
 import { Redis } from 'ioredis'
@@ -13,7 +13,7 @@ export class MultipartUploadFactory {
         private readonly redis?: Redis
     ) {}
 
-    createUploader(): MultipartFileUploader {
+    createUploader(): IMultipartFileUploader {
         const storageConfig = this.config.storage
         const s3Buckets = this.config.s3Buckets
 

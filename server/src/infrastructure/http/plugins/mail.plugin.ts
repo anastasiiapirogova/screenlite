@@ -1,12 +1,12 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
-import { MailServiceInterface } from '@/core/ports/mail.interface.ts'
+import { IMailService } from '@/core/ports/mail.interface.ts'
 import { MailService } from '../../../infrastructure/mail/application/mail.service.ts'
 import { MailConfigManager } from '../../../infrastructure/mail/application/mail-config.manager.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
-        mail: MailServiceInterface
+        mail: IMailService
     }
 }
 

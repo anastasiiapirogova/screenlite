@@ -1,11 +1,11 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
-import { StorageInterface } from '@/core/ports/storage.interface.ts'
+import { IStorage } from '@/core/ports/storage.interface.ts'
 import { StorageFactory } from '@/infrastructure/storage/factories/storage.factory.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
-        storage: StorageInterface
+        storage: IStorage
     }
 }
 

@@ -1,11 +1,11 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
-import { MultipartFileUploader } from '@/core/ports/multipart-file-upload.interface.ts'
+import { IMultipartFileUploader } from '@/core/ports/multipart-file-upload.interface.ts'
 import { MultipartUploadFactory } from '@/infrastructure/storage/factories/multipart-upload.factory.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
-        multipartUpload: MultipartFileUploader
+        multipartUpload: IMultipartFileUploader
     }
 }
 

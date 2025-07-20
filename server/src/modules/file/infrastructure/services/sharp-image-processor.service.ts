@@ -1,8 +1,8 @@
 import sharp from 'sharp'
 import { Readable } from 'stream'
-import { ImageMetadata, ImageProcessor } from '@/core/ports/image-processor.interface.ts'
+import { ImageMetadata, IImageProcessor } from '@/core/ports/image-processor.interface.ts'
 
-export class SharpImageProcessor implements ImageProcessor {
+export class SharpImageProcessor implements IImageProcessor {
     public async getImageMetadata(readStream: Readable): Promise<ImageMetadata> {
         const transformer = sharp()
 

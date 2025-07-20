@@ -1,14 +1,14 @@
 import axios, { AxiosInstance, AxiosError } from 'axios'
-import { FFmpegServiceInterface, VideoMetadata } from '@/core/ports/ffmpeg.interface.ts'
+import { IFFmpegService, VideoMetadata } from '@/core/ports/ffmpeg.interface.ts'
 import { ConfigService } from '@/infrastructure/config/config.service.ts'
-import { StorageInterface } from '@/core/ports/storage.interface.ts'
+import { IStorage } from '@/core/ports/storage.interface.ts'
 
-export class FFmpegService implements FFmpegServiceInterface {
+export class FFmpegService implements IFFmpegService {
     private client: AxiosInstance
-    private storage: StorageInterface
+    private storage: IStorage
 
     constructor(
-        storage: StorageInterface,
+        storage: IStorage,
         configService: ConfigService
     ) {
         this.storage = storage

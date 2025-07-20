@@ -3,13 +3,13 @@ import fs from 'fs'
 import path from 'path'
 import { FileNotFoundError } from '../errors/file-not-found.error.ts'
 import { stat } from 'fs/promises'
-import { StorageInterface } from '@/core/ports/storage.interface.ts'
+import { IStorage } from '@/core/ports/storage.interface.ts'
 
 type Config = {
     backendUrl: string
 }
 
-export class LocalStorageAdapter implements StorageInterface {
+export class LocalStorageAdapter implements IStorage {
     private readonly storageDir: string = 'storage'
     private readonly backendUrl: string
 

@@ -1,11 +1,11 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
-import { CryptoServiceInterface } from '@/core/ports/crypto.interface.ts'
+import { ICryptoService } from '@/core/ports/crypto.interface.ts'
 import { NodeCryptoService } from '@/infrastructure/crypto/node-crypto.service.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
-        crypto: CryptoServiceInterface
+        crypto: ICryptoService
     }
 }
 

@@ -1,18 +1,18 @@
 import { MailConfigManager } from './mail-config.manager.ts'
-import { MailerFactory } from '../../../infrastructure/mail/adapters/mailer.factory.ts'
-import { MailerInterface } from '@/core/ports/mailer.interface.ts'
-import { EmailOptions } from '@/core/ports/mail-options.interface.ts'
-import { VerificationEmailTemplate } from '../../../infrastructure/mail/templates/verification.template.ts'
-import { MailServiceInterface, VerificationEmailData } from '@/core/ports/mail.interface.ts'
+import { MailerFactory } from '../adapters/mailer.factory.ts'
+import { IMailer } from '@/core/ports/mailer.interface.ts'
+import { VerificationEmailTemplate } from '../templates/verification.template.ts'
+import { IMailService, VerificationEmailData } from '@/core/ports/mail.interface.ts'
 import { MailConfig } from '../dto/mail-config.dto.ts'
+import { SendEmailDTO } from '@/core/dto/send-email.dto.ts'
 
-export class MailService implements MailServiceInterface {
+export class MailService implements IMailService {
     constructor(
         private readonly configManager: MailConfigManager,
         private readonly frontendUrl: string
     ) {}
 
-    async sendEmail(options: EmailOptions): Promise<boolean> {
+    async sendEmail(options: SendEmailDTO): Promise<boolean> {
         const adapter = await this.getCurrentAdapter()
 
         return adapter?.sendEmail(options) ?? false
@@ -33,7 +33,7 @@ export class MailService implements MailServiceInterface {
         return adapter.verifyConnection()
     }
 
-    private async getCurrentAdapter(): Promise<MailerInterface> {
+    private async getCurrentAdapter(): Promise<IMailer> {
         const config = await this.configManager.getCurrentConfig()
 
         return MailerFactory.create(config)

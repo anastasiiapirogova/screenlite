@@ -1,14 +1,14 @@
-import { MultipartFileUploader } from '@/core/ports/multipart-file-upload.interface.ts'
+import { IMultipartFileUploader } from '@/core/ports/multipart-file-upload.interface.ts'
 import { MultipartUpload } from '@/core/entities/multipart-upload.entity.ts'
 import { Readable } from 'stream'
 import { S3Client, CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand, AbortMultipartUploadCommand } from '@aws-sdk/client-s3'
-import { EtagStorage } from '@/core/ports/etag-storage.interface.ts'
+import { IEtagStorage } from '@/core/ports/etag-storage.interface.ts'
 
-export class S3MultipartFileUploadAdapter implements MultipartFileUploader {
+export class S3MultipartFileUploadAdapter implements IMultipartFileUploader {
     constructor(
         private readonly s3Client: S3Client,
         private readonly bucket: string,
-        private readonly etagStore: EtagStorage
+        private readonly etagStore: IEtagStorage
     ) {}
 
     async initializeUpload(upload: MultipartUpload): Promise<void> {

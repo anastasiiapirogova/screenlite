@@ -1,12 +1,12 @@
 import { SettingRepository } from '../../domain/setting.repository.ts'
 import { PrismaClient } from '@/generated/prisma/client.ts'
-import { CryptoServiceInterface } from '@/core/ports/crypto.interface.ts'
+import { ICryptoService } from '@/core/ports/crypto.interface.ts'
 import { Setting } from '@/core/entities/setting.entity.ts'
 
 export class PrismaSettingRepository implements SettingRepository {
     constructor(
         private readonly prisma: PrismaClient,
-        private readonly crypto: CryptoServiceInterface
+        private readonly crypto: ICryptoService
     ) {}
 
     async findByCategory(category: string): Promise<Setting[]> {

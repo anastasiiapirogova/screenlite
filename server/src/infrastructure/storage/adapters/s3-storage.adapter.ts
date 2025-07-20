@@ -8,14 +8,14 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { Readable } from 'stream'
 import { FileNotFoundError } from '@/infrastructure/storage/errors/file-not-found.error.ts'
-import { StorageInterface } from '@/core/ports/storage.interface.ts'
+import { IStorage } from '@/core/ports/storage.interface.ts'
 
 type Config = {
     s3Client: S3Client
     bucket?: string
 }
 
-export class S3StorageAdapter implements StorageInterface {
+export class S3StorageAdapter implements IStorage {
     private readonly bucket: string
     private readonly s3Client: S3Client
 

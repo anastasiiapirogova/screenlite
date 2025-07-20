@@ -1,8 +1,8 @@
-import { MailerInterface } from '@/core/ports/mailer.interface.ts'
-import { EmailOptions } from '@/core/ports/mail-options.interface.ts'
+import { IMailer } from '@/core/ports/mailer.interface.ts'
+import { SendEmailDTO } from '@/core/dto/send-email.dto.ts'
 
-export class LogMailAdapter implements MailerInterface {
-    async sendEmail(options: EmailOptions): Promise<boolean> {
+export class LogMailAdapter implements IMailer {
+    async sendEmail(options: SendEmailDTO): Promise<boolean> {
         try {
             const textContent = options.text || this.extractTextFromHtml(options.html)
             
