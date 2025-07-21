@@ -38,6 +38,7 @@ export class FastifyServer {
         await this.app.register(plugins.configPlugin)
         await this.app.register(plugins.cryptoPlugin)
         await this.app.register(plugins.redisPlugin)
+        await this.app.register(plugins.cachePlugin)
         await this.app.register(plugins.messageBrokerPlugin)
         await this.app.register(plugins.s3ClientPlugin)
         await this.app.register(plugins.multipartUploadPlugin)
