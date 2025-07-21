@@ -91,11 +91,13 @@ export class ConfigService implements ConfigServiceInterface {
             app: {
                 data: {
                     frontendUrl: env.FRONTEND_URL,
-                    backendUrl: env.BACKEND_URL
+                    backendUrl: env.BACKEND_URL,
+                    allowedCorsOrigins: env.ALLOWED_CORS_ORIGINS?.split(',') || []
                 },
                 envMap: {
                     frontendUrl: 'FRONTEND_URL',
-                    backendUrl: 'BACKEND_URL'
+                    backendUrl: 'BACKEND_URL',
+                    allowedCorsOrigins: 'ALLOWED_CORS_ORIGINS'
                 },
                 schema: appSchema
             },
