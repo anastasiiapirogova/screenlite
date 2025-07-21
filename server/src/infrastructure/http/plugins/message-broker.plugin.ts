@@ -16,8 +16,8 @@ const messageBrokerPlugin: FastifyPluginAsync = async (fastify) => {
     const redisPub = fastify.redis.getClient('pub').duplicate()
     const redisSub = fastify.redis.getClient('sub').duplicate()
 
-    fastify.redis.registerClient('websocket-pub', redisPub)
-    fastify.redis.registerClient('websocket-sub', redisSub)
+    fastify.redis.registerClient('message-broker-pub', redisPub)
+    fastify.redis.registerClient('message-broker-sub', redisSub)
 
     const messageBroker = new RedisMessageBrokerAdapter(redisPub, redisSub)
     const messageChannelSubscriptionManager = new MessageChannelSubscriptionManager(messageBroker)
@@ -25,9 +25,13 @@ const messageBrokerPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('messageBroker', messageBroker)
     fastify.decorate('messageChannelSubscriptionManager', messageChannelSubscriptionManager)
 
+    fastify.addHook('preClose', async () => {
+        await messageChannelSubscriptionManager.shutdown()
+    })
+
     fastify.addHook('onClose', async () => {
-        await fastify.redis.destroyClient('websocket-pub')
-        await fastify.redis.destroyClient('websocket-sub')
+        await fastify.redis.destroyClient('message-broker-pub')
+        await fastify.redis.destroyClient('message-broker-sub')
     })
 }
 
