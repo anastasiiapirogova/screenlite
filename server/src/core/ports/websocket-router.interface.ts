@@ -5,5 +5,5 @@ export type MessageHandler = (connection: WebSocketConnection, message: object) 
 export type IWebSocketRouter = {
     registerHandler(messageType: string, handler: MessageHandler): void
     onConnection(connectionId: string): void
-    onMessage(connectionId: string, message: Buffer): void
+    onMessage(connectionId: string, message: string): void
 }
