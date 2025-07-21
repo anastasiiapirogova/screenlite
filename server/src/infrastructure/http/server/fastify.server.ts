@@ -3,7 +3,6 @@ import { registerRoutes } from '../routes/index.ts'
 import plugins from '../plugins/index.ts'
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
 import formBody from '@fastify/formbody'
-import cors from '@fastify/cors'
 
 export class FastifyServer {
     private app: FastifyInstance
@@ -14,12 +13,6 @@ export class FastifyServer {
 
     async start(port: number): Promise<void> {
         try {
-            await this.app.register(cors, {
-                origin: this.app.config.app.allowedCorsOrigins,
-                methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-                credentials: true
-            })
-
             await this.registerZodCompiler()
             await this.registerPlugins()
             await registerRoutes(this.app)
@@ -43,6 +36,7 @@ export class FastifyServer {
     private async registerPlugins() {
         await this.app.register(formBody)
         await this.app.register(plugins.configPlugin)
+        await this.app.register(plugins.corsPlugin)
         await this.app.register(plugins.cryptoPlugin)
         await this.app.register(plugins.redisPlugin)
         await this.app.register(plugins.cachePlugin)

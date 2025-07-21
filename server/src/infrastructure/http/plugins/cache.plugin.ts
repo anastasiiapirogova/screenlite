@@ -18,5 +18,5 @@ const cachePlugin: FastifyPluginAsync = async (fastify) => {
 
 export default fp(cachePlugin, {
     name: 'cache',
-    dependencies: ['redis'],
+    dependencies: ['config', 'redis'],
 })
