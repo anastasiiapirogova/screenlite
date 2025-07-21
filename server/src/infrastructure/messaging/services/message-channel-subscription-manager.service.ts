@@ -38,9 +38,9 @@ export class MessageChannelSubscriptionManager implements IMessageChannelSubscri
                 const handlers = this.channelHandlers.get(channel)
 
                 if (handlers) {
-                    for (const h of handlers) {
+                    for (const handler of handlers) {
                         try {
-                            h(message)
+                            handler(message)
                         } catch (err) {
                             console.error(`Error in handler for channel "${channel}":`, err)
                         }
