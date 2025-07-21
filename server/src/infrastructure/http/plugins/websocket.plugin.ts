@@ -39,11 +39,18 @@ const websocketPlugin: FastifyPluginAsync = async (fastify) => {
     const wss = new Server({ noServer: true })
 
     fastify.server.on('upgrade', (request, socket, head) => {
+        const upgradeHeader = request.headers['upgrade']
+
+        if (upgradeHeader !== 'websocket') return
+
         if (request.url === '/ws') {
             wss.handleUpgrade(request, socket, head, (ws) => {
                 connectionManager.handleConnection(request, ws)
             })
+            return
         }
+
+        socket.destroy()
     })
 
     fastify.addHook('preClose', async () => {
