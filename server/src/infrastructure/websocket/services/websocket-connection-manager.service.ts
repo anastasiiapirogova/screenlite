@@ -37,7 +37,7 @@ export class WebSocketConnectionManager extends EventEmitter implements IWebSock
             isAlive: true
         })
 
-        this.connectionRepository.registerConnection(connectionId, websocketConnection)
+        this.connectionRepository.addConnection(websocketConnection)
         this.emit(WebSocketEvents.CONNECT, connectionId)
 
         socket.on('pong', () => this.handlePong(connectionId))
@@ -56,12 +56,12 @@ export class WebSocketConnectionManager extends EventEmitter implements IWebSock
     }
 
     private handleClose(connectionId: string): void {
-        this.connectionRepository.removeConnection(connectionId)
+        this.connectionRepository.deleteConnection(connectionId)
         this.emit(WebSocketEvents.CLOSE, connectionId)
     }
 
     private handleError(connectionId: string, err: unknown): void {
-        this.connectionRepository.unregisterConnection(connectionId)
+        this.connectionRepository.deleteConnection(connectionId)
         this.emit(WebSocketEvents.ERROR, connectionId, err)
     }
 
@@ -73,22 +73,14 @@ export class WebSocketConnectionManager extends EventEmitter implements IWebSock
         return setInterval(() => {
             this.connectionRepository.getAllConnections().forEach((websocketConnection: WebSocketConnection) => {
                 if (!websocketConnection.isAlive) {
-                    this.connectionRepository.unregisterConnection(websocketConnection.id)
+                    this.connectionRepository.deleteConnection(websocketConnection.id)
                     return
                 }
 
-                if (websocketConnection.isClosed()) {
-                    this.connectionRepository.removeConnection(websocketConnection.id)
-                    return
+                if (websocketConnection.isOpen()) {
+                    websocketConnection.setIsAlive(false)
+                    websocketConnection.socket.ping()
                 }
-
-                if (websocketConnection.isClosing()) {
-                    this.connectionRepository.removeConnection(websocketConnection.id)
-                    return
-                }
-
-                websocketConnection.setIsAlive(false)
-                websocketConnection.socket.ping()
             })
         }, HEARTBEAT_INTERVAL)
     }
