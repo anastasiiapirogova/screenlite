@@ -2,15 +2,14 @@ import fp from 'fastify-plugin'
 import { WebSocketServer as Server } from 'ws'
 import type { FastifyPluginAsync } from 'fastify'
 import { WebSocketConnectionRepository } from '@/infrastructure/websocket/repositories/websocket-connection.repository.ts'
-import { WebSocketConnectionManager } from '@/infrastructure/websocket/services/websocket-connection-manager.service.ts'
-import { IWebSocketConnectionRepository } from '@/core/ports/websocket-connection.repository.interface.ts'
+import { WebSocketConnectionManager, WebSocketEvents } from '@/infrastructure/websocket/services/websocket-connection-manager.service.ts'
 import { IWebSocketSubscriptionRepository } from '@/core/ports/websocket-subscription.repository.interface.ts'
 import { WebSocketSubscriptionRepository } from '@/infrastructure/websocket/repositories/websocket-subscription.repository.ts'
+import { WebSocketRouter } from '@/infrastructure/websocket/websocket.router.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
         websocket: {
-            connectionRepository: IWebSocketConnectionRepository
             subscriptionRepository: IWebSocketSubscriptionRepository
         }
     }
@@ -21,24 +20,19 @@ const websocketPlugin: FastifyPluginAsync = async (fastify) => {
 
     const subscriptionRepository = new WebSocketSubscriptionRepository()
 
-    const connectionManager = new WebSocketConnectionManager({
-        connectionRepository,
-        onConnect: (connectionId) => {
-            console.log(`WebSocket connection established: ${connectionId}`)
-        },
-        onMessage: (connectionId, message) => {
-            console.log(`WebSocket message received: ${message} from ${connectionId}`)
-        },
-        onClose: (connectionId) => {
-            connectionRepository.unregisterConnection(connectionId)
-        },
-        onError: (connectionId, error) => {
-            console.error(`WebSocket error on connection ${connectionId}:`, error)
-        },
+    const connectionManager = new WebSocketConnectionManager(connectionRepository)
+
+    const websocketRouter = new WebSocketRouter(connectionRepository)
+
+    connectionManager.on(WebSocketEvents.CONNECT, (connectionId: string) => {
+        websocketRouter.onConnection(connectionId)
+    })
+
+    connectionManager.on(WebSocketEvents.MESSAGE, (connectionId, message) => {
+        websocketRouter.onMessage(connectionId, message)
     })
 
     fastify.decorate('websocket', {
-        connectionRepository,
         subscriptionRepository,
     })
 
