@@ -6,11 +6,14 @@ import { WebSocketConnectionManager, WebSocketEvents } from '@/infrastructure/we
 import { IWebSocketSubscriptionRepository } from '@/core/ports/websocket-subscription.repository.interface.ts'
 import { WebSocketSubscriptionRepository } from '@/infrastructure/websocket/repositories/websocket-subscription.repository.ts'
 import { WebSocketRouter } from '@/infrastructure/websocket/websocket.router.ts'
+import { WebSocketBroadcaster } from '@/infrastructure/websocket/services/websocket-broadcaster.service.ts'
+import { IWebSocketBroadcaster } from '@/core/ports/websocket-broadcaster.interface.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
         websocket: {
             subscriptionRepository: IWebSocketSubscriptionRepository
+            broadcaster: IWebSocketBroadcaster
         }
     }
 }
@@ -24,6 +27,8 @@ const websocketPlugin: FastifyPluginAsync = async (fastify) => {
 
     const websocketRouter = new WebSocketRouter(connectionRepository)
 
+    const broadcaster = new WebSocketBroadcaster(connectionRepository, subscriptionRepository)
+
     connectionManager.on(WebSocketEvents.CONNECT, (connectionId: string) => {
         websocketRouter.onConnection(connectionId)
     })
@@ -34,6 +39,7 @@ const websocketPlugin: FastifyPluginAsync = async (fastify) => {
 
     fastify.decorate('websocket', {
         subscriptionRepository,
+        broadcaster
     })
 
     const wss = new Server({ noServer: true })
