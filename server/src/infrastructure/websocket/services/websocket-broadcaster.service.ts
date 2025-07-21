@@ -14,8 +14,8 @@ export class WebSocketBroadcaster implements IWebSocketBroadcaster {
         this.subscriptionRepo = subscriptionRepo
     }
 
-    broadcastToChannel(channel: string, message: string): void {
-        const connectionIds = this.subscriptionRepo.getConnectionsForChannel(channel)
+    async broadcastToChannel(channel: string, message: string): Promise<void> {
+        const connectionIds = await this.subscriptionRepo.getConnectionsForChannel(channel)
     
         this.broadcastToConnections(connectionIds, message)
     }
