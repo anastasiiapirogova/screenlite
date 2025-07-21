@@ -15,7 +15,7 @@ export class WebSocketRouter implements IWebSocketRouter {
         this.handlers.set(messageType, handler)
     }
 
-    onMessage(connectionId: string, message: Buffer) {
+    onMessage(connectionId: string, message: string) {
         const connection = this.connectionRepository.getConnection(connectionId)
 
         if (!connection) return
@@ -33,9 +33,9 @@ export class WebSocketRouter implements IWebSocketRouter {
         }))
     }
 
-    private routeMessage(connection: WebSocketConnection, rawData: Buffer) {
+    private routeMessage(connection: WebSocketConnection, rawMessage: string) {
         try {
-            const message = JSON.parse(rawData.toString())
+            const message = JSON.parse(rawMessage)
             const handler = this.handlers.get(message.type)
       
             if (!handler) {
