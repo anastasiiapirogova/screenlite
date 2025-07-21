@@ -12,22 +12,18 @@ export class WebSocketConnectionRepository implements IWebSocketConnectionReposi
         return this.connections.get(connectionId)
     }
 
-    removeConnection(connectionId: string): void {
-        this.connections.delete(connectionId)
+    addConnection(connection: WebSocketConnection): void {
+        this.connections.set(connection.id, connection)
     }
-  
-    registerConnection(connectionId: string, connection: WebSocketConnection): void {
-        this.connections.set(connectionId, connection)
-    }
-  
-    unregisterConnection(connectionId: string): boolean {
+
+    deleteConnection(connectionId: string): void {
         const connection = this.connections.get(connectionId)
 
-        if (!connection) return true
+        if (!connection) return
 
         connection.terminate()
         this.connections.delete(connectionId)
-        return true
+        return
     }
 
     terminateAllConnections(): void {

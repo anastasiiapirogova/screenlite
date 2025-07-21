@@ -3,8 +3,7 @@ import { WebSocketConnection } from '@/core/entities/websocket-connection.entity
 export type IWebSocketConnectionRepository = {
     getAllConnections(): WebSocketConnection[]
     getConnection(connectionId: string): WebSocketConnection | undefined
-    removeConnection(connectionId: string): void
-    registerConnection(connectionId: string, connection: WebSocketConnection): void
-    unregisterConnection(connectionId: string): boolean
+    addConnection(connection: WebSocketConnection): void
+    deleteConnection(connectionId: string): void
     terminateAllConnections(): void
 }
