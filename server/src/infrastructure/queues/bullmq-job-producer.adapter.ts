@@ -21,6 +21,16 @@ export class BullMQJobProducerAdapter implements IJobProducer<AppJobRegistry> {
         return job.id
     }
 
+    async enqueueMany<J extends keyof AppJobRegistry>(
+        jobType: J,
+        payload: AppJobRegistry[J]['data'][]
+    ): Promise<string[]> {
+        const queue = this.getOrCreateQueue(jobType)
+        const jobs = await queue.addBulk(payload.map(item => ({ name: jobType as string, data: item })))
+
+        return jobs.map(job => job.id!)
+    }
+
     private getOrCreateQueue(jobType: keyof AppJobRegistry): Queue {
         if (this.queues.has(jobType)) return this.queues.get(jobType)!
         

@@ -11,11 +11,15 @@ export interface IJobWorker<T extends JobRegistry = JobRegistry> {
     ): void
     shutdown(): Promise<void>
 }
-  
+
 export interface IJobProducer<T extends JobRegistry = JobRegistry> {
     enqueue<J extends keyof T>(
         jobType: J,
         payload: T[J]['data'],
     ): Promise<string>
+    enqueueMany<J extends keyof T>(
+        jobType: J,
+        payload: T[J]['data'][]
+    ): Promise<string[]>
     shutdown(): Promise<void>
 }
