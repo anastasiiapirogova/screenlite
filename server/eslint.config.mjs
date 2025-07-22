@@ -37,6 +37,7 @@ export default [
                 },
                 'multilineDetection': 'brackets'
             }],
+            '@stylistic/ts/indent': ['error', 4, { 'SwitchCase': 1 }],
         },
     },
 ]
