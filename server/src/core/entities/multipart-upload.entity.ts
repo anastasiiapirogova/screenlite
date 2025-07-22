@@ -2,8 +2,8 @@ export class MultipartUpload {
     private _uploadId: string | null = null
   
     constructor(
-      public readonly path: string,
-      public readonly mimeType: string
+        public readonly path: string,
+        public readonly mimeType: string
     ) {}
   
     get uploadId(): string {
