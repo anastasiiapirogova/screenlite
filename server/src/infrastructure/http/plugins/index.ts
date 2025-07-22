@@ -1,34 +1,32 @@
 
-import configPlugin from './config.plugin.ts'
-import prismaPlugin from './prisma.plugin.ts'
-import s3ClientPlugin from './s3-client.plugin.ts'
-import mailPlugin from './mail.plugin.ts'
-import storagePlugin from './storage.plugin.ts'
-import cryptoPlugin from './crypto.plugin.ts'
-import settingsPlugin from './settings.plugin.ts'
-import customValidationErrorHandler from './custom-validation-error-handler.plugin.ts'
-import redisPlugin from './redis.plugin.ts'
-import multipartUploadPlugin from './multipart-upload.plugin.ts'
-import websocketPlugin from './websocket.plugin.ts'
-import messageBrokerPlugin from './message-broker.plugin.ts'
-import cachePlugin from './cache.plugin.ts'
-import corsPlugin from './cors.plugin.ts'
-import prismaErrorHandler from './prisma-error-handler.plugin.ts'
+import config from './config.plugin.ts'
+import prisma from './prisma.plugin.ts'
+import s3Client from './s3-client.plugin.ts'
+import mail from './mail.plugin.ts'
+import storage from './storage.plugin.ts'
+import crypto from './crypto.plugin.ts'
+import settings from './settings.plugin.ts'
+import redis from './redis.plugin.ts'
+import multipartUpload from './multipart-upload.plugin.ts'
+import websocket from './websocket.plugin.ts'
+import messageBroker from './message-broker.plugin.ts'
+import cache from './cache.plugin.ts'
+import cors from './cors.plugin.ts'
+import errorHandler from './error-handler.plugin.ts'
 
 export default {
-    configPlugin,
-    prismaPlugin,
-    s3ClientPlugin,
-    mailPlugin,
-    storagePlugin,
-    cryptoPlugin,
-    settingsPlugin,
-    customValidationErrorHandler,
-    redisPlugin,
-    multipartUploadPlugin,
-    websocketPlugin,
-    messageBrokerPlugin,
-    cachePlugin,
-    corsPlugin,
-    prismaErrorHandler,
+    config,
+    prisma,
+    s3Client,
+    mail,
+    storage,
+    crypto,
+    settings,
+    errorHandler,
+    redis,
+    multipartUpload,
+    websocket,
+    messageBroker,
+    cache,
+    cors,
 }

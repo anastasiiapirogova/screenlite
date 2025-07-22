@@ -8,7 +8,10 @@ export class FastifyServer {
     private app: FastifyInstance
 
     constructor() {
-        this.app = fastify({ logger: true })
+        this.app = fastify({
+            logger: true,
+            trustProxy: true
+        })
     }
 
     async start(port: number): Promise<void> {
@@ -35,21 +38,20 @@ export class FastifyServer {
 
     private async registerPlugins() {
         await this.app.register(formBody)
-        await this.app.register(plugins.configPlugin)
-        await this.app.register(plugins.corsPlugin)
-        await this.app.register(plugins.cryptoPlugin)
-        await this.app.register(plugins.redisPlugin)
-        await this.app.register(plugins.cachePlugin)
-        await this.app.register(plugins.messageBrokerPlugin)
-        await this.app.register(plugins.s3ClientPlugin)
-        await this.app.register(plugins.multipartUploadPlugin)
-        await this.app.register(plugins.storagePlugin)
-        await this.app.register(plugins.prismaPlugin)
-        await this.app.register(plugins.settingsPlugin)
-        await this.app.register(plugins.mailPlugin)
-        await this.app.register(plugins.customValidationErrorHandler)
-        await this.app.register(plugins.prismaErrorHandler)
-        await this.app.register(plugins.websocketPlugin)
+        await this.app.register(plugins.config)
+        await this.app.register(plugins.cors)
+        await this.app.register(plugins.crypto)
+        await this.app.register(plugins.redis)
+        await this.app.register(plugins.cache)
+        await this.app.register(plugins.messageBroker)
+        await this.app.register(plugins.s3Client)
+        await this.app.register(plugins.multipartUpload)
+        await this.app.register(plugins.storage)
+        await this.app.register(plugins.prisma)
+        await this.app.register(plugins.settings)
+        await this.app.register(plugins.mail)
+        await this.app.register(plugins.errorHandler)
+        await this.app.register(plugins.websocket)
     }
 
     get instance(): FastifyInstance {
