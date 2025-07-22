@@ -13,6 +13,7 @@ import websocketPlugin from './websocket.plugin.ts'
 import messageBrokerPlugin from './message-broker.plugin.ts'
 import cachePlugin from './cache.plugin.ts'
 import corsPlugin from './cors.plugin.ts'
+import prismaErrorHandler from './prisma-error-handler.plugin.ts'
 
 export default {
     configPlugin,
@@ -29,4 +30,5 @@ export default {
     messageBrokerPlugin,
     cachePlugin,
     corsPlugin,
+    prismaErrorHandler,
 }

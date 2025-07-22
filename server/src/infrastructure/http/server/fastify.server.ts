@@ -48,6 +48,7 @@ export class FastifyServer {
         await this.app.register(plugins.settingsPlugin)
         await this.app.register(plugins.mailPlugin)
         await this.app.register(plugins.customValidationErrorHandler)
+        await this.app.register(plugins.prismaErrorHandler)
         await this.app.register(plugins.websocketPlugin)
     }
 
