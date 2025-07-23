@@ -3,6 +3,8 @@ import { registerRoutes } from '../routes/index.ts'
 import plugins from '../plugins/index.ts'
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
 import formBody from '@fastify/formbody'
+import sensible from '@fastify/sensible'
+import hooks from '../hooks/index.ts'
 
 export class FastifyServer {
     private app: FastifyInstance
@@ -18,6 +20,7 @@ export class FastifyServer {
         try {
             await this.registerZodCompiler()
             await this.registerPlugins()
+            await this.registerHooks()
             await registerRoutes(this.app)
             await this.app.listen({ port, host: '0.0.0.0' })
             console.log(`Server running on port ${port}`)
@@ -36,7 +39,12 @@ export class FastifyServer {
         this.app.setSerializerCompiler(serializerCompiler)
     }
 
+    private async registerHooks() {
+        await this.app.register(hooks.accountStatusPreHandler)
+    }
+
     private async registerPlugins() {
+        await this.app.register(sensible)
         await this.app.register(formBody)
         await this.app.register(plugins.config)
         await this.app.register(plugins.cors)
