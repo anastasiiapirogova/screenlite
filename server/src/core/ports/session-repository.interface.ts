@@ -4,6 +4,7 @@ import { ITransactionClient } from './transaction-client.interface.ts'
 export interface ISessionRepository {
     findById(id: string): Promise<Session | null>
     findByToken(token: string): Promise<Session | null>
+    findActiveByToken(token: string): Promise<Session | null>
     save(session: Session): Promise<void>
     
     terminateAll(userId: string): Promise<void>
