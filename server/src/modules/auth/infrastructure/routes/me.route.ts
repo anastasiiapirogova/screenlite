@@ -6,7 +6,7 @@ export const meRoute = async (fastify: FastifyInstance) => {
         preHandler: [fastify.requireAuth]
     }, async (request, reply) => {
         return reply.status(200).send({
-            user: request.user
+            user: request.user?.toPublicDTO()
         })
     })
 } 
