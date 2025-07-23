@@ -1,4 +1,4 @@
-import { NodeSessionTokenService } from '@/modules/session/infrastructure/repositories/domain/services/node-session-token.service.ts'
+import { NodeSessionTokenService } from '@/modules/session/domain/services/node-session-token.service.ts'
 import { PrismaSessionRepository } from '@/modules/session/infrastructure/repositories/prisma-session.repository.ts'
 import { SignupUsecase } from '@/modules/auth/application/usecases/signup.usecase.ts'
 import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
@@ -35,7 +35,7 @@ export const signupRoute = async (fastify: FastifyInstance) => {
         })
 
         return reply.status(201).send({ 
-            user: result.user.toDTO(), 
+            user: result.user.toPublicDTO(), 
             token: result.token 
         })
     })

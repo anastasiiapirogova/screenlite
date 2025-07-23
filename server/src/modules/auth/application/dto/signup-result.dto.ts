@@ -1,6 +1,3 @@
-import { User } from '@/core/entities/user.entity.ts'
+import { LoginResultDTO } from './login-result.dto.ts'
 
-export type SignupResultDTO = {
-    user: User
-    token: string
-}
+export type SignupResultDTO = LoginResultDTO
