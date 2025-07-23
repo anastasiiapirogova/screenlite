@@ -11,6 +11,7 @@ export class User {
     private profilePhoto: string | null = null
     private _totpSecret: string | null = null
     private _twoFactorEnabled: boolean = false
+    private deletionRequestedAt: Date | null = null
     private deletedAt: Date | null = null
 
     constructor(dto: UserDTO) {
@@ -23,7 +24,12 @@ export class User {
         this.profilePhoto = dto.profilePhoto
         this._totpSecret = dto.totpSecret
         this._twoFactorEnabled = dto.twoFactorEnabled
+        this.deletionRequestedAt = dto.deletionRequestedAt
         this.deletedAt = dto.deletedAt
+    }
+
+    get isActive(): boolean {
+        return !this.deletionRequestedAt && !this.deletedAt
     }
   
     verifyEmail(): void {
@@ -52,8 +58,20 @@ export class User {
         this._totpSecret = null
     }
   
-    softDelete(): void {
-        this.deletedAt = new Date()
+    requestDeletion(): void {
+        this.deletionRequestedAt = new Date()
+    }
+
+    get isDeletionRequested(): boolean {
+        return !!this.deletionRequestedAt
+    }
+
+    cancelDeletionRequest(): void {
+        this.deletionRequestedAt = null
+    }
+  
+    get isDeleted(): boolean {
+        return !!this.deletedAt
     }
   
     get password(): string {
@@ -83,6 +101,7 @@ export class User {
             profilePhoto: this.profilePhoto,
             totpSecret: this._totpSecret,
             twoFactorEnabled: this._twoFactorEnabled,
+            deletionRequestedAt: this.deletionRequestedAt,
             deletedAt: this.deletedAt,
         }
     }
@@ -96,6 +115,7 @@ export class User {
             passwordUpdatedAt: this._passwordUpdatedAt,
             profilePhoto: this.profilePhoto,
             twoFactorEnabled: this._twoFactorEnabled,
+            deletionRequestedAt: this.deletionRequestedAt,
             deletedAt: this.deletedAt,
         }
     }

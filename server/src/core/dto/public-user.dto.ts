@@ -6,5 +6,6 @@ export type PublicUserDTO = {
     passwordUpdatedAt: Date | null
     profilePhoto: string | null
     twoFactorEnabled: boolean
+    deletionRequestedAt: Date | null
     deletedAt: Date | null
 }

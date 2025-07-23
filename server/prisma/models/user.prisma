@@ -1,16 +1,17 @@
 model User {
-    id                String    @id @default(uuid())
-    email             String    @unique
-    emailVerifiedAt   DateTime?
-    name              String
-    password          String
-    passwordUpdatedAt DateTime?
-    profilePhoto      String?
-    totpSecret        String?
-    twoFactorEnabled  Boolean   @default(false)
-    createdAt         DateTime  @default(now())
-    updatedAt         DateTime  @updatedAt
-    deletedAt         DateTime?
+    id                  String    @id @default(uuid())
+    email               String    @unique
+    emailVerifiedAt     DateTime?
+    name                String
+    password            String
+    passwordUpdatedAt   DateTime?
+    profilePhoto        String?
+    totpSecret          String?
+    twoFactorEnabled    Boolean   @default(false)
+    createdAt           DateTime  @default(now())
+    updatedAt           DateTime  @updatedAt
+    deletionRequestedAt DateTime?
+    deletedAt           DateTime?
 
     emailVerificationTokens EmailVerificationToken[]
     passwordResetTokens     PasswordResetToken[]

@@ -8,5 +8,6 @@ export type UserDTO = {
     profilePhoto: string | null
     totpSecret: string | null
     twoFactorEnabled: boolean
+    deletionRequestedAt: Date | null
     deletedAt: Date | null
 } 
