@@ -8,4 +8,5 @@ export type SessionDTO = {
     terminatedAt: Date | null
     lastActivityAt: Date
     twoFaVerifiedAt: Date | null
+    terminationReason: string | null
 }
