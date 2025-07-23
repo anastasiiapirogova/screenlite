@@ -4,6 +4,8 @@
 
 This application uses **opaque token-based authentication** for client-server communication. Tokens are sent explicitly in the `Authorization` header as `Bearer <token>` and are **not stored in cookies**.
 
+Each token is a 64-character hexadecimal string generated using cryptographically secure random bytes, ensuring uniqueness, unpredictability, and resistance to brute-force attacks.
+
 ## Considerations
 
 - **Refresh Tokens** are not yet implemented. This means:
@@ -54,6 +56,19 @@ We **do not use** `dangerouslySetInnerHTML`, which is a React escape hatch for i
 **For production deployments**, it is strongly recommended to serve the application with appropriate **Content Security Policy (CSP)** headers. These headers help mitigate XSS and other injection attacks by restricting the sources from which scripts, styles, and other resources can be loaded.
 
 > ⚠️ **Note:** CSP headers are **not yet implemented** for serving `index.html` in the production SPA deployment. This should be addressed before going live in a high-security environment.
+
+## Backend Server (Fastify) and Production Deployment
+
+The backend server is built using **Fastify**, a high-performance Node.js web framework. For security and reliability, the Fastify server should **never be exposed directly to the internet** in production environments. Instead, it must be deployed **behind a reverse proxy** such as **NGINX** or a similar solution.
+
+Reverse proxies provide several critical security and operational benefits:
+- **TLS Termination:** Offload HTTPS/SSL handling to the proxy, keeping private keys out of the application container.
+- **Request Filtering:** Block malicious or malformed requests before they reach the backend.
+- **Rate Limiting & DDoS Protection:** Mitigate abuse and denial-of-service attacks.
+- **Header Management:** Add, remove, or modify HTTP headers for security (e.g., CSP, HSTS, X-Frame-Options).
+- **Static Asset Serving:** Efficiently serve static files, reducing load on the backend.
+
+> ⚠️ **Note:** Exposing the Fastify server directly to the internet increases the risk of attacks and bypasses important security controls. Always use a properly configured reverse proxy in production deployments.
 
 ## Vite and Production Deployment
 
