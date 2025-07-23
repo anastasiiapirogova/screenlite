@@ -5,10 +5,12 @@ import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories
 import { BearerSessionTokenParser } from '@/modules/session/domain/services/bearer-session-token.parser.ts'
 import { ValidateSessionUseCase } from '@/modules/session/application/usecases/validate-session.usecase.ts'
 import { PublicUserDTO } from '@/core/dto/public-user.dto.ts'
+import { Session } from '@/core/entities/session.entity.ts'
 
 declare module 'fastify' {
     interface FastifyRequest {
         user: PublicUserDTO | null
+        session: Session | null
     }
 }
 
@@ -36,9 +38,10 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
         const validateSession = new ValidateSessionUseCase(sessionRepo, userRepo)
 
         try {
-            const user = await validateSession.execute(sessionToken)
+            const { user, session } = await validateSession.execute(sessionToken)
 
             request.user = user.toPublicDTO()
+            request.session = session
         } catch {
             return
         }
