@@ -35,6 +35,7 @@ export class SignupUsecase {
             profilePhoto: null,
             totpSecret: null,
             twoFactorEnabled: false,
+            deletionRequestedAt: null,
             deletedAt: null,
         })
 
