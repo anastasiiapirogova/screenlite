@@ -1,3 +1,4 @@
+import { HttpError } from '@/core/errors/http.errors.ts'
 import { ValidationError } from '@/core/errors/validation.error.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
 import { FastifyPluginAsync } from 'fastify'
@@ -18,6 +19,16 @@ const errorHandler: FastifyPluginAsync = async (fastify) => {
                 error: 'Service Unavailable',
                 code: 'PRISMA_ERR_SERVICE_UNAVAILABLE',
                 message: 'Unable to connect to the database.',
+            })
+
+            return
+        }
+
+        if (error instanceof HttpError) {
+            reply.status(error.statusCode).send({
+                statusCode: error.statusCode,
+                error: error.error || error.name,
+                message: error.message
             })
 
             return
