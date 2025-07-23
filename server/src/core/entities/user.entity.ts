@@ -1,3 +1,4 @@
+import { PublicUserDTO } from '../dto/public-user.dto.ts'
 import { UserDTO } from '../dto/user.dto.ts'
 
 export class User {
@@ -81,6 +82,19 @@ export class User {
             passwordUpdatedAt: this._passwordUpdatedAt,
             profilePhoto: this.profilePhoto,
             totpSecret: this._totpSecret,
+            twoFactorEnabled: this._twoFactorEnabled,
+            deletedAt: this.deletedAt,
+        }
+    }
+
+    toPublicDTO(): PublicUserDTO {
+        return {
+            id: this.id,
+            email: this.email,
+            name: this.name,
+            emailVerifiedAt: this.emailVerifiedAt,
+            passwordUpdatedAt: this._passwordUpdatedAt,
+            profilePhoto: this.profilePhoto,
             twoFactorEnabled: this._twoFactorEnabled,
             deletedAt: this.deletedAt,
         }
