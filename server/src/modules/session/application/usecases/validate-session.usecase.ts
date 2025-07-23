@@ -16,7 +16,7 @@ export class ValidateSessionUseCase {
 
         const user = await this.userRepo.findById(session.userId)
 
-        if (!user) {
+        if (!user || user.isDeleted) {
             throw new Error('User not found')
         }
 
