@@ -1,11 +1,10 @@
 import { Session } from '@/core/entities/session.entity.ts'
 import { ISessionRepository } from '@/core/ports/session-repository.interface.ts'
-import { Session as PrismaSession } from '@/generated/prisma/client.ts'
+import { Prisma, Session as PrismaSession } from '@/generated/prisma/client.ts'
 import { PrismaClient } from '@/generated/prisma/client.ts'
-import { ITransactionClient } from '@/core/ports/transaction-client.interface.ts'
 
 export class PrismaSessionRepository implements ISessionRepository {
-    constructor(private readonly prisma: PrismaClient) {}
+    constructor(private readonly prisma: PrismaClient | Prisma.TransactionClient) {}
 
     async findById(id: string): Promise<Session | null> {
         const session = await this.prisma.session.findUnique({ where: { id } })
@@ -31,13 +30,9 @@ export class PrismaSessionRepository implements ISessionRepository {
     }
 
     async save(session: Session): Promise<void> {
-        await this.saveWithTransaction(session, this.prisma)
-    }
-
-    async saveWithTransaction(session: Session, tx: ITransactionClient): Promise<void> {
         const sessionData = this.toPersistence(session)
 
-        await tx.session.upsert({
+        await this.prisma.session.upsert({
             where: { id: sessionData.id },
             create: sessionData,
             update: sessionData,
@@ -45,29 +40,17 @@ export class PrismaSessionRepository implements ISessionRepository {
     }
 
     async terminateAll(userId: string): Promise<void> {
-        await this.terminateAllWithTransaction(userId, this.prisma)
-    }
-
-    async terminateAllWithTransaction(userId: string, tx: ITransactionClient): Promise<void> {
-        await tx.session.updateMany({
-            where: { 
-                userId, 
-                terminatedAt: null 
+        await this.prisma.session.updateMany({
+            where: {
+                userId,
+                terminatedAt: null,
             },
             data: { terminatedAt: new Date() }
         })
     }
 
-    async terminateAllExcept(userId: string, exceptToken: string): Promise<void> {
-        await this.terminateAllExceptWithTransaction(userId, exceptToken, this.prisma)
-    }
-
-    async terminateAllExceptWithTransaction(
-        userId: string, 
-        exceptToken: string,
-        tx: ITransactionClient
-    ): Promise<void> {
-        await tx.session.updateMany({
+    async terminateAllExcept(userId: string, exceptToken?: string): Promise<void> {
+        await this.prisma.session.updateMany({
             where: { 
                 userId, 
                 terminatedAt: null,

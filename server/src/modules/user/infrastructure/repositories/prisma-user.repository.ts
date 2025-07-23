@@ -4,7 +4,7 @@ import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
 import { PrismaClient } from '@/generated/prisma/client.ts'
 
 export class PrismaUserRepository implements IUserRepository {
-    constructor(private readonly prisma: PrismaClient) {}
+    constructor(private readonly prisma: PrismaClient | Prisma.TransactionClient) {}
 
     async findById(id: string): Promise<User | null> {
         const user = await this.prisma.user.findUnique({ where: { id } })
@@ -26,13 +26,9 @@ export class PrismaUserRepository implements IUserRepository {
     }
 
     async save(user: User): Promise<void> {
-        await this.saveWithTransaction(user, this.prisma)
-    }
-
-    async saveWithTransaction(user: User, transaction: Prisma.TransactionClient): Promise<void> {
         const userData = this.toPersistence(user)
 
-        await transaction.user.upsert({
+        await this.prisma.user.upsert({
             where: {
                 id: userData.id,
             },
@@ -52,6 +48,7 @@ export class PrismaUserRepository implements IUserRepository {
             twoFactorEnabled: prismaUser.twoFactorEnabled,
             profilePhoto: prismaUser.profilePhoto,
             emailVerifiedAt: prismaUser.emailVerifiedAt,
+            deletionRequestedAt: prismaUser.deletionRequestedAt,
             deletedAt: prismaUser.deletedAt,
         })
     }
@@ -69,6 +66,7 @@ export class PrismaUserRepository implements IUserRepository {
             twoFactorEnabled: dto.twoFactorEnabled,
             profilePhoto: dto.profilePhoto,
             emailVerifiedAt: dto.emailVerifiedAt,
+            deletionRequestedAt: dto.deletionRequestedAt,
             deletedAt: dto.deletedAt,
         }
     }
