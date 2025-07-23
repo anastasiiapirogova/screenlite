@@ -1,14 +1,15 @@
 model Session {
-    id              String    @id @default(uuid())
-    userId          String
-    token           String    @unique
-    userAgent       String
-    ipAddress       String
-    location        String?
-    createdAt       DateTime  @default(now())
-    terminatedAt    DateTime?
-    lastActivityAt  DateTime  @default(now())
-    twoFaVerifiedAt DateTime?
+    id                String    @id @default(uuid())
+    userId            String
+    token             String    @unique
+    userAgent         String
+    ipAddress         String
+    location          String?
+    createdAt         DateTime  @default(now())
+    terminatedAt      DateTime?
+    terminationReason String?
+    lastActivityAt    DateTime  @default(now())
+    twoFaVerifiedAt   DateTime?
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
