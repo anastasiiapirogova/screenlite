@@ -8,7 +8,7 @@ export class ValidateSessionUseCase {
     ) {}
 
     async execute(sessionToken: string) {
-        const session = await this.sessionRepo.findByToken(sessionToken)
+        const session = await this.sessionRepo.findActiveByToken(sessionToken)
 
         if (!session || !session.isActive()) {
             throw new Error('Invalid session')
@@ -20,6 +20,9 @@ export class ValidateSessionUseCase {
             throw new Error('User not found')
         }
 
-        return user
+        return {
+            user,
+            session,
+        }
     }
 }
