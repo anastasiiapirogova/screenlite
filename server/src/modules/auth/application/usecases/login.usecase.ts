@@ -1,19 +1,17 @@
 import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
 import { ISessionRepository } from '@/core/ports/session-repository.interface.ts'
-import { ISessionTokenGenerator } from '@/core/ports/session-token-generator.interface.ts'
 import { IPasswordHasher } from '@/core/ports/password-hasher.interface.ts'
-import { Session } from '@/core/entities/session.entity.ts'
-import { v4 as uuidv4 } from 'uuid'
 import { LoginDTO } from '../dto/login.dto.ts'
 import { ValidationError } from '@/core/errors/validation.error.ts'
 import { LoginResultDTO } from '../dto/login-result.dto.ts'
+import { ISessionFactory } from '@/core/ports/session-factory.interface.ts'
 
 export class LoginUsecase {
     constructor(
         private readonly userRepository: IUserRepository,
         private readonly sessionRepository: ISessionRepository,
-        private readonly tokenGenerator: ISessionTokenGenerator,
         private readonly passwordHasher: IPasswordHasher,
+        private readonly sessionFactory: ISessionFactory,
     ) {}
 
     async execute(data: LoginDTO): Promise<LoginResultDTO> {
@@ -29,22 +27,14 @@ export class LoginUsecase {
             throw new ValidationError({ password: ['INVALID_PASSWORD'] })
         }
 
-        const token = this.tokenGenerator.generate()
-
-        const session = new Session({
-            id: uuidv4(),
+        const session = this.sessionFactory.create({
             userId: user.id,
-            token,
             userAgent: data.userAgent,
             ipAddress: data.ipAddress,
-            location: null,
-            terminatedAt: null,
-            lastActivityAt: new Date(),
-            twoFaVerifiedAt: null,
         })
 
         await this.sessionRepository.save(session)
 
-        return { user, token }
+        return { user, token: session.token }
     }
 } 

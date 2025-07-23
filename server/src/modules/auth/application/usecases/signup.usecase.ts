@@ -1,19 +1,18 @@
 import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
 import { ISessionRepository } from '@/core/ports/session-repository.interface.ts'
-import { ISessionTokenGenerator } from '@/core/ports/session-token-generator.interface.ts'
 import { User } from '@/core/entities/user.entity.ts'
-import { Session } from '@/core/entities/session.entity.ts'
 import { v4 as uuidv4 } from 'uuid'
 import { IPasswordHasher } from '@/core/ports/password-hasher.interface.ts'
 import { SignupDTO } from '../dto/signup.dto.ts'
 import { SignupResultDTO } from '../dto/signup-result.dto.ts'
 import { ValidationError } from '@/core/errors/validation.error.ts'
+import { ISessionFactory } from '@/core/ports/session-factory.interface.ts'
 
 export class SignupUsecase {
     constructor(
         private readonly userRepository: IUserRepository,
         private readonly sessionRepository: ISessionRepository,
-        private readonly tokenGenerator: ISessionTokenGenerator,
+        private readonly sessionFactory: ISessionFactory,
         private readonly passwordHasher: IPasswordHasher
     ) {}
 
@@ -41,25 +40,17 @@ export class SignupUsecase {
 
         await this.userRepository.save(user)
 
-        const token = this.tokenGenerator.generate()
-
-        const session = new Session({
-            id: uuidv4(),
+        const session = this.sessionFactory.create({
             userId: user.id,
-            token,
             userAgent: data.userAgent,
             ipAddress: data.ipAddress,
-            location: null,
-            terminatedAt: null,
-            lastActivityAt: new Date(),
-            twoFaVerifiedAt: null,
         })
 
         await this.sessionRepository.save(session)
 
         return {
             user,
-            token,
+            token: session.token,
         }
     }
 } 
