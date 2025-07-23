@@ -7,6 +7,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { BcryptPasswordHasher } from '@/shared/infrastructure/services/bcrypt-password-hasher.service.ts'
 import { signupSchema } from '../schemas/signup.schema.ts'
 import { FastifyRequestAdapter } from '@/infrastructure/http/adapters/fastify-request.adapter.ts'
+import { SessionFactory } from '@/modules/session/domain/services/session.factory.ts'
 
 export const signupRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/signup', {
@@ -18,13 +19,13 @@ export const signupRoute = async (fastify: FastifyInstance) => {
         
         const userRepo = new PrismaUserRepository(fastify.prisma)
         const sessionRepo = new PrismaSessionRepository(fastify.prisma)
-        const tokenGen = new NodeSessionTokenService()
+        const sessionFactory = new SessionFactory(new NodeSessionTokenService())
         const passwordHasher = new BcryptPasswordHasher()
 
         const signup = new SignupUsecase(
             userRepo,
             sessionRepo,
-            tokenGen,
+            sessionFactory,
             passwordHasher
         )
 
