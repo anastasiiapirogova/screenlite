@@ -13,6 +13,8 @@ import messageBroker from './message-broker.plugin.ts'
 import cache from './cache.plugin.ts'
 import cors from './cors.plugin.ts'
 import errorHandler from './error-handler.plugin.ts'
+import auth from './auth.plugin.ts'
+import requireAuth from './require-auth.plugin.ts'
 
 export default {
     config,
@@ -29,4 +31,6 @@ export default {
     messageBroker,
     cache,
     cors,
+    auth,
+    requireAuth,
 }
