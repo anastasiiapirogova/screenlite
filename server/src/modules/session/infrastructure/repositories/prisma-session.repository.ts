@@ -19,6 +19,17 @@ export class PrismaSessionRepository implements ISessionRepository {
         return session ? this.toDomain(session) : null
     }
 
+    async findActiveByToken(token: string): Promise<Session | null> {
+        const session = await this.prisma.session.findFirst({
+            where: {
+                token,
+                terminatedAt: null,
+            }
+        })
+  
+        return session ? this.toDomain(session) : null
+    }
+
     async save(session: Session): Promise<void> {
         await this.saveWithTransaction(session, this.prisma)
     }
@@ -91,6 +102,7 @@ export class PrismaSessionRepository implements ISessionRepository {
             terminatedAt: prismaSession.terminatedAt,
             lastActivityAt: prismaSession.lastActivityAt,
             twoFaVerifiedAt: prismaSession.twoFaVerifiedAt,
+            terminationReason: prismaSession.terminationReason,
         })
     }
 
@@ -107,6 +119,7 @@ export class PrismaSessionRepository implements ISessionRepository {
             terminatedAt: dto.terminatedAt,
             lastActivityAt: dto.lastActivityAt,
             twoFaVerifiedAt: dto.twoFaVerifiedAt,
+            terminationReason: dto.terminationReason,
         }
     }
 }
