@@ -10,7 +10,8 @@ export class Session {
     private _terminatedAt: Date | null = null
     private _lastActivityAt: Date
     private _twoFaVerifiedAt: Date | null = null
-
+    private _terminationReason: string | null = null
+    
     constructor(dto: SessionDTO) {
         this.id = dto.id
         this.userId = dto.userId
@@ -21,10 +22,12 @@ export class Session {
         this._terminatedAt = dto.terminatedAt
         this._lastActivityAt = dto.lastActivityAt
         this._twoFaVerifiedAt = dto.twoFaVerifiedAt
+        this._terminationReason = dto.terminationReason
     }
 
-    terminate(): void {
+    terminate(reason: string): void {
         this._terminatedAt = new Date()
+        this._terminationReason = reason
     }
 
     updateActivity(): void {
@@ -47,6 +50,10 @@ export class Session {
         return this._twoFaVerifiedAt
     }
 
+    get terminationReason(): string | null {
+        return this._terminationReason
+    }
+
     isActive(): boolean {
         return this._terminatedAt === null
     }
@@ -62,6 +69,7 @@ export class Session {
             terminatedAt: this._terminatedAt,
             lastActivityAt: this._lastActivityAt,
             twoFaVerifiedAt: this._twoFaVerifiedAt,
+            terminationReason: this.terminationReason,
         }
     }
 }
