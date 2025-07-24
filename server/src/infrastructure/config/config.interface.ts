@@ -6,10 +6,11 @@ import {
     S3BucketsConfig,
     StorageConfig,
     SecretsConfig,
-    FFmpegConfig
+    FFmpegConfig,
+    TTLsConfig
 } from './types/index.ts'
 
-export type ConfigServiceInterface = {
+export type IConfig = {
     app: AppConfig
     database: DatabaseConfig
     redis: RedisConfig
@@ -18,4 +19,5 @@ export type ConfigServiceInterface = {
     ffmpeg: FFmpegConfig
     s3Buckets: S3BucketsConfig
     s3?: S3Config
+    ttls: TTLsConfig
 }

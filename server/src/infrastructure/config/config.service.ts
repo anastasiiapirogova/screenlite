@@ -15,9 +15,11 @@ import {
     S3BucketsConfig,
     S3Config,
     SecretsConfig,
-    StorageConfig
+    StorageConfig,
+    TTLsConfig
 } from './types/index.ts'
-import { ConfigServiceInterface } from './config.interface.ts'
+import { IConfig } from './config.interface.ts'
+import { TTLsSchema } from './schemas/ttls.schema.ts'
 
 type ConfigDefinition<T> = {
     data: Record<string, unknown>
@@ -25,7 +27,7 @@ type ConfigDefinition<T> = {
     envMap?: Record<string, string>
 }
 
-export class ConfigService implements ConfigServiceInterface {
+export class ConfigService implements IConfig {
     private readonly _database: DatabaseConfig
     private readonly _redis: RedisConfig
     private readonly _app: AppConfig
@@ -34,6 +36,7 @@ export class ConfigService implements ConfigServiceInterface {
     private readonly _ffmpeg: FFmpegConfig
     private readonly _s3Buckets: S3BucketsConfig
     private readonly _s3: S3Config | undefined
+    private readonly _ttls: TTLsConfig
 
     constructor(env: NodeJS.ProcessEnv = process.env) {
         const errors: string[] = []
@@ -112,10 +115,10 @@ export class ConfigService implements ConfigServiceInterface {
             },
             secrets: {
                 data: {
-                    cryptoSecret: env.CRYPTO_SECRET
+                    encryptionSecret: env.ENCRYPTION_SECRET
                 },
                 envMap: {
-                    cryptoSecret: 'CRYPTO_SECRET'
+                    encryptionSecret: 'ENCRYPTION_SECRET'
                 },
                 schema: secretsSchema
             },
@@ -136,6 +139,13 @@ export class ConfigService implements ConfigServiceInterface {
                     userUploads: 'S3_USER_UPLOADS'
                 },
                 schema: s3BucketsSchema
+            },
+            ttls: {
+                data: {
+                    emailVerification: 1000 * 60 * 60 * 24, // 24 hours
+                    emailChange: 1000 * 60 * 60 * 24 // 24 hours
+                },
+                schema: TTLsSchema
             }
         }
 
@@ -180,7 +190,12 @@ export class ConfigService implements ConfigServiceInterface {
                 configDefinitions.s3Buckets.schema,
                 configDefinitions.s3Buckets.data,
                 's3Buckets'
-            ) as S3BucketsConfig
+            ) as S3BucketsConfig,
+            ttls: parseConfig(
+                configDefinitions.ttls.schema,
+                configDefinitions.ttls.data,
+                'ttls'
+            ) as TTLsConfig
         }
 
         let s3: S3Config | undefined
@@ -219,6 +234,7 @@ export class ConfigService implements ConfigServiceInterface {
         this._ffmpeg = parsedConfigs.ffmpeg!
         this._s3Buckets = parsedConfigs.s3Buckets!
         this._s3 = s3
+        this._ttls = parsedConfigs.ttls!
     }
 
     get database(): DatabaseConfig { return this._database }
@@ -229,4 +245,5 @@ export class ConfigService implements ConfigServiceInterface {
     get ffmpeg(): FFmpegConfig { return this._ffmpeg }
     get s3Buckets(): S3BucketsConfig { return this._s3Buckets }
     get s3(): S3Config | undefined { return this._s3 }
+    get ttls(): TTLsConfig { return this._ttls }
 }
