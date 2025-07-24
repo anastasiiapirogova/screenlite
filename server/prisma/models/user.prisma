@@ -1,9 +1,11 @@
 model User {
     id                  String    @id @default(uuid())
     email               String    @unique
+    pendingEmail        String?   @unique
     emailVerifiedAt     DateTime?
     name                String
     password            String
+    role                String    @default("user")
     passwordUpdatedAt   DateTime?
     profilePhoto        String?
     totpSecret          String?
@@ -22,4 +24,5 @@ model User {
     fileUploadSessions      FileUploadSession[]
     sentInvitations         WorkspaceUserInvitation[]
     addedLinks              Link[]
+    adminPermissions        UserAdminPermission[]
 }

@@ -1,11 +1,15 @@
 import { PublicUserDTO } from '../dto/public-user.dto.ts'
 import { UserDTO } from '../dto/user.dto.ts'
+import { UserRole } from '../enums/user-role.enum.ts'
+import { ValidationError } from '../errors/validation.error.ts'
 
 export class User {
     public readonly id: string
-    public readonly email: string
+    private _email: string
+    private _pendingEmail: string | null = null
     public readonly name: string
     private _password: string
+    private _role: UserRole
     private emailVerifiedAt: Date | null = null
     private _passwordUpdatedAt: Date | null = null
     private profilePhoto: string | null = null
@@ -15,10 +19,12 @@ export class User {
     private deletedAt: Date | null = null
 
     constructor(dto: UserDTO) {
-        this.id = dto.id    
-        this.email = dto.email
+        this.id = dto.id
+        this._email = dto.email
+        this._pendingEmail = dto.pendingEmail
         this.name = dto.name
         this._password = dto.password
+        this._role = dto.role
         this.emailVerifiedAt = dto.emailVerifiedAt
         this._passwordUpdatedAt = dto.passwordUpdatedAt
         this.profilePhoto = dto.profilePhoto
@@ -31,7 +37,60 @@ export class User {
     get isActive(): boolean {
         return !this.deletionRequestedAt && !this.deletedAt
     }
-  
+
+    get email(): string {
+        return this._email
+    }
+
+    get isAdmin(): boolean {
+        return this._role === UserRole.ADMIN
+    }
+
+    get isSuperAdmin(): boolean {
+        return this._role === UserRole.SUPER_ADMIN
+    }
+
+    get pendingEmail(): string | null {
+        return this._pendingEmail
+    }
+
+    set role(role: UserRole) {
+        this._role = role
+    }
+
+    confirmPendingEmail(): void {
+        if(!this._pendingEmail) {
+            throw new ValidationError({
+                pendingEmail: ['NO_PENDING_EMAIL_FOUND'],
+            })
+        }
+
+        this._email = this._pendingEmail
+
+        this.verifyEmail()
+        this.clearPendingEmail()
+    }
+
+    setPendingEmail(email: string): void {
+        if(!this.isEmailValid(email)) {
+            throw new ValidationError({
+                email: ['INVALID_EMAIL'],
+            })
+        }
+
+        if(this._email === email) {
+            throw new ValidationError({
+                email: ['PENDING_EMAIL_CANNOT_BE_THE_SAME_AS_THE_CURRENT_EMAIL'],
+            })
+        }
+
+        this._pendingEmail = email
+    }
+
+    clearPendingEmail(): void {
+        this._pendingEmail = null
+    }
+
     verifyEmail(): void {
         this.emailVerifiedAt = new Date()
     }
@@ -47,7 +106,9 @@ export class User {
   
     enableTwoFactorAuth(): void {
         if(!this._totpSecret) {
-            throw new Error('No TOTP secret found')
+            throw new ValidationError({
+                totpSecret: ['NO_TOTP_SECRET_FOUND'],
+            })
         }
 
         this._twoFactorEnabled = true
@@ -90,10 +151,15 @@ export class User {
         return this._twoFactorEnabled
     }
 
+    private isEmailValid(email: string): boolean {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    }
+
     toDTO(): UserDTO {
         return {
             id: this.id,
-            email: this.email,
+            email: this._email,
+            pendingEmail: this._pendingEmail,
             name: this.name,
             password: this._password,
             emailVerifiedAt: this.emailVerifiedAt,
@@ -103,14 +169,17 @@ export class User {
             twoFactorEnabled: this._twoFactorEnabled,
             deletionRequestedAt: this.deletionRequestedAt,
             deletedAt: this.deletedAt,
+            role: this._role,
         }
     }
 
     toPublicDTO(): PublicUserDTO {
         return {
             id: this.id,
-            email: this.email,
+            email: this._email,
+            pendingEmail: this._pendingEmail,
             name: this.name,
+            role: this._role,
             emailVerifiedAt: this.emailVerifiedAt,
             passwordUpdatedAt: this._passwordUpdatedAt,
             profilePhoto: this.profilePhoto,
