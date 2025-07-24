@@ -12,16 +12,16 @@ export class PrismaSessionRepository implements ISessionRepository {
         return session ? this.toDomain(session) : null
     }
 
-    async findByToken(token: string): Promise<Session | null> {
-        const session = await this.prisma.session.findUnique({ where: { token } })
+    async findByTokenHash(tokenHash: string): Promise<Session | null> {
+        const session = await this.prisma.session.findUnique({ where: { tokenHash } })
 
         return session ? this.toDomain(session) : null
     }
 
-    async findActiveByToken(token: string): Promise<Session | null> {
+    async findActiveByTokenHash(tokenHash: string): Promise<Session | null> {
         const session = await this.prisma.session.findFirst({
             where: {
-                token,
+                tokenHash,
                 terminatedAt: null,
             }
         })
@@ -49,12 +49,12 @@ export class PrismaSessionRepository implements ISessionRepository {
         })
     }
 
-    async terminateAllExcept(userId: string, exceptToken?: string): Promise<void> {
+    async terminateAllExcept(userId: string, exceptTokenHash?: string): Promise<void> {
         await this.prisma.session.updateMany({
             where: { 
                 userId, 
                 terminatedAt: null,
-                NOT: { token: exceptToken }
+                NOT: { tokenHash: exceptTokenHash }
             },
             data: { terminatedAt: new Date() }
         })
@@ -78,7 +78,7 @@ export class PrismaSessionRepository implements ISessionRepository {
         return new Session({
             id: prismaSession.id,
             userId: prismaSession.userId,
-            token: prismaSession.token,
+            tokenHash: prismaSession.tokenHash,
             userAgent: prismaSession.userAgent,
             ipAddress: prismaSession.ipAddress,
             location: prismaSession.location,
@@ -95,7 +95,7 @@ export class PrismaSessionRepository implements ISessionRepository {
         return {
             id: dto.id,
             userId: dto.userId,
-            token: dto.token,
+            tokenHash: dto.tokenHash,
             userAgent: dto.userAgent,
             ipAddress: dto.ipAddress,
             location: dto.location,
