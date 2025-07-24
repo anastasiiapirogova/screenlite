@@ -2,9 +2,10 @@ import { MailConfigManager } from './mail-config.manager.ts'
 import { MailerFactory } from '../adapters/mailer.factory.ts'
 import { IMailer } from '@/core/ports/mailer.interface.ts'
 import { VerificationEmailTemplate } from '../templates/verification.template.ts'
-import { IMailService, VerificationEmailData } from '@/core/ports/mail.interface.ts'
+import { IMailService } from '@/core/ports/mail.interface.ts'
 import { MailConfig } from '../dto/mail-config.dto.ts'
 import { SendEmailDTO } from '@/core/dto/send-email.dto.ts'
+import { SendVerificationEmailDTO } from '@/core/dto/send-verification-email.dto.ts'
 
 export class MailService implements IMailService {
     constructor(
@@ -18,7 +19,7 @@ export class MailService implements IMailService {
         return adapter?.sendEmail(options) ?? false
     }
 
-    async sendVerificationEmail(data: VerificationEmailData): Promise<boolean> {
+    async sendVerificationEmail(data: SendVerificationEmailDTO): Promise<boolean> {
         return this.sendEmail({
             to: data.email,
             subject: VerificationEmailTemplate.getSubject(),
