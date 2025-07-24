@@ -7,6 +7,7 @@ import { s3Schema } from '../schemas/s3.schema.ts'
 import { secretsSchema } from '../schemas/secret.schema.ts'
 import { ffmpegSchema } from '../schemas/ffmpeg.schema.ts'
 import { s3BucketsSchema } from '../schemas/s3-buckets.schema.ts'
+import { TTLsSchema } from '../schemas/ttls.schema.ts'
 
 export type DatabaseConfig = z.infer<typeof databaseSchema>
 export type RedisConfig = z.infer<typeof redisSchema>
@@ -16,3 +17,4 @@ export type S3Config = z.infer<typeof s3Schema>
 export type SecretsConfig = z.infer<typeof secretsSchema>
 export type FFmpegConfig = z.infer<typeof ffmpegSchema>
 export type S3BucketsConfig = z.infer<typeof s3BucketsSchema>
+export type TTLsConfig = z.infer<typeof TTLsSchema>
