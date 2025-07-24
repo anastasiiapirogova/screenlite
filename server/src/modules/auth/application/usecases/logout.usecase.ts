@@ -2,13 +2,19 @@ import { ISessionRepository } from '@/core/ports/session-repository.interface.ts
 import { ValidationError } from '@/core/errors/validation.error.ts'
 import { LogoutDTO } from '../dto/logout.dto.ts'
 
+export type LogoutUsecaseDeps = {
+    sessionRepository: ISessionRepository
+}
+
 export class LogoutUsecase {
     constructor(
-        private readonly sessionRepository: ISessionRepository,
+        private readonly deps: LogoutUsecaseDeps
     ) {}
 
     async execute(data: LogoutDTO): Promise<void> {
-        const session = await this.sessionRepository.findActiveByToken(data.sessionToken)
+        const { sessionRepository } = this.deps
+
+        const session = await sessionRepository.findActiveByTokenHash(data.sessionTokenHash)
 
         if (!session) {
             throw new ValidationError({ sessionToken: ['SESSION_NOT_FOUND'] })
@@ -20,6 +26,6 @@ export class LogoutUsecase {
 
         session.terminate('manual_logout')
 
-        await this.sessionRepository.save(session)
+        await sessionRepository.save(session)
     }
 }

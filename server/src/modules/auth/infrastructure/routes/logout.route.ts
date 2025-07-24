@@ -9,14 +9,14 @@ export const logoutRoute = async (fastify: FastifyInstance) => {
     }, async (request, reply) => {
         const sessionRepo = new PrismaSessionRepository(fastify.prisma)
 
-        const logout = new LogoutUsecase(
-            sessionRepo,
-        )
+        const logout = new LogoutUsecase({
+            sessionRepository: sessionRepo,
+        })
 
         await logout.execute({
-            sessionToken: request.session!.token
+            sessionTokenHash: request.session!.tokenHash
         })
 
         return reply.status(200).send()
     })
-} 
+}
