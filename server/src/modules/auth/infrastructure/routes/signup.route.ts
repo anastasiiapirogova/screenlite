@@ -1,13 +1,15 @@
-import { NodeSessionTokenService } from '@/modules/session/domain/services/node-session-token.service.ts'
 import { PrismaSessionRepository } from '@/modules/session/infrastructure/repositories/prisma-session.repository.ts'
 import { SignupUsecase } from '@/modules/auth/application/usecases/signup.usecase.ts'
 import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
 import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
-import { BcryptPasswordHasher } from '@/shared/infrastructure/services/bcrypt-password-hasher.service.ts'
+import { BcryptHasher } from '@/shared/infrastructure/services/bcrypt-hasher.service.ts'
 import { signupSchema } from '../schemas/signup.schema.ts'
 import { FastifyRequestAdapter } from '@/infrastructure/http/adapters/fastify-request.adapter.ts'
 import { SessionFactory } from '@/modules/session/domain/services/session.factory.ts'
+import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
+import { TokenGenerator } from '@/shared/infrastructure/services/token-generator.service.ts'
+import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.ts'
 
 export const signupRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/signup', {
@@ -19,15 +21,17 @@ export const signupRoute = async (fastify: FastifyInstance) => {
         
         const userRepo = new PrismaUserRepository(fastify.prisma)
         const sessionRepo = new PrismaSessionRepository(fastify.prisma)
-        const sessionFactory = new SessionFactory(new NodeSessionTokenService())
-        const passwordHasher = new BcryptPasswordHasher()
+        const sessionFactory = new SessionFactory(new TokenGenerator(), new FastHasher())
+        const hasher = new BcryptHasher()
+        const unitOfWork = new PrismaUnitOfWork(fastify.prisma)
 
-        const signup = new SignupUsecase(
-            userRepo,
-            sessionRepo,
+        const signup = new SignupUsecase({
+            userRepository: userRepo,
+            sessionRepository: sessionRepo,
             sessionFactory,
-            passwordHasher
-        )
+            passwordHasher: hasher,
+            unitOfWork,
+        })
 
         const result = await signup.execute({
             ...request.body,
