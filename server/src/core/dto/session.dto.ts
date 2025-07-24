@@ -1,7 +1,7 @@
 export type SessionDTO = {
     id: string
     userId: string
-    token: string
+    tokenHash: string
     userAgent: string
     ipAddress: string
     location: string | null

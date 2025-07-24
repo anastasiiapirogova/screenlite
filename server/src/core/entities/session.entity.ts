@@ -3,7 +3,7 @@ import { SessionDTO } from '@/core/dto/session.dto.ts'
 export class Session {
     public readonly id: string
     public readonly userId: string
-    public readonly token: string
+    public readonly tokenHash: string
     public readonly userAgent: string
     public readonly ipAddress: string
     public readonly location: string | null
@@ -15,7 +15,7 @@ export class Session {
     constructor(dto: SessionDTO) {
         this.id = dto.id
         this.userId = dto.userId
-        this.token = dto.token
+        this.tokenHash = dto.tokenHash
         this.userAgent = dto.userAgent
         this.ipAddress = dto.ipAddress
         this.location = dto.location
@@ -62,7 +62,7 @@ export class Session {
         return {
             id: this.id,
             userId: this.userId,
-            token: this.token,
+            tokenHash: this.tokenHash,
             userAgent: this.userAgent,
             ipAddress: this.ipAddress,
             location: this.location,

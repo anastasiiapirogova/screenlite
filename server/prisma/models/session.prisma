@@ -1,7 +1,7 @@
 model Session {
     id                String    @id @default(uuid())
     userId            String
-    token             String    @unique
+    tokenHash         String    @unique
     userAgent         String
     ipAddress         String
     location          String?

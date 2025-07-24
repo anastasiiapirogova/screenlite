@@ -6,5 +6,5 @@ export type ISessionFactory = {
         userAgent: string
         ipAddress: string
         location?: string
-    }): Session
+    }): Promise<{ session: Session, token: string }>
 }
