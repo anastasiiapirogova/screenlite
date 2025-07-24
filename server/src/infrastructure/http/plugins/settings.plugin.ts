@@ -17,11 +17,11 @@ const settingsPlugin: FastifyPluginAsync = async (fastify) => {
         throw new Error('Prisma client not registered')
     }
 
-    if (!fastify.crypto) {
-        throw new Error('Crypto service not registered')
+    if (!fastify.encryption) {
+        throw new Error('Encryption service not registered')
     }
 
-    const settingRepository: SettingRepository = new PrismaSettingRepository(fastify.prisma, fastify.crypto)
+    const settingRepository: SettingRepository = new PrismaSettingRepository(fastify.prisma, fastify.encryption)
 
     const settingService = new SettingsService(settingRepository, [new MailGroup(), new SMTPGroup()])
 
@@ -34,5 +34,5 @@ const settingsPlugin: FastifyPluginAsync = async (fastify) => {
 
 export default fp(settingsPlugin, {
     name: 'settings',
-    dependencies: ['config', 'prisma', 'crypto'],
+    dependencies: ['config', 'prisma', 'encryption'],
 })

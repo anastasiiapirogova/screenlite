@@ -32,5 +32,5 @@ const mailPlugin: FastifyPluginAsync = async (fastify) => {
 
 export default fp(mailPlugin, {
     name: 'mail',
-    dependencies: ['config', 'prisma', 'crypto', 'settings'],
+    dependencies: ['config', 'prisma', 'settings'],
 })
