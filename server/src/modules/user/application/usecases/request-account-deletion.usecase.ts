@@ -11,7 +11,7 @@ export class RequestAccountDeletionUsecase {
     ) {}
 
     async execute(dto: RequestAccountDeletionDTO): Promise<void> {
-        const { userId, requester, currentSessionToken } = dto
+        const { userId, requester, currentSessionTokenHash } = dto
 
         if (userId !== requester.id) {
             throw new AuthorizationError({
@@ -38,8 +38,8 @@ export class RequestAccountDeletionUsecase {
         await this.unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
 
-            if (currentSessionToken) {
-                await repos.sessionRepository.terminateAllExcept(userId, currentSessionToken)
+            if (currentSessionTokenHash) {
+                await repos.sessionRepository.terminateAllExcept(userId, currentSessionTokenHash)
             } else {
                 await repos.sessionRepository.terminateAll(userId)
             }
