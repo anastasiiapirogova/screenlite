@@ -48,7 +48,7 @@ export class FastifyServer {
         await this.app.register(formBody)
         await this.app.register(plugins.config)
         await this.app.register(plugins.cors)
-        await this.app.register(plugins.crypto)
+        await this.app.register(plugins.encryption)
         await this.app.register(plugins.redis)
         await this.app.register(plugins.cache)
         await this.app.register(plugins.messageBroker)
@@ -62,6 +62,7 @@ export class FastifyServer {
         await this.app.register(plugins.requireAuth)
         await this.app.register(plugins.errorHandler)
         await this.app.register(plugins.websocket)
+        await this.app.register(plugins.adminPermissions)
     }
 
     get instance(): FastifyInstance {
