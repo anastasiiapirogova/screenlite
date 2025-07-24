@@ -13,4 +13,4 @@ export class GetMailSettingsUsecase {
 
         return this.mailGroup.fromSettings(settings)
     }
-} 
+}

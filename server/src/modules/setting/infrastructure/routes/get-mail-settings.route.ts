@@ -5,7 +5,7 @@ import { MailGroup } from '@/modules/setting/domain/groups/mail.group.ts'
 
 export const getMailSettingsRoute = async (fastify: FastifyInstance) => {
     fastify.get('/mail', async (request, reply) => {
-        const settingRepository = new PrismaSettingRepository(fastify.prisma, fastify.crypto)
+        const settingRepository = new PrismaSettingRepository(fastify.prisma, fastify.encryption)
         const mailGroup = new MailGroup()
         const usecase = new GetMailSettingsUsecase(settingRepository, mailGroup)
         const mailSettings = await usecase.execute()
