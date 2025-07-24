@@ -22,12 +22,12 @@ export const requestAccountDeletionRoute = async (fastify: FastifyInstance) => {
         },
         async (request, reply) => {
             const userId = request.params.userId
-            const sessionToken = request.session!.token
+            const sessionTokenHash = request.session!.tokenHash
 
             const dto: RequestAccountDeletionDTO = {
                 userId,
                 requester: request.user!,
-                currentSessionToken: sessionToken
+                currentSessionTokenHash: sessionTokenHash
             }
 
             const requestDeletion = new RequestAccountDeletionUsecase(

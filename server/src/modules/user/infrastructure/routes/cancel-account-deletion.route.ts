@@ -11,7 +11,7 @@ export const cancelAccountDeletionRoute = async (fastify: FastifyInstance) => {
         {
             schema: {
                 params: z.object({
-                    userId: z.string().uuid()
+                    userId: z.uuid()
                 })
             },
             onRequest: [fastify.requireAuth],
