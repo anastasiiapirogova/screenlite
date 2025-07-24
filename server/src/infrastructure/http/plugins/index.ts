@@ -4,7 +4,7 @@ import prisma from './prisma.plugin.ts'
 import s3Client from './s3-client.plugin.ts'
 import mail from './mail.plugin.ts'
 import storage from './storage.plugin.ts'
-import crypto from './crypto.plugin.ts'
+import encryption from './encryption.plugin.ts'
 import settings from './settings.plugin.ts'
 import redis from './redis.plugin.ts'
 import multipartUpload from './multipart-upload.plugin.ts'
@@ -15,6 +15,7 @@ import cors from './cors.plugin.ts'
 import errorHandler from './error-handler.plugin.ts'
 import auth from './auth.plugin.ts'
 import requireAuth from './require-auth.plugin.ts'
+import adminPermissions from './admin-permissions.plugin.ts'
 
 export default {
     config,
@@ -22,7 +23,7 @@ export default {
     s3Client,
     mail,
     storage,
-    crypto,
+    encryption,
     settings,
     errorHandler,
     redis,
@@ -33,4 +34,5 @@ export default {
     cors,
     auth,
     requireAuth,
+    adminPermissions,
 }
