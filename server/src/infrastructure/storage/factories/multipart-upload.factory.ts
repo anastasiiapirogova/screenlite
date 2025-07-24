@@ -2,13 +2,13 @@ import { IMultipartFileUploader } from '@/core/ports/multipart-file-upload.inter
 import { S3MultipartFileUploadAdapter } from '@/infrastructure/storage/adapters/s3-multipart-file-upload.adapter.ts'
 import { S3Client } from '@aws-sdk/client-s3'
 import { Redis } from 'ioredis'
-import { ConfigServiceInterface } from '../../config/config.interface.ts'
+import { IConfig } from '../../config/config.interface.ts'
 import { LocalMultipartFileUploadAdapter } from '../adapters/local-multipart-file-upload.adapter.ts'
 import { RedisEtagStorage } from '../services/redis-etag-storage.service.ts'
 
 export class MultipartUploadFactory {
     constructor(
-        private readonly config: ConfigServiceInterface,
+        private readonly config: IConfig,
         private readonly s3Client?: S3Client,
         private readonly redis?: Redis
     ) {}
