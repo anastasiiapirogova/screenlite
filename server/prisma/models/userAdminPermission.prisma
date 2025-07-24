@@ -1,0 +1,10 @@
+model UserAdminPermission {
+    id           String @id @default(uuid())
+    userId       String
+    permissionId String
+
+    user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    permission AdminPermission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, permissionId])
+}
