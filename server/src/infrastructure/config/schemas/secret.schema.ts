@@ -1,5 +1,5 @@
 import { z } from 'zod'
 
 export const secretsSchema = z.object({
-    cryptoSecret: z.string().min(1),
+    encryptionSecret: z.string().min(44).max(44),
 })
