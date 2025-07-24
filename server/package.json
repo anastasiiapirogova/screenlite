@@ -9,7 +9,6 @@
 		"lint": "eslint --fix",
 		"start": "node --env-file=.env dist/screenlite.js",
 		"test": "vitest --bail=1",
-		"routes:list": "node scripts/generate-route-list.js",
 		"env:sync": "node scripts/sync-env-docs.js"
 	},
 	"dependencies": {
