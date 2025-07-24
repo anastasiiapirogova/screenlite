@@ -12,11 +12,11 @@ export const updateMailSettingsRoute = async (fastify: FastifyInstance) => {
         },
     }, async (request, reply) => {
         const body = request.body
-        const settingRepository = new PrismaSettingRepository(fastify.prisma, fastify.crypto)
+        const settingRepository = new PrismaSettingRepository(fastify.prisma, fastify.encryption)
         const mailGroup = new MailGroup()
         const usecase = new UpdateMailSettingsUsecase(settingRepository, mailGroup)
         const updatedSettings = await usecase.execute(body)
 
         reply.send(updatedSettings)
     })
-} 
+}
