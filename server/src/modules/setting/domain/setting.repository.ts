@@ -1,6 +1,6 @@
 import { Setting } from '@/core/entities/setting.entity.ts'
 
-export type SettingRepository = {
+export type ISettingRepository = {
     findByCategory(category: string): Promise<Setting[]>
     updateMany(settings: Setting[]): Promise<void>
     delete(key: string, category: string): Promise<void>
