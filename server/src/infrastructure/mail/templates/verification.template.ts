@@ -1,11 +1,11 @@
-import { VerificationEmailData } from '@/core/ports/mail.interface.ts'
+import { VerificationEmailDTO } from '@/core/dto/verification-email.dto.ts'
 
 export class VerificationEmailTemplate {
     static getSubject(): string {
         return 'Verify Your Email Address - Screenlite'
     }
 
-    static getHtml(data: VerificationEmailData, frontendUrl: string): string {
+    static getHtml(data: VerificationEmailDTO, frontendUrl: string): string {
         const { token } = data
         const verificationUrl = `${frontendUrl}/verify-email?token=${token}`
         
@@ -25,7 +25,7 @@ export class VerificationEmailTemplate {
         `
     }
 
-    static getText(data: VerificationEmailData, frontendUrl: string): string {
+    static getText(data: VerificationEmailDTO, frontendUrl: string): string {
         const { token } = data
         const verificationUrl = `${frontendUrl}/verify-email?token=${token}`
         
