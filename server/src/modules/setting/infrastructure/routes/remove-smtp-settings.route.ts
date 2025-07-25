@@ -5,9 +5,9 @@ import { SMTPGroup } from '../../domain/groups/smtp.group.ts'
 
 export const removeSMTPSettingsRoute = async (fastify: FastifyInstance) => {
     fastify.delete('/smtp', async (request, reply) => {
-        const settingRepository = new PrismaSettingRepository(request.server.prisma, request.server.crypto)
+        const settingRepository = new PrismaSettingRepository(fastify.prisma)
 
-        const smtpGroup = new SMTPGroup()
+        const smtpGroup = new SMTPGroup(fastify.encryption)
 
         const usecase = new RemoveSMTPSettingsUsecase(settingRepository, smtpGroup)
 
@@ -15,4 +15,4 @@ export const removeSMTPSettingsRoute = async (fastify: FastifyInstance) => {
 
         reply.status(204).send()
     })
-}
+}   

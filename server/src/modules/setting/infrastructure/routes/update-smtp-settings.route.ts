@@ -13,9 +13,9 @@ export const updateSMTPSettingsRoute = async (fastify: FastifyInstance) => {
     }, async (request, reply) => {
         const body = request.body
 
-        const settingRepository = new PrismaSettingRepository(request.server.prisma, request.server.crypto)
+        const settingRepository = new PrismaSettingRepository(fastify.prisma)
 
-        const smtpGroup = new SMTPGroup()
+        const smtpGroup = new SMTPGroup(fastify.encryption)
         
         const usecase = new UpdateSMTPSettingsUsecase(settingRepository, smtpGroup)
 
