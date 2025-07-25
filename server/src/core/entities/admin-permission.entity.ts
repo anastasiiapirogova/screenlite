@@ -1,5 +1,4 @@
-import { AdminPermissionDTO } from '../dto/admin-permission.dto.ts'
-import { AdminPermissionName } from '../enums/admin-permission-name.enum.ts'
+import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 
 export class AdminPermission {
     constructor(
@@ -14,13 +13,5 @@ export class AdminPermission {
 
     setDescription(description: string | null): void {
         this._description = description
-    }
-
-    toDTO(): AdminPermissionDTO {
-        return {
-            id: this.id,
-            name: this.name,
-            description: this.description,
-        }
     }
 }
