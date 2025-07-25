@@ -8,6 +8,7 @@ import { SignupResultDTO } from '../dto/signup-result.dto.ts'
 import { ValidationError } from '@/core/errors/validation.error.ts'
 import { ISessionFactory } from '@/core/ports/session-factory.interface.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
+import { UserRole } from '@/core/enums/user-role.enum.ts'
 
 export type SignupUsecaseDeps = {
     userRepository: IUserRepository
@@ -46,6 +47,7 @@ export class SignupUsecase {
             twoFactorEnabled: false,
             deletionRequestedAt: null,
             deletedAt: null,
+            role: UserRole.USER,
         })
 
         const savedUser = await unitOfWork.execute(async (repos) => {
