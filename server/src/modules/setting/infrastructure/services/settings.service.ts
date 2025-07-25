@@ -1,10 +1,10 @@
-import { SettingRepository } from '../../domain/setting.repository.ts'
+import { ISettingRepository } from '../../domain/setting.repository.ts'
 import { SettingGroup } from '../../domain/setting-group.abstract.ts'
 import { SettingGroupTypes } from '../../domain/types/settings.type.ts'
 
 export class SettingsService {
     constructor(
-        private readonly settingRepository: SettingRepository,
+        private readonly settingRepository: ISettingRepository,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         private readonly groups: SettingGroup<any>[]
     ) {}
