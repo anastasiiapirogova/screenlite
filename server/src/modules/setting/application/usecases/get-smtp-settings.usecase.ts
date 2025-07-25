@@ -1,11 +1,11 @@
 import { SMTPSettings } from '@/shared/types/smtp-settings.type.ts'
-import { SettingRepository } from '../../domain/setting.repository.ts'
+import { ISettingRepository } from '../../domain/setting.repository.ts'
 import { SMTPGroup } from '../../domain/groups/smtp.group.ts'
 import { SafeDTO } from '@/shared/types/safe-dto.type.ts'
 
 export class GetSMTPSettingsUsecase {
     constructor(
-        private readonly settingRepository: SettingRepository,
+        private readonly settingRepository: ISettingRepository,
         private readonly smtpGroup: SMTPGroup
     ) {}
 

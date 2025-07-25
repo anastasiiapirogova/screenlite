@@ -1,9 +1,9 @@
-import { SettingRepository } from '../../domain/setting.repository.ts'
+import { ISettingRepository } from '../../domain/setting.repository.ts'
 import { SMTPGroup } from '../../domain/groups/smtp.group.ts'
 
 export class RemoveSMTPSettingsUsecase {
     constructor(
-        private readonly settingRepository: SettingRepository,
+        private readonly settingRepository: ISettingRepository,
         private readonly smtpGroup: SMTPGroup
     ) {}
 
