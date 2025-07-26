@@ -2,17 +2,17 @@
   "REDIS_HOST": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
   "REDIS_PORT": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
   "DATABASE_URL": {
@@ -20,119 +20,119 @@
     "used": true,
     "usedOutsideConfig": true,
     "files": [
-      "/app/src/services/PrismaService.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
   "S3_REGION": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
   "S3_ENDPOINT": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
   "S3_PORT": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
   "S3_ACCESS_KEY": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
   "S3_SECRET_KEY": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
   "STORAGE_TYPE": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
-    ]
-  },
-  "CORS_ORIGINS": {
-    "description": "",
-    "used": true,
-    "usedOutsideConfig": false,
-    "files": [
-      "/app/src/config.ts"
-    ]
-  },
-  "NODE_ENV": {
-    "description": "",
-    "used": true,
-    "usedOutsideConfig": false,
-    "files": [
-      "/app/src/config.ts"
-    ]
-  },
-  "TOTP_ENCRYPTION_KEY": {
-    "description": "",
-    "used": true,
-    "usedOutsideConfig": false,
-    "files": [
-      "/app/src/config.ts"
-    ]
-  },
-  "BASE_URL": {
-    "description": "",
-    "used": true,
-    "usedOutsideConfig": false,
-    "files": [
-      "/app/src/config.ts"
-    ]
-  },
-  "FFMPEG_SERVICE_URL": {
-    "description": "",
-    "used": true,
-    "usedOutsideConfig": false,
-    "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
   "FRONTEND_URL": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
-  "CRYPTO_SECRET": {
+  "REDIS_PASSWORD": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   },
-  "APP_NAME": {
+  "REDIS_DB": {
     "description": "",
     "used": true,
-    "usedOutsideConfig": false,
+    "usedOutsideConfig": true,
     "files": [
-      "/app/src/config.ts"
+      "/app/src/infrastructure/config/config.service.ts"
+    ]
+  },
+  "REDIS_USERNAME": {
+    "description": "",
+    "used": true,
+    "usedOutsideConfig": true,
+    "files": [
+      "/app/src/infrastructure/config/config.service.ts"
+    ]
+  },
+  "BACKEND_URL": {
+    "description": "",
+    "used": true,
+    "usedOutsideConfig": true,
+    "files": [
+      "/app/src/infrastructure/config/config.service.ts"
+    ]
+  },
+  "ALLOWED_CORS_ORIGINS": {
+    "description": "",
+    "used": true,
+    "usedOutsideConfig": true,
+    "files": [
+      "/app/src/infrastructure/config/config.service.ts"
+    ]
+  },
+  "ENCRYPTION_SECRET": {
+    "description": "",
+    "used": true,
+    "usedOutsideConfig": true,
+    "files": [
+      "/app/src/infrastructure/config/config.service.ts"
+    ]
+  },
+  "FFMPEG_SERVICE_API_URL": {
+    "description": "",
+    "used": true,
+    "usedOutsideConfig": true,
+    "files": [
+      "/app/src/infrastructure/config/config.service.ts"
     ]
   }
 }

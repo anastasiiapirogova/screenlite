@@ -30,7 +30,7 @@ function getAllSourceFiles(dir) {
 
 function extractEnvUsages(filePath) {
     const content = readFileSync(filePath, 'utf8')
-    const regex = /process\.env(?:\.([A-Z0-9_]+)|\[['"]([A-Z0-9_]+)['"]\])/g
+    const regex = /env\.(?:([A-Z0-9_]+)|\[['"]([A-Z0-9_]+)['"]\])/g
     const envs = new Set()
     let match
 
@@ -104,18 +104,7 @@ function main() {
 
     saveEnvDocs(envDocs)
     
-    const externalEnvs = Array.from(usedEnvs).filter(env => {
-        const filesUsingEnv = envUsageByFile.get(env) || new Set()
-
-        return filesUsingEnv.size > 0 && 
-            (!filesUsingEnv.has(CONFIG_FILE) || filesUsingEnv.size > 1)
-    })
-    
     console.log(`Synced env-docs.json. Found ${usedEnvs.size} used envs.`)
-    console.log(`Envs used outside config.ts: ${externalEnvs.length}`)
-    if (externalEnvs.length > 0) {
-        console.log('External envs:', externalEnvs.join(', '))
-    }
 }
 
 main() 
