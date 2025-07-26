@@ -16,6 +16,7 @@ import errorHandler from './error-handler.plugin.ts'
 import auth from './auth.plugin.ts'
 import requireAuth from './require-auth.plugin.ts'
 import adminPermissions from './admin-permissions.plugin.ts'
+import adminAccess from './admin-access.plugin.ts'
 
 export default {
     config,
@@ -35,4 +36,5 @@ export default {
     auth,
     requireAuth,
     adminPermissions,
+    adminAccess,
 }

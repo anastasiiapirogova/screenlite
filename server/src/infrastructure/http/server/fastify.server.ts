@@ -63,6 +63,7 @@ export class FastifyServer {
         await this.app.register(plugins.errorHandler)
         await this.app.register(plugins.websocket)
         await this.app.register(plugins.adminPermissions)
+        await this.app.register(plugins.adminAccess)
     }
 
     get instance(): FastifyInstance {

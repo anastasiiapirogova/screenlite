@@ -6,7 +6,7 @@ import { getMailSettingsRoute } from './get-mail-settings.route.ts'
 import { updateMailSettingsRoute } from './update-mail-settings.route.ts'
 import { testMailConfigRoute } from './test-mail-config.route.ts'
 
-// Prefix: /api/settings
+// Prefix: /api/admin/settings
 const settingRoutes = async (fastify: FastifyInstance) => {
     await Promise.all([
         updateSMTPSettingsRoute(fastify),
