@@ -1,9 +1,10 @@
 import { EmailVerificationTokenDTO } from '../dto/email-verification-token.dto.ts'
 import { EmailVerificationToken } from '../entities/email-verification-token.entity.ts'
 import { EmailVerificationTokenType } from '../enums/email-verification-token-type.enum.ts'
+import { IEmailVerificationTokenMapper } from '../ports/email-verification-token-mapper.interface.ts'
 
-export class EmailVerificationTokenMapper {
-    static toDTO(entity: EmailVerificationToken): EmailVerificationTokenDTO {
+export class EmailVerificationTokenMapper implements IEmailVerificationTokenMapper {
+    toDTO(entity: EmailVerificationToken): EmailVerificationTokenDTO {
         return {
             id: entity.id,
             userId: entity.userId,
