@@ -7,21 +7,16 @@ import { ValidateSessionUseCase } from '@/modules/session/application/usecases/v
 import { Session } from '@/core/entities/session.entity.ts'
 import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { User } from '@/core/entities/user.entity.ts'
-import { PrismaUserAdminPermissionRepository } from '@/modules/adminPermission/infrastructure/repositories/prisma-user-admin-permission.repository.ts'
-import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
-import { GetUserAdminPermissionsUseCase } from '@/modules/adminPermission/application/usecases/get-user-admin-permissions.usecase.ts'
 
 declare module 'fastify' {
     interface FastifyRequest {
         user: User | null
         session: Session | null
-        adminPermissions: AdminPermissionName[] | null
     }
 }
 
 const authPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorateRequest('user', null)
-    fastify.decorateRequest('adminPermissions', null)
 
     fastify.addHook('onRequest', async (request) => {
         const authHeader = request.headers.authorization
@@ -51,16 +46,6 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
         try {
             const { user, session } = await validateSession.execute(sessionToken)
-
-            if(user.isAdmin) {
-                const getUserAdminPermissions = new GetUserAdminPermissionsUseCase(
-                    new PrismaUserAdminPermissionRepository(fastify.prisma),
-                )
-
-                const adminPermissions = await getUserAdminPermissions.execute(user.id)
-
-                request.adminPermissions = adminPermissions
-            }
 
             request.user = user
             request.session = session
