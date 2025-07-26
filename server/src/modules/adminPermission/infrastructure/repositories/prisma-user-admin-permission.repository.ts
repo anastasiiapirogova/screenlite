@@ -2,7 +2,7 @@ import { IUserAdminPermissionRepository } from '@/core/ports/user-admin-permissi
 import { Prisma, PrismaClient, User as PrismaUser } from '@/generated/prisma/client.ts'
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 import { User } from '@/core/entities/user.entity.ts'
-import { UserRole } from '@/core/enums/user-role.enum.ts'
+import { PrismaRepositoryUserMapper } from '@/core/mapper/prisma-repository-user.mapper.ts'
 
 export class PrismaUserAdminPermissionRepository implements IUserAdminPermissionRepository {
     constructor(private readonly prisma: PrismaClient | Prisma.TransactionClient) {}
@@ -82,20 +82,6 @@ export class PrismaUserAdminPermissionRepository implements IUserAdminPermission
     }
 
     private userToDomain(prismaUser: PrismaUser): User {
-        return new User({
-            id: prismaUser.id,
-            email: prismaUser.email,
-            pendingEmail: prismaUser.pendingEmail,
-            name: prismaUser.name,
-            password: prismaUser.password,
-            passwordUpdatedAt: prismaUser.passwordUpdatedAt,
-            totpSecret: prismaUser.totpSecret,
-            twoFactorEnabled: prismaUser.twoFactorEnabled,
-            profilePhoto: prismaUser.profilePhoto,
-            emailVerifiedAt: prismaUser.emailVerifiedAt,
-            deletionRequestedAt: prismaUser.deletionRequestedAt,
-            deletedAt: prismaUser.deletedAt,
-            role: prismaUser.role as UserRole,
-        })
+        return PrismaRepositoryUserMapper.toDomain(prismaUser)
     }
 }

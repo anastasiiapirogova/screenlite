@@ -1,4 +1,3 @@
-import { PublicUserDTO } from '../dto/public-user.dto.ts'
 import { UserDTO } from '../dto/user.dto.ts'
 import { UserRole } from '../enums/user-role.enum.ts'
 import { ValidationError } from '../errors/validation.error.ts'
@@ -10,13 +9,13 @@ export class User {
     public readonly name: string
     private _password: string
     private _role: UserRole
-    private emailVerifiedAt: Date | null = null
+    private _emailVerifiedAt: Date | null = null
     private _passwordUpdatedAt: Date | null = null
-    private profilePhoto: string | null = null
+    private _profilePhoto: string | null = null
     private _totpSecret: string | null = null
     private _twoFactorEnabled: boolean = false
-    private deletionRequestedAt: Date | null = null
-    private deletedAt: Date | null = null
+    private _deletionRequestedAt: Date | null = null
+    private _deletedAt: Date | null = null
 
     constructor(dto: UserDTO) {
         this.id = dto.id
@@ -25,17 +24,17 @@ export class User {
         this.name = dto.name
         this._password = dto.password
         this._role = dto.role
-        this.emailVerifiedAt = dto.emailVerifiedAt
+        this._emailVerifiedAt = dto.emailVerifiedAt
         this._passwordUpdatedAt = dto.passwordUpdatedAt
-        this.profilePhoto = dto.profilePhoto
+        this._profilePhoto = dto.profilePhoto
         this._totpSecret = dto.totpSecret
         this._twoFactorEnabled = dto.twoFactorEnabled
-        this.deletionRequestedAt = dto.deletionRequestedAt
-        this.deletedAt = dto.deletedAt
+        this._deletionRequestedAt = dto.deletionRequestedAt
+        this._deletedAt = dto.deletedAt
     }
 
     get isActive(): boolean {
-        return !this.deletionRequestedAt && !this.deletedAt
+        return !this._deletionRequestedAt && !this._deletedAt
     }
 
     get email(): string {
@@ -56,6 +55,18 @@ export class User {
 
     set role(role: UserRole) {
         this._role = role
+    }
+
+    get role(): UserRole {
+        return this._role
+    }
+
+    get deletedAt(): Date | null {
+        return this._deletedAt
+    }
+
+    get deletionRequestedAt(): Date | null {
+        return this._deletionRequestedAt
     }
 
     confirmPendingEmail(): void {
@@ -92,7 +103,7 @@ export class User {
     }
 
     verifyEmail(): void {
-        this.emailVerifiedAt = new Date()
+        this._emailVerifiedAt = new Date()
     }
   
     updatePassword(newHashedPassword: string): void {
@@ -120,7 +131,7 @@ export class User {
     }
   
     requestDeletion(): void {
-        this.deletionRequestedAt = new Date()
+        this._deletionRequestedAt = new Date()
     }
 
     get isDeletionRequested(): boolean {
@@ -128,7 +139,7 @@ export class User {
     }
 
     cancelDeletionRequest(): void {
-        this.deletionRequestedAt = null
+        this._deletionRequestedAt = null
     }
   
     get isDeleted(): boolean {
@@ -151,41 +162,19 @@ export class User {
         return this._twoFactorEnabled
     }
 
+    get emailVerifiedAt(): Date | null {
+        return this._emailVerifiedAt
+    }
+
     private isEmailValid(email: string): boolean {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     }
 
-    toDTO(): UserDTO {
-        return {
-            id: this.id,
-            email: this._email,
-            pendingEmail: this._pendingEmail,
-            name: this.name,
-            password: this._password,
-            emailVerifiedAt: this.emailVerifiedAt,
-            passwordUpdatedAt: this._passwordUpdatedAt,
-            profilePhoto: this.profilePhoto,
-            totpSecret: this._totpSecret,
-            twoFactorEnabled: this._twoFactorEnabled,
-            deletionRequestedAt: this.deletionRequestedAt,
-            deletedAt: this.deletedAt,
-            role: this._role,
-        }
+    get profilePhoto(): string | null {
+        return this._profilePhoto
     }
 
-    toPublicDTO(): PublicUserDTO {
-        return {
-            id: this.id,
-            email: this._email,
-            pendingEmail: this._pendingEmail,
-            name: this.name,
-            role: this._role,
-            emailVerifiedAt: this.emailVerifiedAt,
-            passwordUpdatedAt: this._passwordUpdatedAt,
-            profilePhoto: this.profilePhoto,
-            twoFactorEnabled: this._twoFactorEnabled,
-            deletionRequestedAt: this.deletionRequestedAt,
-            deletedAt: this.deletedAt,
-        }
+    updateProfilePhoto(profilePhotoPath: string | null) {
+        this._profilePhoto = profilePhotoPath
     }
 }

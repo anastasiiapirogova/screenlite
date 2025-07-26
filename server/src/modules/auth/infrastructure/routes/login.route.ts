@@ -9,6 +9,7 @@ import { FastifyRequestAdapter } from '@/infrastructure/http/adapters/fastify-re
 import { SessionFactory } from '@/modules/session/domain/services/session.factory.ts'
 import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { TokenGenerator } from '@/shared/infrastructure/services/token-generator.service.ts'
+import { UserMapper } from '@/core/mapper/user.mapper.ts'
 
 export const loginRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/login', {
@@ -20,6 +21,7 @@ export const loginRoute = async (fastify: FastifyInstance) => {
         const userRepo = new PrismaUserRepository(fastify.prisma)
         const sessionRepo = new PrismaSessionRepository(fastify.prisma)
         const sessionFactory = new SessionFactory(new TokenGenerator(), new FastHasher())
+        const userMapper = new UserMapper()
         const hasher = new BcryptHasher()
 
         const login = new LoginUsecase({
@@ -36,7 +38,7 @@ export const loginRoute = async (fastify: FastifyInstance) => {
         })
 
         return reply.status(200).send({
-            user: result.user.toPublicDTO(),
+            user: userMapper.toPublicDTO(result.user),
             token: result.token
         })
     })

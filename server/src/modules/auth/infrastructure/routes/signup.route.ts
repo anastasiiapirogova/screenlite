@@ -10,6 +10,7 @@ import { SessionFactory } from '@/modules/session/domain/services/session.factor
 import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { TokenGenerator } from '@/shared/infrastructure/services/token-generator.service.ts'
 import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.ts'
+import { UserMapper } from '@/core/mapper/user.mapper.ts'
 
 export const signupRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/signup', {
@@ -24,6 +25,7 @@ export const signupRoute = async (fastify: FastifyInstance) => {
         const sessionFactory = new SessionFactory(new TokenGenerator(), new FastHasher())
         const hasher = new BcryptHasher()
         const unitOfWork = new PrismaUnitOfWork(fastify.prisma)
+        const userMapper = new UserMapper()
 
         const signup = new SignupUsecase({
             userRepository: userRepo,
@@ -40,7 +42,7 @@ export const signupRoute = async (fastify: FastifyInstance) => {
         })
 
         return reply.status(201).send({ 
-            user: result.user.toPublicDTO(), 
+            user: userMapper.toPublicDTO(result.user), 
             token: result.token 
         })
     })
