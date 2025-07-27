@@ -16,6 +16,10 @@ export class AdminPermissionDefinitionService {
             name: AdminPermissionName.USERS_EDIT,
             description: 'Edit users',
         },
+        {
+            name: AdminPermissionName.USERS_DELETE,
+            description: 'Delete users',
+        },
     ]
 
     constructor(
