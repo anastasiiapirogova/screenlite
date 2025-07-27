@@ -1,4 +1,5 @@
 import { Session } from '@/core/entities/session.entity.ts'
+import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
 import { IHasher } from '@/core/ports/hasher.interface.ts'
 import { ISessionFactory } from '@/core/ports/session-factory.interface.ts'
 import { ITokenGenerator } from '@/core/ports/token-generator.interface.ts'
@@ -34,7 +35,7 @@ export class SessionFactory implements ISessionFactory {
 
         return {
             session,
-            token
+            token: `${AuthContextType.UserSession}:${token}`
         }
     }
 }
