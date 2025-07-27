@@ -49,6 +49,10 @@ export class User {
         return this._role === UserRole.SUPER_ADMIN
     }
 
+    get hasAdminAccess(): boolean {
+        return this.isAdmin || this.isSuperAdmin
+    }
+
     get pendingEmail(): string | null {
         return this._pendingEmail
     }
