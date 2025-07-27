@@ -4,8 +4,8 @@ import { ConfirmEmailChangeSchema } from '../schemas/confirm-email-change.schema
 import { ConfirmEmailChangeUseCase } from '../../application/usecases/confirm-email-change.usecase.ts'
 import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
 import { PrismaEmailVerificationTokenRepository } from '../repositories/prisma-email-verification-token.repository.ts'
-import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.ts'
+import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 
 export async function confirmEmailChangeRoute(fastify: FastifyInstance) {
     fastify.withTypeProvider<ZodTypeProvider>().post('/confirm-email-change', {
