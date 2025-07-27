@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify'
 
 // Prefix: /api/health
-export function healthRoutes(app: FastifyInstance) {
+const healthRoutes = async (app: FastifyInstance) => {
     app.get('/', async () => {
         return {
             status: 'ok',
@@ -9,3 +9,5 @@ export function healthRoutes(app: FastifyInstance) {
         }
     })
 }
+
+export default healthRoutes
