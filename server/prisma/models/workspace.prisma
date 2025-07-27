@@ -1,12 +1,12 @@
 model Workspace {
-    id          String    @id @default(uuid())
-    name        String
-    slug        String    @unique
-    status      String
-    picture     String?
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    deletedAt   DateTime?
+    id        String    @id @default(uuid())
+    name      String
+    slug      String    @unique
+    status    String
+    picture   String?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deletedAt DateTime?
 
     members            UserWorkspace[]
     screens            Screen[]
@@ -19,4 +19,5 @@ model Workspace {
     screenGroups       ScreenGroup[]
     links              Link[]
     storageUsage       WorkspaceStorageUsage?
+    workspaceApiTokens WorkspaceApiToken[]
 }
