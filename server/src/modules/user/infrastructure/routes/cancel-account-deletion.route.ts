@@ -21,7 +21,7 @@ export const cancelAccountDeletionRoute = async (fastify: FastifyInstance) => {
 
             const dto: CancelAccountDeletionDTO = {
                 userId,
-                requester: request.user!,
+                requester: request.auth!,
             }
 
             const cancelDeletion = new CancelAccountDeletionUsecase(
