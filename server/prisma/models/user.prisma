@@ -25,4 +25,6 @@ model User {
     sentInvitations         WorkspaceUserInvitation[]
     addedLinks              Link[]
     adminPermissions        UserAdminPermission[]
+    workspaceApiTokens      WorkspaceApiToken[]
+    adminApiTokens          AdminApiToken[]
 }
