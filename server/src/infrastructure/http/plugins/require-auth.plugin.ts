@@ -9,7 +9,7 @@ declare module 'fastify' {
 
 const requireAuthPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('requireAuth', async function (request: FastifyRequest) {
-        if (!request.user) {
+        if (!request.auth) {
             throw fastify.httpErrors.unauthorized()
         }
     })

@@ -16,14 +16,18 @@ const adminAccessPlugin: FastifyPluginAsync = async (fastify) => {
     const authService = new AuthorizationService()
 
     fastify.decorate('requireAdminAccess', async function (request: FastifyRequest) {
-        if (!authService.hasAdminAccess(request.user)) {
+        authService.setAuthContext(request.auth)
+
+        if (!authService.hasAdminAccess()) {
             throw fastify.httpErrors.forbidden('Admin access required')
         }
     })
 
     fastify.decorate('requireAdminPermissions', function (requiredPermissions) {
         return async (request: FastifyRequest) => {
-            if(authService.isSuperAdmin(request.user)) {
+            authService.setAuthContext(request.auth)
+
+            if(authService.isSuperAdmin()) {
                 return
             }
 

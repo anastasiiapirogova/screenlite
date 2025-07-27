@@ -5,6 +5,7 @@ import { PrismaAdminPermissionRepository } from '@/modules/adminPermission/infra
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 import { GetUserAdminPermissionsUseCase } from '@/modules/adminPermission/application/usecases/get-user-admin-permissions.usecase.ts'
 import { PrismaUserAdminPermissionRepository } from '@/modules/adminPermission/infrastructure/repositories/prisma-user-admin-permission.repository.ts'
+import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
 
 declare module 'fastify' {
     interface FastifyRequest {
@@ -24,14 +25,16 @@ const adminPermissionsPlugin: FastifyPluginAsync = async (fastify) => {
     await adminPermissionDefinitionService.syncPermissions()
 
     fastify.addHook('onRequest', async (request) => {
-        const user = request.user
+        const auth = request.auth
 
-        if(user?.isAdmin) {
+        if(!auth) return
+
+        if(auth.type === AuthContextType.UserSession && auth.user.isAdmin) {
             const getUserAdminPermissions = new GetUserAdminPermissionsUseCase(
                 new PrismaUserAdminPermissionRepository(fastify.prisma),
             )
 
-            const adminPermissions = await getUserAdminPermissions.execute(user.id)
+            const adminPermissions = await getUserAdminPermissions.execute(auth.user.id)
 
             request.adminPermissions = adminPermissions
         }
