@@ -1,3 +1,3 @@
 export type ITokenGenerator = {
-    generate(): string
+    generate(length?: number, prefix?: string): string
 }
