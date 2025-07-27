@@ -29,7 +29,7 @@ const adminPermissionsPlugin: FastifyPluginAsync = async (fastify) => {
 
         if(!auth) return
 
-        if(auth.type === AuthContextType.UserSession && auth.user.isAdmin) {
+        if(auth.type === AuthContextType.UserSession && auth.user.hasAdminAccess) {
             const getUserAdminPermissions = new GetUserAdminPermissionsUseCase(
                 new PrismaUserAdminPermissionRepository(fastify.prisma),
             )
