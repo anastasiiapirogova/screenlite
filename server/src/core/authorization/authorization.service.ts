@@ -1,30 +1,69 @@
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
-import { User } from '@/core/entities/user.entity.ts'
 import { IAuthorizationService } from '../ports/authorization-service.interface.ts'
+import { User } from '../entities/user.entity.ts'
+import { AuthContextType } from '../enums/auth-context-type.enum.ts'
+import { IAuthContext } from '../ports/auth-context.interface.ts'
 
 export class AuthorizationService implements IAuthorizationService {
-    isAdmin(user: User | null): boolean {
-        return !!user?.isAdmin
+    private _authContext: IAuthContext | null = null
+    
+    get authContext(): IAuthContext {
+        if (!this._authContext) {
+            throw new Error('Authentication context not set')
+        }
+        return this._authContext
     }
 
-    isSuperAdmin(user: User | null): boolean {
-        return !!user?.isSuperAdmin
+    setAuthContext(context: IAuthContext | null) {
+        this._authContext = context
     }
 
-    hasAdminAccess(user: User | null): boolean {
-        return !!user?.isAdmin || !!user?.isSuperAdmin
+    isAuthenticated(): boolean {
+        return this._authContext !== null
+    }
+
+    isUserContext(): boolean {
+        return this._authContext?.type === AuthContextType.UserSession
+    }
+  
+    currentUser(): User | null {
+        return this._authContext?.type === AuthContextType.UserSession
+            ? this._authContext.user 
+            : null
+    }
+
+    isAdmin(): boolean {
+        if (!this._authContext) return false
+        
+        return this._authContext.type === AuthContextType.AdminApiKey || (this._authContext.type === AuthContextType.UserSession && !!this._authContext.user.isAdmin)
+    }
+
+    isSuperAdmin(): boolean {
+        if (!this._authContext) return false
+
+        if(this._authContext.type === AuthContextType.UserSession) {
+            return !!this._authContext.user.isSuperAdmin
+        }
+
+        return false
+    }
+
+    hasAdminAccess(): boolean {
+        if (!this._authContext) return false
+
+        return this.isAdmin() || this.isSuperAdmin()
     }
 
     hasAdminPermission(
-        userPermissions: AdminPermissionName[] | null,
+        actorPermissions: AdminPermissionName[] | null,
         requiredPermissions: AdminPermissionName | AdminPermissionName[]
     ): boolean {
-        if (!userPermissions) return false
+        if (!actorPermissions) return false
     
         const required = Array.isArray(requiredPermissions)
             ? requiredPermissions
             : [requiredPermissions]
 
-        return required.some(perm => userPermissions.includes(perm))
+        return required.some(perm => actorPermissions.includes(perm))
     }
 }
