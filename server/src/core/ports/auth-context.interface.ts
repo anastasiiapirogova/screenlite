@@ -23,4 +23,4 @@ export type IAdminApiKeyAuthContext = {
     adminPermissions: AdminPermission[] | null
 }
 
-export type IAuthContext = IUserSessionAuthContext | IWorkspaceApiKeyAuthContext | IAdminApiKeyAuthContext
+export type IAuthContext = ISystemAuthContext | IUserSessionAuthContext | IWorkspaceApiKeyAuthContext | IAdminApiKeyAuthContext
