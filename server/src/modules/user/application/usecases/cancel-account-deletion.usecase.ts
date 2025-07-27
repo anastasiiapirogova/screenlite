@@ -1,7 +1,6 @@
 import { ValidationError } from '@/core/errors/validation.error.ts'
 import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
 import { CancelAccountDeletionDTO } from '../dto/cancel-account-deletion.dto.ts'
-import { AuthorizationError } from '@/core/errors/authorization.error.ts'
 
 export class CancelAccountDeletionUsecase {
     constructor(
@@ -9,13 +8,9 @@ export class CancelAccountDeletionUsecase {
     ) {}
 
     async execute(dto: CancelAccountDeletionDTO): Promise<void> {
-        const { userId, requester } = dto
+        const { userId } = dto
 
-        if (userId !== requester.id) {
-            throw new AuthorizationError({
-                userId: ['NOT_AUTHORIZED_TO_CANCEL_THIS_ACCOUNT_DELETION']
-            })
-        }
+        // TODO: Check if the requester has the permission to cancel account deletion
 
         const user = await this.userRepository.findById(userId)
 

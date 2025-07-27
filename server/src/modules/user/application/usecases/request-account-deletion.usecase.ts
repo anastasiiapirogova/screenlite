@@ -2,7 +2,6 @@ import { ValidationError } from '@/core/errors/validation.error.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
 import { RequestAccountDeletionDTO } from '../dto/request-account-deletion.dto.ts'
-import { AuthorizationError } from '@/core/errors/authorization.error.ts'
 
 export class RequestAccountDeletionUsecase {
     constructor(
@@ -11,13 +10,9 @@ export class RequestAccountDeletionUsecase {
     ) {}
 
     async execute(dto: RequestAccountDeletionDTO): Promise<void> {
-        const { userId, requester, currentSessionTokenHash } = dto
+        const { userId, currentSessionTokenHash } = dto
 
-        if (userId !== requester.id) {
-            throw new AuthorizationError({
-                userId: ['NOT_AUTHORIZED_TO_REQUEST_THIS_ACCOUNT_DELETION']
-            })
-        }
+        // TODO: Check if the requester has the permission to request account deletion
 
         const user = await this.userRepository.findById(userId)
 
