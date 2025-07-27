@@ -5,9 +5,9 @@ import { RequestEmailChangeUseCase } from '../../application/usecases/request-em
 import { PrismaEmailVerificationTokenRepository } from '../repositories/prisma-email-verification-token.repository.ts'
 import { EmailVerificationTokenFactory } from '../../domain/services/email-verification-token.factory.ts'
 import { TokenGenerator } from '@/shared/infrastructure/services/token-generator.service.ts'
-import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.ts'
 import { RequestEmailChangeSchema } from '../schemas/request-email-change.schema.ts'
+import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 
 export async function requestEmailChangeRoute(fastify: FastifyInstance) {
     fastify.withTypeProvider<ZodTypeProvider>().post('/request-email-change', {

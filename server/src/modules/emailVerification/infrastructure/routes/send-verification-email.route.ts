@@ -5,8 +5,8 @@ import { SendVerificationEmailUseCase } from '../../application/usecases/send-ve
 import { PrismaEmailVerificationTokenRepository } from '../repositories/prisma-email-verification-token.repository.ts'
 import { EmailVerificationTokenFactory } from '../../domain/services/email-verification-token.factory.ts'
 import { TokenGenerator } from '@/shared/infrastructure/services/token-generator.service.ts'
-import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { SendVerificationEmailSchema } from '../schemas/send-verification-email.schema.ts'
+import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 
 export async function sendVerificationEmailRoute(fastify: FastifyInstance) {
     fastify.withTypeProvider<ZodTypeProvider>().post('/send-verification-email', {

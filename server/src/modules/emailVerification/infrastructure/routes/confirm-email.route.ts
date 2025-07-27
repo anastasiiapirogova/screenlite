@@ -3,9 +3,9 @@ import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { ConfirmEmailUseCase } from '../../application/usecases/confirm-email.usecase.ts'
 import { PrismaEmailVerificationTokenRepository } from '../repositories/prisma-email-verification-token.repository.ts'
-import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.ts'
 import { ConfirmEmailSchema } from '../schemas/confirm-email.schema.ts'
+import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 
 export async function confirmEmailRoute(fastify: FastifyInstance) {
     fastify.withTypeProvider<ZodTypeProvider>().post('/confirm-email', {
