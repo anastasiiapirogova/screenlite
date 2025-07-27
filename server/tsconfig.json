@@ -18,10 +18,11 @@
 			],
 		},
 	},
+	"exclude": ["oldsrc", "tests"],
 	"watchOptions": {
 		"excludeDirectories": [
 			"**/node_modules",
-			"dist"
+			"dist",
 		]
 	},
 }
