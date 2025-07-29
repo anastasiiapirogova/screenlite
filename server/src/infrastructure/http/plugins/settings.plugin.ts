@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
 import { PrismaSettingRepository } from '@/modules/setting/infrastructure/repositories/prisma-setting.repository.ts'
-import { ISettingRepository } from '@/modules/setting/domain/setting.repository.ts'
+import { ISettingRepository } from '@/modules/setting/domain/setting-repository.interface.ts'
 import { MailGroup } from '@/modules/setting/domain/groups/mail.group.ts'
 import { SMTPGroup } from '@/modules/setting/domain/groups/smtp.group.ts'
 import { SettingsService } from '@/modules/setting/infrastructure/services/settings.service.ts'

@@ -3,7 +3,8 @@ import healthRoutes from '@/modules/health/infrastructure/routes/health.routes.t
 import settingRoutes from '@/modules/setting/infrastructure/routes/setting.routes.ts'
 import authRoutes from '@/modules/auth/infrastructure/routes/auth.routes.ts'
 import userRoutes from '@/modules/user/infrastructure/routes/user.routes.ts'
-import emailVerificationRoutes from '@/modules/emailVerification/infrastructure/routes/email-verification.routes.ts'
+import emailVerificationRoutes from '@/modules/email-verification/infrastructure/routes/email-verification.routes.ts'
+import adminPermissionRoutes from '@/modules/admin-permission/infrastructure/routes/admin-permission.routes.ts'
 
 export async function registerRoutes(fastify: FastifyInstance) {
     fastify.register(healthRoutes, { prefix: '/api/health' })
@@ -16,5 +17,6 @@ export async function registerRoutes(fastify: FastifyInstance) {
         fastifyAdmin.addHook('onRequest', fastify.requireAdminAccess)
     
         fastifyAdmin.register(settingRoutes, { prefix: '/settings' })
+        fastifyAdmin.register(adminPermissionRoutes, { prefix: '/permissions' })
     }, { prefix: '/api/admin' })
 }

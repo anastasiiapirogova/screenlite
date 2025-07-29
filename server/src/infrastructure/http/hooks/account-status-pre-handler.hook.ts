@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
 import { AuthorizationError } from '@/core/errors/authorization.error.ts'
-import { AuthorizationService } from '@/core/authorization/authorization.service.ts'
+import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
 
 declare module 'fastify' {
     interface FastifyContextConfig {
@@ -17,13 +17,11 @@ const accountStatusPreHandlerHook: FastifyPluginAsync = async (fastify) => {
             return
         }
 
-        const authService = new AuthorizationService()
-
-        authService.setAuthContext(request.auth)
-
         if (config.requireActiveUser) {
-            if(authService.isUserContext()) {
-                const isActive = authService.currentUser()?.isActive
+            if(request.auth?.isUserContext()) {
+                const authContext = request.auth as UserSessionAuthContext
+
+                const isActive = authContext.user.isActive
 
                 if (!isActive) {
                     throw new AuthorizationError({

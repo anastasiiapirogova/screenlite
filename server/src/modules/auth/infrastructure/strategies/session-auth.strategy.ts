@@ -1,10 +1,11 @@
-import { IAuthContext } from '@/core/ports/auth-context.interface.ts'
 import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
 import { IAuthStrategy } from '@/core/ports/auth-strategy.interface.ts'
 import { IHasher } from '@/core/ports/hasher.interface.ts'
 import { ISessionRepository } from '@/core/ports/session-repository.interface.ts'
 import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
 import { ValidateSessionUseCase } from '@/modules/session/application/usecases/validate-session.usecase.ts'
+import { AuthContext } from '@/core/context/auth-context.abstract.ts'
+import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
 
 export type SessionAuthDeps = {
     sessionRepo: ISessionRepository
@@ -27,7 +28,7 @@ export class SessionAuthStrategy implements IAuthStrategy {
         return tokenType === AuthContextType.UserSession
     }
 
-    async authenticate(token: string): Promise<IAuthContext | null> {
+    async authenticate(token: string): Promise<AuthContext | null> {
         const validateSession = new ValidateSessionUseCase({
             sessionRepo: this.sessionRepo,
             userRepo: this.userRepo,
@@ -37,12 +38,7 @@ export class SessionAuthStrategy implements IAuthStrategy {
         try {
             const { user, session } = await validateSession.execute(token)
 
-            return {
-                type: AuthContextType.UserSession,
-                user,
-                session,
-                adminPermissions: null
-            }
+            return new UserSessionAuthContext(user, session)
         } catch {
             return null
         }

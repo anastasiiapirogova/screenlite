@@ -3,14 +3,18 @@ import { FastifyPluginAsync } from 'fastify'
 import { PrismaSessionRepository } from '@/modules/session/infrastructure/repositories/prisma-session.repository.ts'
 import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
 import { BearerTokenParser } from '@/modules/auth/domain/services/bearer-token.parser.ts'
-import { IAuthContext } from '@/core/ports/auth-context.interface.ts'
 import { SessionAuthStrategy } from '@/modules/auth/infrastructure/strategies/session-auth.strategy.ts'
 import { IAuthStrategy } from '@/core/ports/auth-strategy.interface.ts'
 import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
+import { AuthContext } from '@/core/context/auth-context.abstract.ts'
+import { AdminApiKeyAuthContext } from '@/core/context/admin-api-key-auth.context.ts'
+import { SystemAuthContext } from '@/core/context/system-auth.context.ts'
+import { WorkspaceApiKeyAuthContext } from '@/core/context/workspace-api-key-auth.context.ts'
+import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
 
 declare module 'fastify' {
     interface FastifyRequest {
-        auth: IAuthContext | null
+        auth: AuthContext | AdminApiKeyAuthContext | SystemAuthContext | WorkspaceApiKeyAuthContext | UserSessionAuthContext | null
     }
 }
 
