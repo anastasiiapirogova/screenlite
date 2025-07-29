@@ -1,7 +1,7 @@
-import { IAuthContext } from '@/core/ports/auth-context.interface.ts'
+import { AuthContext } from '@/core/context/auth-context.abstract.ts'
 
 export type RequestAccountDeletionDTO = {
     userId: string
-    requester: IAuthContext
+    requester: AuthContext
     currentSessionTokenHash?: string
 }

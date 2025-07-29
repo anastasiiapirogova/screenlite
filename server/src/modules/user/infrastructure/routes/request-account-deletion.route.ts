@@ -5,7 +5,7 @@ import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories
 import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.ts'
 import { RequestAccountDeletionDTO } from '@/modules/user/application/dto/request-account-deletion.dto.ts'
 import z from 'zod'
-import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
+import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
 
 export const requestAccountDeletionRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post(
@@ -25,8 +25,8 @@ export const requestAccountDeletionRoute = async (fastify: FastifyInstance) => {
             const userId = request.params.userId
             let sessionTokenHash = undefined
 
-            if(request.auth?.type === AuthContextType.UserSession) {
-                const session = request.auth.session
+            if(request.auth?.isUserContext()) {
+                const session = (request.auth as UserSessionAuthContext).session
 
                 sessionTokenHash = session.tokenHash
             }
