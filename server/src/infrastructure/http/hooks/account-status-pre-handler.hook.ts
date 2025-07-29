@@ -1,6 +1,5 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
-import { AuthorizationError } from '@/core/errors/authorization.error.ts'
 import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
 
 declare module 'fastify' {
@@ -24,9 +23,7 @@ const accountStatusPreHandlerHook: FastifyPluginAsync = async (fastify) => {
                 const isActive = authContext.user.isActive
 
                 if (!isActive) {
-                    throw new AuthorizationError({
-                        user: ['YOUR_ACCOUNT_IS_NOT_ACTIVE']
-                    })
+                    throw fastify.httpErrors.forbidden('YOUR_ACCOUNT_IS_NOT_ACTIVE')
                 }
             }
         }
