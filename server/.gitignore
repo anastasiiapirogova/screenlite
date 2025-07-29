@@ -10,3 +10,4 @@ tmp
 /src/generated/prisma
 /storage
 /logs
+/oldsrc

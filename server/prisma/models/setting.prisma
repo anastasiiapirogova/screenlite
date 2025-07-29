@@ -1,0 +1,14 @@
+model Setting {
+    id          String   @id @default(uuid())
+    key         String
+    value       String
+    type        String   @default("string")
+    category    String
+    isEncrypted Boolean  @default(false)
+    updatedAt   DateTime @updatedAt
+
+    @@unique([key, category])
+    @@index([key])
+    @@index([category])
+    @@index([type])
+}

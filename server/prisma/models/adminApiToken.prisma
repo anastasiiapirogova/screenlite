@@ -1,0 +1,12 @@
+model AdminApiToken {
+    id        String    @id @default(uuid())
+    token     String    @unique
+    name      String
+    userId    String
+    revokedAt DateTime?
+    createdAt DateTime  @default(now())
+
+    user User @relation(fields: [userId], references: [id])
+
+    @@index([userId])
+}

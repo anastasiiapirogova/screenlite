@@ -1,10 +1,10 @@
-import { initPrisma, prisma } from '@/config/prisma.ts'
 import { afterAll, beforeAll } from 'vitest'
+import { services } from 'oldsrc/services/index.ts'
 
 beforeAll(async () => {
-    await initPrisma()
+    await services.prisma.connect()
 })
 
 afterAll(() => {
-    prisma.$disconnect()
+    services.prisma.disconnect()
 })
