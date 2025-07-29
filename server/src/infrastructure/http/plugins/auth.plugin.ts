@@ -6,15 +6,13 @@ import { BearerTokenParser } from '@/modules/auth/domain/services/bearer-token.p
 import { SessionAuthStrategy } from '@/modules/auth/infrastructure/strategies/session-auth.strategy.ts'
 import { IAuthStrategy } from '@/core/ports/auth-strategy.interface.ts'
 import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
-import { AuthContext } from '@/core/context/auth-context.abstract.ts'
-import { AdminApiKeyAuthContext } from '@/core/context/admin-api-key-auth.context.ts'
-import { SystemAuthContext } from '@/core/context/system-auth.context.ts'
-import { WorkspaceApiKeyAuthContext } from '@/core/context/workspace-api-key-auth.context.ts'
-import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
+import { AuthContext } from '@/core/types/auth-context.type.ts'
+import { GuestAuthContext } from '@/core/context/guest-auth.context.ts'
 
 declare module 'fastify' {
     interface FastifyRequest {
-        auth: AuthContext | AdminApiKeyAuthContext | SystemAuthContext | WorkspaceApiKeyAuthContext | UserSessionAuthContext | null
+        auth: AuthContext
+        _auth?: AuthContext
     }
 }
 
@@ -27,7 +25,17 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
         new SessionAuthStrategy({ sessionRepo, userRepo, hasher }),
     ]
 
-    fastify.decorateRequest('auth', null)
+    fastify.decorateRequest('auth', {
+        getter() {
+            if (!this._auth) {
+                this._auth = new GuestAuthContext()
+            }
+            return this._auth
+        },
+        setter(value: AuthContext) {
+            this._auth = value
+        }
+    })
 
     fastify.addHook('onRequest', async (request) => {
         const authHeader = request.headers.authorization
