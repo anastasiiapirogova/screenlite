@@ -13,7 +13,6 @@ export async function registerRoutes(fastify: FastifyInstance) {
     fastify.register(emailVerificationRoutes, { prefix: '/api/email-verification' })
 
     fastify.register(async function adminRoutes(fastifyAdmin) {
-        fastifyAdmin.addHook('onRequest', fastify.requireAuth)
         fastifyAdmin.addHook('onRequest', fastify.requireAdminAccess)
     
         fastifyAdmin.register(settingRoutes, { prefix: '/settings' })
