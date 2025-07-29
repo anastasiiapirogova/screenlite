@@ -1,4 +1,4 @@
-import { AuthContext } from '../context/auth-context.abstract.ts'
+import { AuthContext } from '../types/auth-context.type.ts'
 
 export interface IAuthStrategy {
     supports(tokenType: string): boolean
