@@ -14,14 +14,13 @@ export const cancelAccountDeletionRoute = async (fastify: FastifyInstance) => {
                     userId: z.uuid()
                 })
             },
-            onRequest: [fastify.requireAuth],
         },
         async (request, reply) => {
             const userId = request.params.userId
 
             const dto: CancelAccountDeletionDTO = {
                 userId,
-                requester: request.auth!,
+                authContext: request.auth,
             }
 
             const cancelDeletion = new CancelAccountDeletionUsecase(

@@ -2,6 +2,8 @@ import { ValidationError } from '@/core/errors/validation.error.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
 import { RequestAccountDeletionDTO } from '../dto/request-account-deletion.dto.ts'
+import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
+import { UserPolicy } from '../../domain/policies/user.policy.ts'
 
 export class RequestAccountDeletionUsecase {
     constructor(
@@ -10,9 +12,7 @@ export class RequestAccountDeletionUsecase {
     ) {}
 
     async execute(dto: RequestAccountDeletionDTO): Promise<void> {
-        const { userId, currentSessionTokenHash } = dto
-
-        // TODO: Check if the requester has the permission to request account deletion
+        const { userId, authContext } = dto
 
         const user = await this.userRepository.findById(userId)
 
@@ -21,6 +21,10 @@ export class RequestAccountDeletionUsecase {
                 userId: ['USER_NOT_FOUND']
             })
         }
+
+        const userPolicy = new UserPolicy(user, authContext)
+
+        userPolicy.enforceCanRequestDeleteAccount()
 
         if (user.isDeletionRequested) {
             throw new ValidationError({
@@ -33,8 +37,10 @@ export class RequestAccountDeletionUsecase {
         await this.unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
 
-            if (currentSessionTokenHash) {
-                await repos.sessionRepository.terminateAllExcept(userId, currentSessionTokenHash)
+            if(authContext.isUserContext() && (authContext as UserSessionAuthContext).user.id === userId) {
+                const session = (authContext as UserSessionAuthContext).session
+
+                await repos.sessionRepository.terminateAllExcept(userId, session.tokenHash)
             } else {
                 await repos.sessionRepository.terminateAll(userId)
             }
