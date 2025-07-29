@@ -14,7 +14,6 @@ export async function requestEmailChangeRoute(fastify: FastifyInstance) {
         schema: {
             body: RequestEmailChangeSchema
         },
-        onRequest: [fastify.requireAuth],
     }, async (request, reply) => {
         const { userId, newEmail } = request.body
 

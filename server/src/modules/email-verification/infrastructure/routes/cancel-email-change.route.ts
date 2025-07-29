@@ -10,7 +10,6 @@ export async function cancelEmailChangeRoute(fastify: FastifyInstance) {
         schema: {
             body: CancelEmailChangeSchema
         },
-        onRequest: [fastify.requireAuth],
     }, async (request, reply) => {
         const { userId } = request.body
 

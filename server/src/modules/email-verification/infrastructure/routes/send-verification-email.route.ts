@@ -13,7 +13,6 @@ export async function sendVerificationEmailRoute(fastify: FastifyInstance) {
         schema: {
             body: SendVerificationEmailSchema
         },
-        onRequest: [fastify.requireAuth],
     }, async (request, reply) => {
         const { userId } = request.body
 

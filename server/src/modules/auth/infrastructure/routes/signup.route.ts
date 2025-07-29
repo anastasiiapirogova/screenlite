@@ -16,6 +16,9 @@ export const signupRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/signup', {
         schema: {
             body: signupSchema,
+        },
+        config: {
+            allowGuest: true,
         }
     }, async (request, reply) => {
         const requestAdapter = new FastifyRequestAdapter(request)

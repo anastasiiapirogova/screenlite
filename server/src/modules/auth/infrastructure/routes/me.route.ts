@@ -4,9 +4,7 @@ import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 export const meRoute = async (fastify: FastifyInstance) => {
-    fastify.withTypeProvider<ZodTypeProvider>().get('/me', {
-        preHandler: [fastify.requireAuth]
-    }, async (request, reply) => {
+    fastify.withTypeProvider<ZodTypeProvider>().get('/me', {}, async (request, reply) => {
         const userMapper = new UserMapper()
 
         const user = request.auth?.isUserContext() ? userMapper.toPublicDTO((request.auth as UserSessionAuthContext).user) : null
