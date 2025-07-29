@@ -17,4 +17,8 @@ export const SYSTEM_ADMIN_PERMISSIONS = [
         name: AdminPermissionName.USERS_DELETE,
         description: 'Delete users',
     },
+    {
+        name: AdminPermissionName.USERS_MANAGE_ADMIN_PERMISSIONS,
+        description: 'Manage user admin permissions',
+    },
 ] as const
