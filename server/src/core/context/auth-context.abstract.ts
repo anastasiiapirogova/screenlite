@@ -1,23 +1,22 @@
 import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
 import { AdminPermissionName } from '../enums/admin-permission-name.enum.ts'
 
-export abstract class AuthContext {
+export abstract class AuthContextAbstract {
     constructor(public readonly type: AuthContextType) {}
   
     protected _adminPermissions: AdminPermissionName[] = []
 
-    setAdminPermissions(permissions: AdminPermissionName[]): this {
-        this._adminPermissions = permissions
-        return this
-    }
+    abstract hasAdminAccess(): boolean
 
-    abstract getAdminPermissions(): AdminPermissionName[];
+    abstract getAdminPermissions(): AdminPermissionName[]
+
+    setAdminPermissions(permissions: AdminPermissionName[]): void {
+        this._adminPermissions = permissions
+    }
   
     hasAdminPermission(permission: AdminPermissionName): boolean {
         return this.getAdminPermissions().includes(permission)
     }
-
-    abstract hasAdminAccess(): boolean
 
     isUserContext(): boolean {
         return this.type === AuthContextType.UserSession
@@ -33,5 +32,9 @@ export abstract class AuthContext {
 
     isSystemContext(): boolean {
         return this.type === AuthContextType.System
+    }
+
+    isGuestContext(): boolean {
+        return this.type === AuthContextType.Guest
     }
 }

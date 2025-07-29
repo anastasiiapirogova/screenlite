@@ -1,9 +1,9 @@
-import { AuthContext } from '@/core/context/auth-context.abstract.ts'
+import { AuthContextAbstract } from '@/core/context/auth-context.abstract.ts'
 import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
 import { SYSTEM_ADMIN_PERMISSIONS } from '@/modules/admin-permission/domain/definitions/admin-permission.definitions.ts'
 import { AdminPermissionName } from '../enums/admin-permission-name.enum.ts'
 
-export class SystemAuthContext extends AuthContext {
+export class SystemAuthContext extends AuthContextAbstract {
     constructor() {
         super(AuthContextType.System)
     }

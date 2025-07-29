@@ -1,8 +1,8 @@
-import { AuthContext } from '@/core/context/auth-context.abstract.ts'
+import { AuthContextAbstract } from '@/core/context/auth-context.abstract.ts'
 import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
 import { AdminPermissionName } from '../enums/admin-permission-name.enum.ts'
 
-export class AdminApiKeyAuthContext extends AuthContext {
+export class AdminApiKeyAuthContext extends AuthContextAbstract {
     constructor() {
         super(AuthContextType.AdminApiKey)
     }
