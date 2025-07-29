@@ -2,7 +2,11 @@ import { FastifyInstance } from 'fastify'
 
 // Prefix: /api/health
 const healthRoutes = async (app: FastifyInstance) => {
-    app.get('/', async () => {
+    app.get('/', {
+        config: {
+            allowGuest: true
+        }
+    }, async () => {
         return {
             status: 'ok',
             timestamp: new Date().toISOString(),
