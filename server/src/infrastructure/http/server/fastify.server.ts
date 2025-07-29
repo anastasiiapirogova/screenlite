@@ -39,10 +39,6 @@ export class FastifyServer {
         this.app.setSerializerCompiler(serializerCompiler)
     }
 
-    private async registerHooks() {
-        await this.app.register(hooks.accountStatusPreHandler)
-    }
-
     private async registerPlugins() {
         await this.app.register(sensible)
         await this.app.register(formBody)
@@ -59,11 +55,15 @@ export class FastifyServer {
         await this.app.register(plugins.settings)
         await this.app.register(plugins.mail)
         await this.app.register(plugins.auth)
-        await this.app.register(plugins.requireAuth)
         await this.app.register(plugins.errorHandler)
         await this.app.register(plugins.websocket)
         await this.app.register(plugins.adminPermissions)
         await this.app.register(plugins.adminAccess)
+    }
+
+    private async registerHooks() {
+        await this.app.register(hooks.accountStatusPreHandler)
+        await this.app.register(hooks.authCheck)
     }
 
     get instance(): FastifyInstance {
