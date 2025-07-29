@@ -1,4 +1,4 @@
-import { ISettingRepository } from '../../domain/setting.repository.ts'
+import { ISettingRepository } from '../../domain/setting-repository.interface.ts'
 import { SettingGroup } from '../../domain/setting-group.abstract.ts'
 import { SettingGroupTypes } from '../../domain/types/settings.type.ts'
 

@@ -1,4 +1,4 @@
-import { ISettingRepository } from '../../domain/setting.repository.ts'
+import { ISettingRepository } from '../../domain/setting-repository.interface.ts'
 import { PrismaClient } from '@/generated/prisma/client.ts'
 import { Setting } from '@/core/entities/setting.entity.ts'
 
