@@ -1,4 +1,4 @@
-import { AuthorizationError } from '@/core/errors/authorization.error.ts'
+import { ForbiddenError } from '@/core/errors/forbidden.error.ts'
 import { ValidationError } from '@/core/errors/validation.error.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
 import { FastifyPluginAsync } from 'fastify'
@@ -54,14 +54,16 @@ const errorHandler: FastifyPluginAsync = async (fastify) => {
             return
         }
 
-        if (error instanceof AuthorizationError) {
+        if (error instanceof ForbiddenError) {
             reply.code(403).send({
                 statusCode: 403,
                 error: 'Forbidden',
-                code: 'FST_ERR_AUTHORIZATION',
-                message: 'Authorization error',
+                code: 'FST_ERR_FORBIDDEN',
+                message: 'Forbidden error',
                 errors: error.details,
             })
+
+            return
         }
 
         reply.send(error)
