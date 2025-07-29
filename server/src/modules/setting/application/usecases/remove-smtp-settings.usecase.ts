@@ -1,4 +1,4 @@
-import { ISettingRepository } from '../../domain/setting.repository.ts'
+import { ISettingRepository } from '../../domain/setting-repository.interface.ts'
 import { SMTPGroup } from '../../domain/groups/smtp.group.ts'
 
 export class RemoveSMTPSettingsUsecase {

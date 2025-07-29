@@ -1,5 +1,5 @@
 import { SMTPSettings } from '@/shared/types/smtp-settings.type.ts'
-import { ISettingRepository } from '../../domain/setting.repository.ts'
+import { ISettingRepository } from '../../domain/setting-repository.interface.ts'
 import { SMTPGroup } from '../../domain/groups/smtp.group.ts'
 import { SafeDTO } from '@/shared/types/safe-dto.type.ts'
 
