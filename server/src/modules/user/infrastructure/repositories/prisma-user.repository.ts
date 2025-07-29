@@ -3,6 +3,9 @@ import { Prisma, User as PrismaUser } from '@/generated/prisma/client.ts'
 import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
 import { PrismaClient } from '@/generated/prisma/client.ts'
 import { PrismaRepositoryUserMapper } from '@/core/mapper/prisma-repository-user.mapper.ts'
+import { UserQueryOptions } from '@/core/types/user-query-options.type.ts'
+import { Paginator } from '@/shared/utils/pagination.util.ts'
+import { PaginationResponse } from '@/core/types/pagination.types.ts'
 
 export class PrismaUserRepository implements IUserRepository {
     constructor(
@@ -55,5 +58,36 @@ export class PrismaUserRepository implements IUserRepository {
 
     private toPersistence(user: User): Omit<PrismaUser, 'createdAt' | 'updatedAt'> {
         return PrismaRepositoryUserMapper.toPersistence(user)
+    }
+
+    async findAll(queryOptions?: UserQueryOptions): Promise<PaginationResponse<User>> {
+        const where: Prisma.UserWhereInput = {
+            ...(queryOptions?.filters?.email && {
+                email: {
+                    equals: queryOptions.filters.email,
+                    mode: 'insensitive',
+                },
+            }),
+            ...(queryOptions?.filters?.roles && {
+                role: {
+                    in: queryOptions.filters.roles,
+                },
+            }),
+        }
+
+        const findManyFn = (skip: number, take: number) => this.prisma.user.findMany({ where, skip, take })
+        
+        const countFn = () => this.prisma.user.count({ where })
+
+        const result = await Paginator.paginate(
+            findManyFn,
+            countFn,
+            queryOptions?.pagination
+        )
+
+        return {
+            items: result.items.map(this.toDomain),
+            meta: result.meta,
+        }
     }
 }
