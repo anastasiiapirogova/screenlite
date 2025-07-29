@@ -1,33 +1,14 @@
 import { IAdminPermissionRepository } from '@/core/ports/admin-permission-repository.interface.ts'
-import { AdminPermissionFactory } from './admin-permission.factory.ts'
-import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
+import { AdminPermissionFactory } from '@/modules/admin-permission/domain/services/admin-permission.factory.ts'
+import { SYSTEM_ADMIN_PERMISSIONS } from '@/modules/admin-permission/domain/definitions/admin-permission.definitions.ts'
 
-export class AdminPermissionDefinitionService {
-    private readonly systemPermissions = [
-        { 
-            name: AdminPermissionName.SETTINGS, 
-            description: 'View and edit global settings', 
-        },
-        {
-            name: AdminPermissionName.USERS_VIEW,
-            description: 'View users',
-        },
-        {
-            name: AdminPermissionName.USERS_EDIT,
-            description: 'Edit users',
-        },
-        {
-            name: AdminPermissionName.USERS_DELETE,
-            description: 'Delete users',
-        },
-    ]
-
+export class SyncAdminPermissionsUseCase {
     constructor(
         private readonly permissionRepo: IAdminPermissionRepository,
     ) {}
 
-    async syncPermissions(): Promise<void> {
-        for (const permission of this.systemPermissions) {
+    async execute(): Promise<void> {
+        for (const permission of SYSTEM_ADMIN_PERMISSIONS) {
             const existingPermission = await this.permissionRepo.findByName(permission.name)
 
             if (!existingPermission) {
@@ -36,14 +17,12 @@ export class AdminPermissionDefinitionService {
                 await this.permissionRepo.upsert(newPermission)
             } else {
                 existingPermission.setDescription(permission.description)
-
                 await this.permissionRepo.upsert(existingPermission)
             }
         }
 
         const allPermissions = await this.permissionRepo.findAll()
-
-        const systemNames = new Set(this.systemPermissions.map(p => p.name))
+        const systemNames = new Set(SYSTEM_ADMIN_PERMISSIONS.map(p => p.name))
 
         for (const permission of allPermissions) {
             if (!systemNames.has(permission.name)) {
