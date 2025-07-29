@@ -4,7 +4,10 @@ import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 import { SetUserAdminPermissionsUseCase } from '@/modules/admin-permission/application/usecases/set-user-admin-permissions.usecase.ts'
 import { PrismaUserAdminPermissionRepository } from '@/modules/admin-permission/infrastructure/repositories/prisma-user-admin-permission.repository.ts'
 import z from 'zod'
+import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.ts'
+import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
 
+// Prefix: /api/admin/permissions
 export const setAdminPermissionsRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().put('/users/:userId', {
         schema: {
@@ -19,11 +22,15 @@ export const setAdminPermissionsRoute = async (fastify: FastifyInstance) => {
         const { userId } = request.params
         const { permissions } = request.body
 
+        const authContext = request.auth!
+
         const setPermissions = new SetUserAdminPermissionsUseCase(
-            new PrismaUserAdminPermissionRepository(fastify.prisma)
+            new PrismaUserAdminPermissionRepository(fastify.prisma),
+            new PrismaUserRepository(fastify.prisma),
+            new PrismaUnitOfWork(fastify.prisma)
         )
 
-        const result = await setPermissions.execute(userId, permissions)
+        const result = await setPermissions.execute(authContext, userId, permissions)
 
         return reply.status(200).send({
             userId: result.userId,
