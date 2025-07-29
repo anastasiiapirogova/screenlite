@@ -5,6 +5,7 @@ import { PrismaSettingRepository } from '@/modules/setting/infrastructure/reposi
 import { SMTPGroup } from '@/modules/setting/domain/groups/smtp.group.ts'
 import { UpdateSMTPSettingsSchema } from '@/modules/setting/infrastructure/schemas/update-smtp.schema.ts'
 
+// Prefix: /api/admin/settings
 export const updateSMTPSettingsRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().patch('/smtp', {
         schema: {

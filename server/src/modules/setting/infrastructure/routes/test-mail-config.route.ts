@@ -3,6 +3,7 @@ import { TestMailConfigUsecase } from '../../application/usecases/test-mail-conf
 import { TestMailConfigSchema } from '../schemas/test-mail-config.schema.ts'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 
+// Prefix: /api/admin/settings
 export const testMailConfigRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/mail/test-config', {
         schema: {

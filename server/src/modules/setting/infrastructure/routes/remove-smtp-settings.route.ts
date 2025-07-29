@@ -3,8 +3,9 @@ import { PrismaSettingRepository } from '../repositories/prisma-setting.reposito
 import { FastifyInstance } from 'fastify'
 import { SMTPGroup } from '../../domain/groups/smtp.group.ts'
 
+// Prefix: /api/admin/settings
 export const removeSMTPSettingsRoute = async (fastify: FastifyInstance) => {
-    fastify.delete('/smtp', async (request, reply) => {
+    fastify.delete('/smtp', async (_request, reply) => {
         const settingRepository = new PrismaSettingRepository(fastify.prisma)
 
         const smtpGroup = new SMTPGroup(fastify.encryption)
