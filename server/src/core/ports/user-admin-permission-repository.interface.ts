@@ -7,9 +7,9 @@ export type IUserAdminPermissionRepository = {
         permissionNames: AdminPermissionName[]
     ): Promise<void>
   
-    revokePermissionFromUser(
+    revokePermissionsFromUser(
         userId: string, 
-        permissionName: AdminPermissionName
+        permissionNames: AdminPermissionName[]
     ): Promise<void>
   
     getUserPermissions(userId: string): Promise<AdminPermissionName[]>

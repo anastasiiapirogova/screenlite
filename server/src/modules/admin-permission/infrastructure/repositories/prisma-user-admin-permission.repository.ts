@@ -17,17 +17,13 @@ export class PrismaUserAdminPermissionRepository implements IUserAdminPermission
         })
     }
 
-    async revokePermissionFromUser(userId: string, permissionName: AdminPermissionName): Promise<void> {
-        const permission = await this.prisma.adminPermission.findUnique({
-            where: { name: permissionName },
+    async revokePermissionsFromUser(userId: string, permissionNames: AdminPermissionName[]): Promise<void> {
+        const permissions = await this.prisma.adminPermission.findMany({
+            where: { name: { in: permissionNames } },
         })
 
-        if (!permission) {
-            return
-        }
-
-        await this.prisma.userAdminPermission.delete({
-            where: { userId_permissionId: { userId, permissionId: permission.id } },
+        await this.prisma.userAdminPermission.deleteMany({
+            where: { userId, permissionId: { in: permissions.map((permission) => permission.id) } },
         })
     }
 
