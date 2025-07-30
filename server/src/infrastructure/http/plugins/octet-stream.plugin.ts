@@ -11,8 +11,10 @@ const octetStreamPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.addContentTypeParser(
         'application/octet-stream',
         function (request, payload, done) {
+            if (request.is404) return done(null, payload)
+
             const config = request.routeOptions?.config
-            
+
             if (!config?.acceptOctetStream) {
                 return done(fastify.httpErrors.unsupportedMediaType())
             }
