@@ -9,14 +9,13 @@ declare module 'fastify' {
 
 const authCheckHook: FastifyPluginAsync = async (fastify) => {
     fastify.addHook('onRequest', async (request) => {
-        const config = request.routeOptions?.config
+        if (request.is404) return
 
-        if (!config) {
-            return
-        }
+        const routeOptions = request.routeOptions
+        const config = routeOptions.config
 
-        if (!config.allowGuest) {
-            if(request.auth.isGuestContext()) {
+        if (config?.allowGuest !== true) {
+            if (request.auth.isGuestContext()) {
                 throw fastify.httpErrors.unauthorized()
             }
         }
