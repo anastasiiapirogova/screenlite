@@ -36,12 +36,18 @@ export class PrismaUserRepository implements IUserRepository {
 
         const where: Prisma.UserUpsertArgs['where'] = {
             id: userData.id,
+            version: userData.version,
         }
 
         await this.prisma.user.upsert({
             where,
             create: userData,
-            update: userData,
+            update: {
+                ...userData,
+                version: {
+                    increment: 1,
+                },
+            },
         })
     }
 

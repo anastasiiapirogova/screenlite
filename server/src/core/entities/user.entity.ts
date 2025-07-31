@@ -16,6 +16,7 @@ export class User {
     private _twoFactorEnabled: boolean = false
     private _deletionRequestedAt: Date | null = null
     private _deletedAt: Date | null = null
+    public readonly version: number
 
     constructor(dto: UserDTO) {
         this.id = dto.id
@@ -31,6 +32,7 @@ export class User {
         this._twoFactorEnabled = dto.twoFactorEnabled
         this._deletionRequestedAt = dto.deletionRequestedAt
         this._deletedAt = dto.deletedAt
+        this.version = dto.version
     }
 
     get isActive(): boolean {
@@ -47,6 +49,10 @@ export class User {
 
     get isSuperAdmin(): boolean {
         return this._role === UserRole.SUPER_ADMIN
+    }
+
+    get isEmailVerified(): boolean {
+        return !!this._emailVerifiedAt
     }
 
     get hasAdminAccess(): boolean {

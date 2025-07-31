@@ -19,6 +19,7 @@ export class UserMapper implements IUserMapper {
             deletionRequestedAt: entity.deletionRequestedAt,
             deletedAt: entity.deletedAt,
             role: entity.role,
+            version: entity.version,
         }
     }
 
@@ -35,6 +36,7 @@ export class UserMapper implements IUserMapper {
             twoFactorEnabled: entity.twoFactorEnabled,
             deletionRequestedAt: entity.deletionRequestedAt,
             deletedAt: entity.deletedAt,
+            version: entity.version,
         }
     }
 }

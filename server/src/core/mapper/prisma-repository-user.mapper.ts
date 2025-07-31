@@ -18,6 +18,7 @@ export class PrismaRepositoryUserMapper {
             deletionRequestedAt: prismaUser.deletionRequestedAt,
             deletedAt: prismaUser.deletedAt,
             role: prismaUser.role as UserRole,
+            version: prismaUser.version,
         })
     }
 
@@ -36,6 +37,7 @@ export class PrismaRepositoryUserMapper {
             deletionRequestedAt: user.deletionRequestedAt,
             deletedAt: user.deletedAt,
             role: user.role,
+            version: user.version,
         }
     }
 }
