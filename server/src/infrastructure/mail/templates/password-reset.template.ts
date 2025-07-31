@@ -6,8 +6,8 @@ export class PasswordResetEmailTemplate {
     }
 
     static getHtml(data: PasswordResetEmailDTO, frontendUrl: string): string {
-        const { token, email } = data
-        const resetUrl = `${frontendUrl}/reset-password?token=${token}&email=${email}`
+        const { token } = data
+        const resetUrl = `${frontendUrl}/reset-password?token=${token}`
         
         return `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -26,8 +26,8 @@ export class PasswordResetEmailTemplate {
     }
 
     static getText(data: PasswordResetEmailDTO, frontendUrl: string): string {
-        const { token, email } = data
-        const resetUrl = `${frontendUrl}/reset-password?token=${token}&email=${email}`
+        const { token } = data
+        const resetUrl = `${frontendUrl}/reset-password?token=${token}`
         
         return `
             Reset Your Password
