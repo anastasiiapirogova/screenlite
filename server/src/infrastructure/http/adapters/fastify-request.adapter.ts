@@ -7,8 +7,6 @@ export class FastifyRequestAdapter implements IRequest {
     getIP(): string {
         const ip = this.request.headers['x-real-ip'] || this.request.headers['x-forwarded-for'] || this.request.ip
 
-        console.log('ip', ip)
-
         return Array.isArray(ip) ? ip[0] : ip
     }
 
