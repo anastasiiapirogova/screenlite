@@ -9,6 +9,7 @@ export class PrismaPasswordResetTokenMapper {
                 tokenHash: prismaPasswordResetToken.tokenHash,
                 userId: prismaPasswordResetToken.userId,
                 expiresAt: prismaPasswordResetToken.expiresAt,
+                createdAt: prismaPasswordResetToken.createdAt,
             }
         )
     }

@@ -9,6 +9,7 @@ export class PasswordResetTokenMapper implements IPasswordResetTokenMapper {
             tokenHash: entity.tokenHash,
             userId: entity.userId,
             expiresAt: entity.expiresAt,
+            createdAt: entity.createdAt,
         }
     }
 }

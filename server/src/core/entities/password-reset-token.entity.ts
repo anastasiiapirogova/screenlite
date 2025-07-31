@@ -5,6 +5,7 @@ export class PasswordResetToken {
     public readonly tokenHash: string
     public readonly userId: string
     public readonly expiresAt: Date
+    public readonly createdAt: Date
 
     constructor(
         data: PasswordResetTokenDTO
@@ -13,6 +14,7 @@ export class PasswordResetToken {
         this.tokenHash = data.tokenHash
         this.userId = data.userId
         this.expiresAt = data.expiresAt
+        this.createdAt = data.createdAt
     }
 
     isExpired(): boolean {
@@ -21,5 +23,9 @@ export class PasswordResetToken {
 
     isValid(): boolean {
         return !this.isExpired()
+    }
+
+    isRecentlyRequested(cooldown: number): boolean {
+        return this.createdAt > new Date(Date.now() - cooldown)
     }
 }

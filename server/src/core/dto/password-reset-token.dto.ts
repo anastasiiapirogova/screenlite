@@ -3,4 +3,5 @@ export type PasswordResetTokenDTO = {
     tokenHash: string
     userId: string
     expiresAt: Date
+    createdAt: Date
 }
