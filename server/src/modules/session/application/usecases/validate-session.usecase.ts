@@ -19,7 +19,7 @@ export class ValidateSessionUseCase {
         const tokenHash = await hasher.hash(sessionToken)
         const session = await sessionRepo.findActiveByTokenHash(tokenHash)
 
-        if (!session || !session.isActive()) {
+        if (!session || !session.isActive) {
             throw new Error('Invalid session')
         }
 
