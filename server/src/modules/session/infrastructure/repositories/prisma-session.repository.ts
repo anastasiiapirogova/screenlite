@@ -46,12 +46,12 @@ export class PrismaSessionRepository implements ISessionRepository {
         })
     }
 
-    async terminateAll(userId: string, terminationReason: SessionTerminationReason, exceptTokenHash?: string): Promise<void> {
+    async terminateByUserId(userId: string, terminationReason: SessionTerminationReason, exceptIds: string[] = []): Promise<void> {
         await this.prisma.session.updateMany({
             where: {
+                id: { notIn: exceptIds },
                 userId,
                 terminatedAt: null,
-                ...(exceptTokenHash && { NOT: { tokenHash: exceptTokenHash } }),
             },
             data: { terminatedAt: new Date(), terminationReason }
         })

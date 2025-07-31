@@ -38,15 +38,15 @@ export class RequestAccountDeletionUsecase {
         await this.unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
 
-            let currentSessionTokenHash: string | undefined = undefined
+            let currentSessionId: string | undefined = undefined
 
             if(authContext.isUserContext() && (authContext as UserSessionAuthContext).user.id === userId) {
                 const session = (authContext as UserSessionAuthContext).session
 
-                currentSessionTokenHash = session.tokenHash
+                currentSessionId = session.id
             }
 
-            await repos.sessionRepository.terminateAll(userId, SessionTerminationReason.REQUESTED_ACCOUNT_DELETION, currentSessionTokenHash)
+            await repos.sessionRepository.terminateByUserId(userId, SessionTerminationReason.REQUESTED_ACCOUNT_DELETION, currentSessionId ? [currentSessionId] : [])
         })
     }
 }

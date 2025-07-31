@@ -6,7 +6,6 @@ export interface ISessionRepository {
     findByTokenHash(tokenHash: string): Promise<Session | null>
     findActiveByTokenHash(tokenHash: string): Promise<Session | null>
     save(session: Session): Promise<void>
-    
-    terminateAll(userId: string, terminationReason: SessionTerminationReason, exceptTokenHash?: string): Promise<void>
+    terminateByUserId(userId: string, terminationReason: SessionTerminationReason, exceptIds?: string[]): Promise<void>
     updateActivity(sessionId: string): Promise<void>
 }
