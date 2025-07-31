@@ -14,4 +14,12 @@ export class PasswordResetToken {
         this.userId = data.userId
         this.expiresAt = data.expiresAt
     }
+
+    isExpired(): boolean {
+        return this.expiresAt < new Date()
+    }
+
+    isValid(): boolean {
+        return !this.isExpired()
+    }
 }
