@@ -31,16 +31,4 @@ export class EmailVerificationToken {
     isExpired(): boolean {
         return this.expiresAt < new Date()
     }
-
-    toDTO(): EmailVerificationTokenDTO {
-        return {
-            id: this.id,
-            userId: this.userId,
-            tokenHash: this.tokenHash,
-            type: this.type,
-            expiresAt: this.expiresAt,
-            newEmail: this.newEmail,
-            createdAt: this.createdAt,
-        }
-    }
 }
