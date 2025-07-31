@@ -5,6 +5,7 @@ import { ValidationError } from '@/core/errors/validation.error.ts'
 import { ConfirmPasswordResetDTO } from '../dto/confirm-password-reset.dto.ts'
 import { IHasher } from '@/core/ports/hasher.interface.ts'
 import { EmailVerificationTokenType } from '@/core/enums/email-verification-token-type.enum.ts'
+import { SessionTerminationReason } from '@/core/enums/session-termination-reason.enum.ts'
 
 export type ConfirmPasswordResetUsecaseDeps = {
     unitOfWork: IUnitOfWork
@@ -51,6 +52,8 @@ export class ConfirmPasswordResetUsecase {
             }
 
             await repos.userRepository.save(user)
+
+            await repos.sessionRepository.terminateByUserId(user.id, SessionTerminationReason.PASSWORD_RESET)
 
             await repos.passwordResetTokenRepository.deleteAllByUserId(user.id)
         })
