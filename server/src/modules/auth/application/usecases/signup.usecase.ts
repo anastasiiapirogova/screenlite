@@ -48,11 +48,12 @@ export class SignupUsecase {
             deletionRequestedAt: null,
             deletedAt: null,
             role: UserRole.USER,
+            version: 1,
         })
 
         const savedUser = await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
-            await repos.emailVerificationTokenRepository.deleteForEmail(data.email)
+            await repos.emailVerificationTokenRepository.deleteByEmail(data.email)
 
             return user
         })
