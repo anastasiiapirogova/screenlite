@@ -21,13 +21,23 @@ export class RequestPasswordResetUsecase {
     constructor(private readonly deps: RequestPasswordResetUsecaseDeps) {}
 
     async execute(data: RequestPasswordResetDTO): Promise<void> {
-        const { unitOfWork, userRepo, jobProducer, passwordResetTokenFactory, config } = this.deps
+        const { unitOfWork, userRepo, jobProducer, passwordResetTokenFactory, config, passwordResetTokenRepo } = this.deps
 
         const user = await userRepo.findByEmail(data.email)
 
         if (!user) {
             throw new ValidationError({
                 email: ['USER_NOT_FOUND'],
+            })
+        }
+
+        const latestPasswordResetToken = await passwordResetTokenRepo.findLatestByUserId(user.id)
+
+        const cooldown = 5 * 60 * 1000 // 5 minutes
+
+        if (latestPasswordResetToken && latestPasswordResetToken.isRecentlyRequested(cooldown)) {
+            throw new ValidationError({
+                email: ['PASSWORD_RESET_RECENTLY_REQUESTED'],
             })
         }
 
