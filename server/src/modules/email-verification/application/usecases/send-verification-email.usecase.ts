@@ -30,7 +30,7 @@ export class SendVerificationEmailUseCase {
             throw new NotFoundError()
         }
 
-        const latestToken = await tokenRepo.findLatestForUser(userId, EmailVerificationTokenType.VERIFY)
+        const latestToken = await tokenRepo.findLatestByUserId(userId, EmailVerificationTokenType.VERIFY)
 
         const cooldown = 5 * 60 * 1000 // 5 minutes
 
@@ -40,7 +40,7 @@ export class SendVerificationEmailUseCase {
             })
         }
   
-        await tokenRepo.deleteAllForUser(userId, EmailVerificationTokenType.VERIFY)
+        await tokenRepo.deleteAllByUserId(userId, EmailVerificationTokenType.VERIFY)
 
         const timeToLive = config.ttls.emailVerification
 

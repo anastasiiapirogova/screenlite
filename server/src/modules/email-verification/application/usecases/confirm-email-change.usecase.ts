@@ -51,7 +51,7 @@ export class ConfirmEmailChangeUseCase {
 
         await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
-            await repos.emailVerificationTokenRepository.deleteAllForUser(tokenEntity.userId)
+            await repos.emailVerificationTokenRepository.deleteAllByUserId(tokenEntity.userId)
         })
     }
 
@@ -61,7 +61,7 @@ export class ConfirmEmailChangeUseCase {
         await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
             await repos.userRepository.clearPendingEmails(user.email)
-            await repos.emailVerificationTokenRepository.deleteAllForUser(tokenEntity.userId)
+            await repos.emailVerificationTokenRepository.deleteAllByUserId(tokenEntity.userId)
         })
     }
 }

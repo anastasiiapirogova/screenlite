@@ -1,18 +1,19 @@
 import { EmailVerificationToken } from '@/core/entities/email-verification-token.entity.ts'
 import { IEmailVerificationTokenRepository } from '@/core/ports/email-verification-token-repository.interface.ts'
-import { Prisma, EmailVerificationToken as PrismaEmailVerificationToken } from '@/generated/prisma/client.ts'
+import { Prisma } from '@/generated/prisma/client.ts'
 import { PrismaClient } from '@/generated/prisma/internal/class.ts'
 import { EmailVerificationTokenType } from '@/core/enums/email-verification-token-type.enum.ts'
+import { PrismaEmailVerificationTokenMapper } from '@/core/mapper/prisma-email-verification-token.mapper.ts'
 
 export class PrismaEmailVerificationTokenRepository implements IEmailVerificationTokenRepository {
     constructor(
         private readonly prisma: PrismaClient | Prisma.TransactionClient,
     ) {}
     async create(token: EmailVerificationToken): Promise<void> {
+        const data = PrismaEmailVerificationTokenMapper.toPersistence(token)
+
         await this.prisma.emailVerificationToken.create({
-            data: {
-                ...this.toPersistence(token),
-            }
+            data,
         })
     }
 
@@ -23,10 +24,10 @@ export class PrismaEmailVerificationTokenRepository implements IEmailVerificatio
             }
         })
 
-        return result ? this.toDomain(result) : null
+        return result ? PrismaEmailVerificationTokenMapper.toDomain(result) : null
     }
 
-    async deleteForEmail(email: string, type?: EmailVerificationTokenType): Promise<void> {
+    async deleteByEmail(email: string, type?: EmailVerificationTokenType): Promise<void> {
         await this.prisma.emailVerificationToken.deleteMany({
             where: {
                 newEmail: email,
@@ -35,7 +36,7 @@ export class PrismaEmailVerificationTokenRepository implements IEmailVerificatio
         })
     }
 
-    async deleteAllForUser(userId: string, type?: EmailVerificationTokenType): Promise<void> {
+    async deleteAllByUserId(userId: string, type?: EmailVerificationTokenType): Promise<void> {
         await this.prisma.emailVerificationToken.deleteMany({ 
             where: {
                 userId,
@@ -44,7 +45,7 @@ export class PrismaEmailVerificationTokenRepository implements IEmailVerificatio
         })
     }
 
-    async findLatestForUser(userId: string, type: string): Promise<EmailVerificationToken | null> {
+    async findLatestByUserId(userId: string, type: string): Promise<EmailVerificationToken | null> {
         const result = await this.prisma.emailVerificationToken.findFirst({
             where: {
                 userId,
@@ -55,32 +56,6 @@ export class PrismaEmailVerificationTokenRepository implements IEmailVerificatio
             },
         })
 
-        return result ? this.toDomain(result) : null
-    }
-
-    private toDomain(token: PrismaEmailVerificationToken): EmailVerificationToken {
-        return new EmailVerificationToken({
-            id: token.id,
-            userId: token.userId,
-            tokenHash: token.tokenHash,
-            type: token.type,
-            expiresAt: token.expiresAt,
-            newEmail: token.newEmail,
-            createdAt: token.createdAt,
-        })
-    }
-
-    private toPersistence(token: EmailVerificationToken): PrismaEmailVerificationToken {
-        const dto = token.toDTO()
-
-        return {
-            id: dto.id,
-            userId: dto.userId,
-            tokenHash: dto.tokenHash,
-            type: dto.type,
-            expiresAt: dto.expiresAt,
-            newEmail: dto.newEmail,
-            createdAt: dto.createdAt,
-        }
+        return result ? PrismaEmailVerificationTokenMapper.toDomain(result) : null
     }
 }

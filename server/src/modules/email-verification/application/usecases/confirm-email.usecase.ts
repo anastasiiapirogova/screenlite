@@ -34,11 +34,19 @@ export class ConfirmEmailUseCase {
 
         if (!user) throw new NotFoundError()
   
+        if (user.isEmailVerified) {
+            await tokenRepo.deleteAllByUserId(tokenEntity.userId, EmailVerificationTokenType.VERIFY)
+
+            throw new ValidationError({
+                email: ['EMAIL_ALREADY_VERIFIED'],
+            })
+        }
+
         user.verifyEmail()
 
         await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
-            await repos.emailVerificationTokenRepository.deleteAllForUser(tokenEntity.userId, EmailVerificationTokenType.VERIFY)
+            await repos.emailVerificationTokenRepository.deleteAllByUserId(tokenEntity.userId, EmailVerificationTokenType.VERIFY)
         })
     }
 }

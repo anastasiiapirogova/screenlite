@@ -24,7 +24,7 @@ export class RequestEmailChangeUseCase {
     ) {}
   
     async execute(userId: string, newEmail: string) {
-        const { userRepo, tokenRepo, tokenFactory, jobProducer, unitOfWork, config } = this.deps
+        const { userRepo, tokenRepo, tokenFactory, unitOfWork, config } = this.deps
 
         const existingUser = await userRepo.findByEmail(newEmail)
 
@@ -40,13 +40,13 @@ export class RequestEmailChangeUseCase {
             throw new NotFoundError()
         }
   
-        await tokenRepo.deleteAllForUser(userId, EmailVerificationTokenType.EMAIL_CHANGE)
+        await tokenRepo.deleteAllByUserId(userId, EmailVerificationTokenType.EMAIL_CHANGE)
         
         const timeToLive = config.ttls.emailChange
   
         const expires = new Date(Date.now() + timeToLive)
   
-        const { token, rawToken } = await tokenFactory.create({
+        const { token } = await tokenFactory.create({
             userId,
             type: EmailVerificationTokenType.EMAIL_CHANGE,
             expiresAt: expires,
@@ -60,9 +60,10 @@ export class RequestEmailChangeUseCase {
             await repos.emailVerificationTokenRepository.create(token)
         })
 
-        await jobProducer.enqueue('send_email_change_confirmation', {
-            email: newEmail,
-            token: rawToken,
-        })
+        // TODO: Job is missing
+        // await jobProducer.enqueue('send_email_change_confirmation', {
+        //     email: newEmail,
+        //     token: rawToken,
+        // })
     }
 }   

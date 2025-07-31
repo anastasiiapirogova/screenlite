@@ -26,7 +26,7 @@ export class CancelEmailChangeUseCase {
 
         await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
-            await repos.emailVerificationTokenRepository.deleteAllForUser(userId, EmailVerificationTokenType.EMAIL_CHANGE)
+            await repos.emailVerificationTokenRepository.deleteAllByUserId(userId, EmailVerificationTokenType.EMAIL_CHANGE)
         })
     }
 }
