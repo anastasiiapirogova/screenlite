@@ -143,7 +143,8 @@ export class ConfigService implements IConfig {
             ttls: {
                 data: {
                     emailVerification: 1000 * 60 * 60 * 24, // 24 hours
-                    emailChange: 1000 * 60 * 60 * 24 // 24 hours
+                    emailChange: 1000 * 60 * 60 * 24, // 24 hours
+                    passwordReset: 1000 * 60 * 60 * 24, // 24 hours
                 },
                 schema: TTLsSchema
             }
