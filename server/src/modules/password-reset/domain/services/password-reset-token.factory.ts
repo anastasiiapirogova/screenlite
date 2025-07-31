@@ -22,6 +22,7 @@ export class PasswordResetTokenFactory implements IPasswordResetTokenFactory {
             tokenHash: hashToken,
             userId: params.userId,
             expiresAt: params.expiresAt,
+            createdAt: new Date(),
         })
 
         return {
