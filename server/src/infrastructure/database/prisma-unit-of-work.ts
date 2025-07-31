@@ -10,6 +10,8 @@ import { IUserAdminPermissionRepository } from '@/core/ports/user-admin-permissi
 import { IAdminPermissionRepository } from '@/core/ports/admin-permission-repository.interface.ts'
 import { PrismaUserAdminPermissionRepository } from '@/modules/admin-permission/infrastructure/repositories/prisma-user-admin-permission.repository.ts'
 import { PrismaAdminPermissionRepository } from '@/modules/admin-permission/infrastructure/repositories/prisma-admin-permission.repository.ts'
+import { IPasswordResetTokenRepository } from '@/core/ports/password-reset-token-repository.interface.ts'
+import { PrismaPasswordResetTokenRepository } from '@/modules/password-reset/infrastructure/repositories/prisma-password-reset-token.repository.ts'
 
 export class PrismaUnitOfWork implements IUnitOfWork {
     constructor(private prisma: PrismaClient) {}
@@ -21,6 +23,7 @@ export class PrismaUnitOfWork implements IUnitOfWork {
             emailVerificationTokenRepository: IEmailVerificationTokenRepository
             userAdminPermissionRepository: IUserAdminPermissionRepository
             adminPermissionRepository: IAdminPermissionRepository
+            passwordResetTokenRepository: IPasswordResetTokenRepository
         }) => Promise<T>
     ): Promise<T> {
         return this.prisma.$transaction(async (tx) => {
@@ -30,6 +33,7 @@ export class PrismaUnitOfWork implements IUnitOfWork {
                 emailVerificationTokenRepository: new PrismaEmailVerificationTokenRepository(tx),
                 userAdminPermissionRepository: new PrismaUserAdminPermissionRepository(tx),
                 adminPermissionRepository: new PrismaAdminPermissionRepository(tx),
+                passwordResetTokenRepository: new PrismaPasswordResetTokenRepository(tx),
             }
         
             return fn(repos)
