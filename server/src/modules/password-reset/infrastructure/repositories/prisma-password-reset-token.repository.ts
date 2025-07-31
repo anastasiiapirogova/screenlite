@@ -28,6 +28,15 @@ export class PrismaPasswordResetTokenRepository implements IPasswordResetTokenRe
         return passwordResetToken ? PrismaPasswordResetTokenMapper.toDomain(passwordResetToken) : null
     }
 
+    async findLatestByUserId(userId: string): Promise<PasswordResetToken | null> {
+        const passwordResetToken = await this.prisma.passwordResetToken.findFirst({
+            where: { userId },
+            orderBy: { createdAt: 'desc' },
+        })
+
+        return passwordResetToken ? PrismaPasswordResetTokenMapper.toDomain(passwordResetToken) : null
+    }
+
     async deleteAllByUserId(userId: string): Promise<void> {
         await this.prisma.passwordResetToken.deleteMany({
             where: { userId },
