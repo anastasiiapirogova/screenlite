@@ -10,7 +10,8 @@ model Session {
     terminationReason String?
     lastActivityAt    DateTime  @default(now())
     twoFaVerifiedAt   DateTime?
-
+    version           Int       @default(0)
+    
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@index([userId])

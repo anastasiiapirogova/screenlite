@@ -14,6 +14,7 @@ model User {
     updatedAt           DateTime  @updatedAt
     deletionRequestedAt DateTime?
     deletedAt           DateTime?
+    version             Int       @default(0)
 
     emailVerificationTokens EmailVerificationToken[]
     passwordResetTokens     PasswordResetToken[]
