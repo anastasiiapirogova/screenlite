@@ -19,13 +19,8 @@ Each token is a 64-character hexadecimal string generated using cryptographicall
 
 ## Password Requirements
 
-The application enforces **strong password requirements** by default to help protect user accounts from brute-force attacks and credential stuffing. Passwords must meet the following criteria:
-
-- At least 8 characters in length  
-- Contain at least one uppercase letter  
-- Contain at least one lowercase letter  
-- Include at least one number  
-- Include at least one symbol (e.g., !@#$%^&*)
+The application previously enforced complex password rules to enhance security. However, after evaluation, it was determined that increasing complexity does not necessarily result in better protection. Therefore, the policy has been simplified:
+- Passwords must be at least 8 characters in length.
 
 ## Two-Factor Authentication (2FA)
 
