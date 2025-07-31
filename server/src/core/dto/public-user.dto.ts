@@ -12,4 +12,5 @@ export type PublicUserDTO = {
     twoFactorEnabled: boolean
     deletionRequestedAt: Date | null
     deletedAt: Date | null
+    version: number
 }
