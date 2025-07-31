@@ -1,4 +1,5 @@
 import { SessionDTO } from '@/core/dto/session.dto.ts'
+import { SessionTerminationReason } from '../enums/session-termination-reason.enum.ts'
 
 export class Session {
     public readonly id: string
@@ -10,8 +11,10 @@ export class Session {
     private _terminatedAt: Date | null = null
     private _lastActivityAt: Date
     private _twoFaVerifiedAt: Date | null = null
-    private _terminationReason: string | null = null
-    
+    private _terminationReason: SessionTerminationReason | null = null
+    private _isCurrent: boolean = false
+    public readonly version: number
+
     constructor(dto: SessionDTO) {
         this.id = dto.id
         this.userId = dto.userId
@@ -23,9 +26,14 @@ export class Session {
         this._lastActivityAt = dto.lastActivityAt
         this._twoFaVerifiedAt = dto.twoFaVerifiedAt
         this._terminationReason = dto.terminationReason
+        this.version = dto.version
     }
 
-    terminate(reason: string): void {
+    setIsCurrent(isCurrent: boolean): void {
+        this._isCurrent = isCurrent
+    }
+
+    terminate(reason: SessionTerminationReason): void {
         this._terminatedAt = new Date()
         this._terminationReason = reason
     }
@@ -50,26 +58,15 @@ export class Session {
         return this._twoFaVerifiedAt
     }
 
-    get terminationReason(): string | null {
+    get terminationReason(): SessionTerminationReason | null {
         return this._terminationReason
     }
 
-    isActive(): boolean {
+    get isActive(): boolean {
         return this._terminatedAt === null
     }
 
-    toDTO(): SessionDTO {
-        return {
-            id: this.id,
-            userId: this.userId,
-            tokenHash: this.tokenHash,
-            userAgent: this.userAgent,
-            ipAddress: this.ipAddress,
-            location: this.location,
-            terminatedAt: this._terminatedAt,
-            lastActivityAt: this._lastActivityAt,
-            twoFaVerifiedAt: this._twoFaVerifiedAt,
-            terminationReason: this.terminationReason,
-        }
+    get isCurrent(): boolean {
+        return this._isCurrent
     }
 }

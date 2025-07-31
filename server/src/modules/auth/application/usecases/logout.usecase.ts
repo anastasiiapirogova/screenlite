@@ -1,6 +1,7 @@
 import { ISessionRepository } from '@/core/ports/session-repository.interface.ts'
 import { ValidationError } from '@/core/errors/validation.error.ts'
 import { LogoutDTO } from '../dto/logout.dto.ts'
+import { SessionTerminationReason } from '@/core/enums/session-termination-reason.enum.ts'
 
 export type LogoutUsecaseDeps = {
     sessionRepository: ISessionRepository
@@ -20,11 +21,11 @@ export class LogoutUsecase {
             throw new ValidationError({ sessionToken: ['SESSION_NOT_FOUND'] })
         }
 
-        if (!session.isActive()) {
+        if (!session.isActive) {
             throw new ValidationError({ sessionToken: ['SESSION_NOT_ACTIVE'] })
         }
 
-        session.terminate('manual_logout')
+        session.terminate(SessionTerminationReason.LOGGED_OUT)
 
         await sessionRepository.save(session)
     }
