@@ -23,7 +23,7 @@ export class PrismaSettingRepository implements ISettingRepository {
         }))
     }
 
-    async updateMany(settings: Setting[]): Promise<void> {
+    async saveMany(settings: Setting[]): Promise<void> {
         await this.prisma.$transaction(
             settings.map(s => this.prisma.setting.upsert({
                 where: { key_category: { key: s.key, category: s.category } },

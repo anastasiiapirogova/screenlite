@@ -11,7 +11,7 @@ export class UpdateMailSettingsUsecase {
     async execute(newSettings: Partial<MailSettings>): Promise<MailSettings> {
         const settings = this.mailGroup.toSettings(newSettings)
 
-        await this.settingRepository.updateMany(settings)
+        await this.settingRepository.saveMany(settings)
 
         const updatedSettings = await this.settingRepository.findByCategory('mail')
 
