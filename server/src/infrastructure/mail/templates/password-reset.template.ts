@@ -1,16 +1,13 @@
-export interface PasswordResetEmailData {
-    email: string
-    token: string
-}
+import { PasswordResetEmailDTO } from '@/core/dto/password-reset-email.dto.ts'
 
 export class PasswordResetEmailTemplate {
     static getSubject(): string {
         return 'Reset Your Password - Screenlite'
     }
 
-    static getHtml(data: PasswordResetEmailData, frontendUrl: string): string {
-        const { token } = data
-        const resetUrl = `${frontendUrl}/reset-password?token=${token}`
+    static getHtml(data: PasswordResetEmailDTO, frontendUrl: string): string {
+        const { token, email } = data
+        const resetUrl = `${frontendUrl}/reset-password?token=${token}&email=${email}`
         
         return `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -28,9 +25,9 @@ export class PasswordResetEmailTemplate {
         `
     }
 
-    static getText(data: PasswordResetEmailData, frontendUrl: string): string {
-        const { token } = data
-        const resetUrl = `${frontendUrl}/reset-password?token=${token}`
+    static getText(data: PasswordResetEmailDTO, frontendUrl: string): string {
+        const { token, email } = data
+        const resetUrl = `${frontendUrl}/reset-password?token=${token}&email=${email}`
         
         return `
             Reset Your Password
