@@ -34,7 +34,7 @@ export class SendVerificationEmailUseCase {
 
         const cooldown = 5 * 60 * 1000 // 5 minutes
 
-        if (latestToken && latestToken.createdAt > new Date(Date.now() - cooldown)) {
+        if (latestToken && latestToken.isRecentlyRequested(cooldown)) {
             throw new ValidationError({
                 userId: ['VERIFICATION_EMAIL_RECENTLY_SENT'],
             })
