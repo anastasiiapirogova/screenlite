@@ -31,4 +31,8 @@ export class EmailVerificationToken {
     isExpired(): boolean {
         return this.expiresAt < new Date()
     }
+
+    isRecentlyRequested(cooldown: number): boolean {
+        return this.createdAt > new Date(Date.now() - cooldown)
+    }
 }
