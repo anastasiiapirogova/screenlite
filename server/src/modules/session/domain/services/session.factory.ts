@@ -31,6 +31,7 @@ export class SessionFactory implements ISessionFactory {
             lastActivityAt: new Date(),
             twoFaVerifiedAt: null,
             terminationReason: null,
+            version: 1,
         })
 
         return {
