@@ -10,7 +10,7 @@ export class UserMapper implements IUserMapper {
             email: entity.email,
             pendingEmail: entity.pendingEmail,
             name: entity.name,
-            password: entity.password,
+            passwordHash: entity.passwordHash,
             emailVerifiedAt: entity.emailVerifiedAt,
             passwordUpdatedAt: entity.passwordUpdatedAt,
             profilePhoto: entity.profilePhoto,

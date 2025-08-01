@@ -7,7 +7,7 @@ export class User {
     private _email: string
     private _pendingEmail: string | null = null
     public readonly name: string
-    private _password: string
+    private _passwordHash: string
     private _role: UserRole
     private _emailVerifiedAt: Date | null = null
     private _passwordUpdatedAt: Date | null = null
@@ -23,7 +23,7 @@ export class User {
         this._email = dto.email
         this._pendingEmail = dto.pendingEmail
         this.name = dto.name
-        this._password = dto.password
+        this._passwordHash = dto.passwordHash
         this._role = dto.role
         this._emailVerifiedAt = dto.emailVerifiedAt
         this._passwordUpdatedAt = dto.passwordUpdatedAt
@@ -116,8 +116,8 @@ export class User {
         this._emailVerifiedAt = new Date()
     }
   
-    updatePassword(newHashedPassword: string): void {
-        this._password = newHashedPassword
+    updatePassword(newPasswordHash: string): void {
+        this._passwordHash = newPasswordHash
         this._passwordUpdatedAt = new Date()
     }
 
@@ -156,8 +156,8 @@ export class User {
         return !!this.deletedAt
     }
   
-    get password(): string {
-        return this._password
+    get passwordHash(): string {
+        return this._passwordHash
     }
   
     get passwordUpdatedAt(): Date | null {

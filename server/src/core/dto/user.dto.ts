@@ -5,7 +5,7 @@ export type UserDTO = {
     email: string
     pendingEmail: string | null
     name: string
-    password: string
+    passwordHash: string
     role: UserRole
     emailVerifiedAt: Date | null
     passwordUpdatedAt: Date | null
