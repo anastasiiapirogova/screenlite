@@ -8,7 +8,7 @@ import { AdminPermissionName } from '../enums/admin-permission-name.enum.ts'
 export class UserSessionAuthContext extends AuthContextAbstract {
     constructor(
         public readonly user: User,
-        public readonly session: Session,
+        private readonly _session: Session,
     ) {
         super(AuthContextType.UserSession)
     }
@@ -23,5 +23,9 @@ export class UserSessionAuthContext extends AuthContextAbstract {
 
     override hasAdminAccess(): boolean {
         return this.user.hasAdminAccess
+    }
+
+    override get session(): Session {
+        return this._session
     }
 }
