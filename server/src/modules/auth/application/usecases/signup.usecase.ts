@@ -9,6 +9,7 @@ import { ValidationError } from '@/core/errors/validation.error.ts'
 import { ISessionFactory } from '@/core/ports/session-factory.interface.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { UserRole } from '@/core/enums/user-role.enum.ts'
+import { UserPassword } from '@/core/value-objects/user-password.value-object.ts'
 
 export type SignupUsecaseDeps = {
     userRepository: IUserRepository
@@ -32,14 +33,16 @@ export class SignupUsecase {
             email: ['EMAIL_ALREADY_EXISTS'],
         })
 
-        const hashedPassword = await passwordHasher.hash(data.password)
+        const userPassword = new UserPassword(data.password)
+
+        const passwordHash = await passwordHasher.hash(userPassword.toString())
 
         const user = new User({
             id: uuidv4(),
             email: data.email,
             pendingEmail: null,
             name: data.name,
-            password: hashedPassword,
+            passwordHash,
             emailVerifiedAt: null,
             passwordUpdatedAt: new Date(),
             profilePhoto: null,
