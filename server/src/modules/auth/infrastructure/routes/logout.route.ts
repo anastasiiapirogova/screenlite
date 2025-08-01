@@ -2,7 +2,6 @@ import { PrismaSessionRepository } from '@/modules/session/infrastructure/reposi
 import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { LogoutUsecase } from '../../application/usecases/logout.usecase.ts'
-import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
 
 export const logoutRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/logout', {}, async (request, reply) => {
@@ -12,11 +11,7 @@ export const logoutRoute = async (fastify: FastifyInstance) => {
             sessionRepository: sessionRepo,
         })
 
-        let sessionTokenHash = undefined
-
-        if(request.auth?.isUserContext()) {
-            sessionTokenHash = (request.auth as UserSessionAuthContext).session.tokenHash
-        }
+        const sessionTokenHash = request.auth?.session?.tokenHash
 
         if(!sessionTokenHash) {
             throw fastify.httpErrors.unauthorized()
