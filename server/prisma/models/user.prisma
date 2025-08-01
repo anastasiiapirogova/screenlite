@@ -4,7 +4,7 @@ model User {
     pendingEmail        String?   @unique
     emailVerifiedAt     DateTime?
     name                String
-    password            String
+    passwordHash        String
     role                String    @default("user")
     passwordUpdatedAt   DateTime?
     profilePhoto        String?
