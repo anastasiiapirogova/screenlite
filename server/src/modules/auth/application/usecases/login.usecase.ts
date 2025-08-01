@@ -27,7 +27,7 @@ export class LoginUsecase {
             throw new ValidationError({ email: ['USER_WITH_EMAIL_NOT_FOUND'] })
         }
 
-        const valid = await passwordHasher.compare(data.password, user.password)
+        const valid = await passwordHasher.compare(data.password, user.passwordHash)
 
         if (!valid) {
             throw new ValidationError({ password: ['INVALID_PASSWORD'] })
