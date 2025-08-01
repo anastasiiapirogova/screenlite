@@ -6,6 +6,7 @@ import { ConfirmPasswordResetDTO } from '../dto/confirm-password-reset.dto.ts'
 import { IHasher } from '@/core/ports/hasher.interface.ts'
 import { EmailVerificationTokenType } from '@/core/enums/email-verification-token-type.enum.ts'
 import { SessionTerminationReason } from '@/core/enums/session-termination-reason.enum.ts'
+import { UserPassword } from '@/core/value-objects/user-password.value-object.ts'
 
 export type ConfirmPasswordResetUsecaseDeps = {
     unitOfWork: IUnitOfWork
@@ -41,9 +42,11 @@ export class ConfirmPasswordResetUsecase {
             })
         }
 
-        const hashedPassword = await passwordHasher.hash(password)
+        const userPassword = new UserPassword(password)
 
-        user.updatePassword(hashedPassword)
+        const passwordHash = await passwordHasher.hash(userPassword.toString())
+
+        user.updatePassword(passwordHash)
 
         await unitOfWork.execute(async (repos) => {
             if (!user.isEmailVerified) {
