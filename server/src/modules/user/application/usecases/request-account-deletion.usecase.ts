@@ -2,7 +2,6 @@ import { ValidationError } from '@/core/errors/validation.error.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
 import { RequestAccountDeletionDTO } from '../dto/request-account-deletion.dto.ts'
-import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
 import { UserPolicy } from '../../domain/policies/user.policy.ts'
 import { SessionTerminationReason } from '@/core/enums/session-termination-reason.enum.ts'
 
@@ -40,8 +39,8 @@ export class RequestAccountDeletionUsecase {
 
             let currentSessionId: string | undefined = undefined
 
-            if(authContext.isUserContext() && (authContext as UserSessionAuthContext).user.id === userId) {
-                const session = (authContext as UserSessionAuthContext).session
+            if(authContext.isUserContext() && authContext.user.id === userId) {
+                const session = authContext.session
 
                 currentSessionId = session.id
             }

@@ -1,5 +1,4 @@
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
-import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
 import { User } from '@/core/entities/user.entity.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { ForbiddenError } from '@/core/errors/forbidden.error.ts'
@@ -25,7 +24,7 @@ export class AdminPermissionPolicy {
 
     canViewUserPermissions(targetUser: User): boolean {
         if (this.authContext.isUserContext()) {
-            const currentUser = (this.authContext as UserSessionAuthContext).user
+            const currentUser = this.authContext.user
 
             return currentUser.id === targetUser.id
         }
@@ -58,7 +57,7 @@ export class AdminPermissionPolicy {
         if (removing.some(p => !actorPerms.includes(p))) return false
 
         if (this.authContext.isUserContext()) {
-            const currentUser = (this.authContext as UserSessionAuthContext).user
+            const currentUser = this.authContext.user
 
             if (currentUser.id === targetUser.id) return false
             if (!currentUser.isSuperAdmin && targetUser.isSuperAdmin) return false

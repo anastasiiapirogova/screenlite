@@ -1,6 +1,5 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
-import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
 
 declare module 'fastify' {
     interface FastifyContextConfig {
@@ -18,7 +17,7 @@ const accountStatusPreHandlerHook: FastifyPluginAsync = async (fastify) => {
 
         if (config.requireActiveUser) {
             if(request.auth?.isUserContext()) {
-                const authContext = request.auth as UserSessionAuthContext
+                const authContext = request.auth
 
                 const isActive = authContext.user.isActive
 

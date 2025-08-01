@@ -1,4 +1,3 @@
-import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
 import { User } from '@/core/entities/user.entity.ts'
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 import { ForbiddenError } from '@/core/errors/forbidden.error.ts'
@@ -12,7 +11,7 @@ export class UserPolicy {
 
     private isSelf(): boolean {
         if(this.authContext.isUserContext()) {
-            const user = (this.authContext as UserSessionAuthContext).user
+            const user = this.authContext.user
 
             return user.id === this.user.id
         }
@@ -64,6 +63,22 @@ export class UserPolicy {
         if(!this.canRequestDeleteAccount()) {
             throw new ForbiddenError({
                 userId: ['YOU_CANNOT_REQUEST_DELETION_FOR_THIS_USER']
+            })
+        }
+    }
+
+    canChangePassword(): boolean {
+        if(this.authContext.isUserContext()) {
+            return this.isSelf()
+        }
+
+        return false
+    }
+
+    enforceCanChangePassword(): void {
+        if(!this.canChangePassword()) {
+            throw new ForbiddenError({
+                userId: ['YOU_CANNOT_CHANGE_PASSWORD_FOR_THIS_USER']
             })
         }
     }
