@@ -1,17 +1,17 @@
-import { AuthContextAbstract } from '@/core/context/auth-context.abstract.ts'
+import { AbstractAuthContext } from '@/core/auth/abstract-auth.context.ts'
 import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
 import { AdminPermissionName } from '../enums/admin-permission-name.enum.ts'
 
-export class GuestAuthContext extends AuthContextAbstract {
+export class AdminApiKeyAuthContext extends AbstractAuthContext {
     constructor() {
-        super(AuthContextType.Guest)
+        super(AuthContextType.AdminApiKey)
     }
 
     getAdminPermissions(): AdminPermissionName[] {
-        return []
+        return this._adminPermissions
     }
 
     override hasAdminAccess(): boolean {
-        return false
+        return true
     }
 }

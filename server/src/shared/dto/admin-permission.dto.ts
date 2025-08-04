@@ -1,4 +1,4 @@
-import { AdminPermissionName } from '../enums/admin-permission-name.enum.ts'
+import { AdminPermissionName } from '../../core/enums/admin-permission-name.enum.ts'
 
 export type AdminPermissionDTO = {
     id: string

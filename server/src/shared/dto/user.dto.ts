@@ -1,4 +1,4 @@
-import { UserRole } from '../enums/user-role.enum.ts'
+import { UserRole } from '../../core/enums/user-role.enum.ts'
 
 export type UserDTO = {
     id: string
@@ -10,8 +10,6 @@ export type UserDTO = {
     emailVerifiedAt: Date | null
     passwordUpdatedAt: Date | null
     profilePhoto: string | null
-    totpSecret: string | null
-    twoFactorEnabled: boolean
     deletionRequestedAt: Date | null
     deletedAt: Date | null
     version: number

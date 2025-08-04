@@ -1,4 +1,4 @@
-import { SessionTerminationReason } from '../enums/session-termination-reason.enum.ts'
+import { SessionTerminationReason } from '../../core/enums/session-termination-reason.enum.ts'
 
 export type PublicSessionDTO = {
     id: string
