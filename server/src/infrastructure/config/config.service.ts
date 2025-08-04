@@ -20,6 +20,7 @@ import {
 } from './types/index.ts'
 import { IConfig } from './config.interface.ts'
 import { TTLsSchema } from './schemas/ttls.schema.ts'
+import { totpSchema } from './schemas/totp.schema.ts'
 
 type ConfigDefinition<T> = {
     data: Record<string, unknown>
@@ -144,9 +145,17 @@ export class ConfigService implements IConfig {
                 data: {
                     emailVerification: 1000 * 60 * 60 * 24, // 24 hours
                     emailChange: 1000 * 60 * 60 * 24, // 24 hours
-                    passwordReset: 1000 * 60 * 60 * 24, // 24 hours
+                    passwordReset: 1000 * 60 * 60 * 1, // 1 hour
                 },
                 schema: TTLsSchema
+            },
+            totp: {
+                data: {
+                    algorithm: 'SHA1',
+                    digits: 6,
+                    period: 30,
+                },
+                schema: totpSchema
             }
         }
 
