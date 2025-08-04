@@ -1,0 +1,10 @@
+import { AdminPermission } from '@/core/entities/admin-permission.entity.ts'
+import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
+
+export type IAdminPermissionRepository = {
+    upsert(permission: AdminPermission): Promise<AdminPermission>
+    findById(id: string): Promise<AdminPermission | null>
+    findByName(name: AdminPermissionName): Promise<AdminPermission | null>
+    findAll(): Promise<AdminPermission[]>
+    deleteByName(name: string): Promise<void>
+}
