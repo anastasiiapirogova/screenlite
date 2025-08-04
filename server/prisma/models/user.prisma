@@ -8,8 +8,6 @@ model User {
     role                String    @default("user")
     passwordUpdatedAt   DateTime?
     profilePhoto        String?
-    totpSecret          String?
-    twoFactorEnabled    Boolean   @default(false)
     createdAt           DateTime  @default(now())
     updatedAt           DateTime  @updatedAt
     deletionRequestedAt DateTime?
@@ -28,4 +26,6 @@ model User {
     adminPermissions        UserAdminPermission[]
     workspaceApiTokens      WorkspaceApiToken[]
     adminApiTokens          AdminApiToken[]
+    twoFactorMethods        TwoFactorMethod[]
+    twoFactorRecoveryCodes  TwoFactorRecoveryCode[]
 }

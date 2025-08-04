@@ -1,0 +1,14 @@
+model TwoFactorMethod {
+    id         String    @id @default(uuid())
+    userId     String
+    type       String
+    enabled    Boolean   @default(false)
+    createdAt  DateTime  @default(now())
+    lastUsedAt DateTime?
+
+    totpConfig TotpConfig?
+    user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+    @@index([type, enabled])
+}

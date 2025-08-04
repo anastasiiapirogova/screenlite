@@ -1,0 +1,12 @@
+model TwoFactorRecoveryCode {
+    id            String    @id @default(uuid())
+    userId        String
+    codeHash      String
+    encryptedCode String
+    usedAt        DateTime?
+    createdAt     DateTime  @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
