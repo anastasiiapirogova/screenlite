@@ -1,9 +1,13 @@
 import { Session } from '@/core/entities/session.entity.ts'
 import { SessionTerminationReason } from '@/core/enums/session-termination-reason.enum.ts'
-import { PrismaRepositorySessionMapper } from '@/core/mapper/prisma-session.mapper.ts'
-import { ISessionRepository } from '@/core/ports/session-repository.interface.ts'
+import { PrismaRepositorySessionMapper } from '@/modules/session/infrastructure/mappers/prisma-session.mapper.ts'
+import { ISessionRepository } from '@/modules/session/domain/ports/session-repository.interface.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
 import { PrismaClient } from '@/generated/prisma/client.ts'
+import { SessionsQueryOptionsDTO } from '../../domain/dto/sessions-query-options.dto.ts'
+import { PaginationResponse } from '@/core/types/pagination.types.ts'
+import { Paginator } from '@/shared/utils/pagination.util.ts'
+import { Session as PrismaSession } from '@/generated/prisma/client.ts'
 
 export class PrismaSessionRepository implements ISessionRepository {
     constructor(private readonly prisma: PrismaClient | Prisma.TransactionClient) {}
@@ -11,13 +15,13 @@ export class PrismaSessionRepository implements ISessionRepository {
     async findById(id: string): Promise<Session | null> {
         const session = await this.prisma.session.findUnique({ where: { id } })
 
-        return session ? PrismaRepositorySessionMapper.toDomain(session) : null
+        return session ? this.toDomain(session) : null
     }
 
     async findByTokenHash(tokenHash: string): Promise<Session | null> {
         const session = await this.prisma.session.findUnique({ where: { tokenHash } })
 
-        return session ? PrismaRepositorySessionMapper.toDomain(session) : null
+        return session ? this.toDomain(session) : null
     }
 
     async findActiveByTokenHash(tokenHash: string): Promise<Session | null> {
@@ -28,11 +32,11 @@ export class PrismaSessionRepository implements ISessionRepository {
             }
         })
   
-        return session ? PrismaRepositorySessionMapper.toDomain(session) : null
+        return session ? this.toDomain(session) : null
     }
 
     async save(session: Session): Promise<void> {
-        const sessionData = PrismaRepositorySessionMapper.toPersistence(session)
+        const sessionData = this.toPersistence(session)
 
         await this.prisma.session.upsert({
             where: { id: sessionData.id },
@@ -62,5 +66,35 @@ export class PrismaSessionRepository implements ISessionRepository {
             where: { id: sessionId },
             data: { lastActivityAt: new Date() }
         })
+    }
+
+    private toPersistence(session: Session): Omit<PrismaSession, 'createdAt' | 'updatedAt'> {
+        return PrismaRepositorySessionMapper.toPersistence(session)
+    }
+
+    private toDomain(prismaSession: PrismaSession): Session {
+        return PrismaRepositorySessionMapper.toDomain(prismaSession)
+    }
+
+    async findAll(options?: SessionsQueryOptionsDTO): Promise<PaginationResponse<Session>> {
+        const where: Prisma.SessionWhereInput = {
+            ...(options?.filters?.userId && { userId: options.filters.userId }),
+            ...(options?.filters?.onlyActive && { terminatedAt: null }),
+            ...(options?.filters?.onlyTerminated && { terminatedAt: { not: null } }),
+        }
+
+        const orderBy: Prisma.SessionOrderByWithRelationInput = {
+            lastActivityAt: 'desc',
+        }
+
+        const findManyFn = (skip: number, take: number) => this.prisma.session.findMany({ where, skip, take, orderBy })
+        const countFn = () => this.prisma.session.count({ where })
+
+        const result = await Paginator.paginate(findManyFn, countFn, options?.pagination)
+
+        return {
+            items: result.items.map(this.toDomain),
+            meta: result.meta,
+        }
     }
 }
