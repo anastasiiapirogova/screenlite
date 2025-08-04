@@ -4,4 +4,5 @@ export enum AdminPermissionName {
     USERS_EDIT = 'users.edit',
     USERS_DELETE = 'users.delete',
     USERS_MANAGE_ADMIN_PERMISSIONS = 'users.manage-admin-permissions',
+    SESSIONS_VIEW = 'sessions.view',
 }
