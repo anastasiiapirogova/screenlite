@@ -1,16 +1,17 @@
-import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
-import { ISessionRepository } from '@/core/ports/session-repository.interface.ts'
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
+import { ISessionRepository } from '@/modules/session/domain/ports/session-repository.interface.ts'
 import { IHasher } from '@/core/ports/hasher.interface.ts'
 import { LoginDTO } from '../dto/login.dto.ts'
-import { ValidationError } from '@/core/errors/validation.error.ts'
+import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { LoginResultDTO } from '../dto/login-result.dto.ts'
-import { ISessionFactory } from '@/core/ports/session-factory.interface.ts'
+import { ISessionTokenService } from '@/modules/session/domain/ports/session-token-service.interface.ts'
+import { SessionFactory } from '@/modules/session/domain/services/session.factory.ts'
 
 export type LoginUsecaseDeps = {
     userRepository: IUserRepository
     sessionRepository: ISessionRepository
     passwordHasher: IHasher
-    sessionFactory: ISessionFactory
+    sessionTokenService: ISessionTokenService
 }
 
 export class LoginUsecase {
@@ -19,7 +20,7 @@ export class LoginUsecase {
     ) {}
 
     async execute(data: LoginDTO): Promise<LoginResultDTO> {
-        const { userRepository, sessionRepository, passwordHasher, sessionFactory } = this.deps
+        const { userRepository, sessionRepository, passwordHasher, sessionTokenService } = this.deps
 
         const user = await userRepository.findByEmail(data.email)
 
@@ -33,10 +34,17 @@ export class LoginUsecase {
             throw new ValidationError({ password: ['INVALID_PASSWORD'] })
         }
 
-        const { session, token } = await sessionFactory.create({
+        const token = sessionTokenService.generateToken()
+
+        const tokenHash = await sessionTokenService.hashToken(token)
+
+        const sessionFactory = new SessionFactory()
+
+        const session = sessionFactory.create({
             userId: user.id,
             userAgent: data.userAgent,
             ipAddress: data.ipAddress,
+            tokenHash,
         })
 
         await sessionRepository.save(session)
