@@ -1,6 +1,6 @@
-import { UserDTO } from '../dto/user.dto.ts'
+import { UserDTO } from '../../shared/dto/user.dto.ts'
 import { UserRole } from '../enums/user-role.enum.ts'
-import { ValidationError } from '../errors/validation.error.ts'
+import { ValidationError } from '../../shared/errors/validation.error.ts'
 
 export class User {
     public readonly id: string
@@ -12,8 +12,6 @@ export class User {
     private _emailVerifiedAt: Date | null = null
     private _passwordUpdatedAt: Date | null = null
     private _profilePhoto: string | null = null
-    private _totpSecret: string | null = null
-    private _twoFactorEnabled: boolean = false
     private _deletionRequestedAt: Date | null = null
     private _deletedAt: Date | null = null
     public readonly version: number
@@ -28,8 +26,6 @@ export class User {
         this._emailVerifiedAt = dto.emailVerifiedAt
         this._passwordUpdatedAt = dto.passwordUpdatedAt
         this._profilePhoto = dto.profilePhoto
-        this._totpSecret = dto.totpSecret
-        this._twoFactorEnabled = dto.twoFactorEnabled
         this._deletionRequestedAt = dto.deletionRequestedAt
         this._deletedAt = dto.deletedAt
         this.version = dto.version
@@ -121,25 +117,6 @@ export class User {
         this._passwordUpdatedAt = new Date()
     }
 
-    updateTwoFactorSecret(secret: string): void {
-        this._totpSecret = secret
-    }
-  
-    enableTwoFactorAuth(): void {
-        if(!this._totpSecret) {
-            throw new ValidationError({
-                totpSecret: ['NO_TOTP_SECRET_FOUND'],
-            })
-        }
-
-        this._twoFactorEnabled = true
-    }
-  
-    disableTwoFactorAuth(): void {
-        this._twoFactorEnabled = false
-        this._totpSecret = null
-    }
-  
     requestDeletion(): void {
         this._deletionRequestedAt = new Date()
     }
@@ -164,14 +141,6 @@ export class User {
         return this._passwordUpdatedAt
     }
   
-    get totpSecret(): string | null {
-        return this._totpSecret
-    }
-  
-    get twoFactorEnabled(): boolean {
-        return this._twoFactorEnabled
-    }
-
     get emailVerifiedAt(): Date | null {
         return this._emailVerifiedAt
     }
