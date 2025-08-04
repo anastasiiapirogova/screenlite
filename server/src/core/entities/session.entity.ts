@@ -1,10 +1,10 @@
-import { SessionDTO } from '@/core/dto/session.dto.ts'
+import { SessionDTO } from '@/shared/dto/session.dto.ts'
 import { SessionTerminationReason } from '../enums/session-termination-reason.enum.ts'
 
 export class Session {
     public readonly id: string
     public readonly userId: string
-    public readonly tokenHash: string
+    private _tokenHash: string
     public readonly userAgent: string
     public readonly ipAddress: string
     public readonly location: string | null
@@ -18,7 +18,7 @@ export class Session {
     constructor(dto: SessionDTO) {
         this.id = dto.id
         this.userId = dto.userId
-        this.tokenHash = dto.tokenHash
+        this._tokenHash = dto.tokenHash
         this.userAgent = dto.userAgent
         this.ipAddress = dto.ipAddress
         this.location = dto.location
@@ -46,6 +46,10 @@ export class Session {
         this._twoFaVerifiedAt = new Date()
     }
 
+    updateTokenHash(tokenHash: string): void {
+        this._tokenHash = tokenHash
+    }
+
     get terminatedAt(): Date | null {
         return this._terminatedAt
     }
@@ -68,5 +72,9 @@ export class Session {
 
     get isCurrent(): boolean {
         return this._isCurrent
+    }
+
+    get tokenHash(): string {
+        return this._tokenHash
     }
 }
