@@ -1,29 +1,18 @@
 import { Session } from '@/core/entities/session.entity.ts'
-import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
-import { IHasher } from '@/core/ports/hasher.interface.ts'
-import { ISessionFactory } from '@/core/ports/session-factory.interface.ts'
-import { ITokenGenerator } from '@/core/ports/token-generator.interface.ts'
 import { v4 as uuid } from 'uuid'
 
-export class SessionFactory implements ISessionFactory {
-    constructor(
-        private readonly tokenGenerator: ITokenGenerator,
-        private readonly hasher: IHasher
-    ) {}
-
-    async create(params: {
+export class SessionFactory {
+    create(params: {
         userId: string
         userAgent: string
         ipAddress: string
         location?: string | null
-    }): Promise<{ session: Session, token: string }> {
-        const token = this.tokenGenerator.generate()
-        const hashToken = await this.hasher.hash(token)
-
-        const session = new Session({
+        tokenHash: string
+    }): Session {
+        return new Session({
             id: uuid(),
             userId: params.userId,
-            tokenHash: hashToken,
+            tokenHash: params.tokenHash,
             userAgent: params.userAgent,
             ipAddress: params.ipAddress,
             location: params.location ?? null,
@@ -33,10 +22,5 @@ export class SessionFactory implements ISessionFactory {
             terminationReason: null,
             version: 1,
         })
-
-        return {
-            session,
-            token: `${AuthContextType.UserSession}:${token}`
-        }
     }
 }
