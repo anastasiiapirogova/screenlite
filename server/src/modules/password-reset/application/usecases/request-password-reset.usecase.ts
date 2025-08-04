@@ -1,12 +1,12 @@
-import { IPasswordResetTokenRepository } from '@/core/ports/password-reset-token-repository.interface.ts'
+import { IPasswordResetTokenRepository } from '@/modules/password-reset/domain/ports/password-reset-token-repository.interface.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
-import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 import { RequestPasswordResetDTO } from '../dto/request-password-reset.dto.ts'
-import { ValidationError } from '@/core/errors/validation.error.ts'
+import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { IConfig } from '@/infrastructure/config/config.interface.ts'
 import { IJobProducer } from '@/core/ports/job-queue.interface.ts'
 import { AppJobRegistry } from '@/core/ports/job-registry.interface.ts'
-import { IPasswordResetTokenFactory } from '@/core/ports/password-reset-token-factory.interface.ts'
+import { IPasswordResetTokenFactory } from '@/modules/password-reset/domain/ports/password-reset-token-factory.interface.ts'
 
 export type RequestPasswordResetUsecaseDeps = {
     unitOfWork: IUnitOfWork

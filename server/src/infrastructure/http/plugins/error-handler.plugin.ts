@@ -1,5 +1,5 @@
-import { ForbiddenError } from '@/core/errors/forbidden.error.ts'
-import { ValidationError } from '@/core/errors/validation.error.ts'
+import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
+import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
 import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'

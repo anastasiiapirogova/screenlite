@@ -1,5 +1,5 @@
 import { Setting } from '@/core/entities/setting.entity.ts'
-import { SafeDTO } from '@/shared/types/safe-dto.type.ts'
+import { SafeDTO } from '@/core/types/safe-dto.type.ts'
 import { IEncryptionService } from '@/core/ports/encryption-service.interface.ts'
 
 export abstract class SettingGroup<T> {

@@ -1,6 +1,6 @@
 import { User } from '@/core/entities/user.entity.ts'
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
-import { ForbiddenError } from '@/core/errors/forbidden.error.ts'
+import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 
 export class UserPolicy {

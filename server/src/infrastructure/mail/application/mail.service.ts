@@ -4,8 +4,8 @@ import { IMailer } from '@/core/ports/mailer.interface.ts'
 import { VerificationEmailTemplate } from '../templates/verification.template.ts'
 import { IMailService } from '@/core/ports/mail.interface.ts'
 import { MailConfig } from '../dto/mail-config.dto.ts'
-import { SendEmailDTO } from '@/core/dto/send-email.dto.ts'
-import { VerificationEmailDTO } from '@/core/dto/verification-email.dto.ts'
+import { SendEmailDTO } from '@/shared/dto/send-email.dto.ts'
+import { VerificationEmailDTO } from '@/shared/dto/verification-email.dto.ts'
 
 export class MailService implements IMailService {
     constructor(

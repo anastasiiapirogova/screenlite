@@ -1,11 +1,11 @@
 import { User } from '@/core/entities/user.entity.ts'
 import { Prisma, User as PrismaUser } from '@/generated/prisma/client.ts'
-import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 import { PrismaClient } from '@/generated/prisma/client.ts'
-import { PrismaRepositoryUserMapper } from '@/core/mapper/prisma-repository-user.mapper.ts'
-import { UserQueryOptions } from '@/core/types/user-query-options.type.ts'
+import { PrismaRepositoryUserMapper } from '@/modules/user/infrastructure/mappers/prisma-repository-user.mapper.ts'
 import { Paginator } from '@/shared/utils/pagination.util.ts'
 import { PaginationResponse } from '@/core/types/pagination.types.ts'
+import { UsersQueryOptionsDTO } from '../../domain/dto/users-query-options.dto.ts'
 
 export class PrismaUserRepository implements IUserRepository {
     constructor(
@@ -66,7 +66,7 @@ export class PrismaUserRepository implements IUserRepository {
         return PrismaRepositoryUserMapper.toPersistence(user)
     }
 
-    async findAll(queryOptions?: UserQueryOptions): Promise<PaginationResponse<User>> {
+    async findAll(queryOptions?: UsersQueryOptionsDTO): Promise<PaginationResponse<User>> {
         const where: Prisma.UserWhereInput = {
             ...(queryOptions?.filters?.email && {
                 email: {

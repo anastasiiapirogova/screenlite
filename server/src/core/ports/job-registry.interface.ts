@@ -1,6 +1,6 @@
-import { SendEmailDTO } from '../dto/send-email.dto.ts'
-import { VerificationEmailDTO } from '../dto/verification-email.dto.ts'
-import { PasswordResetEmailDTO } from '../dto/password-reset-email.dto.ts'
+import { SendEmailDTO } from '@/shared/dto/send-email.dto.ts'
+import { VerificationEmailDTO } from '@/shared/dto/verification-email.dto.ts'
+import { PasswordResetEmailDTO } from '@/shared/dto/password-reset-email.dto.ts'
 
 export interface AppJobRegistry {
     send_email: {

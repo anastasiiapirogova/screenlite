@@ -1,4 +1,4 @@
-import { EmailVerificationTokenDTO } from '../dto/email-verification-token.dto.ts'
+import { EmailVerificationTokenDTO } from '../../shared/dto/email-verification-token.dto.ts'
 import { EmailVerificationTokenType } from '../enums/email-verification-token-type.enum.ts'
 
 export class EmailVerificationToken {

@@ -1,4 +1,4 @@
-import { ValidationError } from '@/core/errors/validation.error.ts'
+import { ValidationError } from '@/shared/errors/validation.error.ts'
 
 export class UserPassword {
     private readonly value: string

@@ -4,10 +4,10 @@ import { PrismaSessionRepository } from '@/modules/session/infrastructure/reposi
 import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
 import { BearerTokenParser } from '@/modules/auth/domain/services/bearer-token.parser.ts'
 import { SessionAuthStrategy } from '@/modules/auth/infrastructure/strategies/session-auth.strategy.ts'
-import { IAuthStrategy } from '@/core/ports/auth-strategy.interface.ts'
+import { IAuthStrategy } from '@/modules/auth/domain/ports/auth-strategy.interface.ts'
 import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
-import { GuestAuthContext } from '@/core/context/guest-auth.context.ts'
+import { GuestAuthContext } from '@/core/auth/guest-auth.context.ts'
 
 declare module 'fastify' {
     interface FastifyRequest {

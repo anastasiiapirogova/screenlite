@@ -1,5 +1,5 @@
-import { ISessionRepository } from '@/core/ports/session-repository.interface.ts'
-import { ValidationError } from '@/core/errors/validation.error.ts'
+import { ISessionRepository } from '@/modules/session/domain/ports/session-repository.interface.ts'
+import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { LogoutDTO } from '../dto/logout.dto.ts'
 import { SessionTerminationReason } from '@/core/enums/session-termination-reason.enum.ts'
 

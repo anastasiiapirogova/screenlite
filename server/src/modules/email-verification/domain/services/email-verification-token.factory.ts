@@ -1,6 +1,6 @@
 import { EmailVerificationToken } from '@/core/entities/email-verification-token.entity.ts'
 import { IHasher } from '@/core/ports/hasher.interface.ts'
-import { IEmailVerificationTokenFactory } from '@/core/ports/email-verification-token-factory.interface.ts'
+import { IEmailVerificationTokenFactory } from '@/modules/email-verification/domain/ports/email-verification-token-factory.interface.ts'
 import { ITokenGenerator } from '@/core/ports/token-generator.interface.ts'
 import { v4 as uuid } from 'uuid'
 import { EmailVerificationTokenType } from '@/core/enums/email-verification-token-type.enum.ts'

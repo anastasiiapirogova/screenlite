@@ -1,4 +1,4 @@
-import { PasswordResetTokenDTO } from '../dto/password-reset-token.dto.ts'
+import { PasswordResetTokenDTO } from '../../shared/dto/password-reset-token.dto.ts'
 
 export class PasswordResetToken {
     public readonly id: string

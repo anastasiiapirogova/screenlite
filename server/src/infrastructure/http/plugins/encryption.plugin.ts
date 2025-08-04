@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
 import { IEncryptionService } from '@/core/ports/encryption-service.interface.ts'
-import { NodeEncryptionService } from '@/infrastructure/encryption/node-crypto.service.ts'
+import { NodeEncryptionService } from '@/infrastructure/encryption/node-encryption.service.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {

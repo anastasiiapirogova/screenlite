@@ -1,4 +1,4 @@
-import { MailSettings } from '@/shared/types/mail-settings.type.ts'
+import { MailSettings } from '@/core/types/mail-settings.type.ts'
 import { ISettingRepository } from '../../domain/setting-repository.interface.ts'
 import { MailGroup } from '../../domain/groups/mail.group.ts'
 

@@ -1,4 +1,4 @@
-import { VerificationEmailDTO } from '@/core/dto/verification-email.dto.ts'
+import { VerificationEmailDTO } from '@/shared/dto/verification-email.dto.ts'
 
 export class VerificationEmailTemplate {
     static getSubject(): string {

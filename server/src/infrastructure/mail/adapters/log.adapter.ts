@@ -1,5 +1,5 @@
 import { IMailer } from '@/core/ports/mailer.interface.ts'
-import { SendEmailDTO } from '@/core/dto/send-email.dto.ts'
+import { SendEmailDTO } from '@/shared/dto/send-email.dto.ts'
 
 export class LogMailAdapter implements IMailer {
     async sendEmail(options: SendEmailDTO): Promise<boolean> {

@@ -1,4 +1,4 @@
-import { IPasswordResetTokenFactory } from '@/core/ports/password-reset-token-factory.interface.ts'
+import { IPasswordResetTokenFactory } from '@/modules/password-reset/domain/ports/password-reset-token-factory.interface.ts'
 import { PasswordResetToken } from '@/core/entities/password-reset-token.entity.ts'
 import { ITokenGenerator } from '@/core/ports/token-generator.interface.ts'
 import { IHasher } from '@/core/ports/hasher.interface.ts'

@@ -1,4 +1,4 @@
-import { UserAdminPermissionDTO } from '../dto/user-admin-permission.dto.ts'
+import { UserAdminPermissionDTO } from '../../shared/dto/user-admin-permission.dto.ts'
 
 export class UserAdminPermissionEntity {
     constructor(

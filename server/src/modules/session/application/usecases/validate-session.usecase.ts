@@ -1,6 +1,6 @@
 import { IHasher } from '@/core/ports/hasher.interface.ts'
-import { ISessionRepository } from '@/core/ports/session-repository.interface.ts'
-import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
+import { ISessionRepository } from '@/modules/session/domain/ports/session-repository.interface.ts'
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 
 export type ValidateSessionUseCaseDeps = {
     sessionRepo: ISessionRepository

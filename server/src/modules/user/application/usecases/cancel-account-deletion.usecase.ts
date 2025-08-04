@@ -1,5 +1,5 @@
-import { ValidationError } from '@/core/errors/validation.error.ts'
-import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
+import { ValidationError } from '@/shared/errors/validation.error.ts'
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 import { CancelAccountDeletionDTO } from '../dto/cancel-account-deletion.dto.ts'
 import { UserPolicy } from '../../domain/policies/user.policy.ts'
 

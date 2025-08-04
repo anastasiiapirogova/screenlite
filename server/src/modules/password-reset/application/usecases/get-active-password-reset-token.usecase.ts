@@ -1,4 +1,4 @@
-import { IPasswordResetTokenRepository } from '@/core/ports/password-reset-token-repository.interface.ts'
+import { IPasswordResetTokenRepository } from '@/modules/password-reset/domain/ports/password-reset-token-repository.interface.ts'
 import { IHasher } from '@/core/ports/hasher.interface.ts'
 import { PasswordResetToken } from '@/core/entities/password-reset-token.entity.ts'
 

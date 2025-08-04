@@ -1,9 +1,9 @@
 import { EmailVerificationToken } from '@/core/entities/email-verification-token.entity.ts'
-import { IEmailVerificationTokenRepository } from '@/core/ports/email-verification-token-repository.interface.ts'
+import { IEmailVerificationTokenRepository } from '@/modules/email-verification/domain/ports/email-verification-token-repository.interface.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
 import { PrismaClient } from '@/generated/prisma/internal/class.ts'
 import { EmailVerificationTokenType } from '@/core/enums/email-verification-token-type.enum.ts'
-import { PrismaEmailVerificationTokenMapper } from '@/core/mapper/prisma-email-verification-token.mapper.ts'
+import { PrismaEmailVerificationTokenMapper } from '@/modules/email-verification/infrastructure/mappers/prisma-email-verification-token.mapper.ts'
 
 export class PrismaEmailVerificationTokenRepository implements IEmailVerificationTokenRepository {
     constructor(

@@ -1,5 +1,5 @@
 import { SettingGroup } from '../setting-group.abstract.ts'
-import { MailSettings } from '@/shared/types/mail-settings.type.ts'
+import { MailSettings } from '@/core/types/mail-settings.type.ts'
 
 export class MailGroup extends SettingGroup<MailSettings> {
     readonly category = 'mail'

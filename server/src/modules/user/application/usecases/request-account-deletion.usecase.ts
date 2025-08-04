@@ -1,6 +1,6 @@
-import { ValidationError } from '@/core/errors/validation.error.ts'
+import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
-import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 import { RequestAccountDeletionDTO } from '../dto/request-account-deletion.dto.ts'
 import { UserPolicy } from '../../domain/policies/user.policy.ts'
 import { SessionTerminationReason } from '@/core/enums/session-termination-reason.enum.ts'

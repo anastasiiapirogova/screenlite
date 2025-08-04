@@ -1,8 +1,8 @@
-import { AuthContextAbstract } from '@/core/context/auth-context.abstract.ts'
-import { AdminApiKeyAuthContext } from '@/core/context/admin-api-key-auth.context.ts'
-import { SystemAuthContext } from '@/core/context/system-auth.context.ts'
-import { WorkspaceApiKeyAuthContext } from '@/core/context/workspace-api-key-auth.context.ts'
-import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
-import { GuestAuthContext } from '@/core/context/guest-auth.context.ts'
+import { AbstractAuthContext } from '@/core/auth/abstract-auth.context.ts'
+import { AdminApiKeyAuthContext } from '@/core/auth/admin-api-key-auth.context.ts'
+import { SystemAuthContext } from '@/core/auth/system-auth.context.ts'
+import { WorkspaceApiKeyAuthContext } from '@/core/auth/workspace-api-key-auth.context.ts'
+import { UserSessionAuthContext } from '@/core/auth/user-session-auth.context.ts'
+import { GuestAuthContext } from '@/core/auth/guest-auth.context.ts'
 
-export type AuthContext = AuthContextAbstract | AdminApiKeyAuthContext | SystemAuthContext | WorkspaceApiKeyAuthContext | UserSessionAuthContext | GuestAuthContext
+export type AuthContext = AbstractAuthContext | AdminApiKeyAuthContext | SystemAuthContext | WorkspaceApiKeyAuthContext | UserSessionAuthContext | GuestAuthContext

@@ -1,5 +1,5 @@
 import type { WebSocket } from 'ws'
-import type { WebSocketConnectionDTO } from '@/core/dto/websocket-connection.dto.ts'
+import type { WebSocketConnectionDTO } from '@/shared/dto/websocket-connection.dto.ts'
 
 export class WebSocketConnection {
     public readonly id: string

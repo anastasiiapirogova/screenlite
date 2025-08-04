@@ -1,11 +1,11 @@
 import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
-import { IAuthStrategy } from '@/core/ports/auth-strategy.interface.ts'
+import { IAuthStrategy } from '@/modules/auth/domain/ports/auth-strategy.interface.ts'
 import { IHasher } from '@/core/ports/hasher.interface.ts'
-import { ISessionRepository } from '@/core/ports/session-repository.interface.ts'
-import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
+import { ISessionRepository } from '@/modules/session/domain/ports/session-repository.interface.ts'
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 import { ValidateSessionUseCase } from '@/modules/session/application/usecases/validate-session.usecase.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
-import { UserSessionAuthContext } from '@/core/context/user-session-auth.context.ts'
+import { UserSessionAuthContext } from '@/core/auth/user-session-auth.context.ts'
 
 export type SessionAuthDeps = {
     sessionRepo: ISessionRepository

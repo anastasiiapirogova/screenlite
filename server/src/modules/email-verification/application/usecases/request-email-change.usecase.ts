@@ -1,12 +1,12 @@
-import { NotFoundError } from '@/core/errors/not-found.error.ts'
-import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
-import { IEmailVerificationTokenRepository } from '@/core/ports/email-verification-token-repository.interface.ts'
+import { NotFoundError } from '@/shared/errors/not-found.error.ts'
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
+import { IEmailVerificationTokenRepository } from '@/modules/email-verification/domain/ports/email-verification-token-repository.interface.ts'
 import { IJobProducer } from '@/core/ports/job-queue.interface.ts'
 import { AppJobRegistry } from '@/core/ports/job-registry.interface.ts'
-import { IEmailVerificationTokenFactory } from '@/core/ports/email-verification-token-factory.interface.ts'
+import { IEmailVerificationTokenFactory } from '@/modules/email-verification/domain/ports/email-verification-token-factory.interface.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { IConfig } from '@/infrastructure/config/config.interface.ts'
-import { ValidationError } from '@/core/errors/validation.error.ts'
+import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { EmailVerificationTokenType } from '@/core/enums/email-verification-token-type.enum.ts'
 
 export type RequestEmailChangeUseCaseDeps = {

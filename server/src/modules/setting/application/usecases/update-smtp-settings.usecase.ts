@@ -1,4 +1,4 @@
-import { SMTPSettings } from '@/shared/types/smtp-settings.type.ts'
+import { SMTPSettings } from '@/core/types/smtp-settings.type.ts'
 import { ISettingRepository } from '../../domain/setting-repository.interface.ts'
 import { SMTPGroup } from '../../domain/groups/smtp.group.ts'
 

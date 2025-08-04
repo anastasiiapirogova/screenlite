@@ -1,7 +1,7 @@
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 import { User } from '@/core/entities/user.entity.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
-import { ForbiddenError } from '@/core/errors/forbidden.error.ts'
+import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
 
 export class AdminPermissionPolicy {
     constructor(private readonly authContext: AuthContext) {}

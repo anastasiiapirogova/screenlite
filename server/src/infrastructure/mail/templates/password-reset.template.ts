@@ -1,4 +1,4 @@
-import { PasswordResetEmailDTO } from '@/core/dto/password-reset-email.dto.ts'
+import { PasswordResetEmailDTO } from '@/shared/dto/password-reset-email.dto.ts'
 
 export class PasswordResetEmailTemplate {
     static getSubject(): string {

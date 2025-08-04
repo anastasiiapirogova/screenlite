@@ -1,6 +1,6 @@
-import { IPasswordResetTokenRepository } from '@/core/ports/password-reset-token-repository.interface.ts'
+import { IPasswordResetTokenRepository } from '@/modules/password-reset/domain/ports/password-reset-token-repository.interface.ts'
 import { Prisma, PrismaClient } from '@/generated/prisma/client.ts'
-import { PrismaPasswordResetTokenMapper } from '@/core/mapper/prisma-password-reset-token.mapper.ts'
+import { PrismaPasswordResetTokenMapper } from '@/modules/password-reset/infrastructure/mappers/prisma-password-reset-token.mapper.ts'
 import { PasswordResetToken } from '@/core/entities/password-reset-token.entity.ts'
 
 export class PrismaPasswordResetTokenRepository implements IPasswordResetTokenRepository {

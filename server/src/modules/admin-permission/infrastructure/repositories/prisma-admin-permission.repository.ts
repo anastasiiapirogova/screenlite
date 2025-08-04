@@ -1,4 +1,4 @@
-import { IAdminPermissionRepository } from '@/core/ports/admin-permission-repository.interface.ts'
+import { IAdminPermissionRepository } from '@/modules/admin-permission/domain/ports/admin-permission-repository.interface.ts'
 import { AdminPermission } from '@/core/entities/admin-permission.entity.ts'
 import { AdminPermission as PrismaAdminPermission } from '@/generated/prisma/client.ts'
 import { PrismaClient } from '@prisma/client'

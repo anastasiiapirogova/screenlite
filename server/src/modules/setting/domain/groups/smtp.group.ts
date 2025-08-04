@@ -1,4 +1,4 @@
-import { SMTPSettings } from '@/shared/types/smtp-settings.type.ts'
+import { SMTPSettings } from '@/core/types/smtp-settings.type.ts'
 import { SettingGroup } from '../setting-group.abstract.ts'
 
 export class SMTPGroup extends SettingGroup<SMTPSettings> {

@@ -1,4 +1,4 @@
-import { SendEmailDTO } from '@/core/dto/send-email.dto.ts'
+import { SendEmailDTO } from '@/shared/dto/send-email.dto.ts'
 
 export type IMailer = {
     sendEmail(options: SendEmailDTO): Promise<boolean>

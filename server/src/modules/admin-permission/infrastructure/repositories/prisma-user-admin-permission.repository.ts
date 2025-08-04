@@ -1,8 +1,8 @@
-import { IUserAdminPermissionRepository } from '@/core/ports/user-admin-permission-repository.interface.ts'
+import { IUserAdminPermissionRepository } from '@/modules/admin-permission/domain/ports/user-admin-permission-repository.interface.ts'
 import { Prisma, PrismaClient, User as PrismaUser } from '@/generated/prisma/client.ts'
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 import { User } from '@/core/entities/user.entity.ts'
-import { PrismaRepositoryUserMapper } from '@/core/mapper/prisma-repository-user.mapper.ts'
+import { PrismaRepositoryUserMapper } from '@/modules/user/infrastructure/mappers/prisma-repository-user.mapper.ts'
 
 export class PrismaUserAdminPermissionRepository implements IUserAdminPermissionRepository {
     constructor(private readonly prisma: PrismaClient | Prisma.TransactionClient) {}

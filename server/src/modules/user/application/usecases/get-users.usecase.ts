@@ -1,5 +1,5 @@
 import { User } from '@/core/entities/user.entity.ts'
-import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 import { GetUsersDto } from '../dto/get-users.dto.ts'
 import { UserListPolicy } from '../../domain/policies/user-list.policy.ts'
 import { PaginationResponse } from '@/core/types/pagination.types.ts'

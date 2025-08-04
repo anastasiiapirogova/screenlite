@@ -1,6 +1,7 @@
-import { IAdminPermissionRepository } from '@/core/ports/admin-permission-repository.interface.ts'
+import { IAdminPermissionRepository } from '@/modules/admin-permission/domain/ports/admin-permission-repository.interface.ts'
 import { AdminPermissionFactory } from '@/modules/admin-permission/domain/services/admin-permission.factory.ts'
 import { SYSTEM_ADMIN_PERMISSIONS } from '@/modules/admin-permission/domain/definitions/admin-permission.definitions.ts'
+import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 
 export class SyncAdminPermissionsUseCase {
     constructor(
@@ -22,7 +23,7 @@ export class SyncAdminPermissionsUseCase {
         }
 
         const allPermissions = await this.permissionRepo.findAll()
-        const systemNames = new Set(SYSTEM_ADMIN_PERMISSIONS.map(p => p.name))
+        const systemNames = new Set(SYSTEM_ADMIN_PERMISSIONS.map(p => p.name as AdminPermissionName))
 
         for (const permission of allPermissions) {
             if (!systemNames.has(permission.name)) {

@@ -1,4 +1,4 @@
-import { SendEmailDTO } from '@/core/dto/send-email.dto.ts'
+import { SendEmailDTO } from '@/shared/dto/send-email.dto.ts'
 import { IMailService } from '@/core/ports/mail.interface.ts'
 
 export class SendEmailUseCase {

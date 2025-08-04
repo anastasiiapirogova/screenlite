@@ -1,6 +1,6 @@
-import { NotFoundError } from '@/core/errors/not-found.error.ts'
+import { NotFoundError } from '@/shared/errors/not-found.error.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
-import { IUserRepository } from '@/core/ports/user-repository.interface.ts'
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 import { EmailVerificationTokenType } from '@/core/enums/email-verification-token-type.enum.ts'
 
 export type CancelEmailChangeUseCaseDeps = {
