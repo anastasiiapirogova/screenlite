@@ -6,6 +6,9 @@ export interface ParsedToken {
     token: string
 }
 
+// SHA-256 hex string (64 chars)
+const MAX_TOKEN_LENGTH = 64
+
 export class BearerTokenParser implements ITokenParser<ParsedToken | null> {
     async parse(value: string): Promise<ParsedToken | null> {
         if (!value) {
@@ -14,7 +17,7 @@ export class BearerTokenParser implements ITokenParser<ParsedToken | null> {
 
         const [prefix, token] = value.split(':', 2)
 
-        if (!token) {
+        if (!token || token.length > MAX_TOKEN_LENGTH) {
             return null
         }
 
