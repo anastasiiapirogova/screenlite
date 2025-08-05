@@ -1,4 +1,4 @@
 export type IEncryptionService = {
-    encrypt(plaintext: string): string
-    decrypt(ciphertext: string): string
+    encrypt(plaintext: string): Promise<string>
+    decrypt(ciphertext: string): Promise<string>
 }

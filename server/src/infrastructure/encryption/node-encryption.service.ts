@@ -12,49 +12,49 @@ export class NodeEncryptionService implements IEncryptionService {
         this.key = Buffer.from(secretBase64, 'base64')
     }
 
-    public encrypt(plainText: string): string {
+    public async encrypt(plainText: string): Promise<string> {
+        return this.encryptSync(plainText)
+    }
+
+    public async decrypt(encryptedText: string): Promise<string> {
+        return this.decryptSync(encryptedText)
+    }
+
+    private encryptSync(plainText: string): string {
         const iv = crypto.randomBytes(this.ivLength)
-        const cipher: crypto.CipherGCM = crypto.createCipheriv(
-            this.algorithm, 
-            this.key, 
-            iv
-        ) as crypto.CipherGCM
-        
+        const cipher = crypto.createCipheriv(this.algorithm, this.key, iv) as crypto.CipherGCM
+
         const encrypted = Buffer.concat([
             cipher.update(plainText, 'utf8'),
             cipher.final()
         ])
-        
+
         const authTag = cipher.getAuthTag()
         const combined = Buffer.concat([iv, encrypted, authTag])
-        
+
         return combined.toString('base64')
     }
 
-    public decrypt(encryptedText: string): string {
+    private decryptSync(encryptedText: string): string {
         const encryptedBuffer = Buffer.from(encryptedText, 'base64')
-        
+
         if (encryptedBuffer.length < this.ivLength + this.authTagLength + 1) {
             throw new Error('Invalid encrypted data length')
         }
-        
+
         const iv = encryptedBuffer.subarray(0, this.ivLength)
         const authTag = encryptedBuffer.subarray(encryptedBuffer.length - this.authTagLength)
         const encrypted = encryptedBuffer.subarray(this.ivLength, encryptedBuffer.length - this.authTagLength)
-        
-        const decipher: crypto.DecipherGCM = crypto.createDecipheriv(
-            this.algorithm, 
-            this.key, 
-            iv
-        ) as crypto.DecipherGCM
-        
+
+        const decipher = crypto.createDecipheriv(this.algorithm, this.key, iv) as crypto.DecipherGCM
+
         decipher.setAuthTag(authTag)
-        
+
         const decrypted = Buffer.concat([
             decipher.update(encrypted),
             decipher.final()
         ])
-        
+
         return decrypted.toString('utf8')
     }
 
