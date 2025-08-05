@@ -6,9 +6,11 @@ import userRoutes from '@/modules/user/infrastructure/routes/user.routes.ts'
 import emailVerificationRoutes from '@/modules/email-verification/infrastructure/routes/email-verification.routes.ts'
 import adminPermissionRoutes from '@/modules/admin-permission/infrastructure/routes/admin-permission.routes.ts'
 import passwordResetRoutes from '@/modules/password-reset/infrastructure/routes/password-reset.routes.ts'
+import configRoutes from '@/modules/config/infrastructure/routes/config.routes.ts'
 
 export async function registerRoutes(fastify: FastifyInstance) {
     fastify.register(healthRoutes, { prefix: '/api/health' })
+    fastify.register(configRoutes, { prefix: '/api/config' })
     fastify.register(authRoutes, { prefix: '/api/auth' })
     fastify.register(userRoutes, { prefix: '/api/users' })
     fastify.register(emailVerificationRoutes, { prefix: '/api/email-verification' })
