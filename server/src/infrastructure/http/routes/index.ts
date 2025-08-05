@@ -7,6 +7,7 @@ import emailVerificationRoutes from '@/modules/email-verification/infrastructure
 import adminPermissionRoutes from '@/modules/admin-permission/infrastructure/routes/admin-permission.routes.ts'
 import passwordResetRoutes from '@/modules/password-reset/infrastructure/routes/password-reset.routes.ts'
 import configRoutes from '@/modules/config/infrastructure/routes/config.routes.ts'
+import twoFactorAuthRoutes from '@/modules/two-factor-auth/infrastructure/routes/two-factor-auth.routes.ts'
 
 export async function registerRoutes(fastify: FastifyInstance) {
     fastify.register(healthRoutes, { prefix: '/api/health' })
@@ -15,6 +16,7 @@ export async function registerRoutes(fastify: FastifyInstance) {
     fastify.register(userRoutes, { prefix: '/api/users' })
     fastify.register(emailVerificationRoutes, { prefix: '/api/email-verification' })
     fastify.register(passwordResetRoutes, { prefix: '/api/password-reset' })
+    fastify.register(twoFactorAuthRoutes, { prefix: '/api/two-factor-auth' })
 
     fastify.register(async function adminRoutes(fastifyAdmin) {
         fastifyAdmin.addHook('onRequest', fastify.requireAdminAccess)
