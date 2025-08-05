@@ -16,7 +16,8 @@ import {
     S3Config,
     SecretsConfig,
     StorageConfig,
-    TTLsConfig
+    TTLsConfig,
+    TotpConfig
 } from './types/index.ts'
 import { IConfig } from './config.interface.ts'
 import { TTLsSchema } from './schemas/ttls.schema.ts'
@@ -38,6 +39,7 @@ export class ConfigService implements IConfig {
     private readonly _s3Buckets: S3BucketsConfig
     private readonly _s3: S3Config | undefined
     private readonly _ttls: TTLsConfig
+    private readonly _totp: TotpConfig
 
     constructor(env: NodeJS.ProcessEnv = process.env) {
         const errors: string[] = []
@@ -207,7 +209,12 @@ export class ConfigService implements IConfig {
                 configDefinitions.ttls.schema,
                 configDefinitions.ttls.data,
                 'ttls'
-            ) as TTLsConfig
+            ) as TTLsConfig,
+            totp: parseConfig(
+                configDefinitions.totp.schema,
+                configDefinitions.totp.data,
+                'totp'
+            ) as TotpConfig
         }
 
         let s3: S3Config | undefined
@@ -247,6 +254,7 @@ export class ConfigService implements IConfig {
         this._s3Buckets = parsedConfigs.s3Buckets!
         this._s3 = s3
         this._ttls = parsedConfigs.ttls!
+        this._totp = parsedConfigs.totp!
     }
 
     get database(): DatabaseConfig { return this._database }
@@ -258,4 +266,5 @@ export class ConfigService implements IConfig {
     get s3Buckets(): S3BucketsConfig { return this._s3Buckets }
     get s3(): S3Config | undefined { return this._s3 }
     get ttls(): TTLsConfig { return this._ttls }
+    get totp(): TotpConfig { return this._totp }
 }

@@ -7,7 +7,8 @@ import {
     StorageConfig,
     SecretsConfig,
     FFmpegConfig,
-    TTLsConfig
+    TTLsConfig,
+    TotpConfig
 } from './types/index.ts'
 
 export type IConfig = {
@@ -20,4 +21,5 @@ export type IConfig = {
     s3Buckets: S3BucketsConfig
     s3?: S3Config
     ttls: TTLsConfig
+    totp: TotpConfig
 }
