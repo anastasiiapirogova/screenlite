@@ -15,15 +15,15 @@ export class TwoFactorMethodFactory {
     static create(data: CreateTwoFactorMethodData): TwoFactorMethod {
         this.validateMethodData(data)
 
-        return new TwoFactorMethod(
-            uuidv4(),
-            data.userId,
-            data.type,
-            data.enabled ?? false,
-            data.config,
-            null,
-            new Date(),
-        )
+        return new TwoFactorMethod({
+            id: uuidv4(),
+            userId: data.userId,
+            type: data.type,
+            enabled: data.enabled ?? false,
+            config: data.config,
+            lastUsedAt: null,
+            createdAt: new Date(),
+        })
     }
 
     private static validateMethodData(methodData: CreateTwoFactorMethodData): void {

@@ -21,15 +21,15 @@ export class PrismaRepositoryTwoFactorMethodMapper {
             return null
         }
     
-        return new TwoFactorMethod(
-            prismaTwoFactorMethod.id,
-            prismaTwoFactorMethod.userId,
+        return new TwoFactorMethod({
+            id: prismaTwoFactorMethod.id,
+            userId: prismaTwoFactorMethod.userId,
             type,
-            prismaTwoFactorMethod.enabled,
-            twoFactorConfig,
-            prismaTwoFactorMethod.lastUsedAt,
-            prismaTwoFactorMethod.createdAt,
-        )
+            enabled: prismaTwoFactorMethod.enabled,
+            config: twoFactorConfig,
+            lastUsedAt: prismaTwoFactorMethod.lastUsedAt,
+            createdAt: prismaTwoFactorMethod.createdAt,
+        })
     }
 
     static toPersistence(
