@@ -1,6 +1,6 @@
 import { Setting } from '@/core/entities/setting.entity.ts'
-import { SafeDTO } from '@/core/types/safe-dto.type.ts'
 import { IEncryptionService } from '@/core/ports/encryption-service.interface.ts'
+import { SafeDTO } from '@/core/types/safe-dto.type.ts'
 
 export abstract class SettingGroup<T> {
     abstract readonly category: string
@@ -8,15 +8,17 @@ export abstract class SettingGroup<T> {
 
     constructor(private readonly encryption: IEncryptionService) {}
 
-    toSettings(config: Partial<T>): Setting[] {
-        return Object.entries(config).map(([key, value]) => {
+    async toSettings(config: Partial<T>): Promise<Setting[]> {
+        const settings: Setting[] = []
+        
+        for (const [key, value] of Object.entries(config)) {
             const isEncrypted = this.isEncrypted(key)
             const stringValue = String(value)
             const encryptedValue = isEncrypted
-                ? this.encryption.encrypt(stringValue)
+                ? await this.encryption.encrypt(stringValue)
                 : stringValue
 
-            return new Setting({
+            settings.push(new Setting({
                 id: '',
                 key,
                 value: encryptedValue,
@@ -24,21 +26,27 @@ export abstract class SettingGroup<T> {
                 category: this.category,
                 isEncrypted,
                 updatedAt: new Date()
-            })
-        })
+            }))
+        }
+        
+        return settings
     }
 
-    fromSettings(settings: Setting[]): T {
-        return settings.reduce((config, setting) => {
+    async fromSettings(settings: Setting[]): Promise<T> {
+        let config = this.defaultValues
+        
+        for (const setting of settings) {
             const decryptedValue = setting.isEncrypted
-                ? this.encryption.decrypt(setting.value)
+                ? await this.encryption.decrypt(setting.value)
                 : setting.value
 
-            return {
+            config = {
                 ...config,
                 [setting.key]: this.parseValue(setting.type, decryptedValue)
             }
-        }, this.defaultValues)
+        }
+        
+        return config
     }
 
     toSafeDTO(fullConfig: T): SafeDTO<T> {

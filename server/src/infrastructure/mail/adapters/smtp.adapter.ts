@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 import { IMailer } from '@/core/ports/mailer.interface.ts'
 import { MailOptions } from 'nodemailer/lib/smtp-transport/index.js'
 import { SMTPSettings } from '@/core/types/smtp-settings.type.ts'
-import { SendEmailDTO } from '../../../shared/dto/send-email.dto.ts'
+import { SendEmailDTO } from '@/shared/dto/send-email.dto.ts'
 
 export class SMTPMailAdapter implements IMailer {
     private transporter: nodemailer.Transporter

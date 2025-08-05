@@ -16,6 +16,6 @@ export class SettingsService {
       
         const settings = await this.settingRepository.findByCategory(groupName)
 
-        return group.fromSettings(settings) as SettingGroupTypes[K]
+        return await group.fromSettings(settings) as SettingGroupTypes[K]
     }
 }

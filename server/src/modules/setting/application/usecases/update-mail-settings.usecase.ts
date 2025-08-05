@@ -9,12 +9,12 @@ export class UpdateMailSettingsUsecase {
     ) {}
 
     async execute(newSettings: Partial<MailSettings>): Promise<MailSettings> {
-        const settings = this.mailGroup.toSettings(newSettings)
+        const settings = await this.mailGroup.toSettings(newSettings)
 
         await this.settingRepository.saveMany(settings)
 
         const updatedSettings = await this.settingRepository.findByCategory('mail')
 
-        return this.mailGroup.fromSettings(updatedSettings)
+        return await this.mailGroup.fromSettings(updatedSettings)
     }
-}
+}   

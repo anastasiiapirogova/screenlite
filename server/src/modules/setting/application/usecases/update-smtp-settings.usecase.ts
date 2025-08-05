@@ -9,12 +9,12 @@ export class UpdateSMTPSettingsUsecase {
     ) {}
 
     async execute(newSettings: Partial<SMTPSettings>): Promise<SMTPSettings> {
-        const settings = this.smtpGroup.toSettings(newSettings)
+        const settings = await this.smtpGroup.toSettings(newSettings)
 
         await this.settingRepository.saveMany(settings)
 
         const updatedSettings = await this.settingRepository.findByCategory('smtp')
 
-        return this.smtpGroup.fromSettings(updatedSettings)
+        return await this.smtpGroup.fromSettings(updatedSettings)
     }
 }

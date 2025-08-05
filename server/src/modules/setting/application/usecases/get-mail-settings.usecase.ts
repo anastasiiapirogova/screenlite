@@ -11,6 +11,6 @@ export class GetMailSettingsUsecase {
     async execute(): Promise<MailSettings> {
         const settings = await this.settingRepository.findByCategory('mail')
 
-        return this.mailGroup.fromSettings(settings)
+        return await this.mailGroup.fromSettings(settings)
     }
 }

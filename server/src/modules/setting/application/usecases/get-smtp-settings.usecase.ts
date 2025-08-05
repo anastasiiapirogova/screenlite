@@ -11,7 +11,7 @@ export class GetSMTPSettingsUsecase {
 
     async execute(): Promise<SafeDTO<SMTPSettings>> {
         const settings = await this.settingRepository.findByCategory('smtp')
-        const smtpSettings = this.smtpGroup.fromSettings(settings)
+        const smtpSettings = await this.smtpGroup.fromSettings(settings)
 
         return this.smtpGroup.toSafeDTO(smtpSettings)
     }
