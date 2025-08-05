@@ -12,6 +12,9 @@ import { PrismaUserAdminPermissionRepository } from '@/modules/admin-permission/
 import { PrismaAdminPermissionRepository } from '@/modules/admin-permission/infrastructure/repositories/prisma-admin-permission.repository.ts'
 import { IPasswordResetTokenRepository } from '@/modules/password-reset/domain/ports/password-reset-token-repository.interface.ts'
 import { PrismaPasswordResetTokenRepository } from '@/modules/password-reset/infrastructure/repositories/prisma-password-reset-token.repository.ts'
+import { ITwoFactorMethodRepository } from '@/modules/two-factor-auth/domain/ports/two-factor-method-repository.interface.ts'
+import { PrismaTwoFactorMethodRepository } from '@/modules/two-factor-auth/infrastructure/repositories/prisma-two-factor-method.repository.ts'
+import { TwoFactorConfigHandlerFactory } from '@/modules/two-factor-auth/infrastructure/handlers/two-factor-config-handler.factory.ts'
 
 export class PrismaUnitOfWork implements IUnitOfWork {
     constructor(private prisma: PrismaClient) {}
@@ -24,6 +27,7 @@ export class PrismaUnitOfWork implements IUnitOfWork {
             userAdminPermissionRepository: IUserAdminPermissionRepository
             adminPermissionRepository: IAdminPermissionRepository
             passwordResetTokenRepository: IPasswordResetTokenRepository
+            twoFactorMethodRepository: ITwoFactorMethodRepository
         }) => Promise<T>
     ): Promise<T> {
         return this.prisma.$transaction(async (tx) => {
@@ -34,6 +38,7 @@ export class PrismaUnitOfWork implements IUnitOfWork {
                 userAdminPermissionRepository: new PrismaUserAdminPermissionRepository(tx),
                 adminPermissionRepository: new PrismaAdminPermissionRepository(tx),
                 passwordResetTokenRepository: new PrismaPasswordResetTokenRepository(tx),
+                twoFactorMethodRepository: new PrismaTwoFactorMethodRepository(tx, new TwoFactorConfigHandlerFactory(tx)),
             }
         
             return fn(repos)
