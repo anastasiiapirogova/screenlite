@@ -55,22 +55,28 @@ export class PrismaTwoFactorMethodRepository implements ITwoFactorMethodReposito
 
     async findByUserIdAndType(userId: string, type: TwoFactorMethodType): Promise<TwoFactorMethod | null> {
         const handler = this.twoFactorConfigHandlerFactory.getHandler(type)
-
+    
         const where: Prisma.TwoFactorMethodWhereInput = {
             userId,
             type,
         }
-
-        const method = await this.prisma.twoFactorMethod.findFirst({
+    
+        const methods = await this.prisma.twoFactorMethod.findMany({
             where,
             include: handler ? handler.includeConfig() : {},
         })
+    
+        for (const method of methods) {
+            if (!handler) continue
+    
+            const config = handler.extractConfig(method)
 
-        if (!method) return null
-
-        const config = handler ? handler.extractConfig(method) : null
-
-        return PrismaRepositoryTwoFactorMethodMapper.toDomain(method, config)
+            if (config) {
+                return PrismaRepositoryTwoFactorMethodMapper.toDomain(method, config)
+            }
+        }
+    
+        return null
     }
 
     async delete(twoFactorMethodId: string): Promise<void> {
