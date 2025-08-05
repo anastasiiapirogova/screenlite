@@ -94,6 +94,8 @@ export class ConfigService implements IConfig {
             },
             app: {
                 data: {
+                    frontendVersion: '0.0.1',
+                    backendVersion: '0.0.1',
                     frontendUrl: env.FRONTEND_URL,
                     backendUrl: env.BACKEND_URL,
                     allowedCorsOrigins: env.ALLOWED_CORS_ORIGINS?.split(',') || []
