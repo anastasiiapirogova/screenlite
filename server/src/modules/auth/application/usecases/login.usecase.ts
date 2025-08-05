@@ -49,6 +49,9 @@ export class LoginUsecase {
 
         await sessionRepository.save(session)
 
-        return { user, token }
+        return {
+            user,
+            token: sessionTokenService.formatToken(token)
+        }
     }
 } 

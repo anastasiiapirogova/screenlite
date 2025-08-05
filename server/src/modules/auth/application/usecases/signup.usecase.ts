@@ -77,7 +77,7 @@ export class SignupUsecase {
 
         return {
             user: savedUser,
-            token,
+            token: sessionTokenService.formatToken(token),
         }
     }
 }
