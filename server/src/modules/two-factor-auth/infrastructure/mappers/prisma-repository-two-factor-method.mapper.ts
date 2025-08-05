@@ -1,12 +1,7 @@
 import { TwoFactorMethod } from '@/core/entities/two-factor-method.entity.ts'
 import { TwoFactorMethodType } from '@/core/enums/two-factor-method-type.enum.ts'
 import { TwoFactorConfig } from '@/core/types/two-factor-config.type.ts'
-import { TotpConfig } from '@/core/value-objects/totp-config.value-object.ts'
 import { TwoFactorMethod as PrismaTwoFactorMethod } from '@/generated/prisma/client.ts'
-
-type ConfigData = {
-    totpConfig: TotpConfig | null
-}
 
 export class PrismaRepositoryTwoFactorMethodMapper {
     static toDomain(
@@ -37,30 +32,16 @@ export class PrismaRepositoryTwoFactorMethodMapper {
     ) {
         const { id, userId, type, enabled, lastUsedAt, createdAt, config } = twoFactorMethod
 
-        const twoFactorMethodData = {
-            id,
-            userId,
-            type,
-            enabled,
-            lastUsedAt,
-            createdAt,
-        }
-
-        const configData: ConfigData = {
-            totpConfig: null
-        }
-
-        switch (type) {
-            case TwoFactorMethodType.TOTP:
-                configData.totpConfig = config
-                break
-            default:
-                throw new Error(`Unsupported two-factor method type: ${type}`)
-        }
-
         return {
-            twoFactorMethodData,
-            configData,
+            twoFactorMethod: {
+                id,
+                userId,
+                type,
+                enabled,
+                lastUsedAt,
+                createdAt,
+            },
+            config
         }
     }
 }

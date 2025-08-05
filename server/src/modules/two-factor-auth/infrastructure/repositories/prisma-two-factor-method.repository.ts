@@ -1,62 +1,76 @@
 import { Prisma, PrismaClient } from '@/generated/prisma/client.ts'
-import { ITwoFactorMethodRepository } from '@/modules/two-factor-auth/domain/ports/two-factor-method-repository.interface.ts'
-import { TwoFactorMethod } from '@/core/entities/two-factor-method.entity.ts'
-import { TwoFactorMethodType } from '@/core/enums/two-factor-method-type.enum.ts'
+import { ITwoFactorMethodRepository } from '../../domain/ports/two-factor-method-repository.interface.ts'
 import { PrismaRepositoryTwoFactorMethodMapper } from '../mappers/prisma-repository-two-factor-method.mapper.ts'
+import { TwoFactorMethod } from '@/core/entities/two-factor-method.entity.ts'
+import { ITwoFactorConfigHandlerFactory } from '../../domain/ports/two-factor-config-handler-factory.interface.ts'
+import { TwoFactorMethodType } from '@/core/enums/two-factor-method-type.enum.ts'
 
 export class PrismaTwoFactorMethodRepository implements ITwoFactorMethodRepository {
-    constructor(private readonly prisma: PrismaClient | Prisma.TransactionClient) {}
+    constructor(
+        private readonly prisma: PrismaClient | Prisma.TransactionClient,
+        private readonly twoFactorConfigHandlerFactory: ITwoFactorConfigHandlerFactory
+    ) {}
 
     async save(twoFactorMethod: TwoFactorMethod): Promise<void> {
-        const { twoFactorMethodData, configData } = PrismaRepositoryTwoFactorMethodMapper.toPersistence(twoFactorMethod)
-        
+        const { twoFactorMethod: twoFactorMethodData, config } = PrismaRepositoryTwoFactorMethodMapper.toPersistence(twoFactorMethod)
+
+        const where: Prisma.TwoFactorMethodWhereUniqueInput = {
+            id: twoFactorMethod.id,
+        }
+
         await this.prisma.twoFactorMethod.upsert({
-            where: {
-                id: twoFactorMethod.id
-            },
+            where,
             update: twoFactorMethodData,
             create: twoFactorMethodData,
         })
 
-        if (twoFactorMethod.type === TwoFactorMethodType.TOTP && configData.totpConfig) {
-            await this.prisma.totpConfig.upsert({
-                where: {
-                    twoFactorMethodId: twoFactorMethod.id
-                },
-                update: configData.totpConfig,
-                create: {
-                    ...configData.totpConfig,
-                    twoFactorMethodId: twoFactorMethod.id,
-                },
-            })
+        const handler = this.twoFactorConfigHandlerFactory.getHandler(twoFactorMethod.type)
+
+        if (handler) {
+            await handler.saveConfig(twoFactorMethod.id, config)
         }
     }
 
     async findByUserId(userId: string): Promise<TwoFactorMethod[]> {
+        const allIncludes = this.twoFactorConfigHandlerFactory.getAllIncludes()
+
+        const where: Prisma.TwoFactorMethodWhereInput = {
+            userId,
+        }
+
         const methods = await this.prisma.twoFactorMethod.findMany({
-            where: {
-                userId
-            },
-            include: {
-                totpConfig: true,
-            },
+            where,
+            include: allIncludes,
         })
 
-        return methods.map(method => PrismaRepositoryTwoFactorMethodMapper.toDomain(method, method.totpConfig)).filter(method => method !== null)
+        return methods
+            .map((method) => {
+                const handler = this.twoFactorConfigHandlerFactory.getHandler(method.type as TwoFactorMethodType)
+                const config = handler ? handler.extractConfig(method) : null
+
+                return PrismaRepositoryTwoFactorMethodMapper.toDomain(method, config)
+            })
+            .filter((m): m is TwoFactorMethod => m !== null)
     }
 
     async findByUserIdAndType(userId: string, type: TwoFactorMethodType): Promise<TwoFactorMethod | null> {
+        const handler = this.twoFactorConfigHandlerFactory.getHandler(type)
+
+        const where: Prisma.TwoFactorMethodWhereInput = {
+            userId,
+            type,
+        }
+
         const method = await this.prisma.twoFactorMethod.findFirst({
-            where: {
-                userId,
-                type,
-            },
-            include: {
-                totpConfig: true,
-            },
+            where,
+            include: handler ? handler.includeConfig() : {},
         })
 
-        return method ? PrismaRepositoryTwoFactorMethodMapper.toDomain(method, method.totpConfig) : null
+        if (!method) return null
+
+        const config = handler ? handler.extractConfig(method) : null
+
+        return PrismaRepositoryTwoFactorMethodMapper.toDomain(method, config)
     }
 
     async delete(twoFactorMethodId: string): Promise<void> {

@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
-import { TwoFactorMethod } from '../../../../core/entities/two-factor-method.entity.ts'
-import { TwoFactorMethodType } from '../../../../core/enums/two-factor-method-type.enum.ts'
-import { TwoFactorConfig } from '../../../../core/types/two-factor-config.type.ts'
-import { TotpConfig } from '../../../../core/value-objects/totp-config.value-object.ts'
+import { TwoFactorMethod } from '@/core/entities/two-factor-method.entity.ts'
+import { TwoFactorMethodType } from '@/core/enums/two-factor-method-type.enum.ts'
+import { TwoFactorConfig } from '@/core/types/two-factor-config.type.ts'
+import { TotpConfig } from '@/core/value-objects/totp-config.value-object.ts'
 
 export type CreateTwoFactorMethodData = {
     userId: string
