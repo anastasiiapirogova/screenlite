@@ -108,7 +108,6 @@ class ScreenliteCLI {
             console.log(`Name: ${user.name}`)
             console.log(`Role: ${roleDisplay}`)
             console.log(`Email Verified: ${user.emailVerifiedAt ? 'Yes' : 'No'}`)
-            console.log(`2FA Enabled: ${user.twoFactorEnabled ? 'Yes' : 'No'}`)
             console.log(`Created: ${user.emailVerifiedAt?.toISOString().split('T')[0] || 'N/A'}`)
             console.log('─'.repeat(50))
 
