@@ -10,7 +10,7 @@ import { ConfirmPasswordResetUsecase } from '../../application/usecases/confirm-
 import { BcryptHasher } from '@/shared/infrastructure/services/bcrypt-hasher.service.ts'
 
 export const confirmPasswordResetRoute = async (fastify: FastifyInstance) => {
-    fastify.withTypeProvider<ZodTypeProvider>().post('/', {
+    fastify.withTypeProvider<ZodTypeProvider>().post('/confirm', {
         schema: {
             body: z.object({
                 token: z.string(),
