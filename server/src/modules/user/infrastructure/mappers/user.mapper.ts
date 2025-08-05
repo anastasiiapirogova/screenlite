@@ -33,7 +33,6 @@ export class UserMapper implements IUserMapper {
             profilePhoto: entity.profilePhoto,
             deletionRequestedAt: entity.deletionRequestedAt,
             deletedAt: entity.deletedAt,
-            version: entity.version,
         }
     }
 }

@@ -11,5 +11,4 @@ export type PublicUserDTO = {
     profilePhoto: string | null
     deletionRequestedAt: Date | null
     deletedAt: Date | null
-    version: number
 }
