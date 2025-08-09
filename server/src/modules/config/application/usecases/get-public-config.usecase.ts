@@ -10,6 +10,7 @@ export class GetPublicConfigUsecase {
             app: {
                 frontendVersion: config.app.frontendVersion,
                 backendVersion: config.app.backendVersion,
+                environment: config.app.environment,
             },
             limits: {
                 allowedFileTypes: 0,

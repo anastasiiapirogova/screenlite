@@ -100,12 +100,14 @@ export class ConfigService implements IConfig {
                     backendVersion: '0.0.1',
                     frontendUrl: env.FRONTEND_URL,
                     backendUrl: env.BACKEND_URL,
-                    allowedCorsOrigins: env.ALLOWED_CORS_ORIGINS?.split(',') || []
+                    allowedCorsOrigins: env.ALLOWED_CORS_ORIGINS?.split(',') || [],
+                    environment: env.NODE_ENV
                 },
                 envMap: {
                     frontendUrl: 'FRONTEND_URL',
                     backendUrl: 'BACKEND_URL',
-                    allowedCorsOrigins: 'ALLOWED_CORS_ORIGINS'
+                    allowedCorsOrigins: 'ALLOWED_CORS_ORIGINS',
+                    environment: 'NODE_ENV'
                 },
                 schema: appSchema
             },
