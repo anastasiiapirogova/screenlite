@@ -6,4 +6,5 @@ export interface ITwoFactorMethodRepository {
     findByUserId(userId: string): Promise<TwoFactorMethod[]>
     findByUserIdAndType(userId: string, type: TwoFactorMethodType): Promise<TwoFactorMethod | null>
     delete(twoFactorMethodId: string): Promise<void>
+    countByUserId(userId: string, enabled?: boolean): Promise<number>
 }

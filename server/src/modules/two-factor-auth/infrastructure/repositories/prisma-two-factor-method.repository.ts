@@ -84,4 +84,18 @@ export class PrismaTwoFactorMethodRepository implements ITwoFactorMethodReposito
             where: { id: twoFactorMethodId },
         })
     }
+
+    async countByUserId(userId: string, enabled?: boolean): Promise<number> {
+        const where: Prisma.TwoFactorMethodWhereInput = {
+            userId,
+        }
+
+        if (enabled !== undefined) {
+            where.enabled = enabled
+        }
+
+        const count = await this.prisma.twoFactorMethod.count({ where })
+
+        return count
+    }
 }
