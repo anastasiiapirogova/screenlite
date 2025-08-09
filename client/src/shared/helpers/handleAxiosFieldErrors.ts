@@ -10,14 +10,22 @@ export function handleAxiosFieldErrors<T extends Record<string, any>>(
     }
 
     const errors = error.response.data.errors
-    
-    for (const [field, message] of Object.entries(errors)) {
-        const messageString = String(message)
 
-        setError(field as keyof T, {
+    const handledFields = new Set<string>()
+
+    for (const fieldError of errors) {
+        const fieldKey = String(fieldError.field)
+
+        if (handledFields.has(fieldKey)) continue
+
+        const messageString = String(fieldError.message)
+
+        setError(fieldKey as keyof T, {
             type: 'custom',
             message: messageString
         })
+
+        handledFields.add(fieldKey)
     }
 
     return true
