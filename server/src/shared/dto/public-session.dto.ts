@@ -8,6 +8,6 @@ export type PublicSessionDTO = {
     location: string | null
     terminatedAt: Date | null
     lastActivityAt: Date
-    twoFaVerifiedAt: Date | null
+    twoFactorAuthenticatedAt: Date | null
     terminationReason: SessionTerminationReason | null
 }

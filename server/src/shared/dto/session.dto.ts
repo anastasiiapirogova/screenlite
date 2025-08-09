@@ -1,4 +1,4 @@
-import { SessionTerminationReason } from '../../core/enums/session-termination-reason.enum.ts'
+import { SessionTerminationReason } from '@/core/enums/session-termination-reason.enum.ts'
 
 export type SessionDTO = {
     id: string
@@ -9,7 +9,7 @@ export type SessionDTO = {
     location: string | null
     terminatedAt: Date | null
     lastActivityAt: Date
-    twoFaVerifiedAt: Date | null
+    twoFactorAuthenticatedAt: Date | null
     terminationReason: SessionTerminationReason | null
     version: number
 }
