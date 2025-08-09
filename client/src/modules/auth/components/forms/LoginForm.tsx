@@ -2,7 +2,6 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { loginRequest, LoginRequestData } from '../../api/login'
 import { useMutation } from '@tanstack/react-query'
-import { isAxiosError } from 'axios'
 import { InputError } from '@shared/ui/input/InputError'
 import { useAuth } from '../../hooks/useAuth'
 import { TbChevronRight } from 'react-icons/tb'
@@ -10,6 +9,7 @@ import { Link } from 'react-router'
 import { ButtonSpinner } from '@shared/ui/buttons/ButtonSpinner'
 import { Input } from '@shared/ui/input/Input'
 import { Button } from '@shared/ui/buttons/Button'
+import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 
 export const LoginForm = () => {
     const auth = useAuth()
@@ -32,21 +32,7 @@ export const LoginForm = () => {
             auth.onLogin(response)
         },
         onError: (error) => {
-            if (isAxiosError(error) && error.response) {
-
-                if (error.response.data && error.response.data.errors) {
-				  const errors = error.response.data.errors
-		
-				  for (const [field, message] of Object.entries(errors)) {
-                        const messageString = String(message)
-
-                        setError(field as keyof LoginRequestData, {
-                            type: 'custom',
-                            message: messageString
-                        })
-				  }
-                }
-            }
+            handleAxiosFieldErrors<LoginRequestData>(error, setError)
         }
     })
 
