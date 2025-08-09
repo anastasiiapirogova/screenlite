@@ -1,11 +1,11 @@
 export class TotpConfig {
     constructor(
-        public readonly secret: string,
+        public readonly encryptedSecret: string,
         public readonly algorithm: string,
         public readonly digits: number,
         public readonly period: number,
     ) {
-        if (!secret || secret.trim() === '') {
+        if (!encryptedSecret || encryptedSecret.trim() === '') {
             throw new Error('TOTP secret is required')
         }
 

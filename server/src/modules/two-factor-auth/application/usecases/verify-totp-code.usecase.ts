@@ -35,7 +35,7 @@ export class VerifyTotpCodeUsecase {
         const config = method.config
         const totpService = new TotpService()
 
-        const decryptedSecret = await this.deps.encryptionService.decrypt(config.secret)
+        const decryptedSecret = await this.deps.encryptionService.decrypt(config.encryptedSecret)
 
         const isValid = await totpService.verifyCode(
             decryptedSecret,

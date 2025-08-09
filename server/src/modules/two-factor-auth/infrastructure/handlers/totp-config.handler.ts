@@ -28,6 +28,6 @@ export class TotpConfigHandler implements TwoFactorConfigPersistenceHandler<Pris
             return null
         }
 
-        return new TotpConfig(persisted.totpConfig.secret, persisted.totpConfig.algorithm, persisted.totpConfig.digits, persisted.totpConfig.period)
+        return new TotpConfig(persisted.totpConfig.encryptedSecret, persisted.totpConfig.algorithm, persisted.totpConfig.digits, persisted.totpConfig.period)
     }
 }
