@@ -32,12 +32,12 @@ export const HomePage = () => {
                     <p>
                         <span className="font-medium">Environment:</span>{ ' ' }
                         <span className="inline-block px-2 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs font-mono text-gray-900">
-                            { config.backend.environment }
+                            { config.app.environment }
                         </span>
                     </p>
                     <p>
                         <span className="font-medium">Version:</span>{ ' ' }
-                        <span className="font-mono text-gray-900">{ config.backend.version }</span>
+                        <span className="font-mono text-gray-900">{ config.app.backendVersion }</span>
                     </p>
                 </div>
             </div>

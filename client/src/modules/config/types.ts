@@ -1,9 +1,7 @@
 export type ScreenliteConfig = {
-    frontend: {
-        version: string
-    }
-    backend: {
-        version: string
+    app: {
+        frontendVersion: string
+        backendVersion: string
         environment: string
     }
     limits: {
