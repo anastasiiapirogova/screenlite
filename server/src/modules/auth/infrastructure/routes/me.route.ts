@@ -10,7 +10,9 @@ export const meRoute = async (fastify: FastifyInstance) => {
         const user = request.auth?.isUserContext() ? userMapper.toPublicDTO(request.auth.user) : null
 
         return reply.status(200).send({
-            user
+            user,
+            twoFactorAuthEnabled: request.auth?.isUserContext() && request.auth.twoFactorAuthEnabled,
+            twoFactorAuthenticated: request.auth?.isUserContext() && request.auth.twoFactorAuthenticated,
         })
     })
 }

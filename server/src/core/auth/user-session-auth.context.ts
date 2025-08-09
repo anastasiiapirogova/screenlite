@@ -22,7 +22,7 @@ export class UserSessionAuthContext extends AbstractAuthContext {
         }
     }
 
-    isTwoFactorAuthenticated(): boolean {
+    get twoFactorAuthenticated(): boolean {
         return this.twoFactorAuthEnabled && this.session.twoFactorAuthenticatedAt !== null
     }
 
