@@ -9,6 +9,7 @@ export class UserSessionAuthContext extends AbstractAuthContext {
     constructor(
         public readonly user: User,
         private readonly _session: Session,
+        public readonly twoFactorAuthEnabled: boolean,
     ) {
         super(AuthContextType.UserSession)
     }
@@ -19,6 +20,10 @@ export class UserSessionAuthContext extends AbstractAuthContext {
         } else {
             return this._adminPermissions
         }
+    }
+
+    isTwoFactorAuthenticated(): boolean {
+        return this.twoFactorAuthEnabled && this.session.twoFactorAuthenticatedAt !== null
     }
 
     override hasAdminAccess(): boolean {
