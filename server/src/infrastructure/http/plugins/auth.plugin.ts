@@ -8,6 +8,8 @@ import { IAuthStrategy } from '@/modules/auth/domain/ports/auth-strategy.interfa
 import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { GuestAuthContext } from '@/core/auth/guest-auth.context.ts'
+import { PrismaTwoFactorMethodRepository } from '@/modules/two-factor-auth/infrastructure/repositories/prisma-two-factor-method.repository.ts'
+import { TwoFactorConfigHandlerFactory } from '@/modules/two-factor-auth/infrastructure/handlers/two-factor-config-handler.factory.ts'
 
 declare module 'fastify' {
     interface FastifyRequest {
@@ -19,10 +21,11 @@ declare module 'fastify' {
 const authPlugin: FastifyPluginAsync = async (fastify) => {
     const sessionRepo = new PrismaSessionRepository(fastify.prisma)
     const userRepo = new PrismaUserRepository(fastify.prisma)
+    const twoFactorMethodRepo = new PrismaTwoFactorMethodRepository(fastify.prisma, new TwoFactorConfigHandlerFactory(fastify.prisma))
     const hasher = new FastHasher()
 
     const strategies: IAuthStrategy[] = [
-        new SessionAuthStrategy({ sessionRepo, userRepo, hasher }),
+        new SessionAuthStrategy({ sessionRepo, userRepo, twoFactorMethodRepo, hasher }),
     ]
 
     fastify.decorateRequest('auth', {

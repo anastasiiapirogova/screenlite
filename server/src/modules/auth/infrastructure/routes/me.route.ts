@@ -13,4 +13,4 @@ export const meRoute = async (fastify: FastifyInstance) => {
             user
         })
     })
-} 
+}
