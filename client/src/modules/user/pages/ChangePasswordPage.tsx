@@ -8,7 +8,6 @@ import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { InputError } from '@shared/ui/input/InputError'
 import { Button } from '@shared/ui/buttons/Button'
 import { ChangePasswordData, changePasswordRequest } from '../api/requests/changePasswordRequest'
-import { PasswordStrength } from '@shared/utils/password/PasswordStrength'
 
 // TODO: Add success message
 export const ChangePasswordPage = () => {
@@ -20,7 +19,6 @@ export const ChangePasswordPage = () => {
         setError,
         formState: { errors, isDirty },
         reset,
-        watch
     } = useForm<ChangePasswordData>({
         defaultValues: {
             userId: user.id,
@@ -89,10 +87,6 @@ export const ChangePasswordPage = () => {
                         />
                         <InputError error={ errors.newPassword?.message }/>
                     </InputLabelGroup>
-
-                    <div className='mt-5'>
-                        <PasswordStrength password={ watch().newPassword } />
-                    </div>
 
                     <div className='flex justify-end items-center gap-2 mt-5'>
                         <Button

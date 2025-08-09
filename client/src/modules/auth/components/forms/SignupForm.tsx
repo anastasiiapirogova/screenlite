@@ -9,7 +9,6 @@ import { Input } from '@shared/ui/input/Input'
 import { InputError } from '@shared/ui/input/InputError'
 import { Button } from '@shared/ui/buttons/Button'
 import { ButtonSpinner } from '@shared/ui/buttons/ButtonSpinner'
-import { PasswordStrength } from '@shared/utils/password/PasswordStrength'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 
 export const SignupForm = () => {
@@ -18,7 +17,6 @@ export const SignupForm = () => {
     const {
         control,
         handleSubmit,
-        watch,
         setError,
         formState: { errors }
     } = useForm<SignupRequestData>({
@@ -102,9 +100,6 @@ export const SignupForm = () => {
                     />
                     <InputError error={ errors.password?.message }/>
                 </InputLabelGroup>
-                <div className="mb-5">
-                    <PasswordStrength password={ watch().password } />
-                </div>
                 <Button
                     variant='solid'
                     className='w-full'
