@@ -6,7 +6,7 @@ type GetConfigResponse = {
 }
 
 export const getConfigRequest = async () => {
-    const response = await axios.get<GetConfigResponse>('/config')
+    const response = await axios.get<GetConfigResponse>('/config/public')
 
     return response.data.config
 }
