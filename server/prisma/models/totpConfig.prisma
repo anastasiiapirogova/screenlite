@@ -1,9 +1,9 @@
 model TotpConfig {
-    twoFactorMethodId String   @id
-    secret            String
-    algorithm         String   @default("SHA1")
-    digits            Int      @default(6)
-    period            Int      @default(30)
+    twoFactorMethodId String @id
+    encryptedSecret   String
+    algorithm         String @default("SHA1")
+    digits            Int    @default(6)
+    period            Int    @default(30)
 
     twoFactorMethod TwoFactorMethod @relation(fields: [twoFactorMethodId], references: [id], onDelete: Cascade)
 }
