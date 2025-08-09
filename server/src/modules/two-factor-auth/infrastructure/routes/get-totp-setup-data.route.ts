@@ -7,9 +7,10 @@ import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.
 import { TwoFactorConfigHandlerFactory } from '../handlers/two-factor-config-handler.factory.ts'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
+import { TotpConfigMapper } from '../mappers/totp-config.mapper.ts'
 
 // Prefix: /api/two-factor-auth/
-export const getTwoFactorAuthSetupDataRoute = async (fastify: FastifyInstance) => {
+export const getTotpSetupDataRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().get('/users/:userId/setup/totp', {
         schema: {
             params: z.object({
@@ -30,8 +31,12 @@ export const getTwoFactorAuthSetupDataRoute = async (fastify: FastifyInstance) =
             unitOfWork: new PrismaUnitOfWork(fastify.prisma),
         })
 
+        const mapper = new TotpConfigMapper()
+
         const result = await usecase.execute(authContext, userId)
 
-        return reply.status(200).send(result)
+        const setupTotpConfigDTO = mapper.toSetupTotpConfigDTO(result.totpConfig, result.secret, result.url)
+
+        return reply.status(200).send(setupTotpConfigDTO)
     })
 }
