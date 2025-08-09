@@ -1,7 +1,7 @@
-import { Session } from '../../../../core/entities/session.entity.ts'
-import { SessionDTO } from '../../../../shared/dto/session.dto.ts'
+import { Session } from '@/core/entities/session.entity.ts'
+import { SessionDTO } from '@/shared/dto/session.dto.ts'
 import { ISessionMapper } from '../../domain/ports/session-mapper.interface.ts'
-import { PublicSessionDTO } from '../../../../shared/dto/public-session.dto.ts'
+import { PublicSessionDTO } from '@/shared/dto/public-session.dto.ts'
 
 export class SessionMapper implements ISessionMapper {
     toDTO(session: Session): SessionDTO {
@@ -14,7 +14,7 @@ export class SessionMapper implements ISessionMapper {
             location: session.location,
             terminatedAt: session.terminatedAt,
             lastActivityAt: session.lastActivityAt,
-            twoFaVerifiedAt: session.twoFaVerifiedAt,
+            twoFactorAuthenticatedAt: session.twoFactorAuthenticatedAt,
             terminationReason: session.terminationReason,
             version: session.version,
         }
@@ -29,7 +29,7 @@ export class SessionMapper implements ISessionMapper {
             location: session.location,
             terminatedAt: session.terminatedAt,
             lastActivityAt: session.lastActivityAt,
-            twoFaVerifiedAt: session.twoFaVerifiedAt,
+            twoFactorAuthenticatedAt: session.twoFactorAuthenticatedAt,
             terminationReason: session.terminationReason,
         }
     }
