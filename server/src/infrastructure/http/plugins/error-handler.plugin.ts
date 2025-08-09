@@ -43,12 +43,18 @@ const errorHandler: FastifyPluginAsync = async (fastify) => {
         }
 
         if (error instanceof ValidationError) {
+            const errors = Object.entries(error.details).map(([field, messages]) => ({
+                field,
+                message: messages[0],
+                code: 'custom'
+            }))
+            
             reply.code(400).send({
                 statusCode: 400,
                 error: 'Bad Request',
                 code: 'FST_ERR_VALIDATION',
                 message: 'Validation error',
-                errors: error.details,
+                errors,
             })
 
             return
