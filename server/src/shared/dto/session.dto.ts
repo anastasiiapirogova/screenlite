@@ -9,7 +9,7 @@ export type SessionDTO = {
     location: string | null
     terminatedAt: Date | null
     lastActivityAt: Date
-    twoFactorAuthenticatedAt: Date | null
+    completedTwoFactorAuthAt: Date | null
     terminationReason: SessionTerminationReason | null
     version: number
 }
