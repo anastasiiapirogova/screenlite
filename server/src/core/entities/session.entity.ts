@@ -10,7 +10,7 @@ export class Session {
     public readonly location: string | null
     private _terminatedAt: Date | null = null
     private _lastActivityAt: Date
-    private _twoFactorAuthenticatedAt: Date | null = null
+    private _completedTwoFactorAuthAt: Date | null = null
     private _terminationReason: SessionTerminationReason | null = null
     private _isCurrent: boolean = false
     public readonly version: number
@@ -24,7 +24,7 @@ export class Session {
         this.location = dto.location
         this._terminatedAt = dto.terminatedAt
         this._lastActivityAt = dto.lastActivityAt
-        this._twoFactorAuthenticatedAt = dto.twoFactorAuthenticatedAt
+        this._completedTwoFactorAuthAt = dto.completedTwoFactorAuthAt
         this._terminationReason = dto.terminationReason
         this.version = dto.version
     }
@@ -43,7 +43,7 @@ export class Session {
     }
 
     authenticateTwoFactor(): void {
-        this._twoFactorAuthenticatedAt = new Date()
+        this._completedTwoFactorAuthAt = new Date()
     }
 
     updateTokenHash(tokenHash: string): void {
@@ -58,8 +58,8 @@ export class Session {
         return this._lastActivityAt
     }
 
-    get twoFactorAuthenticatedAt(): Date | null {
-        return this._twoFactorAuthenticatedAt
+    get completedTwoFactorAuthAt(): Date | null {
+        return this._completedTwoFactorAuthAt
     }
 
     get terminationReason(): SessionTerminationReason | null {

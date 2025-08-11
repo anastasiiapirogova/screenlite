@@ -9,7 +9,7 @@ model Session {
     terminatedAt             DateTime?
     terminationReason        String?
     lastActivityAt           DateTime  @default(now())
-    twoFactorAuthenticatedAt DateTime?
+    completedTwoFactorAuthAt DateTime?
     version                  Int       @default(0)
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)

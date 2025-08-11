@@ -18,7 +18,7 @@ export class SessionFactory {
             location: params.location ?? null,
             terminatedAt: null,
             lastActivityAt: new Date(),
-            twoFaVerifiedAt: null,
+            completedTwoFactorAuthAt: null,
             terminationReason: null,
             version: 1,
         })

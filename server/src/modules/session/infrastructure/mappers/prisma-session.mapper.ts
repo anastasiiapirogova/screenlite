@@ -1,6 +1,6 @@
 import { Session as PrismaSession } from '@/generated/prisma/client.ts'
-import { SessionTerminationReason } from '../../../../core/enums/session-termination-reason.enum.ts'
-import { Session } from '../../../../core/entities/session.entity.ts'
+import { SessionTerminationReason } from '@/core/enums/session-termination-reason.enum.ts'
+import { Session } from '@/core/entities/session.entity.ts'
 
 export class PrismaRepositorySessionMapper {
     static toDomain(prismaSession: PrismaSession): Session {
@@ -13,7 +13,7 @@ export class PrismaRepositorySessionMapper {
             location: prismaSession.location,
             terminatedAt: prismaSession.terminatedAt,
             lastActivityAt: prismaSession.lastActivityAt,
-            twoFaVerifiedAt: prismaSession.twoFaVerifiedAt,
+            completedTwoFactorAuthAt: prismaSession.completedTwoFactorAuthAt,
             terminationReason: prismaSession.terminationReason as SessionTerminationReason | null,
             version: prismaSession.version,
         })
@@ -29,7 +29,7 @@ export class PrismaRepositorySessionMapper {
             location: session.location,
             terminatedAt: session.terminatedAt,
             lastActivityAt: session.lastActivityAt,
-            twoFaVerifiedAt: session.twoFaVerifiedAt,
+            completedTwoFactorAuthAt: session.completedTwoFactorAuthAt,
             terminationReason: session.terminationReason,
             version: session.version,
         }

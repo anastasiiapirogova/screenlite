@@ -14,7 +14,7 @@ export class SessionMapper implements ISessionMapper {
             location: session.location,
             terminatedAt: session.terminatedAt,
             lastActivityAt: session.lastActivityAt,
-            twoFactorAuthenticatedAt: session.twoFactorAuthenticatedAt,
+            completedTwoFactorAuthAt: session.completedTwoFactorAuthAt,
             terminationReason: session.terminationReason,
             version: session.version,
         }
@@ -29,7 +29,7 @@ export class SessionMapper implements ISessionMapper {
             location: session.location,
             terminatedAt: session.terminatedAt,
             lastActivityAt: session.lastActivityAt,
-            twoFactorAuthenticatedAt: session.twoFactorAuthenticatedAt,
+            completedTwoFactorAuthAt: session.completedTwoFactorAuthAt,
             terminationReason: session.terminationReason,
         }
     }

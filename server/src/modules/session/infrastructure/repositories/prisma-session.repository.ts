@@ -77,10 +77,19 @@ export class PrismaSessionRepository implements ISessionRepository {
     }
 
     async findAll(options?: SessionsQueryOptionsDTO): Promise<PaginationResponse<Session>> {
+        const terminatedAtFilters: Prisma.SessionWhereInput[] = []
+
+        if(options?.filters?.onlyTerminated) {
+            terminatedAtFilters.push({ terminatedAt: { not: null } })
+        }
+
+        if(options?.filters?.onlyActive) {
+            terminatedAtFilters.push({ terminatedAt: null })
+        }
+
         const where: Prisma.SessionWhereInput = {
             ...(options?.filters?.userId && { userId: options.filters.userId }),
-            ...(options?.filters?.onlyActive && { terminatedAt: null }),
-            ...(options?.filters?.onlyTerminated && { terminatedAt: { not: null } }),
+            ...(terminatedAtFilters.length > 0 && { OR: terminatedAtFilters }),
         }
 
         const orderBy: Prisma.SessionOrderByWithRelationInput = {
