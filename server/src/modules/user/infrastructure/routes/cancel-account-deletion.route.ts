@@ -14,6 +14,9 @@ export const cancelAccountDeletionRoute = async (fastify: FastifyInstance) => {
                     userId: z.uuid()
                 })
             },
+            config: {
+                allowDeletedUser: true
+            }
         },
         async (request, reply) => {
             const userId = request.params.userId

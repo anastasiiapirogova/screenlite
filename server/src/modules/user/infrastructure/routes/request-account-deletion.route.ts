@@ -14,9 +14,6 @@ export const requestAccountDeletionRoute = async (fastify: FastifyInstance) => {
                 params: z.object({
                     userId: z.uuid()
                 })
-            },
-            config: {
-                requireActiveUser: true
             }
         },
         async (request, reply) => {
