@@ -63,7 +63,6 @@ export class FastifyServer {
     }
 
     private async registerHooks() {
-        await this.app.register(hooks.accountStatusPreHandler)
         await this.app.register(hooks.authCheck)
     }
 
