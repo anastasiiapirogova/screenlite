@@ -12,7 +12,7 @@ export const meRoute = async (fastify: FastifyInstance) => {
         return reply.status(200).send({
             user,
             twoFactorAuthEnabled: request.auth?.isUserContext() && request.auth.twoFactorAuthEnabled,
-            twoFactorAuthenticated: request.auth?.isUserContext() && request.auth.twoFactorAuthenticated,
+            hasCompletedTwoFactorAuth: request.auth?.isUserContext() && request.auth.hasCompletedTwoFactorAuth,
         })
     })
 }
