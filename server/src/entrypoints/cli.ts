@@ -160,13 +160,13 @@ Usage:
   npm run cli <command> [options]
 
 Commands:
-  list                           List all users with their roles
-  info <email>                   Show detailed information for a user
-  set-super-admin <email>        Set a user as super admin
-  set-admin <email>              Set a user as admin
-  set-user <email>               Set a user as regular user
-  super-admins                   List all super admins
-  help                           Show this help message
+  users:list                           List all users with their roles
+  users:info <email>                   Show detailed information for a user
+  users:set-super-admin <email>        Set a user as super admin
+  users:set-admin <email>              Set a user as admin
+  users:set-user <email>               Set a user as regular user
+  users:super-admins                   List all super admins
+  help                                 Show this help message
 `)
 }
 
@@ -186,43 +186,43 @@ async function main(): Promise<void> {
         const command = args[0]
 
         switch (command) {
-            case 'list':
+            case 'users:list':
                 await cli.listUsers()
                 break
 
-            case 'info':
+            case 'users:info':
                 if (args.length !== 2) {
-                    console.error('Usage: npm run cli info <email>')
+                    console.error('Usage: npm run cli users:info <email>')
                     process.exit(1)
                 }
                 await cli.showUserInfo(args[1])
                 break
 
-            case 'set-super-admin':
+            case 'users:set-super-admin':
                 if (args.length !== 2) {
-                    console.error('Usage: npm run cli set-super-admin <email>')
+                    console.error('Usage: npm run cli users:set-super-admin <email>')
                     process.exit(1)
                 }
                 await cli.setUserRole(args[1], UserRole.SUPER_ADMIN)
                 break
 
-            case 'set-admin':
+            case 'users:set-admin':
                 if (args.length !== 2) {
-                    console.error('Usage: npm run cli set-admin <email>')
+                    console.error('Usage: npm run cli users:set-admin <email>')
                     process.exit(1)
                 }
                 await cli.setUserRole(args[1], UserRole.ADMIN)
                 break
 
-            case 'set-user':
+            case 'users:set-user':
                 if (args.length !== 2) {
-                    console.error('Usage: npm run cli set-user <email>')
+                    console.error('Usage: npm run cli users:set-user <email>')
                     process.exit(1)
                 }
                 await cli.setUserRole(args[1], UserRole.USER)
                 break
 
-            case 'super-admins':
+            case 'users:super-admins':
                 await cli.findSuperAdmins()
                 break
 
