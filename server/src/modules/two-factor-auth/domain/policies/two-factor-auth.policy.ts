@@ -18,6 +18,22 @@ export class TwoFactorAuthPolicy {
         return false
     }
 
+    canViewTwoFactorMethods(): boolean {
+        if(this.isSelf()) {
+            return true
+        }
+        
+        return false
+    }
+
+    enforceCanViewTwoFactorMethods(): void {
+        if(!this.canViewTwoFactorMethods()) {
+            throw new ForbiddenError({
+                userId: ['YOU_CANNOT_VIEW_TWO_FACTOR_METHODS_FOR_THIS_USER']
+            })
+        }
+    }
+
     canViewTotpSetupData(): boolean {
         if(this.isSelf()) {
             return true
