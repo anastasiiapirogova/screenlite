@@ -22,8 +22,8 @@ export class UserSessionAuthContext extends AbstractAuthContext {
         }
     }
 
-    get twoFactorAuthenticated(): boolean {
-        return this.twoFactorAuthEnabled && this.session.twoFactorAuthenticatedAt !== null
+    get hasCompletedTwoFactorAuth(): boolean {
+        return this.session.completedTwoFactorAuthAt !== null
     }
 
     override hasAdminAccess(): boolean {
