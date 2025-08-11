@@ -134,5 +134,13 @@
     "files": [
       "/app/src/infrastructure/config/config.service.ts"
     ]
+  },
+  "NODE_ENV": {
+    "description": "",
+    "used": true,
+    "usedOutsideConfig": true,
+    "files": [
+      "/app/src/infrastructure/config/config.service.ts"
+    ]
   }
 }
