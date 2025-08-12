@@ -12,7 +12,6 @@ export class Session {
     private _lastActivityAt: Date
     private _completedTwoFactorAuthAt: Date | null = null
     private _terminationReason: SessionTerminationReason | null = null
-    private _isCurrent: boolean = false
     public readonly version: number
 
     constructor(dto: SessionDTO) {
@@ -27,10 +26,6 @@ export class Session {
         this._completedTwoFactorAuthAt = dto.completedTwoFactorAuthAt
         this._terminationReason = dto.terminationReason
         this.version = dto.version
-    }
-
-    setIsCurrent(isCurrent: boolean): void {
-        this._isCurrent = isCurrent
     }
 
     terminate(reason: SessionTerminationReason): void {
@@ -68,10 +63,6 @@ export class Session {
 
     get isActive(): boolean {
         return this._terminatedAt === null
-    }
-
-    get isCurrent(): boolean {
-        return this._isCurrent
     }
 
     get tokenHash(): string {
