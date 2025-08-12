@@ -6,8 +6,6 @@ model WorkspaceStorageUsage {
     audio       BigInt   @default(0)
     other       BigInt   @default(0)
     trash       BigInt   @default(0)
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
 
     workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }
