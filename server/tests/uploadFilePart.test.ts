@@ -73,7 +73,7 @@ app.use((req, res, next) => {
         emailVerifiedAt: null,
         twoFactorEnabled: false,
         passwordUpdatedAt: null,
-        profilePhoto: null
+        profilePhotoPath: null
     }
 
     req.workspace = {

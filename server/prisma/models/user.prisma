@@ -7,7 +7,7 @@ model User {
     passwordHash        String
     role                String    @default("user")
     passwordUpdatedAt   DateTime?
-    profilePhoto        String?
+    profilePhotoPath    String?
     createdAt           DateTime  @default(now())
     updatedAt           DateTime  @updatedAt
     deletionRequestedAt DateTime?
@@ -17,7 +17,7 @@ model User {
     emailVerificationTokens EmailVerificationToken[]
     passwordResetTokens     PasswordResetToken[]
     sessions                Session[]
-    workspaces              UserWorkspace[]
+    userWorkspaceRelations  UserWorkspaceRelation[]
     userPreferences         UserPreferences?
     uploadedFiles           File[]
     fileUploadSessions      FileUploadSession[]

@@ -13,7 +13,7 @@ export class UserMapper implements IUserMapper {
             passwordHash: entity.passwordHash,
             emailVerifiedAt: entity.emailVerifiedAt,
             passwordUpdatedAt: entity.passwordUpdatedAt,
-            profilePhoto: entity.profilePhoto,
+            profilePhotoPath: entity.profilePhotoPath,
             deletionRequestedAt: entity.deletionRequestedAt,
             deletedAt: entity.deletedAt,
             role: entity.role,
@@ -30,7 +30,7 @@ export class UserMapper implements IUserMapper {
             role: entity.role,
             emailVerifiedAt: entity.emailVerifiedAt,
             passwordUpdatedAt: entity.passwordUpdatedAt,
-            profilePhoto: entity.profilePhoto,
+            profilePhotoPath: entity.profilePhotoPath,
             deletionRequestedAt: entity.deletionRequestedAt,
             deletedAt: entity.deletedAt,
         }

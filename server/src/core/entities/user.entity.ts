@@ -11,7 +11,7 @@ export class User {
     private _role: UserRole
     private _emailVerifiedAt: Date | null = null
     private _passwordUpdatedAt: Date | null = null
-    private _profilePhoto: string | null = null
+    private _profilePhotoPath: string | null = null
     private _deletionRequestedAt: Date | null = null
     private _deletedAt: Date | null = null
     public readonly version: number
@@ -25,7 +25,7 @@ export class User {
         this._role = dto.role
         this._emailVerifiedAt = dto.emailVerifiedAt
         this._passwordUpdatedAt = dto.passwordUpdatedAt
-        this._profilePhoto = dto.profilePhoto
+        this._profilePhotoPath = dto.profilePhotoPath
         this._deletionRequestedAt = dto.deletionRequestedAt
         this._deletedAt = dto.deletedAt
         this.version = dto.version
@@ -149,11 +149,11 @@ export class User {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     }
 
-    get profilePhoto(): string | null {
-        return this._profilePhoto
+    get profilePhotoPath(): string | null {
+        return this._profilePhotoPath
     }
 
-    updateProfilePhoto(profilePhotoPath: string | null) {
-        this._profilePhoto = profilePhotoPath
+    updateProfilePhotoPath(profilePhotoPath: string | null) {
+        this._profilePhotoPath = profilePhotoPath
     }
 }

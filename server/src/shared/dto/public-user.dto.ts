@@ -8,7 +8,7 @@ export type PublicUserDTO = {
     role: UserRole
     emailVerifiedAt: Date | null
     passwordUpdatedAt: Date | null
-    profilePhoto: string | null
+    profilePhotoPath: string | null
     deletionRequestedAt: Date | null
     deletedAt: Date | null
 }
