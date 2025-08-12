@@ -10,8 +10,6 @@ model WorkspaceUserInvitation {
     workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
     invitor   User?     @relation(fields: [invitorId], references: [id], onDelete: SetNull)
 
-    members UserWorkspace[]
-
     @@index([email])
     @@index([workspaceId])
 }
