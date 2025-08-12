@@ -4,7 +4,7 @@ import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories
 import { TwoFactorConfigHandlerFactory } from '../handlers/two-factor-config-handler.factory.ts'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { GetUserTwoFactorMethodsUsecase } from '../../application/usecases/get-user-two-factor-methods.ts'
+import { GetUserTwoFactorMethodsUsecase } from '../../application/usecases/get-user-two-factor-methods.usecase.ts'
 
 // Prefix: /api/two-factor-auth/
 export const getTwoFactorMethodsRoute = async (fastify: FastifyInstance) => {
