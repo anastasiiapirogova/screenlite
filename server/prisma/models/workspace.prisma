@@ -8,16 +8,16 @@ model Workspace {
     updatedAt DateTime  @updatedAt
     deletedAt DateTime?
 
-    members            UserWorkspace[]
-    screens            Screen[]
-    playlists          Playlist[]
-    layouts            PlaylistLayout[]
-    files              File[]
-    folders            Folder[]
-    fileUploadSessions FileUploadSession[]
-    userInvitations    WorkspaceUserInvitation[]
-    screenGroups       ScreenGroup[]
-    links              Link[]
-    storageUsage       WorkspaceStorageUsage?
-    workspaceApiTokens WorkspaceApiToken[]
+    userWorkspaceRelations UserWorkspaceRelation[]
+    screens                Screen[]
+    playlists              Playlist[]
+    layouts                PlaylistLayout[]
+    files                  File[]
+    folders                Folder[]
+    fileUploadSessions     FileUploadSession[]
+    userInvitations        WorkspaceUserInvitation[]
+    screenGroups           ScreenGroup[]
+    links                  Link[]
+    storageUsage           WorkspaceStorageUsage?
+    workspaceApiTokens     WorkspaceApiToken[]
 }
