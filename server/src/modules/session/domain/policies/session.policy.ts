@@ -1,5 +1,6 @@
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { Session } from '@/core/entities/session.entity.ts'
+import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
 
 export class SessionPolicy {
     constructor(
@@ -7,7 +8,7 @@ export class SessionPolicy {
         private readonly authContext: AuthContext
     ) {}
 
-    private isOwnSession(): boolean {
+    private isSelf(): boolean {
         if(this.authContext.isUserContext()) {
             const user = this.authContext.user
 
@@ -15,5 +16,17 @@ export class SessionPolicy {
         }
 
         return false
+    }
+
+    canViewSession(): boolean {
+        return this.isSelf()
+    }
+
+    enforceCanViewSession(): void {
+        if(!this.canViewSession()) {
+            throw new ForbiddenError({
+                sessionId: ['YOU_ARE_NOT_AUTHORIZED_TO_VIEW_THIS_SESSION'],
+            })
+        }
     }
 }
