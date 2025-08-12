@@ -30,11 +30,6 @@ export const getUserSessionsRoute = async (fastify: FastifyInstance) => {
                 new PrismaSessionRepository(fastify.prisma)
             )
 
-            console.log('onlyActive', onlyActive)
-            console.log('onlyTerminated', onlyTerminated)
-            console.log('page', page)
-            console.log('limit', limit)
-
             const result = await usecase.execute(request.auth, {
                 filters: {
                     userId,
