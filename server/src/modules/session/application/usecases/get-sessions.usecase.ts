@@ -21,13 +21,6 @@ export class GetSessionsUsecase {
 
         const { items, meta } = await this.sessionRepository.findAll(options)
 
-        if(authContext.session) {
-            const sessionId = authContext.session.id
-            const currentSession = items.find(item => item.id === sessionId)
-            
-            currentSession?.setIsCurrent(true)
-        }
-
         return {
             items,
             meta,
