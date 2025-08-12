@@ -7,12 +7,17 @@ export const meRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().get('/me', {}, async (request, reply) => {
         const userMapper = new UserMapper()
 
-        const user = request.auth?.isUserContext() ? userMapper.toPublicDTO(request.auth.user) : null
+        if (!request.auth?.isUserContext()) {
+            return fastify.httpErrors.unauthorized()
+        }
+
+        const user = userMapper.toPublicDTO(request.auth.user)
 
         return reply.status(200).send({
             user,
-            twoFactorAuthEnabled: request.auth?.isUserContext() && request.auth.twoFactorAuthEnabled,
-            hasCompletedTwoFactorAuth: request.auth?.isUserContext() && request.auth.hasCompletedTwoFactorAuth,
+            sessionId: request.auth.session?.id,
+            twoFactorAuthEnabled: request.auth.twoFactorAuthEnabled,
+            hasCompletedTwoFactorAuth: request.auth.hasCompletedTwoFactorAuth,
         })
     })
 }
