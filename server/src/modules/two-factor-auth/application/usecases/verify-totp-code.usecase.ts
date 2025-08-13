@@ -1,14 +1,15 @@
 import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { ITwoFactorMethodRepository } from '../../domain/ports/two-factor-method-repository.interface.ts'
 import { TwoFactorMethodType } from '@/core/enums/two-factor-method-type.enum.ts'
-import { TotpService } from '../../infrastructure/services/totp.service.ts'
 import { TwoFactorMethod } from '@/core/entities/two-factor-method.entity.ts'
 import { VerifyTotpCodeDTO } from '../dto/verify-totp-code.dto.ts'
 import { IEncryptionService } from '@/core/ports/encryption-service.interface.ts'
+import { ITotpService } from '../../domain/ports/totp-service.interface.ts'
 
 type VerifyTotpCodeUsecaseDeps = {
     twoFactorMethodRepo: ITwoFactorMethodRepository
     encryptionService: IEncryptionService
+    totpService: ITotpService
 }
 
 /**
@@ -19,9 +20,10 @@ export class VerifyTotpCodeUsecase {
     constructor(private readonly deps: VerifyTotpCodeUsecaseDeps) {}
 
     async execute(data: VerifyTotpCodeDTO): Promise<TwoFactorMethod> {
+        const { totpService, encryptionService, twoFactorMethodRepo } = this.deps
         const { userId, totpCode } = data
 
-        const method = await this.deps.twoFactorMethodRepo.findByUserIdAndType(
+        const method = await twoFactorMethodRepo.findByUserIdAndType(
             userId,
             TwoFactorMethodType.TOTP
         )
@@ -33,9 +35,8 @@ export class VerifyTotpCodeUsecase {
         }
 
         const config = method.config
-        const totpService = new TotpService()
 
-        const decryptedSecret = await this.deps.encryptionService.decrypt(config.encryptedSecret)
+        const decryptedSecret = await encryptionService.decrypt(config.encryptedSecret)
 
         const isValid = await totpService.verifyCode(
             decryptedSecret,

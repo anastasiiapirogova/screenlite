@@ -7,6 +7,7 @@ import z from 'zod'
 import { CompleteTotpSetupUsecase } from '../../application/usecases/complete-totp-setup.usecase.ts'
 import { VerifyTotpCodeUsecase } from '../../application/usecases/verify-totp-code.usecase.ts'
 import { totpCodeSchema } from '@/shared/schemas/totp-code.schema.ts'
+import { TotpService } from '../services/totp.service.ts'
 
 // Prefix: /api/two-factor-auth/
 export const completeTotpSetupRoute = async (fastify: FastifyInstance) => {
@@ -29,6 +30,7 @@ export const completeTotpSetupRoute = async (fastify: FastifyInstance) => {
             verifyTotpCodeUsecase: new VerifyTotpCodeUsecase({
                 twoFactorMethodRepo: new PrismaTwoFactorMethodRepository(fastify.prisma, new TwoFactorConfigHandlerFactory(fastify.prisma)),
                 encryptionService: fastify.encryption,
+                totpService: new TotpService(),
             }),
             userRepo: new PrismaUserRepository(fastify.prisma),
         })
