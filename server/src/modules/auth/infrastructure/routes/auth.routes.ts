@@ -3,6 +3,7 @@ import { signupRoute } from './signup.route.ts'
 import { loginRoute } from './login.route.ts'
 import { meRoute } from './me.route.ts'
 import { logoutRoute } from './logout.route.ts'
+import { completeTotpTwoFactorAuthRoute } from './complete-totp-two-factor-auth.route.ts'
 
 // Prefix: /api/auth
 const authRoutes = async (fastify: FastifyInstance) => {
@@ -10,7 +11,8 @@ const authRoutes = async (fastify: FastifyInstance) => {
         signupRoute(fastify),
         loginRoute(fastify),
         meRoute(fastify),
-        logoutRoute(fastify)
+        logoutRoute(fastify),
+        completeTotpTwoFactorAuthRoute(fastify),
     ])
 }
 
