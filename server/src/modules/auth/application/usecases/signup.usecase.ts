@@ -45,7 +45,7 @@ export class SignupUsecase {
             name: data.name,
             passwordHash,
             emailVerifiedAt: null,
-            passwordUpdatedAt: new Date(),
+            passwordUpdatedAt: null,
             profilePhotoPath: null,
             deletionRequestedAt: null,
             deletedAt: null,
