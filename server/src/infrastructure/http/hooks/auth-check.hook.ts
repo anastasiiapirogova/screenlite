@@ -23,7 +23,7 @@ const authCheckHook: FastifyPluginAsync = async (fastify) => {
         }
 
         if (config.allowSkipTwoFactorAuth !== true) {
-            if(request.auth.isUserContext() && request.auth.twoFactorAuthEnabled && !request.auth.hasCompletedTwoFactorAuth) {
+            if(request.auth.isUserContext() && request.auth.pendingTwoFactorAuth) {
                 throw fastify.httpErrors.unauthorized('TWO_FACTOR_AUTH_REQUIRED')
             }
         }

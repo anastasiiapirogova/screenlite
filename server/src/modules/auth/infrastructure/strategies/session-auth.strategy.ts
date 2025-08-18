@@ -8,6 +8,8 @@ import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { UserSessionAuthContext } from '@/core/auth/user-session-auth.context.ts'
 import { ITwoFactorMethodRepository } from '@/modules/two-factor-auth/domain/ports/two-factor-method-repository.interface.ts'
 import { CheckUserTwoFactorAuthStatusUsecase } from '@/modules/two-factor-auth/application/usecases/check-user-two-factor-auth-status.usecase.ts'
+import { AuthSessionFactory } from '@/core/factories/auth-session.factory.ts'
+import { AuthUserFactory } from '@/core/factories/auth-user.factory.ts'
 
 export type SessionAuthDeps = {
     sessionRepo: ISessionRepository
@@ -45,9 +47,13 @@ export class SessionAuthStrategy implements IAuthStrategy {
         try {
             const { user, session } = await validateSession.execute(token)
 
+            const authUser = AuthUserFactory.fromUser(user)
+
             const isTwoFactorAuthEnabled = await checkUserTwoFactorAuthStatus.execute(user.id)
 
-            return new UserSessionAuthContext(user, session, isTwoFactorAuthEnabled)
+            const authSession = AuthSessionFactory.fromSession(session, isTwoFactorAuthEnabled)
+
+            return new UserSessionAuthContext(authUser, authSession)
         } catch {
             return null
         }
