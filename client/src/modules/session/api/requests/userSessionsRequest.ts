@@ -14,7 +14,7 @@ export type UserSessionsRequestFilters = {
 }
 
 export const userSessionsRequest = async (userId: string, filters: UserSessionsRequestFilters) => {
-    const response = await axios.get<UserSessionsRequestResponse>(`/users/${userId}/sessions`, {
+    const response = await axios.get<UserSessionsRequestResponse>(`/sessions/users/${userId}`, {
         params: {
             ...filters
         }

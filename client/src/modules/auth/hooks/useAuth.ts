@@ -2,11 +2,11 @@ import { useContext } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 
 export const useAuth = () => {
-    const user = useContext(AuthContext)
+    const data = useContext(AuthContext)
 
-    if (!user) {
+    if (!data) {
         throw new Error('useAuth must be used within a CurrentUserProvider')
     }
 
-    return user
+    return data
 }

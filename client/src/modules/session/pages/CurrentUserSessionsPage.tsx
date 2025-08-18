@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { useCurrentUser } from '../../auth/hooks/useCurrentUser'
 import { FullWidthSettingsPageHeader } from '@modules/user/components/FullWidthSettingsPageHeader'
 import { userSessionsQuery } from '../queries/userSessionsQuery'
 import { useRouterSessionFilter } from '../hooks/useRouterSessionFilter'
 import { SessionCard } from '../components/SessionCard'
 import { ScrollArea } from '@shared/ui/ScrollArea'
+import { useAuthData } from '@modules/auth/hooks/useAuthData'
 
 export const CurrentUserSessionsPage = () => {
-    const user = useCurrentUser()
+    const { user, sessionId } = useAuthData()
     const { filters } = useRouterSessionFilter()
 
     const { data: sessions, isLoading, error } = useQuery(userSessionsQuery({
@@ -18,8 +18,8 @@ export const CurrentUserSessionsPage = () => {
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>Error loading sessions</div>
 
-    const currentSession = sessions?.data!.find(session => session.token)
-    const otherSessions = sessions?.data!.filter(session => !session.token)
+    const currentSession = sessions?.items.find(session => session.id === sessionId)
+    const otherSessions = sessions?.items.filter(session => session.id !== sessionId)
 
     return (
         <>
