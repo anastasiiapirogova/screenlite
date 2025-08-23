@@ -53,7 +53,7 @@ export class RequestEmailChangeUseCase {
             newEmail,
         })
 
-        user.setPendingEmail(newEmail)  
+        user.email.setPending(newEmail)  
 
         await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)

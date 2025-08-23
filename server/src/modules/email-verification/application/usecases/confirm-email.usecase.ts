@@ -34,7 +34,7 @@ export class ConfirmEmailUseCase {
 
         if (!user) throw new NotFoundError()
   
-        if (user.isEmailVerified) {
+        if (user.email.isVerified) {
             await tokenRepo.deleteAllByUserId(tokenEntity.userId, EmailVerificationTokenType.VERIFY)
 
             throw new ValidationError({
@@ -42,7 +42,7 @@ export class ConfirmEmailUseCase {
             })
         }
 
-        user.verifyEmail()
+        user.email.verify()
 
         await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)

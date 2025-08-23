@@ -37,7 +37,15 @@ export class ConfirmEmailChangeUseCase {
             throw new NotFoundError()
         }
 
-        const existingUser = await userRepo.findByEmail(user.pendingEmail!)
+        const pendingEmail = user.email.pending
+
+        if(!pendingEmail) {
+            throw new ValidationError({
+                email: ['NO_PENDING_EMAIL_FOUND'],
+            })
+        }
+
+        const existingUser = await userRepo.findByEmail(pendingEmail)
 
         if(existingUser) {
             await this.handleEmailConflict(user, tokenEntity, unitOfWork)
@@ -47,7 +55,7 @@ export class ConfirmEmailChangeUseCase {
             })
         }
 
-        user.confirmPendingEmail()
+        user.email.confirmPending()
 
         await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
@@ -56,11 +64,10 @@ export class ConfirmEmailChangeUseCase {
     }
 
     private async handleEmailConflict(user: User, tokenEntity: EmailVerificationToken, unitOfWork: IUnitOfWork) {
-        user.clearPendingEmail()
+        user.email.clearPending()
 
         await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
-            await repos.userRepository.clearPendingEmails(user.email)
             await repos.emailVerificationTokenRepository.deleteAllByUserId(tokenEntity.userId)
         })
     }

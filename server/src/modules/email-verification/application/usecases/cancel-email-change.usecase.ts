@@ -22,7 +22,7 @@ export class CancelEmailChangeUseCase {
             throw new NotFoundError()
         }
 
-        user.clearPendingEmail()
+        user.email.clearPending()
 
         await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)

@@ -30,6 +30,12 @@ export class SendVerificationEmailUseCase {
             throw new NotFoundError()
         }
 
+        if(user.email.isVerified) {
+            throw new ValidationError({
+                userId: ['EMAIL_ALREADY_VERIFIED'],
+            })
+        }
+
         const latestToken = await tokenRepo.findLatestByUserId(userId, EmailVerificationTokenType.VERIFY)
 
         const cooldown = 5 * 60 * 1000 // 5 minutes
@@ -55,7 +61,7 @@ export class SendVerificationEmailUseCase {
         await tokenRepo.create(token)
 
         await jobProducer.enqueue('send_verification_email', {
-            email: user.email,
+            email: user.email.current,
             token: rawToken,
         })
     }
