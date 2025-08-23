@@ -6,12 +6,16 @@ import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { LoginResultDTO } from '../dto/login-result.dto.ts'
 import { ISessionTokenService } from '@/modules/session/domain/ports/session-token-service.interface.ts'
 import { SessionFactory } from '@/modules/session/domain/services/session.factory.ts'
+import { IUserCredentialRepository } from '@/core/ports/user-credential-repository.interface.ts'
+import { UserCredentialType } from '@/core/enums/user-credential-type.enum.ts'
+import { UserPassword } from '@/core/entities/user-password.entity.ts'
 
 export type LoginUsecaseDeps = {
     userRepository: IUserRepository
     sessionRepository: ISessionRepository
     passwordHasher: IHasher
     sessionTokenService: ISessionTokenService
+    userCredentialRepository: IUserCredentialRepository
 }
 
 export class LoginUsecase {
@@ -20,7 +24,7 @@ export class LoginUsecase {
     ) {}
 
     async execute(data: LoginDTO): Promise<LoginResultDTO> {
-        const { userRepository, sessionRepository, passwordHasher, sessionTokenService } = this.deps
+        const { userRepository, sessionRepository, passwordHasher, sessionTokenService, userCredentialRepository } = this.deps
 
         const user = await userRepository.findByEmail(data.email)
 
@@ -28,7 +32,15 @@ export class LoginUsecase {
             throw new ValidationError({ email: ['USER_WITH_EMAIL_NOT_FOUND'] })
         }
 
-        const valid = await passwordHasher.compare(data.password, user.passwordHash)
+        const userCredentials = await userCredentialRepository.findByUserId(user.id)
+
+        const passwordCredential = userCredentials.find(credential => credential.type === UserCredentialType.PASSWORD) as UserPassword
+
+        if (!passwordCredential) {
+            throw new ValidationError({ password: ['PASSWORD_CREDENTIAL_NOT_FOUND'] })
+        }
+
+        const valid = await passwordCredential.validate(data.password, passwordHasher)
 
         if (!valid) {
             throw new ValidationError({ password: ['INVALID_PASSWORD'] })
@@ -54,4 +66,4 @@ export class LoginUsecase {
             token: sessionTokenService.formatToken(token)
         }
     }
-} 
+}

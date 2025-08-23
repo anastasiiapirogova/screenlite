@@ -11,14 +11,14 @@ export const logoutRoute = async (fastify: FastifyInstance) => {
             sessionRepository: sessionRepo,
         })
 
-        const sessionTokenHash = request.auth?.session?.tokenHash
+        const sessionId = request.auth?.session?.id
 
-        if(!sessionTokenHash) {
+        if(!sessionId) {
             throw fastify.httpErrors.unauthorized()
         }
 
         await logout.execute({
-            sessionTokenHash
+            sessionId
         })
 
         return reply.status(200).send()

@@ -1,3 +1,3 @@
 export type LogoutDTO = {
-    sessionTokenHash: string
+    sessionId: string
 }

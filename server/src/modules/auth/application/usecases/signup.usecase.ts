@@ -8,9 +8,11 @@ import { SignupResultDTO } from '../dto/signup-result.dto.ts'
 import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { UserRole } from '@/core/enums/user-role.enum.ts'
-import { UserPassword } from '@/core/value-objects/user-password.value-object.ts'
+import { Password } from '@/core/value-objects/password.value-object.ts'
 import { SessionFactory } from '@/modules/session/domain/services/session.factory.ts'
 import { ISessionTokenService } from '@/modules/session/domain/ports/session-token-service.interface.ts'
+import { UserPassword } from '@/core/entities/user-password.entity.ts'
+import { IUserCredentialRepository } from '@/core/ports/user-credential-repository.interface.ts'
 
 export type SignupUsecaseDeps = {
     userRepository: IUserRepository
@@ -18,6 +20,7 @@ export type SignupUsecaseDeps = {
     passwordHasher: IHasher
     unitOfWork: IUnitOfWork
     sessionTokenService: ISessionTokenService
+    userCredentialRepository: IUserCredentialRepository
 }
 
 export class SignupUsecase {
@@ -34,7 +37,7 @@ export class SignupUsecase {
             email: ['EMAIL_ALREADY_EXISTS'],
         })
 
-        const userPassword = new UserPassword(data.password)
+        const userPassword = new Password(data.password)
 
         const passwordHash = await passwordHasher.hash(userPassword.toString())
 
@@ -43,9 +46,7 @@ export class SignupUsecase {
             email: data.email,
             pendingEmail: null,
             name: data.name,
-            passwordHash,
             emailVerifiedAt: null,
-            passwordUpdatedAt: null,
             profilePhotoPath: null,
             deletionRequestedAt: null,
             deletedAt: null,
@@ -53,8 +54,11 @@ export class SignupUsecase {
             version: 1,
         })
 
+        const userCredential = new UserPassword(uuidv4(), user.id, passwordHash, new Date())
+
         const savedUser = await unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)
+            await repos.userCredentialRepository.save(userCredential)
             await repos.emailVerificationTokenRepository.deleteByEmail(data.email)
 
             return user

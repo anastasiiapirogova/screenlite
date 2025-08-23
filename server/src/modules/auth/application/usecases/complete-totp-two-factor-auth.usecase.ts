@@ -1,6 +1,7 @@
 import { UserSessionAuthContext } from '@/core/auth/user-session-auth.context.ts'
 import { ISessionRepository } from '@/modules/session/domain/ports/session-repository.interface.ts'
 import { VerifyTotpCodeUsecase } from '@/modules/two-factor-auth/application/usecases/verify-totp-code.usecase.ts'
+import { ValidationError } from '@/shared/errors/validation.error.ts'
 
 type CompleteTotpTwoFactorAuthUsecaseDeps = {
     verifyTotpCodeUsecase: VerifyTotpCodeUsecase
@@ -18,7 +19,11 @@ export class CompleteTotpTwoFactorAuthUsecase {
             totpCode,
         })
 
-        const session = authContext.session
+        const session = await sessionRepo.findById(authContext.session.id)
+
+        if(!session) {
+            throw new ValidationError({ sessionId: ['SESSION_NOT_FOUND'] })
+        }
 
         session.authenticateTwoFactor()
 

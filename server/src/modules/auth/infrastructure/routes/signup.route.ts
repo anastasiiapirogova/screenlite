@@ -11,6 +11,7 @@ import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.
 import { UserMapper } from '@/modules/user/infrastructure/mappers/user.mapper.ts'
 import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { SessionTokenService } from '@/modules/session/domain/services/session-token.service.ts'
+import { PrismaUserCredentialRepository } from '@/modules/user/infrastructure/repositories/prisma-user-credential.repository.ts'
 
 export const signupRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/signup', {
@@ -26,6 +27,7 @@ export const signupRoute = async (fastify: FastifyInstance) => {
         const userRepo = new PrismaUserRepository(fastify.prisma)
         const sessionRepo = new PrismaSessionRepository(fastify.prisma)
         const sessionTokenService = new SessionTokenService(new TokenGenerator(), new FastHasher())
+        const userCredentialRepo = new PrismaUserCredentialRepository(fastify.prisma)
         const hasher = new BcryptHasher()
         const unitOfWork = new PrismaUnitOfWork(fastify.prisma)
         const userMapper = new UserMapper()
@@ -36,6 +38,7 @@ export const signupRoute = async (fastify: FastifyInstance) => {
             sessionTokenService,
             passwordHasher: hasher,
             unitOfWork,
+            userCredentialRepository: userCredentialRepo
         })
 
         const result = await signup.execute({

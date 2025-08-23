@@ -1,6 +1,6 @@
 import { ValidationError } from '@/shared/errors/validation.error.ts'
 
-export class UserPassword {
+export class Password {
     private readonly value: string
 
     constructor(plain: string) {

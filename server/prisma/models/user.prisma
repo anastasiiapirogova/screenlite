@@ -4,9 +4,7 @@ model User {
     pendingEmail        String?   @unique
     emailVerifiedAt     DateTime?
     name                String
-    passwordHash        String
     role                String    @default("user")
-    passwordUpdatedAt   DateTime?
     profilePhotoPath    String?
     createdAt           DateTime  @default(now())
     updatedAt           DateTime  @updatedAt
@@ -28,4 +26,5 @@ model User {
     adminApiTokens          AdminApiToken[]
     twoFactorMethods        TwoFactorMethod[]
     twoFactorRecoveryCodes  TwoFactorRecoveryCode[]
+    userCredentials         UserCredential[]
 }

@@ -7,10 +7,8 @@ export class User {
     private _email: string
     private _pendingEmail: string | null = null
     public readonly name: string
-    private _passwordHash: string
     private _role: UserRole
     private _emailVerifiedAt: Date | null = null
-    private _passwordUpdatedAt: Date | null = null
     private _profilePhotoPath: string | null = null
     private _deletionRequestedAt: Date | null = null
     private _deletedAt: Date | null = null
@@ -21,10 +19,8 @@ export class User {
         this._email = dto.email
         this._pendingEmail = dto.pendingEmail
         this.name = dto.name
-        this._passwordHash = dto.passwordHash
         this._role = dto.role
         this._emailVerifiedAt = dto.emailVerifiedAt
-        this._passwordUpdatedAt = dto.passwordUpdatedAt
         this._profilePhotoPath = dto.profilePhotoPath
         this._deletionRequestedAt = dto.deletionRequestedAt
         this._deletedAt = dto.deletedAt
@@ -111,12 +107,6 @@ export class User {
     verifyEmail(): void {
         this._emailVerifiedAt = new Date()
     }
-  
-    updatePassword(newPasswordHash: string): void {
-        this._passwordHash = newPasswordHash
-        this._passwordUpdatedAt = new Date()
-    }
-
     requestDeletion(): void {
         this._deletionRequestedAt = new Date()
     }
@@ -131,14 +121,6 @@ export class User {
   
     get isDeleted(): boolean {
         return !!this.deletedAt
-    }
-  
-    get passwordHash(): string {
-        return this._passwordHash
-    }
-  
-    get passwordUpdatedAt(): Date | null {
-        return this._passwordUpdatedAt
     }
   
     get emailVerifiedAt(): Date | null {

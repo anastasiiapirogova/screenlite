@@ -6,12 +6,16 @@ import { NotFoundError } from '@/shared/errors/not-found.error.ts'
 import { SessionTerminationReason } from '@/core/enums/session-termination-reason.enum.ts'
 import { ChangePasswordDTO } from '../dto/change-password.dto.ts'
 import { ValidationError } from '@/shared/errors/validation.error.ts'
-import { UserPassword } from '@/core/value-objects/user-password.value-object.ts'
+import { Password } from '@/core/value-objects/password.value-object.ts'
+import { IUserCredentialRepository } from '@/core/ports/user-credential-repository.interface.ts'
+import { UserCredentialType } from '@/core/enums/user-credential-type.enum.ts'
+import { UserPassword } from '@/core/entities/user-password.entity.ts'
 
 type ChangePasswordUsecaseDeps = {
     unitOfWork: IUnitOfWork
     userRepository: IUserRepository
     passwordHasher: IHasher
+    userCredentialRepository: IUserCredentialRepository
 }
 
 export class ChangePasswordUseCase {
@@ -22,7 +26,7 @@ export class ChangePasswordUseCase {
     async execute(data: ChangePasswordDTO) {
         const { authContext, userId, password, currentPassword } = data
 
-        const { unitOfWork, userRepository, passwordHasher } = this.deps
+        const { unitOfWork, userRepository, passwordHasher, userCredentialRepository } = this.deps
 
         const user = await userRepository.findById(userId)
 
@@ -36,7 +40,11 @@ export class ChangePasswordUseCase {
 
         userPolicy.enforceCanChangePassword()
 
-        const isCurrentPasswordValid = await passwordHasher.compare(currentPassword, user.passwordHash)
+        const userCredentials = await userCredentialRepository.findByUserId(user.id)
+
+        const passwordCredential = userCredentials.find(credential => credential.type === UserCredentialType.PASSWORD) as UserPassword
+
+        const isCurrentPasswordValid = await passwordCredential.validate(currentPassword, passwordHasher)
 
         if(!isCurrentPasswordValid) {
             throw new ValidationError({
@@ -44,14 +52,12 @@ export class ChangePasswordUseCase {
             })
         }
 
-        const userPassword = new UserPassword(password)
+        const userPassword = new Password(password)
 
-        const passwordHash = await passwordHasher.hash(userPassword.toString())
-
-        user.updatePassword(passwordHash)
+        await passwordCredential.update(userPassword.toString(), passwordHasher)
 
         await unitOfWork.execute(async (repos) => {
-            await repos.userRepository.save(user)
+            await repos.userCredentialRepository.save(passwordCredential)
 
             await repos.sessionRepository.terminateByUserId(user.id, SessionTerminationReason.PASSWORD_CHANGED, currentSessionId ? [currentSessionId] : [])
         })

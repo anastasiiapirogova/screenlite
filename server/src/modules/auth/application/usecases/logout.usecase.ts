@@ -15,7 +15,7 @@ export class LogoutUsecase {
     async execute(data: LogoutDTO): Promise<void> {
         const { sessionRepository } = this.deps
 
-        const session = await sessionRepository.findActiveByTokenHash(data.sessionTokenHash)
+        const session = await sessionRepository.findById(data.sessionId)
 
         if (!session) {
             throw new ValidationError({ sessionToken: ['SESSION_NOT_FOUND'] })

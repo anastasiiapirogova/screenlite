@@ -5,6 +5,7 @@ import { ISessionRepository } from '../../modules/session/domain/ports/session-r
 import { IUserAdminPermissionRepository } from '../../modules/admin-permission/domain/ports/user-admin-permission-repository.interface.ts'
 import { IUserRepository } from '../../modules/user/domain/ports/user-repository.interface.ts'
 import { ITwoFactorMethodRepository } from '@/modules/two-factor-auth/domain/ports/two-factor-method-repository.interface.ts'
+import { IUserCredentialRepository } from './user-credential-repository.interface.ts'
 
 export type IUnitOfWork = {
     execute<T>(fn: (repos: {
@@ -15,5 +16,6 @@ export type IUnitOfWork = {
         adminPermissionRepository: IAdminPermissionRepository
         passwordResetTokenRepository: IPasswordResetTokenRepository
         twoFactorMethodRepository: ITwoFactorMethodRepository
+        userCredentialRepository: IUserCredentialRepository
     }) => Promise<T>): Promise<T>
 }

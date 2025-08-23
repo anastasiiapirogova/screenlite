@@ -8,6 +8,7 @@ import z from 'zod'
 import { passwordSchema } from '@/shared/schemas/user-password.schema.ts'
 import { ConfirmPasswordResetUsecase } from '../../application/usecases/confirm-password-reset.usecase.ts'
 import { BcryptHasher } from '@/shared/infrastructure/services/bcrypt-hasher.service.ts'
+import { PrismaUserCredentialRepository } from '@/modules/user/infrastructure/repositories/prisma-user-credential.repository.ts'
 
 export const confirmPasswordResetRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/confirm', {
@@ -28,13 +29,15 @@ export const confirmPasswordResetRoute = async (fastify: FastifyInstance) => {
         const passwordResetTokenRepo = new PrismaPasswordResetTokenRepository(fastify.prisma)
         const passwordHasher = new BcryptHasher()
         const hasher = new FastHasher()
-
+        const userCredentialRepo = new PrismaUserCredentialRepository(fastify.prisma)
+        
         const confirmPasswordResetUseCase = new ConfirmPasswordResetUsecase({
             unitOfWork,
             userRepo,
             passwordResetTokenRepo,
             hasher,
             passwordHasher,
+            userCredentialRepo,
         })
 
         await confirmPasswordResetUseCase.execute({ token, password })
