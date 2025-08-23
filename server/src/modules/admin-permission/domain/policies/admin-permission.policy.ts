@@ -45,22 +45,29 @@ export class AdminPermissionPolicy {
         targetUserPermissions: AdminPermissionName[],
         permissionsToSet: AdminPermissionName[]
     ): boolean {
-        if (!this.hasAdminPermissions([AdminPermissionName.USERS_MANAGE_ADMIN_PERMISSIONS])) return false
-        if (!targetUser.hasAdminAccess) return false
+        // Super admins have all permissions by default so they can't be managed
+        const canTargetUserHaveAdminPermissions = !targetUser.isSuperAdmin && targetUser.hasAdminAccess
 
+        if (!canTargetUserHaveAdminPermissions) {
+            return false
+        }
+        
+        if (!this.hasAdminPermissions([AdminPermissionName.USERS_MANAGE_ADMIN_PERMISSIONS])) {
+            return false
+        }
+        
         const actorPerms = this.authContext.getAdminPermissions()
 
-        const adding = permissionsToSet.filter(p => !targetUserPermissions.includes(p))
-        const removing = targetUserPermissions.filter(p => !permissionsToSet.includes(p))
-
-        if (adding.some(p => !actorPerms.includes(p))) return false
-        if (removing.some(p => !actorPerms.includes(p))) return false
+        if (this.violatesPrivilegeEscalation(actorPerms, targetUserPermissions, permissionsToSet)) {
+            return false
+        }
 
         if (this.authContext.isUserContext()) {
             const currentUser = this.authContext.user
 
-            if (currentUser.id === targetUser.id) return false
-            if (!currentUser.isSuperAdmin && targetUser.isSuperAdmin) return false
+            if (currentUser.id === targetUser.id) {
+                return false
+            }
 
             return true
         }
@@ -84,5 +91,19 @@ export class AdminPermissionPolicy {
                 admin: ['CANNOT_MANAGE_UNOWNED_PERMISSIONS']
             })
         }
+    }
+
+    private violatesPrivilegeEscalation(
+        actorPermissions: AdminPermissionName[],
+        currentPermissions: AdminPermissionName[],
+        requestedPermissions: AdminPermissionName[]
+    ): boolean {
+        const adding = requestedPermissions.filter(p => !currentPermissions.includes(p))
+        const removing = currentPermissions.filter(p => !requestedPermissions.includes(p))
+    
+        return (
+            adding.some(p => !actorPermissions.includes(p)) ||
+            removing.some(p => !actorPermissions.includes(p))
+        )
     }
 }
