@@ -46,6 +46,18 @@ export class TwoFactorAuthPolicy {
         return this.canViewTotpSetupData()
     }
 
+    canDisableTotpMethod(): boolean {
+        return this.canViewTotpSetupData()
+    }
+
+    enforceCanDisableTotpMethod(): void {
+        if(!this.canDisableTotpMethod()) {
+            throw new ForbiddenError({
+                userId: ['YOU_CANNOT_DISABLE_TOTP_METHOD_FOR_THIS_USER']
+            })
+        }
+    }
+
     enforceCanCompleteTotpSetup(): void {
         if(!this.canCompleteTotpSetup()) {
             throw new ForbiddenError({
