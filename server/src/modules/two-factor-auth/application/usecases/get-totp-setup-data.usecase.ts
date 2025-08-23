@@ -77,7 +77,7 @@ export class GetTotpSetupDataUsecase {
             secret = await encryptionService.decrypt(twoFactorMethod.config.encryptedSecret)
         }
 
-        const url = totpService.generateQrCodeUrl(secret, user.email, 'Screenlite', config.totp.digits, config.totp.period, config.totp.algorithm)
+        const url = totpService.generateQrCodeUrl(secret, user.email.current, 'Screenlite', config.totp.digits, config.totp.period, config.totp.algorithm)
 
         return {
             secret,
