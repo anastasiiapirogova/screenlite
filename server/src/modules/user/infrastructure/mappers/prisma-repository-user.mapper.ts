@@ -23,13 +23,13 @@ export class PrismaRepositoryUserMapper {
     static toPersistence(user: User): ToPersistenceUserData {
         return {
             id: user.id,
-            email: user.email,
-            pendingEmail: user.pendingEmail,
+            email: user.email.current,
+            pendingEmail: user.email.pending,
             name: user.name,
             profilePhotoPath: user.profilePhotoPath,
-            emailVerifiedAt: user.emailVerifiedAt,
-            deletionRequestedAt: user.deletionRequestedAt,
-            deletedAt: user.deletedAt,
+            emailVerifiedAt: user.email.verifiedAt,
+            deletionRequestedAt: user.deletionState.requestedAt,
+            deletedAt: user.deletionState.deletedAt,
             role: user.role,
             version: user.version,
         }
