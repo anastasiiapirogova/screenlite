@@ -26,13 +26,13 @@ export class RequestAccountDeletionUsecase {
 
         userPolicy.enforceCanRequestDeleteAccount()
 
-        if (user.isDeletionRequested) {
+        if (user.deletionState.isDeletionRequested) {
             throw new ValidationError({
                 userId: ['USER_ALREADY_REQUESTED_FOR_DELETION']
             })
         }
         
-        user.requestDeletion()
+        user.deletionState.requestDeletion()
 
         await this.unitOfWork.execute(async (repos) => {
             await repos.userRepository.save(user)

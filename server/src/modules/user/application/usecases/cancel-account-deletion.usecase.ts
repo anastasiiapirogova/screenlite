@@ -23,13 +23,13 @@ export class CancelAccountDeletionUsecase {
 
         userPolicy.enforceCanRequestDeleteAccount()
 
-        if (!user.isDeletionRequested) {
+        if (!user.deletionState.isDeletionRequested) {
             throw new ValidationError({
                 userId: ['USER_HAS_NOT_REQUESTED_DELETION']
             })
         }
         
-        user.cancelDeletionRequest()
+        user.deletionState.cancelDeletionRequest()
 
         await this.userRepository.save(user)
     }
