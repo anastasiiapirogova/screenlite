@@ -59,8 +59,8 @@ export class ConfirmPasswordResetUsecase {
         await passwordCredential.update(userPassword.toString(), passwordHasher)
 
         await unitOfWork.execute(async (repos) => {
-            if (!user.isEmailVerified) {
-                user.verifyEmail()
+            if (!user.email.isVerified) {
+                user.email.verify()
                 await repos.emailVerificationTokenRepository.deleteAllByUserId(user.id, EmailVerificationTokenType.VERIFY)
             }
 
