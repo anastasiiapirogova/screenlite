@@ -71,6 +71,14 @@ export class GetTotpSetupDataUsecase {
             })
 
             await unitOfWork.execute(async (repos) => {
+                const existing = await repos.twoFactorMethodRepository.findByUserIdAndType(userId, TwoFactorMethodType.TOTP)
+
+                if (existing) {
+                    throw new ForbiddenError({
+                        totp: ['TOTP_ALREADY_SETUP']
+                    })
+                }
+                
                 await repos.twoFactorMethodRepository.save(twoFactorMethod!)
             })
         } else {
