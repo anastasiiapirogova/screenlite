@@ -7,5 +7,4 @@ export interface IUserRepository {
     findByEmail(email: string): Promise<User | null>
     findAll(queryOptions?: UsersQueryOptionsDTO): Promise<PaginationResponse<User>>
     save(user: User): Promise<void>
-    clearPendingEmails(email: string): Promise<void>
 }

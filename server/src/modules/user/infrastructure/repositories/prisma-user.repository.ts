@@ -51,13 +51,6 @@ export class PrismaUserRepository implements IUserRepository {
         })
     }
 
-    async clearPendingEmails(email: string): Promise<void> {
-        await this.prisma.user.updateMany({
-            where: { email },
-            data: { pendingEmail: null },
-        })
-    }
-
     private toDomain(prismaUser: PrismaUser): User {
         return PrismaRepositoryUserMapper.toDomain(prismaUser)
     }
