@@ -40,6 +40,7 @@ export class PrismaRepositoryTwoFactorMethodMapper {
                 enabled,
                 lastUsedAt,
                 createdAt,
+                isTotp: type === TwoFactorMethodType.TOTP,
             },
             config
         }

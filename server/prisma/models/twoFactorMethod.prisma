@@ -5,10 +5,15 @@ model TwoFactorMethod {
     enabled    Boolean   @default(false)
     createdAt  DateTime  @default(now())
     lastUsedAt DateTime?
+    
+    // Indicates whether this method is TOTP.
+    // Used to enforce a unique constraint ensuring each user has at most one TOTP method.
+    isTotp     Boolean   @default(false)
 
     totpConfig TotpConfig?
     user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+    @@unique([userId, isTotp]) // Ensures only one TOTP method per user when isTotp = true
+    @@index([userId, type])
     @@index([userId])
-    @@index([type, enabled])
 }
