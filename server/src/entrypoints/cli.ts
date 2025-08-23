@@ -104,11 +104,10 @@ class ScreenliteCLI {
 
             console.log('\nUser Information:')
             console.log('─'.repeat(50))
-            console.log(`Email: ${user.email}`)
+            console.log(`Email: ${user.email.current}`)
             console.log(`Name: ${user.name}`)
             console.log(`Role: ${roleDisplay}`)
-            console.log(`Email Verified: ${user.emailVerifiedAt ? 'Yes' : 'No'}`)
-            console.log(`Created: ${user.emailVerifiedAt?.toISOString().split('T')[0] || 'N/A'}`)
+            console.log(`Email Verified: ${user.email.isVerified ? 'Yes' : 'No'}`)
             console.log('─'.repeat(50))
 
         } catch (error) {
