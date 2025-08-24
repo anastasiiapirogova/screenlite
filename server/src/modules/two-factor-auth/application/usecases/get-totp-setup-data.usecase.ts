@@ -11,7 +11,7 @@ import { TwoFactorAuthPolicy } from '../../domain/policies/two-factor-auth.polic
 import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
 import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
-import { Prisma } from '@/generated/prisma/client.ts'
+import { ResourceConflictError } from '@/shared/errors/resource-conflict.error.ts'
 
 type GetTotpSetupDataUsecaseDeps = {
     twoFactorMethodRepo: ITwoFactorMethodRepository
@@ -75,9 +75,7 @@ export class GetTotpSetupDataUsecase {
                 try {
                     await repos.twoFactorMethodRepository.save(twoFactorMethod!)
                 } catch (error) {
-                    // If the error is a PrismaClientKnownRequestError and the code is P2002, it means that the user already has a TOTP method
-                    // We need to throw a ForbiddenError to prevent the user from setting up a second TOTP method
-                    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+                    if (error instanceof ResourceConflictError) {
                         throw new ForbiddenError({
                             totp: ['TOTP_ALREADY_SETUP']
                         })

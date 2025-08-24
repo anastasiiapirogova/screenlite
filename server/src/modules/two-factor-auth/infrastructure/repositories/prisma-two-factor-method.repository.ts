@@ -4,6 +4,7 @@ import { PrismaRepositoryTwoFactorMethodMapper } from '../mappers/prisma-reposit
 import { TwoFactorMethod } from '@/core/entities/two-factor-method.entity.ts'
 import { ITwoFactorConfigHandlerFactory } from '../../domain/ports/two-factor-config-handler-factory.interface.ts'
 import { TwoFactorMethodType } from '@/core/enums/two-factor-method-type.enum.ts'
+import { ResourceConflictError } from '@/shared/errors/resource-conflict.error.ts'
 
 export class PrismaTwoFactorMethodRepository implements ITwoFactorMethodRepository {
     constructor(
@@ -18,11 +19,21 @@ export class PrismaTwoFactorMethodRepository implements ITwoFactorMethodReposito
             id: twoFactorMethod.id,
         }
 
-        await this.prisma.twoFactorMethod.upsert({
-            where,
-            update: twoFactorMethodData,
-            create: twoFactorMethodData,
-        })
+        try {
+            await this.prisma.twoFactorMethod.upsert({
+                where,
+                update: twoFactorMethodData,
+                create: twoFactorMethodData,
+            })
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+                throw new ResourceConflictError({
+                    totp: ['TOTP_ALREADY_SETUP']
+                })
+            }
+        
+            throw error
+        }
 
         const handler = this.twoFactorConfigHandlerFactory.getHandler(twoFactorMethod.type)
 
