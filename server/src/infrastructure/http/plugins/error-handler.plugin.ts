@@ -3,6 +3,7 @@ import { ValidationError } from '@/shared/errors/validation.error.ts'
 import { Prisma } from '@/generated/prisma/client.ts'
 import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
+import { ZodError } from 'zod'
 
 const errorHandler: FastifyPluginAsync = async (fastify) => {
     fastify.setErrorHandler(async (error, request, reply) => {
@@ -37,6 +38,24 @@ const errorHandler: FastifyPluginAsync = async (fastify) => {
                 code: 'FST_ERR_VALIDATION',
                 message: 'Validation error',
                 errors
+            })
+
+            return
+        }
+
+        if (error instanceof ZodError) {
+            const errors = error.issues.map((err) => ({
+                field: err.path.join('.'),
+                message: err.message,
+                code: err.code
+            }))
+
+            reply.code(400).send({
+                statusCode: 400,
+                error: 'Bad Request',
+                code: 'FST_ERR_VALIDATION',
+                message: 'Validation error',
+                errors,
             })
 
             return
