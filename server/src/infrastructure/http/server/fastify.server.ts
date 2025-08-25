@@ -43,6 +43,7 @@ export class FastifyServer {
         await this.app.register(sensible)
         await this.app.register(formBody)
         await this.app.register(plugins.octetStream)
+        await this.app.register(plugins.multipartValidation)
         await this.app.register(plugins.config)
         await this.app.register(plugins.cors)
         await this.app.register(plugins.encryption)

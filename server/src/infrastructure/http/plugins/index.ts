@@ -17,6 +17,7 @@ import auth from './auth.plugin.ts'
 import adminPermissions from './admin-permissions.plugin.ts'
 import adminAccess from './admin-access.plugin.ts'
 import octetStream from './octet-stream.plugin.ts'
+import multipartValidation from './multipart-validation.plugin.ts'
 
 export default {
     config,
@@ -36,5 +37,6 @@ export default {
     auth,
     adminPermissions,
     adminAccess,
-    octetStream
+    octetStream,
+    multipartValidation
 }
