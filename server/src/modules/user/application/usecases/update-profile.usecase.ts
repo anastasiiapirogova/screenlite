@@ -41,7 +41,7 @@ export class UpdateProfileUsecase {
         userPolicy.enforceCanUpdateProfile()
 
         const shouldUploadNewPhoto = profilePhotoBuffer && Buffer.isBuffer(profilePhotoBuffer)
-        
+
         let newPhotoStorageKey: string | null = null
         let oldPhotoPath: string | null = null
 
@@ -64,7 +64,7 @@ export class UpdateProfileUsecase {
 
             return userMapper.toDTO(user)
         } catch (error) {
-            await this.cleanupFailedUpload(newPhotoStorageKey)
+            await this.scheduleCleanupJobs(newPhotoStorageKey)
             throw error
         }
     }
@@ -92,16 +92,8 @@ export class UpdateProfileUsecase {
 
     private async scheduleCleanupJobs(oldPhotoPath: string | null) {
         if (oldPhotoPath) {
-            await this.deps.jobProducer.enqueue('delete_old_profile_photo', {
+            await this.deps.jobProducer.enqueue('delete_profile_photo', {
                 storageKey: oldPhotoPath
-            })
-        }
-    }
-
-    private async cleanupFailedUpload(storageKey: string | null) {
-        if (storageKey) {
-            await this.deps.storage.deleteFile(storageKey).catch(() => {
-                console.warn(`Failed to cleanup uploaded file: ${storageKey}`)
             })
         }
     }
