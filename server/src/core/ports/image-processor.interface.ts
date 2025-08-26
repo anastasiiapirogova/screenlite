@@ -14,5 +14,5 @@ export type ImageProcessingOptions = {
 
 export type IImageProcessor = {
     getImageMetadata(readStream: Readable): Promise<ImageMetadata>
-    processImage(imageBuffer: Buffer, options?: ImageProcessingOptions): Promise<Buffer>
+    process(imageBuffer: Buffer, options?: ImageProcessingOptions): Promise<Buffer>
 }

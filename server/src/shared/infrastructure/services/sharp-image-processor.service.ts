@@ -15,7 +15,7 @@ export class SharpImageProcessor implements IImageProcessor {
         }
     }
 
-    public async processImage(
+    public async process(
         imageBuffer: Buffer,
         options?: ImageProcessingOptions
     ): Promise<Buffer> {
