@@ -6,20 +6,49 @@ import { UserDeletionState } from '../value-objects/user-deletion-state.value-ob
 export class User {
     public readonly id: string
     public email: UserEmailState
-    public readonly name: string
+    private _name: string
     public role: UserRole
-    public profilePhotoPath: string | null
+    private _profilePhotoPath: string | null
     public deletionState: UserDeletionState
     public readonly version: number
 
     constructor(dto: UserDTO) {
         this.id = dto.id
         this.email = new UserEmailState(dto.email, dto.pendingEmail, dto.emailVerifiedAt)
-        this.name = dto.name
+        this._name = dto.name
         this.role = dto.role
-        this.profilePhotoPath = dto.profilePhotoPath
+        this._profilePhotoPath = dto.profilePhotoPath
         this.deletionState = new UserDeletionState(dto.deletionRequestedAt, dto.deletedAt)
         this.version = dto.version
+    }
+
+    get name(): string {
+        return this._name
+    }
+
+    get profilePhotoPath(): string | null {
+        return this._profilePhotoPath
+    }
+
+    set profilePhotoPath(profilePhotoPath: string) {
+        this._profilePhotoPath = profilePhotoPath
+    }
+
+    removeProfilePhoto() {
+        const prevProfilePhotoPath = this._profilePhotoPath
+
+        this._profilePhotoPath = null
+        
+        return prevProfilePhotoPath
+    }
+
+    set name(name: string) {
+        // The longest personal name is 747 characters long
+        if(name.length < 1 || name.length > 1000) {
+            throw new Error('INVALID_NAME_LENGTH')
+        }
+
+        this._name = name
     }
 
     get isAdmin(): boolean {
