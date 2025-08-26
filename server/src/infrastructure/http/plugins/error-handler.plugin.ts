@@ -4,6 +4,7 @@ import { Prisma } from '@/generated/prisma/client.ts'
 import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
 import { ZodError } from 'zod'
+import { NotFoundError } from '@/shared/errors/not-found.error.ts'
 
 const errorHandler: FastifyPluginAsync = async (fastify) => {
     fastify.setErrorHandler(async (error, request, reply) => {
@@ -86,6 +87,17 @@ const errorHandler: FastifyPluginAsync = async (fastify) => {
                 code: 'FST_ERR_FORBIDDEN',
                 message: 'Forbidden error',
                 errors: error.details,
+            })
+
+            return
+        }
+
+        if (error instanceof NotFoundError) {
+            reply.code(404).send({
+                statusCode: 404,
+                error: 'Not Found',
+                code: 'FST_ERR_NOT_FOUND',
+                message: error.message,
             })
 
             return
