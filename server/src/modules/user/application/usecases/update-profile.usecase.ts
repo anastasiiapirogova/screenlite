@@ -11,6 +11,7 @@ import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { IImageProcessor } from '@/core/ports/image-processor.interface.ts'
 import { ProfilePhotoSpecification } from '@/core/value-objects/profile-photo-specification.value-object.ts'
 import { IUserMapper } from '../../domain/ports/user-mapper.interface.ts'
+import { User } from '@/core/entities/user.entity.ts'
 
 type UpdateProfileUsecaseDeps = {
     storage: IStorage
@@ -26,12 +27,8 @@ export class UpdateProfileUsecase {
     constructor(private readonly deps: UpdateProfileUsecaseDeps) {}
 
     async execute(data: UpdateProfileDto) {
-        let prevProfilePhotoPath: string | null = null
-
-        const { storage, userRepository, imageValidator, unitOfWork, jobProducer, imageProcessor, userMapper } = this.deps
+        const { userRepository, unitOfWork, userMapper } = this.deps
         const { profilePhotoBuffer, name, userId, removeProfilePhoto, authContext } = data
-
-        const newPhotoSubmitted = profilePhotoBuffer && Buffer.isBuffer(profilePhotoBuffer)
 
         const user = await userRepository.findById(userId)
 
@@ -43,36 +40,69 @@ export class UpdateProfileUsecase {
 
         userPolicy.enforceCanUpdateProfile()
 
-        if (removeProfilePhoto && !newPhotoSubmitted) {
-            prevProfilePhotoPath = user.removeProfilePhoto()
-        }
+        const shouldUploadNewPhoto = profilePhotoBuffer && Buffer.isBuffer(profilePhotoBuffer)
+        
+        let newPhotoStorageKey: string | null = null
+        let oldPhotoPath: string | null = null
 
-        if (newPhotoSubmitted) {
-            await imageValidator.validateProfilePhoto(profilePhotoBuffer)
+        try {
+            if (shouldUploadNewPhoto) {
+                const result = await this.handleNewPhotoUpload(profilePhotoBuffer, user)
 
-            const processedPhoto = await imageProcessor.process(profilePhotoBuffer, ProfilePhotoSpecification.getDefault())
-
-            const profilePhoto = new ProfilePhoto(processedPhoto, 'image/jpeg', userId)
-
-            await storage.uploadFile(profilePhoto.storageKey, processedPhoto, 'profile-pictures')
-
-            prevProfilePhotoPath = user.profilePhotoPath
-
-            user.profilePhotoPath = profilePhoto.storageKey
-        }
-
-        user.name = name
-
-        await unitOfWork.execute(async (tx) => {
-            await tx.userRepository.save(user)
-
-            if (prevProfilePhotoPath) {
-                await jobProducer.enqueue('delete_old_profile_photo', {
-                    storageKey: prevProfilePhotoPath
-                })
+                newPhotoStorageKey = result.newPhotoStorageKey
+                oldPhotoPath = result.oldPhotoPath
+            } else if (removeProfilePhoto) {
+                oldPhotoPath = user.removeProfilePhoto()
             }
-        })
 
-        return userMapper.toDTO(user)
+            user.name = name
+
+            await unitOfWork.execute(async (tx) => {
+                await tx.userRepository.save(user)
+                await this.scheduleCleanupJobs(oldPhotoPath)
+            })
+
+            return userMapper.toDTO(user)
+        } catch (error) {
+            await this.cleanupFailedUpload(newPhotoStorageKey)
+            throw error
+        }
+    }
+
+    private async handleNewPhotoUpload(photoBuffer: Buffer, user: User) {
+        const { imageValidator, imageProcessor, storage } = this.deps
+
+        await imageValidator.validateProfilePhoto(photoBuffer)
+        const processedPhoto = await imageProcessor.process(
+            photoBuffer,
+            ProfilePhotoSpecification.getDefault()
+        )
+
+        const profilePhoto = new ProfilePhoto(processedPhoto, 'image/jpeg', user.id)
+
+        await storage.uploadFile(profilePhoto.storageKey, processedPhoto, 'profile-pictures')
+
+        const oldPhotoPath = user.updateProfilePhotoPath(profilePhoto.storageKey)
+
+        return {
+            newPhotoStorageKey: profilePhoto.storageKey,
+            oldPhotoPath
+        }
+    }
+
+    private async scheduleCleanupJobs(oldPhotoPath: string | null) {
+        if (oldPhotoPath) {
+            await this.deps.jobProducer.enqueue('delete_old_profile_photo', {
+                storageKey: oldPhotoPath
+            })
+        }
+    }
+
+    private async cleanupFailedUpload(storageKey: string | null) {
+        if (storageKey) {
+            await this.deps.storage.deleteFile(storageKey).catch(() => {
+                console.warn(`Failed to cleanup uploaded file: ${storageKey}`)
+            })
+        }
     }
 }
