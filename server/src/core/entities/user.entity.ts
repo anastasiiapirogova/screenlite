@@ -30,15 +30,19 @@ export class User {
         return this._profilePhotoPath
     }
 
-    set profilePhotoPath(profilePhotoPath: string) {
+    updateProfilePhotoPath(profilePhotoPath: string) {
+        const prevProfilePhotoPath = this._profilePhotoPath
+
         this._profilePhotoPath = profilePhotoPath
+
+        return prevProfilePhotoPath
     }
 
     removeProfilePhoto() {
         const prevProfilePhotoPath = this._profilePhotoPath
 
         this._profilePhotoPath = null
-        
+
         return prevProfilePhotoPath
     }
 
