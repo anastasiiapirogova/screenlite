@@ -18,6 +18,7 @@ import adminPermissions from './admin-permissions.plugin.ts'
 import adminAccess from './admin-access.plugin.ts'
 import octetStream from './octet-stream.plugin.ts'
 import multipartValidation from './multipart-validation.plugin.ts'
+import jobQueue from './job-queue.plugin.ts'
 
 export default {
     config,
@@ -38,5 +39,6 @@ export default {
     adminPermissions,
     adminAccess,
     octetStream,
-    multipartValidation
+    multipartValidation,
+    jobQueue
 }
