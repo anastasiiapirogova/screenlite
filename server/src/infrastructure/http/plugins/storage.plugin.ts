@@ -28,6 +28,8 @@ const storagePlugin: FastifyPluginAsync = async (fastify) => {
 
     const storageAdapter = storage.create(fastify.config.storage, fastify.config.app.backendUrl)
 
+    await storageAdapter.check()
+
     fastify.decorate('storage', storageAdapter)
 
     fastify.addHook('onClose', async () => {
