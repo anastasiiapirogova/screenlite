@@ -13,7 +13,7 @@ export interface AppJobRegistry {
     send_password_reset_email: {
         data: PasswordResetEmailDTO
     }
-    delete_old_profile_photo: {
+    delete_profile_photo: {
         data: DeleteProfilePhotoDTO
     }
 }
