@@ -82,4 +82,28 @@ export class UserPolicy {
             })
         }
     }
+
+    canUpdateProfile(): boolean {
+        if(this.authContext.hasAdminAccess()) {
+            const hasAdminPermission = this.authContext.hasAdminPermission(AdminPermissionName.USERS_EDIT)
+
+            if(hasAdminPermission) {
+                return true
+            }
+        }
+
+        if(this.isSelf()) {
+            return true
+        }
+
+        return false
+    }
+
+    enforceCanUpdateProfile(): void {
+        if(!this.canUpdateProfile()) {
+            throw new ForbiddenError({
+                userId: ['YOU_CANNOT_UPDATE_PROFILE_FOR_THIS_USER']
+            })
+        }
+    }
 }
