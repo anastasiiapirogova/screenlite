@@ -1,3 +1,3 @@
 export interface IImageValidator {
-    validateProfilePicture(buffer: Buffer): Promise<void>
+    validateProfilePhoto(buffer: Buffer): Promise<void>
 }
