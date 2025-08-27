@@ -10,6 +10,8 @@ import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { InputError } from '@shared/ui/input/InputError'
 import { UserAvatarUploadComponent } from '@shared/components/UserAvatarUploadComponent'
 import { Button } from '@shared/ui/buttons/Button'
+import { CurrentUserData } from '@modules/auth/types'
+import { User } from '../types'
 
 export const EditProfilePage = () => {
     const user = useCurrentUser()
@@ -26,16 +28,37 @@ export const EditProfilePage = () => {
         defaultValues: {
             userId: user.id,
             name: user.name,
-            profilePhoto: undefined
+            profilePhoto: null,
+            removeProfilePhoto: false
         }
     })
 
-    const isDirty = watch('name') !== user.name || watch('profilePhoto') !== undefined
+    const nameChanged = watch('name') !== user.name
+    const profilePhotoChanged = watch('profilePhoto') !== null
+    const removeProfilePhoto = watch('removeProfilePhoto') === true && user.profilePhotoPath !== null
+
+    const isDirty = nameChanged || profilePhotoChanged || removeProfilePhoto
 
     const { mutate, isPending } = useMutation({
         mutationFn: (data: UpdateUserData) => updateUserRequest(data),
-        onSuccess: async (screen) => {
-            queryClient.setQueryData(currentUserQuery().queryKey, screen)
+        onSuccess: async (user: User) => {
+            const data = queryClient.getQueryData<CurrentUserData>(currentUserQuery().queryKey)
+
+            if (data) {
+                queryClient.setQueryData(currentUserQuery().queryKey, {
+                    ...data,
+                    user: {
+                        ...data.user,
+                        name: user.name,
+                        profilePhotoPath: user.profilePhotoPath || null
+                    }
+                })
+            }
+
+            setValue('profilePhoto', null)
+            setValue('removeProfilePhoto', false)
+
+            queryClient.invalidateQueries({ queryKey: currentUserQuery().queryKey })
         },
         onError: (error) => {
             handleAxiosFieldErrors<UpdateUserData>(error, setError)
@@ -61,12 +84,32 @@ export const EditProfilePage = () => {
                     </div>
                     <UserAvatarUploadComponent
                         name={ watch().name! }
-                        profilePhoto={ user.profilePhoto }
+                        profilePhoto={ watch().removeProfilePhoto ? null : user.profilePhotoPath }
                         preview={ watch().profilePhoto }
-                        onChange={ (file) => { setValue('profilePhoto', file) } }
+                        onChange={ (file) => {
+                            setValue('profilePhoto', file)
+                        } }
                     />
-                    <div className='text-sm text-gray-500 mb-5'>
-                        Supported formats: JPG, PNG. Max size: 5MB. Recommended size is 512x512 pixels.
+                    <div className='flex flex-col gap-2 mb-5'>
+                        <div className='text-sm text-gray-500'>
+                            Supported formats: JPG, PNG. Max size: 5MB. Recommended size is 512x512 pixels.
+                        </div>
+                        { ((user.profilePhotoPath && !watch().removeProfilePhoto) || watch().profilePhoto) && (
+                            <div className='flex items-center gap-2 mt-5'>
+                                <Button
+                                    type='button'
+                                    variant='soft'
+                                    color='secondary'
+                                    className='text-sm'
+                                    onClick={ () => {
+                                        setValue('profilePhoto', null)
+                                        setValue('removeProfilePhoto', true)
+                                    } }
+                                >
+                                    Remove profile photo
+                                </Button>
+                            </div>
+                        ) }
                     </div>
                     <InputError error={ errors.profilePhoto?.message }/>
                     <InputLabelGroup
@@ -82,25 +125,35 @@ export const EditProfilePage = () => {
                         />
                         <InputError error={ errors.name?.message }/>
                     </InputLabelGroup>
-                    <div className='flex justify-end items-center gap-2 mt-5'>
-                        <Button
-                            to='/settings'
-                            color='secondary'
-                            variant='soft'
-                            type="button"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            type='submit'
-                            disabled={ isPending || isDirty === false }
-                            variant='solid'
-                        >
-                            Save
-                        </Button>
-                    </div>
+                    <FormActions
+                        isPending={ isPending }
+                        isDirty={ isDirty }
+                    />
                 </form>
             </div>
+        </div>
+    )
+}
+
+
+const FormActions = ({ isPending, isDirty }: { isPending: boolean, isDirty: boolean }) => {
+    return (
+        <div className='flex justify-end items-center gap-2 mt-5'>
+            <Button
+                to='/settings'
+                color='secondary'
+                variant='soft'
+                type="button"
+            >
+                Cancel
+            </Button>
+            <Button
+                type='submit'
+                disabled={ isPending || isDirty === false }
+                variant='solid'
+            >
+                Save
+            </Button>
         </div>
     )
 }
