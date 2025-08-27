@@ -5,6 +5,7 @@ import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
 import { ZodError } from 'zod'
 import { NotFoundError } from '@/shared/errors/not-found.error.ts'
+import { FileNotFoundError } from '@/infrastructure/storage/errors/file-not-found.error.ts'
 
 const errorHandler: FastifyPluginAsync = async (fastify) => {
     fastify.setErrorHandler(async (error, request, reply) => {
@@ -60,6 +61,15 @@ const errorHandler: FastifyPluginAsync = async (fastify) => {
             })
 
             return
+        }
+
+        if (error instanceof FileNotFoundError) {
+            reply.code(404).send({
+                statusCode: 404,
+                error: 'Not Found',
+                code: 'FST_ERR_NOT_FOUND',
+                message: error.message,
+            })
         }
 
         if (error instanceof ValidationError) {
