@@ -10,17 +10,22 @@ import { CurrentUserData } from '../types'
 export const AuthProvider = () => {
     const queryClient = useQueryClient()
 
+    const invalidateCurrentUser = () => {
+        queryClient.invalidateQueries({ queryKey: currentUserQuery().queryKey })
+    }
+
     const { data: currentUserData } = useQuery<CurrentUserData | null>(currentUserQuery())
 
     const handleLogin = (data: LoginRequestResponse) => {
         storeAuthToken(data.token)
 
-        queryClient.setQueryData(currentUserQuery().queryKey, data.user)
+        invalidateCurrentUser()
     }
 
     const handleLogout = () => {
         removeAuthToken()
-        queryClient.setQueryData(currentUserQuery().queryKey, null)
+
+        invalidateCurrentUser()
     }
 
     if (currentUserData === undefined) {
