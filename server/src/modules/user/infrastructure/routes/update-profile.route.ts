@@ -32,6 +32,8 @@ export const updateProfileRoute = async (fastify: FastifyInstance) => {
             }
         })
 
+        const userMapper = new UserMapper()
+
         const { profilePhoto, name, removeProfilePhoto } = UpdateProfileSchema.parse(multipartData)
 
         const updateProfileUsecase = new UpdateProfileUsecase({
@@ -40,8 +42,7 @@ export const updateProfileRoute = async (fastify: FastifyInstance) => {
             imageValidator: new SharpImageValidator(),
             imageProcessor: new SharpImageProcessor(),
             unitOfWork: new PrismaUnitOfWork(fastify.prisma),
-            jobProducer: fastify.jobProducer,
-            userMapper: new UserMapper()
+            jobProducer: fastify.jobProducer
         })
 
         const result = await updateProfileUsecase.execute({
@@ -53,8 +54,7 @@ export const updateProfileRoute = async (fastify: FastifyInstance) => {
         })
 
         return reply.status(200).send({
-            message: 'Profile updated successfully',
-            data: result
+            user: userMapper.toPublicDTO(result)
         })
     })
 }
