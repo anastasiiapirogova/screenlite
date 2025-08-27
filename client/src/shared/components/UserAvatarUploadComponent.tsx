@@ -61,6 +61,8 @@ export const UserAvatarUploadComponent = ({
         if (file) {
             onChange?.(file)
         }
+        
+        e.target.value = ''
     }
 
     const pixelSize = 112
