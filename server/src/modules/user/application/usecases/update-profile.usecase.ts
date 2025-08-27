@@ -10,7 +10,6 @@ import { AppJobRegistry } from '@/core/ports/job-registry.interface.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { IImageProcessor } from '@/core/ports/image-processor.interface.ts'
 import { ProfilePhotoSpecification } from '@/core/value-objects/profile-photo-specification.value-object.ts'
-import { IUserMapper } from '../../domain/ports/user-mapper.interface.ts'
 import { User } from '@/core/entities/user.entity.ts'
 
 type UpdateProfileUsecaseDeps = {
@@ -20,14 +19,13 @@ type UpdateProfileUsecaseDeps = {
     imageProcessor: IImageProcessor
     unitOfWork: IUnitOfWork
     jobProducer: IJobProducer<AppJobRegistry>
-    userMapper: IUserMapper
 }
 
 export class UpdateProfileUsecase {
     constructor(private readonly deps: UpdateProfileUsecaseDeps) {}
 
     async execute(data: UpdateProfileDto) {
-        const { userRepository, unitOfWork, userMapper } = this.deps
+        const { userRepository, unitOfWork } = this.deps
         const { profilePhotoBuffer, name, userId, removeProfilePhoto, authContext } = data
 
         const user = await userRepository.findById(userId)
@@ -62,7 +60,7 @@ export class UpdateProfileUsecase {
                 await this.scheduleCleanupJobs(oldPhotoPath)
             })
 
-            return userMapper.toDTO(user)
+            return user
         } catch (error) {
             await this.scheduleCleanupJobs(newPhotoStorageKey)
             throw error
@@ -73,14 +71,17 @@ export class UpdateProfileUsecase {
         const { imageValidator, imageProcessor, storage } = this.deps
 
         await imageValidator.validateProfilePhoto(photoBuffer)
+
+        const mimeType = 'image/jpeg'
+
         const processedPhoto = await imageProcessor.process(
             photoBuffer,
             ProfilePhotoSpecification.getDefault()
         )
 
-        const profilePhoto = new ProfilePhoto(processedPhoto, 'image/jpeg', user.id)
+        const profilePhoto = new ProfilePhoto(processedPhoto, mimeType, user.id)
 
-        await storage.uploadFile(profilePhoto.storageKey, processedPhoto, 'profile-pictures')
+        await storage.uploadFile(profilePhoto.storageKey, processedPhoto, mimeType)
 
         const oldPhotoPath = user.updateProfilePhotoPath(profilePhoto.storageKey)
 
