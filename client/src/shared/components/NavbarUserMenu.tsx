@@ -51,7 +51,7 @@ export const NavbarUserMenu = () => {
             <DropdownMenu.Trigger className="focus:outline-none rounded-full cursor-pointer">
                 <UserAvatar
                     name={ user.name }
-                    profilePhoto={ user.profilePhoto }
+                    profilePhoto={ user.profilePhotoPath }
                 />
             </DropdownMenu.Trigger>
 
@@ -61,7 +61,7 @@ export const NavbarUserMenu = () => {
                         <div className="flex items-center gap-2 h-20 px-5">
                             <UserAvatar
                                 name={ user.name }
-                                profilePhoto={ user.profilePhoto }
+                                profilePhoto={ user.profilePhotoPath }
                             />
                             <div className="flex flex-col">
                                 <span className="text-sm font-semibold">{ user.name }</span>
