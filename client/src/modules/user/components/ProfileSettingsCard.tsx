@@ -15,7 +15,7 @@ export const ProfileSettingsCard = () => {
                 <div className='flex items-center gap-3 mb-4'>
                     <UserAvatar
                         name={ user.name }
-                        profilePhoto={ user.profilePhoto }
+                        profilePhoto={ user.profilePhotoPath }
                         size="large"
                     />
                     <div>
