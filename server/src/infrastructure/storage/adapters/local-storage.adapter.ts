@@ -3,8 +3,8 @@ import fs from 'fs'
 import path from 'path'
 import { FileNotFoundError } from '../errors/file-not-found.error.ts'
 import { stat } from 'fs/promises'
-import { IStorage } from '@/core/ports/storage.interface.ts'
-
+import { FileMetadata, IStorage } from '@/core/ports/storage.interface.ts'
+import mime from 'mime'
 type Config = {
     backendUrl: string
 }
@@ -66,19 +66,14 @@ export class LocalStorageAdapter implements IStorage {
         }
     }
 
-    public async downloadFile(key: string): Promise<Readable | null> {
+    public async getFileBuffer(key: string): Promise<Buffer> {
         const filePath = this.getFilePath(key)
 
-        try {
-            if (!fs.existsSync(filePath)) {
-                return null
-            }
-
-            return fs.createReadStream(filePath)
-        } catch (error) {
-            console.error('Error reading file:', error)
-            return null
+        if (!fs.existsSync(filePath)) {
+            throw new FileNotFoundError(key)
         }
+
+        return fs.readFileSync(filePath)
     }
 
     public async deleteFile(key: string): Promise<void> {
@@ -89,7 +84,7 @@ export class LocalStorageAdapter implements IStorage {
         }
     }
 
-    public async createReadStream(key: string, options?: { start?: number, end?: number }): Promise<Readable> {
+    public async getReadStream(key: string, options?: { start?: number, end?: number }): Promise<Readable> {
         const exists = await this.checkFileExists(key)
 
         if (!exists) {
@@ -140,4 +135,22 @@ export class LocalStorageAdapter implements IStorage {
             return false
         }
     }
-} 
+
+    public async getMetadata(key: string): Promise<FileMetadata> {
+        try {
+            const filePath = this.getFilePath(key)
+
+            const stats = await stat(filePath)
+
+            return {
+                key,
+                size: stats.size,
+                mimeType: mime.getType(filePath) || '',
+                lastModified: stats.mtime,
+                etag: stats.mtime.getTime().toString()
+            }
+        } catch {
+            throw new FileNotFoundError(key)
+        }
+    }
+}

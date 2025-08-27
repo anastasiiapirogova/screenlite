@@ -8,7 +8,7 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { Readable } from 'stream'
 import { FileNotFoundError } from '@/infrastructure/storage/errors/file-not-found.error.ts'
-import { IStorage } from '@/core/ports/storage.interface.ts'
+import { FileMetadata, IStorage } from '@/core/ports/storage.interface.ts'
 
 type Config = {
     s3Client: S3Client
@@ -34,6 +34,7 @@ export class S3StorageAdapter implements IStorage {
             await this.s3Client.send(command)
             return true
         } catch (error) {
+            console.log(error)
             if (error instanceof Error && error.name === 'NotFound') {
                 return false
             }
@@ -52,34 +53,32 @@ export class S3StorageAdapter implements IStorage {
         await this.s3Client.send(command)
     }
 
-    public async downloadFile(key: string): Promise<Readable | null> {
-        try {
-            const command = new GetObjectCommand({
-                Bucket: this.bucket,
-                Key: key
-            })
+    public async getFileBuffer(key: string): Promise<Buffer> {
+        const exists = await this.checkFileExists(key)
 
-            const response = await this.s3Client.send(command)
-
-            return response.Body as Readable
-        } catch (error) {
-            if (error instanceof Error && error.name === 'NoSuchKey') {
-                return null
-            }
-            throw error
+        if (!exists) {
+            throw new FileNotFoundError(key)
         }
-    }
-    
-    public async deleteFile(key: string): Promise<void> {
-        const command = new DeleteObjectCommand({
+
+        const command = new GetObjectCommand({
             Bucket: this.bucket,
             Key: key
         })
 
-        await this.s3Client.send(command)
+        const response = await this.s3Client.send(command)
+
+        const stream = response.Body as Readable
+
+        const chunks: Buffer[] = []
+
+        for await (const chunk of stream) {
+            chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
+        }
+
+        return Buffer.concat(chunks)
     }
 
-    public async createReadStream(key: string, options?: { start?: number, end?: number }): Promise<Readable> {
+    public async getReadStream(key: string, options?: { start?: number, end?: number }): Promise<Readable> {
         const exists = await this.checkFileExists(key)
 
         if (!exists) {
@@ -95,6 +94,15 @@ export class S3StorageAdapter implements IStorage {
         const response = await this.s3Client.send(command)
 
         return response.Body as Readable
+    }
+    
+    public async deleteFile(key: string): Promise<void> {
+        const command = new DeleteObjectCommand({
+            Bucket: this.bucket,
+            Key: key
+        })
+
+        await this.s3Client.send(command)
     }
 
     public async getFileUrl(key: string): Promise<string> {
@@ -148,4 +156,25 @@ export class S3StorageAdapter implements IStorage {
             return false
         }
     }
-} 
+
+    public async getMetadata(key: string): Promise<FileMetadata> {
+        try {
+            const command = new HeadObjectCommand({
+                Bucket: this.bucket,
+                Key: key
+            })
+
+            const response = await this.s3Client.send(command)
+
+            return {
+                key,
+                size: response.ContentLength || 0,
+                mimeType: response.ContentType || '',
+                lastModified: response.LastModified || new Date(),
+                etag: response.ETag
+            }
+        } catch {
+            throw new FileNotFoundError(key)
+        }
+    }
+}
