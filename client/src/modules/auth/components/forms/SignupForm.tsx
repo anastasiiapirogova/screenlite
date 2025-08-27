@@ -1,5 +1,4 @@
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import { TbChevronRight } from 'react-icons/tb'
 import { Link } from 'react-router'
 import { useMutation } from '@tanstack/react-query'
 import { useAuth } from '../../hooks/useAuth'
@@ -8,7 +7,6 @@ import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { Input } from '@shared/ui/input/Input'
 import { InputError } from '@shared/ui/input/InputError'
 import { Button } from '@shared/ui/buttons/Button'
-import { ButtonSpinner } from '@shared/ui/buttons/ButtonSpinner'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 
 export const SignupForm = () => {
@@ -102,11 +100,9 @@ export const SignupForm = () => {
                 </InputLabelGroup>
                 <Button
                     variant='solid'
-                    className='w-full'
+                    className='mt-5 rounded-md'
                     size='large'
                     disabled={ isPending }
-                    icon={ isPending ? ButtonSpinner : TbChevronRight }
-                    iconPosition='right'
                 >
                     <span>Continue</span>
                 </Button>
