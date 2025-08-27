@@ -5,10 +5,7 @@ export type User = {
     id: string
     email: string
     emailVerifiedAt: string | null
-    profilePhoto: string | null
-    twoFactorEnabled: boolean
-	hasPassedTwoFactorAuth?: boolean
-	passwordUpdatedAt?: string
+    profilePhotoPath: string | null
     createdAt: string
     updatedAt: string
     deletedAt: string | null
