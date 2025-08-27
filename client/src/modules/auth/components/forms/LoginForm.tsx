@@ -4,9 +4,7 @@ import { loginRequest, LoginRequestData } from '../../api/login'
 import { useMutation } from '@tanstack/react-query'
 import { InputError } from '@shared/ui/input/InputError'
 import { useAuth } from '../../hooks/useAuth'
-import { TbChevronRight } from 'react-icons/tb'
 import { Link } from 'react-router'
-import { ButtonSpinner } from '@shared/ui/buttons/ButtonSpinner'
 import { Input } from '@shared/ui/input/Input'
 import { Button } from '@shared/ui/buttons/Button'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
@@ -84,11 +82,9 @@ export const LoginForm = () => {
                 </InputLabelGroup>
                 <Button
                     variant='solid'
-                    className='w-full mt-5'
+                    className='mt-5 rounded-md'
                     size='large'
                     disabled={ isPending }
-                    icon={ isPending ? ButtonSpinner : TbChevronRight }
-                    iconPosition='right'
                 >
                     <span>Continue</span>
                 </Button>
