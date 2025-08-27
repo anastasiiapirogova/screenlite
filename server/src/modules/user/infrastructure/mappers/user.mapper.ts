@@ -25,11 +25,11 @@ export class UserMapper implements IUserMapper {
             email: entity.email.current,
             pendingEmail: entity.email.pending,
             name: entity.name,
-            role: entity.role,
             emailVerifiedAt: entity.email.verifiedAt,
             profilePhotoPath: entity.profilePhotoPath,
             deletionRequestedAt: entity.deletionState.requestedAt,
             deletedAt: entity.deletionState.deletedAt,
+            role: entity.role,
         }
     }
 }
