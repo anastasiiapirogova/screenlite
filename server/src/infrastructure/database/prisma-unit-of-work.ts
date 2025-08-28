@@ -17,6 +17,10 @@ import { PrismaTwoFactorMethodRepository } from '@/modules/two-factor-auth/infra
 import { TwoFactorConfigHandlerFactory } from '@/modules/two-factor-auth/infrastructure/handlers/two-factor-config-handler.factory.ts'
 import { IUserCredentialRepository } from '@/core/ports/user-credential-repository.interface.ts'
 import { PrismaUserCredentialRepository } from '@/modules/user/infrastructure/repositories/prisma-user-credential.repository.ts'
+import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace-repository.interface.ts'
+import { PrismaWorkspaceRepository } from '@/modules/workspace/infrastructure/repositories/prisma-workspace.repository.ts'
+import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
+import { PrismaWorkspaceMemberRepository } from '@/modules/workspace-member/domain/infrastructure/repositories/prisma-workspace-member.repository.ts'
 
 export class PrismaUnitOfWork implements IUnitOfWork {
     constructor(private prisma: PrismaClient) {}
@@ -31,6 +35,8 @@ export class PrismaUnitOfWork implements IUnitOfWork {
             passwordResetTokenRepository: IPasswordResetTokenRepository
             twoFactorMethodRepository: ITwoFactorMethodRepository
             userCredentialRepository: IUserCredentialRepository
+            workspaceRepository: IWorkspaceRepository
+            workspaceMemberRepository: IWorkspaceMemberRepository
         }) => Promise<T>
     ): Promise<T> {
         return this.prisma.$transaction(async (tx) => {
@@ -43,6 +49,8 @@ export class PrismaUnitOfWork implements IUnitOfWork {
                 passwordResetTokenRepository: new PrismaPasswordResetTokenRepository(tx),
                 twoFactorMethodRepository: new PrismaTwoFactorMethodRepository(tx, new TwoFactorConfigHandlerFactory(tx)),
                 userCredentialRepository: new PrismaUserCredentialRepository(tx),
+                workspaceRepository: new PrismaWorkspaceRepository(tx),
+                workspaceMemberRepository: new PrismaWorkspaceMemberRepository(tx),
             }
         
             return fn(repos)
