@@ -3,15 +3,11 @@ import { z } from 'zod'
 import multipart from '@fastify/multipart'
 import { UpdateProfileSchema } from '../schemas/update-profile.schema.ts'
 import { UpdateProfileUsecase } from '../../application/usecases/update-profile.usecase.ts'
-import { PrismaUserRepository } from '../repositories/prisma-user.repository.ts'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
-import { SharpImageValidator } from '@/shared/infrastructure/services/sharp-image-validator.service.ts'
-import { SharpImageProcessor } from '@/shared/infrastructure/services/sharp-image-processor.service.ts'
 import { UserMapper } from '../mappers/user.mapper.ts'
-import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.ts'
 import { userNameSchema } from '@/shared/schemas/user.schemas.ts'
 
-// Prefix: /api/user
+// Prefix: /api/users
 export const updateProfileRoute = async (fastify: FastifyInstance) => {
     await fastify.register(multipart)
 
@@ -38,10 +34,10 @@ export const updateProfileRoute = async (fastify: FastifyInstance) => {
 
         const updateProfileUsecase = new UpdateProfileUsecase({
             storage: fastify.storage,
-            userRepository: new PrismaUserRepository(fastify.prisma),
-            imageValidator: new SharpImageValidator(),
-            imageProcessor: new SharpImageProcessor(),
-            unitOfWork: new PrismaUnitOfWork(fastify.prisma),
+            userRepository: fastify.userRepository,
+            imageValidator: fastify.imageValidator,
+            imageProcessor: fastify.imageProcessor,
+            unitOfWork: fastify.unitOfWork,
             jobProducer: fastify.jobProducer
         })
 
