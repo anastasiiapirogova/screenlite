@@ -1,21 +1,19 @@
 import { ValidationError } from '@/shared/errors/validation.error.ts'
+import { USER_PASSWORD_RULES } from '@/shared/validation/user-password.rules.ts'
 
 export class Password {
     private readonly value: string
 
     constructor(plain: string) {
-        const MIN_LENGTH = 8
-        const MAX_LENGTH = 256
-
-        if (plain.length < MIN_LENGTH) {
+        if (plain.length < USER_PASSWORD_RULES.minLength) {
             throw new ValidationError({
-                password: ['PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS']
+                password: ['PASSWORD_TOO_SHORT']
             })
         }
 
-        if (plain.length > MAX_LENGTH) {
+        if (plain.length > USER_PASSWORD_RULES.maxLength) {
             throw new ValidationError({
-                password: ['PASSWORD_MUST_BE_LESS_THAN_256_CHARACTERS']
+                password: ['PASSWORD_TOO_LONG']
             })
         }
 
