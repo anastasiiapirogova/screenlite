@@ -10,6 +10,7 @@ import configRoutes from '@/modules/config/infrastructure/routes/config.routes.t
 import twoFactorAuthRoutes from '@/modules/two-factor-auth/infrastructure/routes/two-factor-auth.routes.ts'
 import sessionRoutes from '@/modules/session/routes/session.routes.ts'
 import fileDeliveryRoutes from '@/modules/file-delivery/infrastructure/routes/file-delivery.routes.ts'
+import workspaceRoutes from '@/modules/workspace/infrastructure/routes/workspace.routes.ts'
 
 export async function registerRoutes(fastify: FastifyInstance) {
     fastify.register(healthRoutes, { prefix: '/api/health' })
@@ -21,6 +22,7 @@ export async function registerRoutes(fastify: FastifyInstance) {
     fastify.register(twoFactorAuthRoutes, { prefix: '/api/two-factor-auth' })
     fastify.register(sessionRoutes, { prefix: '/api/sessions' })
     fastify.register(fileDeliveryRoutes, { prefix: '/api/file-delivery' })
+    fastify.register(workspaceRoutes, { prefix: '/api/workspaces' })
 
     fastify.register(async function adminRoutes(fastifyAdmin) {
         fastifyAdmin.addHook('onRequest', fastify.requireAdminAccess)
