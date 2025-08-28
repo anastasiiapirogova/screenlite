@@ -1,7 +1,4 @@
 import { FastifyInstance } from 'fastify'
-import { PrismaTwoFactorMethodRepository } from '../repositories/prisma-two-factor-method.repository.ts'
-import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
-import { TwoFactorConfigHandlerFactory } from '../handlers/two-factor-config-handler.factory.ts'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { CompleteTotpSetupUsecase } from '../../application/usecases/complete-totp-setup.usecase.ts'
@@ -25,17 +22,19 @@ export const completeTotpSetupRoute = async (fastify: FastifyInstance) => {
 
         const userId = request.params.userId
 
-        const usecase = new CompleteTotpSetupUsecase({
-            twoFactorMethodRepo: new PrismaTwoFactorMethodRepository(fastify.prisma, new TwoFactorConfigHandlerFactory(fastify.prisma)),
-            verifyTotpCodeUsecase: new VerifyTotpCodeUsecase({
-                twoFactorMethodRepo: new PrismaTwoFactorMethodRepository(fastify.prisma, new TwoFactorConfigHandlerFactory(fastify.prisma)),
-                encryptionService: fastify.encryption,
-                totpService: new TotpService(),
-            }),
-            userRepo: new PrismaUserRepository(fastify.prisma),
+        const verifyTotpCodeUsecase = new VerifyTotpCodeUsecase({
+            twoFactorMethodRepo: fastify.twoFactorMethodRepository,
+            encryptionService: fastify.encryption,
+            totpService: new TotpService(),
         })
 
-        const result = await usecase.execute(authContext, {
+        const completeTotpSetupUsecase = new CompleteTotpSetupUsecase({
+            twoFactorMethodRepo: fastify.twoFactorMethodRepository,
+            verifyTotpCodeUsecase,
+            userRepo: fastify.userRepository,
+        })
+
+        const result = await completeTotpSetupUsecase.execute(authContext, {
             userId,
             totpCode: request.body.totpCode
         })
