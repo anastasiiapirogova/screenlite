@@ -5,4 +5,5 @@ export enum AdminPermissionName {
     USERS_DELETE = 'users.delete',
     USERS_MANAGE_ADMIN_PERMISSIONS = 'users.manage-admin-permissions',
     SESSIONS_VIEW = 'sessions.view',
+    WORKSPACES_CREATE = 'workspaces.create',
 }
