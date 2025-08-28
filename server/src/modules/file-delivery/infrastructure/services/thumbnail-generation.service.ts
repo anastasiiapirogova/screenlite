@@ -1,12 +1,11 @@
 import { ImageFile } from '@/core/entities/image-file.entity.ts'
-import { IEtagService } from '@/core/ports/etag-service.interface.ts'
 import { IImageProcessor } from '@/core/ports/image-processor.interface.ts'
 import { IStorage } from '@/core/ports/storage.interface.ts'
+import { Thumbnail } from '@/core/value-objects/thumbnail.value-object.ts'
 
 interface ThumbnailGenerationServiceDeps {
     storage: IStorage
     imageProcessor: IImageProcessor
-    etagService: IEtagService
 }
 
 export class ThumbnailGenerationService {
@@ -18,7 +17,7 @@ export class ThumbnailGenerationService {
         fileKey: string,
         options: { maxWidth?: number, maxHeight?: number }
     ) {
-        const { storage, imageProcessor, etagService } = this.deps
+        const { storage, imageProcessor } = this.deps
 
         const [metadata, fileBuffer] = await Promise.all([
             storage.getMetadata(fileKey),
@@ -34,12 +33,7 @@ export class ThumbnailGenerationService {
         const isThumbnailLargerThanImage = isWidthLargerThanImage || isHeightLargerThanImage
 
         if (isThumbnailLargerThanImage) {
-            return {
-                buffer: imageFile.buffer,
-                mimeType: imageFile.mimeType,
-                contentLength: imageFile.buffer.length,
-                etag: etagService.generate(imageFile.buffer)
-            }
+            return Thumbnail.create(imageFile.buffer, imageFile.mimeType)
         }
 
         const processedImage = await imageProcessor.process(imageFile.buffer, {
@@ -47,12 +41,7 @@ export class ThumbnailGenerationService {
             format: 'webp',
             quality: 80
         })
-  
-        return {
-            buffer: processedImage,
-            mimeType: 'image/webp',
-            contentLength: processedImage.length,
-            etag: etagService.generate(processedImage)
-        }
+
+        return Thumbnail.create(processedImage, 'image/webp')
     }
 }
