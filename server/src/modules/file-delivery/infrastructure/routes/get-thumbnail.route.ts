@@ -6,14 +6,8 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { fileKey } from '@/shared/schemas/file.schemas.ts'
 import { EtagService } from '@/shared/infrastructure/services/etag.service.ts'
 
-interface ThumbnailParams {
-    '*': string
-}
-
 export const getThumbnailRoute = async (fastify: FastifyInstance) => {
-    fastify.withTypeProvider<ZodTypeProvider>().get<{
-        Params: ThumbnailParams
-    }>('/thumbnail/*', {
+    fastify.withTypeProvider<ZodTypeProvider>().get('/thumbnail/*', {
         schema: {
             params: z.object({
                 '*': fileKey
