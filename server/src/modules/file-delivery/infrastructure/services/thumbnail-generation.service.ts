@@ -1,7 +1,7 @@
 import { ImageFile } from '@/core/entities/image-file.entity.ts'
 import { IImageProcessor } from '@/core/ports/image-processor.interface.ts'
 import { IStorage } from '@/core/ports/storage.interface.ts'
-import { Thumbnail } from '@/core/value-objects/thumbnail.value-object.ts'
+import { Thumbnail } from '@/core/value-objects/thumbnail.vo.ts'
 
 interface ThumbnailGenerationServiceDeps {
     storage: IStorage
