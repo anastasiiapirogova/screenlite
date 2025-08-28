@@ -1,7 +1,7 @@
 model WorkspaceUserInvitation {
     id          String   @id @default(uuid())
     email       String
-    status      String   @default("pending")
+    status      String
     workspaceId String
     invitorId   String?
     createdAt   DateTime @default(now())
