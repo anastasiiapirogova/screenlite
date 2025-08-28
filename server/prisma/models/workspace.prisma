@@ -1,23 +1,23 @@
 model Workspace {
-    id        String    @id @default(uuid())
-    name      String
-    slug      String    @unique
-    status    String
-    picture   String?
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    deletedAt DateTime?
+    id          String    @id @default(uuid())
+    name        String
+    slug        String    @unique
+    status      String
+    picturePath String?
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    deletedAt   DateTime?
 
-    userWorkspaceRelations UserWorkspaceRelation[]
-    screens                Screen[]
-    playlists              Playlist[]
-    layouts                PlaylistLayout[]
-    files                  File[]
-    folders                Folder[]
-    fileUploadSessions     FileUploadSession[]
-    userInvitations        WorkspaceUserInvitation[]
-    screenGroups           ScreenGroup[]
-    links                  Link[]
-    storageUsage           WorkspaceStorageUsage?
-    workspaceApiTokens     WorkspaceApiToken[]
+    members            WorkspaceMember[]
+    screens            Screen[]
+    playlists          Playlist[]
+    layouts            PlaylistLayout[]
+    files              File[]
+    folders            Folder[]
+    fileUploadSessions FileUploadSession[]
+    userInvitations    WorkspaceUserInvitation[]
+    screenGroups       ScreenGroup[]
+    links              Link[]
+    storageUsage       WorkspaceStorageUsage?
+    workspaceApiTokens WorkspaceApiToken[]
 }
