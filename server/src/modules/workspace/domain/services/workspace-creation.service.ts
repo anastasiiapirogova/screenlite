@@ -1,31 +1,30 @@
-import { WorkspaceMemberService } from '@/modules/workspace-member/domain/services/workspace-member.service.ts'
 import { Workspace } from '@/core/entities/workspace.entity.ts'
 import { IWorkspaceRepository } from '../ports/workspace-repository.interface.ts'
 import { CreateWorkspaceDTO } from '../dto/create-workspace.dto.ts'
-
-type WorkspaceCreationServiceDeps = {
-    workspaceMemberService: WorkspaceMemberService
-    workspaceRepository: IWorkspaceRepository
-}
+import { ValidationError } from '@/shared/errors/validation.error.ts'
 
 export class WorkspaceCreationService {
     constructor(
-        private readonly deps: WorkspaceCreationServiceDeps
+        private readonly workspaceRepository: IWorkspaceRepository,
     ) {}
 
     async createWorkspace(dto: CreateWorkspaceDTO): Promise<Workspace> {
-        const { workspaceMemberService, workspaceRepository } = this.deps
+        const { name, slug } = dto
 
-        const { name, slug, creatorUserId } = dto
+        const existingWorkspace = await this.workspaceRepository.findBySlug(slug)
+
+        if (existingWorkspace) {
+            throw new ValidationError({
+                slug: ['SLUG_ALREADY_EXISTS']
+            })
+        }
 
         const workspace = Workspace.create({
             name,
             slug
         })
 
-        await workspaceRepository.save(workspace)
-
-        await workspaceMemberService.addMember(workspace.id, creatorUserId)
+        await this.workspaceRepository.save(workspace)
 
         return workspace
     }
