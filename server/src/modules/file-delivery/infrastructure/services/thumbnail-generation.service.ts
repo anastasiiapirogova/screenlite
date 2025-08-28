@@ -2,7 +2,6 @@ import { ImageFile } from '@/core/entities/image-file.entity.ts'
 import { IEtagService } from '@/core/ports/etag-service.interface.ts'
 import { IImageProcessor } from '@/core/ports/image-processor.interface.ts'
 import { IStorage } from '@/core/ports/storage.interface.ts'
-import { ValidationError } from '@/shared/errors/validation.error.ts'
 
 export class ThumbnailGenerationService {
     constructor(
@@ -29,9 +28,12 @@ export class ThumbnailGenerationService {
         const isThumbnailLargerThanImage = isWidthLargerThanImage || isHeightLargerThanImage
 
         if (isThumbnailLargerThanImage) {
-            throw new ValidationError({
-                fileKey: ['INVALID_THUMBNAIL_SIZE']
-            })
+            return {
+                buffer: imageFile.buffer,
+                mimeType: imageFile.mimeType,
+                contentLength: imageFile.buffer.length,
+                etag: this.etagService.generate(imageFile.buffer)
+            }
         }
 
         const processedImage = await this.imageProcessor.process(imageFile.buffer, {
