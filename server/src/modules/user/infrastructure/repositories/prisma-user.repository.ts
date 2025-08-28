@@ -60,18 +60,21 @@ export class PrismaUserRepository implements IUserRepository {
     }
 
     async findAll(queryOptions?: UsersQueryOptionsDTO): Promise<PaginationResponse<User>> {
-        const where: Prisma.UserWhereInput = {
-            ...(queryOptions?.filters?.email && {
-                email: {
-                    equals: queryOptions.filters.email,
-                    mode: 'insensitive',
-                },
-            }),
-            ...(queryOptions?.filters?.roles && {
-                role: {
-                    in: queryOptions.filters.roles,
-                },
-            }),
+        const { filters, pagination } = queryOptions || {}
+
+        const where: Prisma.UserWhereInput = {}
+
+        if (filters?.email) {
+            where.email = {
+                equals: filters.email,
+                mode: 'insensitive',
+            }
+        }
+
+        if (filters?.roles) {
+            where.role = {
+                in: filters.roles,
+            }
         }
 
         const findManyFn = (skip: number, take: number) => this.prisma.user.findMany({ where, skip, take })
@@ -81,7 +84,7 @@ export class PrismaUserRepository implements IUserRepository {
         const result = await Paginator.paginate(
             findManyFn,
             countFn,
-            queryOptions?.pagination
+            pagination
         )
 
         return {
