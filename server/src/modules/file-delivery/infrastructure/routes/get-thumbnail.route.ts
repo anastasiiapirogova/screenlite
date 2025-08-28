@@ -25,19 +25,25 @@ export const getThumbnailRoute = async (fastify: FastifyInstance) => {
         const thumbnailService = new ThumbnailGenerationService({
             storage: fastify.storage,
             imageProcessor: sharpImageProcessor,
-            etagService
         })
         
-        const result = await thumbnailService.generateThumbnail(fileKey, {
+        const thumbnail = await thumbnailService.generateThumbnail(fileKey, {
             maxWidth: 200,
             maxHeight: 200
         })
 
-        reply.header('Content-Type', result.mimeType)
-        reply.header('Content-Length', result.contentLength)
-        reply.header('Cache-Control', 'public, max-age=3600')
-        reply.header('ETag', result.etag)
+        const clientETag = request.headers['if-none-match']
+        const thumbnailETag = etagService.generate(thumbnail.buffer)
 
-        return reply.send(result.buffer)
+        if (clientETag && clientETag === thumbnailETag) {
+            return reply.code(304).header('ETag', thumbnailETag).send()
+        }
+
+        reply.header('Content-Type', thumbnail.mimeType)
+        reply.header('Content-Length', thumbnail.contentLength)
+        reply.header('Cache-Control', 'public, max-age=3600')
+        reply.header('ETag', thumbnailETag)
+
+        return reply.send(thumbnail.buffer)
     })
 }
