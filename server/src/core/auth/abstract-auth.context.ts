@@ -5,7 +5,7 @@ import { AdminApiKeyAuthContext } from '@/core/auth/admin-api-key-auth.context.t
 import { WorkspaceApiKeyAuthContext } from '@/core/auth/workspace-api-key-auth.context.ts'
 import { SystemAuthContext } from '@/core/auth/system-auth.context.ts'
 import { GuestAuthContext } from '@/core/auth/guest-auth.context.ts'
-import { AuthSession } from '../value-objects/auth-session.value-object.ts'
+import { AuthSession } from '../value-objects/auth-session.vo.ts'
 
 export abstract class AbstractAuthContext {
     constructor(public readonly type: AuthContextType) {}

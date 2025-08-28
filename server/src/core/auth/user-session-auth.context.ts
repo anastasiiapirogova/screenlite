@@ -2,8 +2,8 @@ import { AbstractAuthContext } from '@/core/auth/abstract-auth.context.ts'
 import { AuthContextType } from '@/core/enums/auth-context-type.enum.ts'
 import { SYSTEM_ADMIN_PERMISSIONS } from '@/modules/admin-permission/domain/definitions/admin-permission.definitions.ts'
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
-import { AuthUser } from '../value-objects/auth-user.value-object.ts'
-import { AuthSession } from '../value-objects/auth-session.value-object.ts'
+import { AuthUser } from '../value-objects/auth-user.vo.ts'
+import { AuthSession } from '../value-objects/auth-session.vo.ts'
 
 export class UserSessionAuthContext extends AbstractAuthContext {
     constructor(

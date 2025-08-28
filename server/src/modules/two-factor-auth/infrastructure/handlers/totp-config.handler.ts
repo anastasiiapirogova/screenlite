@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient } from '@/generated/prisma/client.ts'
 import { TwoFactorConfigPersistenceHandler } from './two-factor-config-persistence-handler.interface.ts'
 import { TwoFactorConfig } from '@/core/types/two-factor-config.type.ts'
-import { TotpConfig } from '@/core/value-objects/totp-config.value-object.ts'
+import { TotpConfig } from '@/core/value-objects/totp-config.vo.ts'
 
 export class TotpConfigHandler implements TwoFactorConfigPersistenceHandler<Prisma.TwoFactorMethodGetPayload<{ include: { totpConfig: true } }>> {
     constructor(private readonly prisma: PrismaClient | Prisma.TransactionClient) {}

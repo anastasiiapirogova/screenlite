@@ -1,5 +1,5 @@
 import { Session } from '@/core/entities/session.entity.ts'
-import { AuthSession } from '@/core/value-objects/auth-session.value-object.ts'
+import { AuthSession } from '@/core/value-objects/auth-session.vo.ts'
 
 export class AuthSessionFactory {
     static fromSession(session: Session, isTwoFactorAuthEnabled: boolean): AuthSession {

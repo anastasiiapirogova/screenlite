@@ -3,7 +3,7 @@ import { ITwoFactorMethodRepository } from '../../domain/ports/two-factor-method
 import { ITotpService } from '../../domain/ports/totp-service.interface.ts'
 import { TwoFactorMethodFactory } from '../../domain/services/two-factor-method.factory.ts'
 import { TwoFactorMethodType } from '@/core/enums/two-factor-method-type.enum.ts'
-import { TotpConfig } from '@/core/value-objects/totp-config.value-object.ts'
+import { TotpConfig } from '@/core/value-objects/totp-config.vo.ts'
 import { IConfig } from '@/infrastructure/config/config.interface.ts'
 import { IEncryptionService } from '@/core/ports/encryption-service.interface.ts'
 import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'

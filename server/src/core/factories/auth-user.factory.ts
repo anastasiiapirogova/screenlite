@@ -1,5 +1,5 @@
 import { User } from '@/core/entities/user.entity.ts'
-import { AuthUser } from '@/core/value-objects/auth-user.value-object.ts'
+import { AuthUser } from '@/core/value-objects/auth-user.vo.ts'
 
 export class AuthUserFactory {
     static fromUser(user: User): AuthUser {

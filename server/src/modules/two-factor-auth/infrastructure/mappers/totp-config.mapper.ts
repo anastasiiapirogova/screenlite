@@ -1,4 +1,4 @@
-import { TotpConfig } from '@/core/value-objects/totp-config.value-object.ts'
+import { TotpConfig } from '@/core/value-objects/totp-config.vo.ts'
 import { SetupTotpConfigDTO } from '../../application/dto/public-totp-config.dto.ts'
 
 export class TotpConfigMapper {
