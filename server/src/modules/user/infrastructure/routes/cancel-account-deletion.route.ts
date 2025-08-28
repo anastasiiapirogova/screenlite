@@ -1,10 +1,10 @@
 import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { CancelAccountDeletionUsecase } from '@/modules/user/application/usecases/cancel-account-deletion.usecase.ts'
-import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
 import { CancelAccountDeletionDTO } from '@/modules/user/application/dto/cancel-account-deletion.dto.ts'
 import z from 'zod'
 
+// Prefix: /api/users
 export const cancelAccountDeletionRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post(
         '/:userId/cancel-account-deletion',
@@ -27,7 +27,7 @@ export const cancelAccountDeletionRoute = async (fastify: FastifyInstance) => {
             }
 
             const cancelDeletion = new CancelAccountDeletionUsecase(
-                new PrismaUserRepository(fastify.prisma)
+                fastify.userRepository,
             )
 
             await cancelDeletion.execute(dto)
