@@ -31,19 +31,15 @@ export class WorkspaceMemberService {
     }
     
     async addMember(workspaceId: string, userId: string, repository?: IWorkspaceMemberRepository): Promise<void> {
-        let existing = null
+        const targetRepository = repository || this.memberRepository
 
-        if(repository) {
-            existing = await repository.findByWorkspaceAndUser(workspaceId, userId)
-        } else {
-            existing = await this.memberRepository.findByWorkspaceAndUser(workspaceId, userId)
-        }
+        const existing = await targetRepository.findByWorkspaceAndUser(workspaceId, userId)
 
         if (existing) throw new UserAlreadyIsAMemberError(workspaceId, userId)
     
         const member = await this.createMemberEntity(workspaceId, userId)
 
-        await this.memberRepository.save(member)
+        await targetRepository.save(member)
     }
 
     async removeMember(workspaceId: string, userId: string): Promise<void> {
