@@ -1,7 +1,7 @@
 import { UserDTO } from '@/shared/dto/user.dto.ts'
 import { UserRole } from '../enums/user-role.enum.ts'
-import { UserEmailState } from '../value-objects/user-email-state.value-object.ts'
-import { UserDeletionState } from '../value-objects/user-deletion-state.value-object.ts'
+import { UserEmailState } from '../value-objects/user-email-state.vo.ts'
+import { UserDeletionState } from '../value-objects/user-deletion-state.vo.ts'
 
 export class User {
     public readonly id: string
