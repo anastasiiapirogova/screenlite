@@ -28,6 +28,8 @@ import { IEmailVerificationTokenRepository } from '@/modules/email-verification/
 import { ITokenGenerator } from '@/core/ports/token-generator.interface.ts'
 import { PrismaPasswordResetTokenRepository } from '@/modules/password-reset/infrastructure/repositories/prisma-password-reset-token.repository.ts'
 import { IPasswordResetTokenRepository } from '@/modules/password-reset/domain/ports/password-reset-token-repository.interface.ts'
+import { ISettingRepository } from '@/modules/setting/domain/setting-repository.interface.ts'
+import { PrismaSettingRepository } from '@/modules/setting/infrastructure/repositories/prisma-setting.repository.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -45,6 +47,7 @@ declare module 'fastify' {
         emailVerificationTokenRepository: IEmailVerificationTokenRepository
         tokenGenerator: ITokenGenerator
         passwordResetTokenRepository: IPasswordResetTokenRepository
+        settingRepository: ISettingRepository
     }
 }
 
@@ -65,7 +68,8 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const sessionTokenService = new SessionTokenService(tokenGenerator, fastHasher)
     const emailVerificationTokenRepository = new PrismaEmailVerificationTokenRepository(fastify.prisma)
     const passwordResetTokenRepository = new PrismaPasswordResetTokenRepository(fastify.prisma)
-    
+    const settingRepository = new PrismaSettingRepository(fastify.prisma)
+
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
     fastify.decorate('secureHasher', secureHasher)
@@ -80,6 +84,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('emailVerificationTokenRepository', emailVerificationTokenRepository)
     fastify.decorate('passwordResetTokenRepository', passwordResetTokenRepository)
     fastify.decorate('tokenGenerator', tokenGenerator)
+    fastify.decorate('settingRepository', settingRepository)
 }
 
 export default fp(diPlugin, {
