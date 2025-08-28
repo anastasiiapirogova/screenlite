@@ -26,6 +26,8 @@ import { ISessionTokenService } from '@/modules/session/domain/ports/session-tok
 import { PrismaEmailVerificationTokenRepository } from '@/modules/email-verification/infrastructure/repositories/prisma-email-verification-token.repository.ts'
 import { IEmailVerificationTokenRepository } from '@/modules/email-verification/domain/ports/email-verification-token-repository.interface.ts'
 import { ITokenGenerator } from '@/core/ports/token-generator.interface.ts'
+import { PrismaPasswordResetTokenRepository } from '@/modules/password-reset/infrastructure/repositories/prisma-password-reset-token.repository.ts'
+import { IPasswordResetTokenRepository } from '@/modules/password-reset/domain/ports/password-reset-token-repository.interface.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -42,6 +44,7 @@ declare module 'fastify' {
         sessionTokenService: ISessionTokenService
         emailVerificationTokenRepository: IEmailVerificationTokenRepository
         tokenGenerator: ITokenGenerator
+        passwordResetTokenRepository: IPasswordResetTokenRepository
     }
 }
 
@@ -61,6 +64,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const tokenGenerator = new TokenGenerator()
     const sessionTokenService = new SessionTokenService(tokenGenerator, fastHasher)
     const emailVerificationTokenRepository = new PrismaEmailVerificationTokenRepository(fastify.prisma)
+    const passwordResetTokenRepository = new PrismaPasswordResetTokenRepository(fastify.prisma)
     
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
@@ -74,6 +78,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('sessionRepository', sessionRepository)
     fastify.decorate('sessionTokenService', sessionTokenService)
     fastify.decorate('emailVerificationTokenRepository', emailVerificationTokenRepository)
+    fastify.decorate('passwordResetTokenRepository', passwordResetTokenRepository)
     fastify.decorate('tokenGenerator', tokenGenerator)
 }
 
