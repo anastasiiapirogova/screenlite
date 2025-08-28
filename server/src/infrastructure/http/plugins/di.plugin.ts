@@ -12,6 +12,8 @@ import { SharpImageValidator } from '@/shared/infrastructure/services/sharp-imag
 import { SharpImageProcessor } from '@/shared/infrastructure/services/sharp-image-processor.service.ts'
 import { IImageValidator } from '@/core/ports/image-validator.interface.ts'
 import { IImageProcessor } from '@/core/ports/image-processor.interface.ts'
+import { PrismaUserAdminPermissionRepository } from '@/modules/admin-permission/infrastructure/repositories/prisma-user-admin-permission.repository.ts'
+import { IUserAdminPermissionRepository } from '@/modules/admin-permission/domain/ports/user-admin-permission-repository.interface.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -21,6 +23,7 @@ declare module 'fastify' {
         unitOfWork: IUnitOfWork
         imageValidator: IImageValidator
         imageProcessor: IImageProcessor
+        adminPermissionRepository: IUserAdminPermissionRepository
     }
 }
 
@@ -31,6 +34,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const unitOfWork = new PrismaUnitOfWork(fastify.prisma)
     const imageValidator = new SharpImageValidator()
     const imageProcessor = new SharpImageProcessor()
+    const adminPermissionRepository = new PrismaUserAdminPermissionRepository(fastify.prisma)
 
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
@@ -38,6 +42,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('unitOfWork', unitOfWork)
     fastify.decorate('imageValidator', imageValidator)
     fastify.decorate('imageProcessor', imageProcessor)
+    fastify.decorate('adminPermissionRepository', adminPermissionRepository)
 }
 
 export default fp(diPlugin, {

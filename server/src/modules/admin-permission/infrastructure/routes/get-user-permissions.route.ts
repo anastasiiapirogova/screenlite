@@ -2,8 +2,6 @@ import { z } from 'zod'
 import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { GetUserAdminPermissionsUseCase } from '@/modules/admin-permission/application/usecases/get-user-admin-permissions.usecase.ts'
-import { PrismaUserAdminPermissionRepository } from '@/modules/admin-permission/infrastructure/repositories/prisma-user-admin-permission.repository.ts'
-import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
 
 // Prefix: /api/admin/permissions
 export const getUserPermissionsRoute = async (fastify: FastifyInstance) => {
@@ -19,8 +17,8 @@ export const getUserPermissionsRoute = async (fastify: FastifyInstance) => {
         const authContext = request.auth!
 
         const getUserPermissions = new GetUserAdminPermissionsUseCase(
-            new PrismaUserAdminPermissionRepository(fastify.prisma),
-            new PrismaUserRepository(fastify.prisma),
+            fastify.adminPermissionRepository,
+            fastify.userRepository,
         )
 
         const permissions = await getUserPermissions.execute(authContext, userId)
