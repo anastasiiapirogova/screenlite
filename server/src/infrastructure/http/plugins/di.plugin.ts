@@ -14,6 +14,15 @@ import { IImageValidator } from '@/core/ports/image-validator.interface.ts'
 import { IImageProcessor } from '@/core/ports/image-processor.interface.ts'
 import { PrismaUserAdminPermissionRepository } from '@/modules/admin-permission/infrastructure/repositories/prisma-user-admin-permission.repository.ts'
 import { IUserAdminPermissionRepository } from '@/modules/admin-permission/domain/ports/user-admin-permission-repository.interface.ts'
+import { TwoFactorConfigHandlerFactory } from '@/modules/two-factor-auth/infrastructure/handlers/two-factor-config-handler.factory.ts'
+import { PrismaTwoFactorMethodRepository } from '@/modules/two-factor-auth/infrastructure/repositories/prisma-two-factor-method.repository.ts'
+import { ITwoFactorMethodRepository } from '@/modules/two-factor-auth/domain/ports/two-factor-method-repository.interface.ts'
+import { PrismaSessionRepository } from '@/modules/session/infrastructure/repositories/prisma-session.repository.ts'
+import { ISessionRepository } from '@/modules/session/domain/ports/session-repository.interface.ts'
+import { TokenGenerator } from '@/shared/infrastructure/services/token-generator.service.ts'
+import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
+import { SessionTokenService } from '@/modules/session/domain/services/session-token.service.ts'
+import { ISessionTokenService } from '@/modules/session/domain/ports/session-token-service.interface.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -24,18 +33,29 @@ declare module 'fastify' {
         imageValidator: IImageValidator
         imageProcessor: IImageProcessor
         adminPermissionRepository: IUserAdminPermissionRepository
+        twoFactorConfigHandlerFactory: TwoFactorConfigHandlerFactory
+        twoFactorMethodRepository: ITwoFactorMethodRepository
+        sessionRepository: ISessionRepository
+        sessionTokenService: ISessionTokenService
     }
 }
 
 const diPlugin: FastifyPluginAsync = async (fastify) => {
+    const fastHasher = new FastHasher()
+    const secureHasher = new BcryptHasher()
+
     const userRepository = new PrismaUserRepository(fastify.prisma)
     const userCredentialRepository = new PrismaUserCredentialRepository(fastify.prisma)
-    const secureHasher = new BcryptHasher()
     const unitOfWork = new PrismaUnitOfWork(fastify.prisma)
     const imageValidator = new SharpImageValidator()
     const imageProcessor = new SharpImageProcessor()
     const adminPermissionRepository = new PrismaUserAdminPermissionRepository(fastify.prisma)
-
+    const twoFactorConfigHandlerFactory = new TwoFactorConfigHandlerFactory(fastify.prisma)
+    const twoFactorMethodRepository = new PrismaTwoFactorMethodRepository(fastify.prisma, twoFactorConfigHandlerFactory)
+    const sessionRepository = new PrismaSessionRepository(fastify.prisma)
+    const tokenGenerator = new TokenGenerator()
+    const sessionTokenService = new SessionTokenService(tokenGenerator, fastHasher)
+    
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
     fastify.decorate('secureHasher', secureHasher)
@@ -43,6 +63,10 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('imageValidator', imageValidator)
     fastify.decorate('imageProcessor', imageProcessor)
     fastify.decorate('adminPermissionRepository', adminPermissionRepository)
+    fastify.decorate('twoFactorConfigHandlerFactory', twoFactorConfigHandlerFactory)
+    fastify.decorate('twoFactorMethodRepository', twoFactorMethodRepository)
+    fastify.decorate('sessionRepository', sessionRepository)
+    fastify.decorate('sessionTokenService', sessionTokenService)
 }
 
 export default fp(diPlugin, {

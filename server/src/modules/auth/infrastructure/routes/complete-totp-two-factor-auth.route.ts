@@ -1,7 +1,4 @@
-import { PrismaSessionRepository } from '@/modules/session/infrastructure/repositories/prisma-session.repository.ts'
 import { VerifyTotpCodeUsecase } from '@/modules/two-factor-auth/application/usecases/verify-totp-code.usecase.ts'
-import { TwoFactorConfigHandlerFactory } from '@/modules/two-factor-auth/infrastructure/handlers/two-factor-config-handler.factory.ts'
-import { PrismaTwoFactorMethodRepository } from '@/modules/two-factor-auth/infrastructure/repositories/prisma-two-factor-method.repository.ts'
 import { totpCodeSchema } from '@/shared/schemas/totp-code.schema.ts'
 import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -24,17 +21,15 @@ export const completeTotpTwoFactorAuthRoute = async (fastify: FastifyInstance) =
             return fastify.httpErrors.unauthorized()
         }
 
-        const twoFactorMethodRepo = new PrismaTwoFactorMethodRepository(fastify.prisma, new TwoFactorConfigHandlerFactory(fastify.prisma))
-
         const verifyTotpCodeUsecase = new VerifyTotpCodeUsecase({
-            twoFactorMethodRepo,
+            twoFactorMethodRepo: fastify.twoFactorMethodRepository,
             encryptionService: fastify.encryption,
             totpService: new TotpService(),
         })
 
         const completeTotpTwoFactorAuthUsecase = new CompleteTotpTwoFactorAuthUsecase({
             verifyTotpCodeUsecase,
-            sessionRepo: new PrismaSessionRepository(fastify.prisma),
+            sessionRepo: fastify.sessionRepository,
         })
 
         await completeTotpTwoFactorAuthUsecase.execute(authContext, totpCode)
