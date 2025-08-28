@@ -3,25 +3,31 @@ import { IEtagService } from '@/core/ports/etag-service.interface.ts'
 import { IImageProcessor } from '@/core/ports/image-processor.interface.ts'
 import { IStorage } from '@/core/ports/storage.interface.ts'
 
+interface ThumbnailGenerationServiceDeps {
+    storage: IStorage
+    imageProcessor: IImageProcessor
+    etagService: IEtagService
+}
+
 export class ThumbnailGenerationService {
     constructor(
-        private storage: IStorage,
-        private imageProcessor: IImageProcessor,
-        private etagService: IEtagService
+        private readonly deps: ThumbnailGenerationServiceDeps,
     ) {}
   
     async generateThumbnail(
         fileKey: string,
         options: { maxWidth?: number, maxHeight?: number }
     ) {
+        const { storage, imageProcessor, etagService } = this.deps
+
         const [metadata, fileBuffer] = await Promise.all([
-            this.storage.getMetadata(fileKey),
-            this.storage.getFileBuffer(fileKey)
+            storage.getMetadata(fileKey),
+            storage.getFileBuffer(fileKey)
         ])
 
         const imageFile = ImageFile.create(fileKey, metadata.mimeType, fileBuffer)
 
-        const imageMetadata = await this.imageProcessor.getImageMetadata(imageFile.buffer)
+        const imageMetadata = await imageProcessor.getImageMetadata(imageFile.buffer)
 
         const isWidthLargerThanImage = options.maxWidth && imageMetadata.width < options.maxWidth
         const isHeightLargerThanImage = options.maxHeight && imageMetadata.height < options.maxHeight
@@ -32,11 +38,11 @@ export class ThumbnailGenerationService {
                 buffer: imageFile.buffer,
                 mimeType: imageFile.mimeType,
                 contentLength: imageFile.buffer.length,
-                etag: this.etagService.generate(imageFile.buffer)
+                etag: etagService.generate(imageFile.buffer)
             }
         }
 
-        const processedImage = await this.imageProcessor.process(imageFile.buffer, {
+        const processedImage = await imageProcessor.process(imageFile.buffer, {
             ...options,
             format: 'webp',
             quality: 80
@@ -46,7 +52,7 @@ export class ThumbnailGenerationService {
             buffer: processedImage,
             mimeType: 'image/webp',
             contentLength: processedImage.length,
-            etag: this.etagService.generate(processedImage)
+            etag: etagService.generate(processedImage)
         }
     }
 }

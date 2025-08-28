@@ -22,7 +22,11 @@ export const getThumbnailRoute = async (fastify: FastifyInstance) => {
         
         const sharpImageProcessor = new SharpImageProcessor()
         const etagService = new EtagService()
-        const thumbnailService = new ThumbnailGenerationService(fastify.storage, sharpImageProcessor, etagService)
+        const thumbnailService = new ThumbnailGenerationService({
+            storage: fastify.storage,
+            imageProcessor: sharpImageProcessor,
+            etagService
+        })
         
         const result = await thumbnailService.generateThumbnail(fileKey, {
             maxWidth: 200,
