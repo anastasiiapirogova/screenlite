@@ -9,17 +9,19 @@ import { IUserCredentialRepository } from './user-credential-repository.interfac
 import { IWorkspaceMemberRepository } from './workspace-member-repository.interface.ts'
 import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace-repository.interface.ts'
 
+export type IUnitOfWorkRepositories = {
+    userRepository: IUserRepository
+    sessionRepository: ISessionRepository
+    emailVerificationTokenRepository: IEmailVerificationTokenRepository
+    userAdminPermissionRepository: IUserAdminPermissionRepository
+    adminPermissionRepository: IAdminPermissionRepository
+    passwordResetTokenRepository: IPasswordResetTokenRepository
+    twoFactorMethodRepository: ITwoFactorMethodRepository
+    userCredentialRepository: IUserCredentialRepository
+    workspaceRepository: IWorkspaceRepository
+    workspaceMemberRepository: IWorkspaceMemberRepository
+}
+
 export type IUnitOfWork = {
-    execute<T>(fn: (repos: {
-        userRepository: IUserRepository
-        sessionRepository: ISessionRepository
-        emailVerificationTokenRepository: IEmailVerificationTokenRepository
-        userAdminPermissionRepository: IUserAdminPermissionRepository
-        adminPermissionRepository: IAdminPermissionRepository
-        passwordResetTokenRepository: IPasswordResetTokenRepository
-        twoFactorMethodRepository: ITwoFactorMethodRepository
-        userCredentialRepository: IUserCredentialRepository
-        workspaceRepository: IWorkspaceRepository
-        workspaceMemberRepository: IWorkspaceMemberRepository
-    }) => Promise<T>): Promise<T>
+    execute<T>(fn: (repos: IUnitOfWorkRepositories) => Promise<T>): Promise<T>
 }
