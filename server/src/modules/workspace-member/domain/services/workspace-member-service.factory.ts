@@ -1,0 +1,18 @@
+import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
+import { WorkspaceMemberService } from './workspace-member.service.ts'
+import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
+import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace-repository.interface.ts'
+
+export type WorkspaceMemberServiceFactory = (deps: {
+    workspaceMemberRepository: IWorkspaceMemberRepository
+    userRepository: IUserRepository
+    workspaceRepository: IWorkspaceRepository
+}) => WorkspaceMemberService
+
+export const workspaceMemberServiceFactory: WorkspaceMemberServiceFactory = (deps) => {
+    return new WorkspaceMemberService(
+        deps.workspaceMemberRepository,
+        deps.userRepository,
+        deps.workspaceRepository
+    )
+}
