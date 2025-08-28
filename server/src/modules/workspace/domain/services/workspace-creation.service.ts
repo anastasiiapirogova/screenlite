@@ -1,10 +1,11 @@
-import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { WorkspaceMemberService } from '@/modules/workspace-member/domain/services/workspace-member.service.ts'
 import { Workspace } from '@/core/entities/workspace.entity.ts'
+import { IWorkspaceRepository } from '../ports/workspace-repository.interface.ts'
+import { CreateWorkspaceDTO } from '../dto/create-workspace.dto.ts'
 
 type WorkspaceCreationServiceDeps = {
     workspaceMemberService: WorkspaceMemberService
-    unitOfWork: IUnitOfWork
+    workspaceRepository: IWorkspaceRepository
 }
 
 export class WorkspaceCreationService {
@@ -12,19 +13,19 @@ export class WorkspaceCreationService {
         private readonly deps: WorkspaceCreationServiceDeps
     ) {}
 
-    async createWorkspace(name: string, slug: string, creatorUserId: string): Promise<Workspace> {
-        const { workspaceMemberService, unitOfWork } = this.deps
+    async createWorkspace(dto: CreateWorkspaceDTO): Promise<Workspace> {
+        const { workspaceMemberService, workspaceRepository } = this.deps
+
+        const { name, slug, creatorUserId } = dto
 
         const workspace = Workspace.create({
             name,
             slug
         })
 
-        await unitOfWork.execute(async (repos) => {
-            await repos.workspaceRepository.save(workspace)
+        await workspaceRepository.save(workspace)
 
-            await workspaceMemberService.addMember(workspace.id, creatorUserId, repos.workspaceMemberRepository)
-        })
+        await workspaceMemberService.addMember(workspace.id, creatorUserId)
 
         return workspace
     }
