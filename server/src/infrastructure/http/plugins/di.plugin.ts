@@ -23,6 +23,9 @@ import { TokenGenerator } from '@/shared/infrastructure/services/token-generator
 import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { SessionTokenService } from '@/modules/session/domain/services/session-token.service.ts'
 import { ISessionTokenService } from '@/modules/session/domain/ports/session-token-service.interface.ts'
+import { PrismaEmailVerificationTokenRepository } from '@/modules/email-verification/infrastructure/repositories/prisma-email-verification-token.repository.ts'
+import { IEmailVerificationTokenRepository } from '@/modules/email-verification/domain/ports/email-verification-token-repository.interface.ts'
+import { ITokenGenerator } from '@/core/ports/token-generator.interface.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -37,6 +40,8 @@ declare module 'fastify' {
         twoFactorMethodRepository: ITwoFactorMethodRepository
         sessionRepository: ISessionRepository
         sessionTokenService: ISessionTokenService
+        emailVerificationTokenRepository: IEmailVerificationTokenRepository
+        tokenGenerator: ITokenGenerator
     }
 }
 
@@ -55,6 +60,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const sessionRepository = new PrismaSessionRepository(fastify.prisma)
     const tokenGenerator = new TokenGenerator()
     const sessionTokenService = new SessionTokenService(tokenGenerator, fastHasher)
+    const emailVerificationTokenRepository = new PrismaEmailVerificationTokenRepository(fastify.prisma)
     
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
@@ -67,6 +73,8 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('twoFactorMethodRepository', twoFactorMethodRepository)
     fastify.decorate('sessionRepository', sessionRepository)
     fastify.decorate('sessionTokenService', sessionTokenService)
+    fastify.decorate('emailVerificationTokenRepository', emailVerificationTokenRepository)
+    fastify.decorate('tokenGenerator', tokenGenerator)
 }
 
 export default fp(diPlugin, {

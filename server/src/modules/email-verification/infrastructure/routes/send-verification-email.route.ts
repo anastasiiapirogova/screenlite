@@ -1,12 +1,8 @@
-import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
 import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { SendVerificationEmailUseCase } from '../../application/usecases/send-verification-email.usecase.ts'
-import { PrismaEmailVerificationTokenRepository } from '../repositories/prisma-email-verification-token.repository.ts'
 import { EmailVerificationTokenFactory } from '../../domain/services/email-verification-token.factory.ts'
-import { TokenGenerator } from '@/shared/infrastructure/services/token-generator.service.ts'
 import { SendVerificationEmailSchema } from '../schemas/send-verification-email.schema.ts'
-import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 
 export async function sendVerificationEmailRoute(fastify: FastifyInstance) {
     fastify.withTypeProvider<ZodTypeProvider>().post('/send-verification-email', {
@@ -16,13 +12,12 @@ export async function sendVerificationEmailRoute(fastify: FastifyInstance) {
     }, async (request, reply) => {
         const { userId } = request.body
 
-        const tokenGenerator = new TokenGenerator()
-        const hasher = new FastHasher()
+        const tokenFactory = new EmailVerificationTokenFactory(fastify.tokenGenerator, fastify.secureHasher)
 
         const sendVerificationEmail = new SendVerificationEmailUseCase({
-            userRepo: new PrismaUserRepository(fastify.prisma),
-            tokenRepo: new PrismaEmailVerificationTokenRepository(fastify.prisma),
-            tokenFactory: new EmailVerificationTokenFactory(tokenGenerator, hasher),
+            userRepo: fastify.userRepository,
+            tokenRepo: fastify.emailVerificationTokenRepository,
+            tokenFactory,
             jobProducer: fastify.jobProducer,
             config: fastify.config,
         })
