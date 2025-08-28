@@ -62,6 +62,7 @@ export class FastifyServer {
         await this.app.register(plugins.adminPermissions)
         await this.app.register(plugins.adminAccess)
         await this.app.register(plugins.jobQueue)
+        await this.app.register(plugins.di)
     }
 
     private async registerHooks() {
