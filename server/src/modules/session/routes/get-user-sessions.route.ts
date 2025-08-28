@@ -2,7 +2,6 @@ import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { GetSessionsUsecase } from '../application/usecases/get-sessions.usecase.ts'
-import { PrismaSessionRepository } from '../infrastructure/repositories/prisma-session.repository.ts'
 import { paginationSchema } from '@/shared/schemas/pagination.schema.ts'
 import { SessionMapper } from '../infrastructure/mappers/session.mapper.ts'
 
@@ -27,7 +26,7 @@ export const getUserSessionsRoute = async (fastify: FastifyInstance) => {
             const sessionMapper = new SessionMapper()
 
             const usecase = new GetSessionsUsecase(
-                new PrismaSessionRepository(fastify.prisma)
+                fastify.sessionRepository
             )
 
             const result = await usecase.execute(request.auth, {
