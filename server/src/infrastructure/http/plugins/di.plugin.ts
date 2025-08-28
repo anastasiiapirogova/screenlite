@@ -30,6 +30,10 @@ import { PrismaPasswordResetTokenRepository } from '@/modules/password-reset/inf
 import { IPasswordResetTokenRepository } from '@/modules/password-reset/domain/ports/password-reset-token-repository.interface.ts'
 import { ISettingRepository } from '@/modules/setting/domain/setting-repository.interface.ts'
 import { PrismaSettingRepository } from '@/modules/setting/infrastructure/repositories/prisma-setting.repository.ts'
+import { PrismaWorkspaceRepository } from '@/modules/workspace/infrastructure/repositories/prisma-workspace.repository.ts'
+import { PrismaWorkspaceMemberRepository } from '@/modules/workspace-member/domain/infrastructure/repositories/prisma-workspace-member.repository.ts'
+import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace-repository.interface.ts'
+import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -48,6 +52,8 @@ declare module 'fastify' {
         tokenGenerator: ITokenGenerator
         passwordResetTokenRepository: IPasswordResetTokenRepository
         settingRepository: ISettingRepository
+        workspaceRepository: IWorkspaceRepository
+        workspaceMemberRepository: IWorkspaceMemberRepository
     }
 }
 
@@ -69,6 +75,8 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const emailVerificationTokenRepository = new PrismaEmailVerificationTokenRepository(fastify.prisma)
     const passwordResetTokenRepository = new PrismaPasswordResetTokenRepository(fastify.prisma)
     const settingRepository = new PrismaSettingRepository(fastify.prisma)
+    const workspaceRepository = new PrismaWorkspaceRepository(fastify.prisma)
+    const workspaceMemberRepository = new PrismaWorkspaceMemberRepository(fastify.prisma)
 
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
@@ -85,6 +93,8 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('passwordResetTokenRepository', passwordResetTokenRepository)
     fastify.decorate('tokenGenerator', tokenGenerator)
     fastify.decorate('settingRepository', settingRepository)
+    fastify.decorate('workspaceRepository', workspaceRepository)
+    fastify.decorate('workspaceMemberRepository', workspaceMemberRepository)
 }
 
 export default fp(diPlugin, {
