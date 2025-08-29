@@ -34,6 +34,9 @@ import { PrismaWorkspaceRepository } from '@/modules/workspace/infrastructure/re
 import { PrismaWorkspaceMemberRepository } from '@/modules/workspace-member/domain/infrastructure/repositories/prisma-workspace-member.repository.ts'
 import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace-repository.interface.ts'
 import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
+import { WorkspaceMemberService } from '@/modules/workspace-member/domain/services/workspace-member.service.ts'
+import { IWorkspaceMemberService } from '@/modules/workspace-member/domain/ports/workspace-member-service.interface.ts'
+import { workspaceMemberServiceFactory, IWorkspaceMemberServiceFactory } from '@/modules/workspace-member/domain/services/workspace-member-service.factory.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -54,6 +57,8 @@ declare module 'fastify' {
         settingRepository: ISettingRepository
         workspaceRepository: IWorkspaceRepository
         workspaceMemberRepository: IWorkspaceMemberRepository
+        workspaceMemberService: IWorkspaceMemberService
+        workspaceMemberServiceFactory: IWorkspaceMemberServiceFactory
     }
 }
 
@@ -77,6 +82,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const settingRepository = new PrismaSettingRepository(fastify.prisma)
     const workspaceRepository = new PrismaWorkspaceRepository(fastify.prisma)
     const workspaceMemberRepository = new PrismaWorkspaceMemberRepository(fastify.prisma)
+    const workspaceMemberService = new WorkspaceMemberService(workspaceMemberRepository, userRepository, workspaceRepository)
 
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
@@ -95,6 +101,8 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('settingRepository', settingRepository)
     fastify.decorate('workspaceRepository', workspaceRepository)
     fastify.decorate('workspaceMemberRepository', workspaceMemberRepository)
+    fastify.decorate('workspaceMemberService', workspaceMemberService)
+    fastify.decorate('workspaceMemberServiceFactory', workspaceMemberServiceFactory)
 }
 
 export default fp(diPlugin, {
