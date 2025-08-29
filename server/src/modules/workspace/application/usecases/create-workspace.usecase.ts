@@ -1,23 +1,21 @@
 import { CreateWorkspaceDTO } from '../dto/create-workspace.dto.ts'
 import { Workspace } from '@/core/entities/workspace.entity.ts'
-import { WorkspacePolicy } from '../../domain/policies/workspace.policy.ts'
+import { GlobalWorkspacePolicy } from '../../domain/policies/global-workspace.policy.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { WorkspaceCreationServiceFactory } from '../../domain/services/workspace-creation-service.factory.ts'
-import { WorkspaceMemberServiceFactory } from '@/modules/workspace-member/domain/services/workspace-member-service.factory.ts'
+import { IWorkspaceMemberServiceFactory } from '@/modules/workspace-member/domain/services/workspace-member-service.factory.ts'
 
 export class CreateWorkspaceUsecase {
     constructor(
         private readonly unitOfWork: IUnitOfWork,
         private readonly workspaceCreationServiceFactory: WorkspaceCreationServiceFactory,
-        private readonly workspaceMemberServiceFactory: WorkspaceMemberServiceFactory
+        private readonly workspaceMemberServiceFactory: IWorkspaceMemberServiceFactory
     ) {}
 
     async execute(dto: CreateWorkspaceDTO): Promise<Workspace> {
         const { name, slug, authContext } = dto
 
-        const workspacePolicy = new WorkspacePolicy(authContext)
-
-        workspacePolicy.enforceCreateWorkspace()
+        GlobalWorkspacePolicy.enforceCreateWorkspace(authContext)
 
         let creatorUserId: string | undefined
 
