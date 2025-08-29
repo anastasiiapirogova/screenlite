@@ -19,11 +19,11 @@ export class PrismaRepositoryWorkspaceMapper {
     static toPersistence(workspace: Workspace): Omit<PrismaWorkspace, 'createdAt' | 'updatedAt'> {
         return {
             id: workspace.id,
-            name: workspace.name.value,
-            slug: workspace.slug.value,
-            status: workspace.status,
+            name: workspace.name,
+            slug: workspace.slug,
+            status: workspace.state.status,
             picturePath: workspace.picturePath,
-            deletedAt: workspace.deletedAt,
+            deletedAt: workspace.state.deletedAt,
         }
     }
 }
