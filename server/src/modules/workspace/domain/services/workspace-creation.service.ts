@@ -2,6 +2,7 @@ import { Workspace } from '@/core/entities/workspace.entity.ts'
 import { IWorkspaceRepository } from '../ports/workspace-repository.interface.ts'
 import { CreateWorkspaceDTO } from '../dto/create-workspace.dto.ts'
 import { ValidationError } from '@/shared/errors/validation.error.ts'
+import { WorkspaceFactory } from '@/core/factories/workspace.factory.ts'
 
 export class WorkspaceCreationService {
     constructor(
@@ -19,7 +20,7 @@ export class WorkspaceCreationService {
             })
         }
 
-        const workspace = Workspace.create({
+        const workspace = WorkspaceFactory.create({
             name,
             slug
         })
