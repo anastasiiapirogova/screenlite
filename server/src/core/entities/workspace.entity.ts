@@ -1,59 +1,39 @@
 import { WorkspaceDTO } from '@/shared/dto/workspace.dto.ts'
-import { WorkspaceStatus } from '../enums/workspace-status.enum.ts'
 import { WorkspaceName } from '../value-objects/workspace-name.vo.ts'
 import { WorkspaceSlug } from '../value-objects/workspace-slug.vo.ts'
+import { WorkspaceStateVO } from '../value-objects/workspace-state.vo.ts'
 
 export class Workspace {
     public readonly id: string
-    public name: WorkspaceName
-    public slug: WorkspaceSlug
-    public status: WorkspaceStatus
+    private _name: WorkspaceName
+    private _slug: WorkspaceSlug
     public readonly createdAt: Date
     public updatedAt: Date
-    public deletedAt: Date | null
     public picturePath: string | null
+    public state: WorkspaceStateVO
 
     constructor(props: WorkspaceDTO) {
         this.id = props.id
-        this.name = new WorkspaceName(props.name)
-        this.slug = new WorkspaceSlug(props.slug)
-        this.status = props.status
+        this._name = new WorkspaceName(props.name)
+        this._slug = new WorkspaceSlug(props.slug)
+        this.state = new WorkspaceStateVO(props.status, props.deletedAt)
         this.createdAt = props.createdAt
         this.updatedAt = props.updatedAt
-        this.deletedAt = props.deletedAt
         this.picturePath = props.picturePath
     }
 
-    static create(props: {
-        name: string
-        slug: string
-    }): Workspace {
-        const id = crypto.randomUUID()
-        const now = new Date()
-    
-        return new Workspace({
-            id,
-            name: props.name,
-            slug: props.slug,
-            status: WorkspaceStatus.ACTIVE,
-            createdAt: now,
-            updatedAt: now,
-            deletedAt: null,
-            picturePath: null
-        })
+    get name() {
+        return this._name.value
     }
 
-    updateDetails(props: { name?: string, slug?: string }) {
-        if (props.name) this.name = new WorkspaceName(props.name)
-        if (props.slug) this.slug = new WorkspaceSlug(props.slug)
+    get slug() {
+        return this._slug.value
+    }
+    set name(name: string) {
+        this._name = new WorkspaceName(name)
     }
 
-    isDeleted() {
-        return this.deletedAt !== null
-    }
-
-    markAsDeleted() {
-        this.deletedAt = new Date()
-        this.status = WorkspaceStatus.DELETED
+    set slug(slug: string) {
+        this._slug = new WorkspaceSlug(slug)
     }
 }
