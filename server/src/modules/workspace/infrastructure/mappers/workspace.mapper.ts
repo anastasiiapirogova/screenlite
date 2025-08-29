@@ -5,12 +5,12 @@ export class WorkspaceMapper {
     toDTO(workspace: Workspace): WorkspaceDTO {
         return {
             id: workspace.id,
-            name: workspace.name.value,
-            slug: workspace.slug.value,
-            status: workspace.status,
+            name: workspace.name,
+            slug: workspace.slug,
+            status: workspace.state.status,
             createdAt: workspace.createdAt,
             updatedAt: workspace.updatedAt,
-            deletedAt: workspace.deletedAt,
+            deletedAt: workspace.state.deletedAt,
             picturePath: workspace.picturePath
         }
     }
