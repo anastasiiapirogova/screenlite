@@ -1,12 +1,12 @@
 import { Suspense } from 'react'
 import { QueryErrorResetBoundary, useSuspenseQuery } from '@tanstack/react-query'
 import { useCurrentUser } from '../../auth/hooks/useCurrentUser'
-import { userWorkspacesQuery } from '../../workspace/api/queries/userWorkspacesQuery'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Link } from 'react-router'
 import { WorkspacePicture } from '@shared/components/WorkspacePicture'
 import { TbPlus } from 'react-icons/tb'
 import { Button } from '@shared/ui/buttons/Button'
+import { userWorkspacesQuery } from '@modules/workspace/api/requests/userWorkspacesRequest'
 
 const WorkspacesListLoadingState = () => {
     return (
@@ -23,7 +23,7 @@ const WorkspacesList = () => {
 
     const { data } = useSuspenseQuery(userWorkspacesQuery(user.id, 1, 10))
 	
-    const { workspaces } = data
+    const { items: workspaces } = data
 	
     return (
         <div className=''>
