@@ -3,24 +3,12 @@ import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 
 export class UserListPolicy {
-    constructor(
-        private readonly authContext: AuthContext
-    ) {}
-
-    canViewAllUsers(): boolean {
-        if(this.authContext.hasAdminAccess()) {
-            const hasAdminPermission = this.authContext.hasAdminPermission(AdminPermissionName.USERS_VIEW)
-
-            if(hasAdminPermission) {
-                return true
-            }
-        }
-
-        return false
+    static canViewAllUsers(authContext: AuthContext): boolean {
+        return authContext.hasAdminPermission(AdminPermissionName.USERS_VIEW)
     }
 
-    enforceViewAllUsers(): void {
-        if(!this.canViewAllUsers()) {
+    static enforceViewAllUsers(authContext: AuthContext): void {
+        if(!UserListPolicy.canViewAllUsers(authContext)) {
             throw new ForbiddenError({
                 userId: ['YOU_CANNOT_VIEW_ALL_USERS']
             })

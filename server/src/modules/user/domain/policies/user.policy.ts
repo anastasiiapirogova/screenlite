@@ -1,108 +1,89 @@
-import { User } from '@/core/entities/user.entity.ts'
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 
 export class UserPolicy {
-    constructor(
-        private readonly user: User,
-        private readonly authContext: AuthContext
-    ) {}
-
-    private isSelf(): boolean {
-        if(this.authContext.isUserContext()) {
-            const user = this.authContext.user
-
-            return user.id === this.user.id
+    private static isTargetUserSelf(targetUserId: string, authContext: AuthContext): boolean {
+        if (!authContext.isUserContext()) {
+            return false
         }
 
-        return false
+        const authenticatedUser = authContext.user
+
+        return authenticatedUser.id === targetUserId
     }
 
-    canView(): boolean {
-        if(this.authContext.hasAdminAccess()) {
-            const hasAdminPermission = this.authContext.hasAdminPermission(AdminPermissionName.USERS_VIEW)
-
-            if(hasAdminPermission) {
-                return true
-            }
-        }
-
-        if(this.isSelf()) {
+    static canViewProfile(targetUserId: string, authContext: AuthContext): boolean {
+        if (authContext.hasAdminPermission(AdminPermissionName.USERS_VIEW)) {
             return true
         }
 
-        return false
+        return this.isTargetUserSelf(targetUserId, authContext)
     }
 
-    enforceCanView(): void {
-        if(!this.canView()) {
+    static enforceCanViewProfile(targetUserId: string, authContext: AuthContext): void {
+        if (!this.canViewProfile(targetUserId, authContext)) {
             throw new ForbiddenError({
-                userId: ['YOU_CANNOT_VIEW_THIS_USER']
+                userId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_USER_PROFILE']
             })
         }
     }
 
-    canRequestDeleteAccount(): boolean {
-        if(this.authContext.hasAdminAccess()) {
-            const hasAdminPermission = this.authContext.hasAdminPermission(AdminPermissionName.USERS_DELETE)
-
-            if(hasAdminPermission) {
-                return true
-            }
-        }
-
-        if(this.isSelf()) {
+    static canRequestAccountDeletion(targetUserId: string, authContext: AuthContext): boolean {
+        if (authContext.hasAdminPermission(AdminPermissionName.USERS_DELETE)) {
             return true
         }
 
-        return false
+        return this.isTargetUserSelf(targetUserId, authContext)
     }
 
-    enforceCanRequestDeleteAccount(): void {
-        if(!this.canRequestDeleteAccount()) {
+    static enforceCanRequestAccountDeletion(targetUserId: string, authContext: AuthContext): void {
+        if (!this.canRequestAccountDeletion(targetUserId, authContext)) {
             throw new ForbiddenError({
-                userId: ['YOU_CANNOT_REQUEST_DELETION_FOR_THIS_USER']
+                userId: ['INSUFFICIENT_PERMISSIONS_TO_REQUEST_ACCOUNT_DELETION']
             })
         }
     }
 
-    canChangePassword(): boolean {
-        if(this.authContext.isUserContext()) {
-            return this.isSelf()
-        }
-
-        return false
+    static canChangePassword(targetUserId: string, authContext: AuthContext): boolean {
+        return this.isTargetUserSelf(targetUserId, authContext)
     }
 
-    enforceCanChangePassword(): void {
-        if(!this.canChangePassword()) {
+    static enforceCanChangePassword(targetUserId: string, authContext: AuthContext): void {
+        if (!this.canChangePassword(targetUserId, authContext)) {
             throw new ForbiddenError({
-                userId: ['YOU_CANNOT_CHANGE_PASSWORD_FOR_THIS_USER']
+                userId: ['INSUFFICIENT_PERMISSIONS_TO_CHANGE_USER_PASSWORD']
             })
         }
     }
 
-    canUpdateProfile(): boolean {
-        if(this.authContext.hasAdminAccess()) {
-            const hasAdminPermission = this.authContext.hasAdminPermission(AdminPermissionName.USERS_EDIT)
-
-            if(hasAdminPermission) {
-                return true
-            }
-        }
-
-        if(this.isSelf()) {
+    static canUpdateProfile(targetUserId: string, authContext: AuthContext): boolean {
+        if (authContext.hasAdminPermission(AdminPermissionName.USERS_EDIT)) {
             return true
         }
 
-        return false
+        return this.isTargetUserSelf(targetUserId, authContext)
     }
 
-    enforceCanUpdateProfile(): void {
-        if(!this.canUpdateProfile()) {
+    static enforceCanUpdateProfile(targetUserId: string, authContext: AuthContext): void {
+        if (!this.canUpdateProfile(targetUserId, authContext)) {
             throw new ForbiddenError({
-                userId: ['YOU_CANNOT_UPDATE_PROFILE_FOR_THIS_USER']
+                userId: ['INSUFFICIENT_PERMISSIONS_TO_UPDATE_USER_PROFILE']
+            })
+        }
+    }
+    static canViewWorkspaces(targetUserId: string, authContext: AuthContext): boolean {
+        if (authContext.hasAdminPermission(AdminPermissionName.WORKSPACES_VIEW)) {
+            return true
+        }
+
+        return this.isTargetUserSelf(targetUserId, authContext)
+    }
+
+    static enforceCanViewWorkspaces(targetUserId: string, authContext: AuthContext): void {
+        if (!this.canViewWorkspaces(targetUserId, authContext)) {
+            throw new ForbiddenError({
+                userId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_USER_WORKSPACES']
             })
         }
     }
