@@ -25,7 +25,7 @@ export abstract class AbstractAuthContext {
     }
   
     hasAdminPermission(permission: AdminPermissionName): boolean {
-        return this.getAdminPermissions().includes(permission)
+        return this.hasAdminAccess() && this.getAdminPermissions().includes(permission)
     }
 
     isUserContext(): this is UserSessionAuthContext {
