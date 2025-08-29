@@ -34,9 +34,7 @@ export class UpdateProfileUsecase {
             throw new NotFoundError('USER_NOT_FOUND')
         }
 
-        const userPolicy = new UserPolicy(user, authContext)
-
-        userPolicy.enforceCanUpdateProfile()
+        UserPolicy.enforceCanUpdateProfile(userId, authContext)
 
         const shouldUploadNewPhoto = profilePhotoBuffer && Buffer.isBuffer(profilePhotoBuffer)
 

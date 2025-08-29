@@ -22,9 +22,7 @@ export class GetUserUsecase {
             throw new NotFoundError('USER_NOT_FOUND')
         }
 
-        const userPolicy = new UserPolicy(user, dto.authContext)
-
-        userPolicy.enforceCanView()
+        UserPolicy.enforceCanViewProfile(dto.userId, dto.authContext)
 
         return user
     }

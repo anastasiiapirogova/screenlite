@@ -36,9 +36,7 @@ export class ChangePasswordUseCase {
 
         const currentSessionId = authContext.session?.id
 
-        const userPolicy = new UserPolicy(user, authContext)
-
-        userPolicy.enforceCanChangePassword()
+        UserPolicy.enforceCanChangePassword(userId, authContext)
 
         const userCredentials = await userCredentialRepository.findByUserId(user.id)
 

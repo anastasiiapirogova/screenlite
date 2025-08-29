@@ -10,9 +10,7 @@ export class GetUsersUsecase {
     ) {}
 
     async execute(dto: GetUsersDto): Promise<PaginationResponse<User>> {
-        const userListPolicy = new UserListPolicy(dto.authContext)
-
-        userListPolicy.enforceViewAllUsers()
+        UserListPolicy.enforceViewAllUsers(dto.authContext)
 
         return this.userRepository.findAll(dto.queryOptions)
     }
