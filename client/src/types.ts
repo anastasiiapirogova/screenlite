@@ -1,10 +1,12 @@
 import { ButtonHTMLAttributes, ReactElement } from 'react'
 
 export type PaginationMeta = {
-	page: number
+	currentPage: number
+	hasNextPage: boolean
+	hasPrevPage: boolean
 	limit: number
-	pages: number
 	total: number
+	totalPages: number
 }
 
 export type PaginatedResponse<T> = {
