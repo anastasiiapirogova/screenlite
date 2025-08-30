@@ -4,5 +4,6 @@ export interface WorkspaceMembershipWithWorkspaceView {
         id: string
         name: string
         slug: string
+        picturePath: string | null
     }
 }

@@ -80,10 +80,20 @@ export class PrismaWorkspaceMemberRepository implements IWorkspaceMemberReposito
                 workspace: {
                     id: member.workspace.id,
                     name: member.workspace.name,
-                    slug: member.workspace.slug
+                    slug: member.workspace.slug,
+                    picturePath: member.workspace.picturePath
                 }
             })),
             meta: result.meta,
         }
+    }
+
+    async countByWorkspaceAndUser(workspaceId: string, userId: string): Promise<number> {
+        return this.prisma.workspaceMember.count({
+            where: {
+                workspaceId,
+                userId
+            }
+        })
     }
 }

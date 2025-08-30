@@ -9,4 +9,5 @@ export interface IWorkspaceMemberRepository {
     save(member: WorkspaceMember): Promise<void>
     delete(memberId: string): Promise<void>
     findWithWorkspaceByUserId(userId: string, queryOptions: UserWorkspacesQueryOptionsDTO): Promise<PaginationResponse<WorkspaceMembershipWithWorkspaceView>>
+    countByWorkspaceAndUser(workspaceId: string, userId: string): Promise<number>
 }
