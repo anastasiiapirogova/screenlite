@@ -35,4 +35,7 @@ export type WorkspaceMembershipWithWorkspaceView = {
     }
 }
 
-export type WorkspaceWithEntityCounts = Workspace & { _count: WorkspaceEntityCounts } 
+// Temporary type until we update the API to return the workspace with the entity counts
+// export type WorkspaceWithEntityCounts = Workspace & { _count: WorkspaceEntityCounts } 
+
+export type WorkspaceWithEntityCounts = Workspace

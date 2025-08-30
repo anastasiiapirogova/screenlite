@@ -1,8 +1,8 @@
 import { LayoutBodyContainer } from '@shared/components/LayoutBodyContainer'
 import { ScrollArea } from '@shared/ui/ScrollArea'
-import { useWorkspace } from '../hooks/useWorkspace'
-import { workspaceEntityCountsQuery } from '../api/queries/workspaceEntityCountsQuery'
-import { useSuspenseQuery } from '@tanstack/react-query'
+// import { useWorkspace } from '../hooks/useWorkspace'
+// import { workspaceEntityCountsQuery } from '../api/queries/workspaceEntityCountsQuery'
+// import { useSuspenseQuery } from '@tanstack/react-query'
 
 const ScreenCountCard = ({ label, count }: { label: string, count: number }) => (
     <div className='bg-white rounded-3xl p-7 flex flex-col gap-2 border'>
@@ -12,9 +12,19 @@ const ScreenCountCard = ({ label, count }: { label: string, count: number }) => 
 )
 
 export const WorkspacePage = () => {
-    const workspace = useWorkspace()
+    // const workspace = useWorkspace()
 
-    const { data: entityCounts } = useSuspenseQuery(workspaceEntityCountsQuery(workspace.id))
+    // const { data: entityCounts } = useSuspenseQuery(workspaceEntityCountsQuery(workspace.id))
+
+    const entityCounts = {
+        members: 0,
+        playlists: 0,
+        screens: 0,
+        layouts: 0,
+        files: 0,
+        screenStatus: { online: 0, offline: 0, notConnected: 0 },
+        invitations: { all: 0, pending: 0 }
+    }
 
     const screenStatus = entityCounts.screenStatus || { online: 0, offline: 0 }
 
