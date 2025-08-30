@@ -3,6 +3,26 @@ import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
 
 export class WorkspacePolicy {
+    static canViewWorkspace(authContext: AuthContext, isMember: boolean): boolean {
+        if(authContext.hasAdminPermission(AdminPermissionName.WORKSPACES_VIEW)) {
+            return true
+        }
+
+        if(isMember) {
+            return true
+        }
+
+        return false
+    }
+
+    static enforceViewWorkspace(authContext: AuthContext, isMember: boolean): void {
+        if(!WorkspacePolicy.canViewWorkspace(authContext, isMember)) {
+            throw new ForbiddenError({
+                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_WORKSPACE']
+            })
+        }
+    }
+
     static canSoftDeleteWorkspace(authContext: AuthContext, isMember: boolean): boolean {
         if(authContext.hasAdminPermission(AdminPermissionName.WORKSPACES_SOFT_DELETE)) {
             return true
