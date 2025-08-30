@@ -3,26 +3,32 @@ import { WorkspaceContext } from '../contexts/WorkspaceContext'
 import { WorkspaceErrorHandler } from '../components/WorkspaceErrorHandler'
 import { workspaceEntityCountsQuery } from '../api/queries/workspaceEntityCountsQuery'
 import { WorkspaceLoadingStatePage } from '../pages/WorkspaceLoadingStatePage'
-import { workspaceQuery } from '../api/requests/workspace'
+import { workspaceQuery } from '../api/requests/workspaceRequest'
 import { useQuery } from '@tanstack/react-query'
+import { workspaceIdQuery } from '../api/requests/workspaceIdRequest'
 
 export const WorkspaceProvider = () => {
     const params = useParams<{ workspaceSlug: string }>()
-    const workspaceQueryConfig = workspaceQuery(params.workspaceSlug!)
+    
+    const { data: workspaceId, isLoading: workspaceIdLoading, error: workspaceIdError } = useQuery(workspaceIdQuery(params.workspaceSlug!))
+
+    const workspaceQueryConfig = workspaceQuery(workspaceId)
+
     const { data: workspace, isLoading: workspaceLoading, error: workspaceError } = useQuery(workspaceQueryConfig)
+
     const { data: entityCounts, isLoading: countsLoading, error: countsError } = useQuery({
-        ...workspaceEntityCountsQuery(workspace?.id || ''),
+        ...workspaceEntityCountsQuery(workspaceId || ''),
         enabled: !!workspace?.id
     })
 
-    if (workspaceLoading || countsLoading) {
+    if (workspaceLoading || countsLoading || workspaceIdLoading) {
         return <WorkspaceLoadingStatePage />
     }
 
-    if (workspaceError || countsError || !workspace) {
+    if (workspaceError || countsError || !workspace || !workspaceIdError) {
         return (
             <WorkspaceErrorHandler 
-                error={ workspaceError || countsError } 
+                error={ workspaceError || countsError || workspaceIdError } 
                 queryKey={ workspaceQueryConfig.queryKey } 
             />
         )
