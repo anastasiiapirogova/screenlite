@@ -23,10 +23,10 @@ const WorkspacesList = () => {
 
     const { data } = useSuspenseQuery(userWorkspacesQuery(user.id, 1, 10))
 	
-    const { items: workspaces } = data
+    const { items: memberships } = data
 	
     return (
-        <div className=''>
+        <div className='max-w-screen-md mx-auto'>
             <div className='flex items-center justify-between mb-4'>
                 <div className='text-3xl'>
                     Your workspaces
@@ -36,25 +36,25 @@ const WorkspacesList = () => {
                     icon={ TbPlus }
                 >
                     <div className=''>
-                        Create workspace
+                        New workspace
                     </div>
                 </Button>
             </div>
             <div className='flex flex-col gap-2'>
                 {
-                    workspaces.map(workspace => (
+                    memberships.map(membership => (
                         <Link
-                            to={ `/workspaces/${workspace.slug}` }
-                            key={ workspace.id }
-                            className='flex gap-4 items-center p-5 hover:bg-gray-100 rounded-md border border-gray-200 transition-colors'
+                            to={ `/workspaces/${membership.workspace.slug}` }
+                            key={ membership.workspace.id }
+                            className='flex gap-4 items-center p-5 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors'
                         >
                             <WorkspacePicture
-                                name={ workspace.name }
-                                picture={ workspace.picture }
+                                name={ membership.workspace.name }
+                                picture={ membership.workspace.picturePath }
                                 size={ 48 }
                             />
                             <div className=''>
-                                { workspace.name }
+                                { membership.workspace.name }
                             </div>
                         </Link>
                     ))

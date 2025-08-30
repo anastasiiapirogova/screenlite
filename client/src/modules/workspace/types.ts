@@ -25,11 +25,14 @@ export type WorkspaceEntityCounts = {
 	}
 }
 
-export type UserWorkspace = Workspace & {
-	_count: {
-		members: number
-		screens: number
-	}
+export type WorkspaceMembershipWithWorkspaceView = {
+	membershipId: string
+    workspace: {
+        id: string
+        name: string
+        slug: string
+        picturePath: string | null
+    }
 }
 
 export type WorkspaceWithEntityCounts = Workspace & { _count: WorkspaceEntityCounts } 

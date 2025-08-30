@@ -1,8 +1,8 @@
 import axios from '@/config/axios'
-import { UserWorkspace } from '../../types'
+import { WorkspaceMembershipWithWorkspaceView } from '../../types'
 import { PaginatedResponse } from '@/types'
 
-type UserWorkspacesRequestResponse = PaginatedResponse<UserWorkspace>
+type UserWorkspacesRequestResponse = PaginatedResponse<WorkspaceMembershipWithWorkspaceView>
 
 export const userWorkspacesRequest = async (userId: string, page: number, limit: number) => {
     const response = await axios.get<UserWorkspacesRequestResponse>(`/users/${userId}/workspaces`, {
