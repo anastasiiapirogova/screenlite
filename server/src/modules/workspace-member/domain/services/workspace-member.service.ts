@@ -46,4 +46,10 @@ export class WorkspaceMemberService implements IWorkspaceMemberService {
     async findMember(workspaceId: string, userId: string): Promise<WorkspaceMember | null> {
         return this.memberRepository.findByWorkspaceAndUser(workspaceId, userId)
     }
+
+    async isMember(workspaceId: string, userId: string): Promise<boolean> {
+        const count = await this.memberRepository.countByWorkspaceAndUser(workspaceId, userId)
+
+        return count > 0
+    }
 }
