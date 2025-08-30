@@ -9,6 +9,7 @@ import { Input } from '@shared/ui/input/Input'
 import { InputError } from '@shared/ui/input/InputError'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 import { FullWidthSettingsPageHeader } from '@modules/user/components/FullWidthSettingsPageHeader'
+import { BACKEND_URL } from '@config/screenlite'
 
 export const CreateWorkspacePage = () => {
     const navigate = useNavigate()
@@ -39,10 +40,12 @@ export const CreateWorkspacePage = () => {
     const onSubmit: SubmitHandler<CreateWorkspaceRequestData> = (data) => {
         mutate(data)
     }
-	  
+
+    const affix = `${BACKEND_URL.hostname}${BACKEND_URL.port ? ':' + BACKEND_URL.port : ''}${BACKEND_URL.pathname}workspaces/`
+
     return (
         <>
-            <FullWidthSettingsPageHeader backLink='/'>
+            <FullWidthSettingsPageHeader backLink='/workspaces'>
                 Create workspace
             </FullWidthSettingsPageHeader>
             <div className='max-w-screen-sm mx-auto p-5'>
@@ -86,7 +89,7 @@ export const CreateWorkspacePage = () => {
                                     <Input
                                         { ...field }
                                         placeholder={ 'screenlite-hq' }
-                                        affix={ 'screenlite.org/workspaces/' }
+                                        affix={ affix }
                                     />
                                 ) }
                             />
