@@ -1,5 +1,5 @@
 import { useRetryQueryByKey } from '@/hooks/useRetryQueryByKey'
-import { workspaceQuery } from '../../api/requests/workspace'
+import { workspaceQuery } from '../../api/requests/workspaceRequest'
 import { Button } from '@shared/ui/buttons/Button'
 
 export const WorkspaceLoadingErrorPage = ({ queryKey }: { queryKey: ReturnType<typeof workspaceQuery>['queryKey'] }) => {

@@ -1,7 +1,7 @@
 import { WorkspaceForbiddenErrorPage } from '../pages/errors/WorkspaceForbiddenErrorPage'
 import { WorkspaceNotFoundErrorPage } from '../pages/errors/WorkspaceNotFoundErrorPage'
 import { WorkspaceLoadingErrorPage } from '../pages/errors/WorkspaceLoadingErrorPage'
-import { workspaceQuery } from '../api/requests/workspace'
+import { workspaceQuery } from '../api/requests/workspaceRequest'
 import { isAxiosStatusCode } from '@shared/helpers/isAxiosStatusCode'
 
 export const WorkspaceErrorHandler = ({ error, queryKey }: { error: Error | null | undefined, queryKey: ReturnType<typeof workspaceQuery>['queryKey'] }) => {
