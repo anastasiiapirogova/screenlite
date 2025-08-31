@@ -5,7 +5,7 @@ import { useWorkspaceRoutes } from '@/modules/workspace/hooks/useWorkspaceRoutes
 import { useScreen } from '../hooks/useScreen'
 import { deleteScreensRequest } from '../api/requests/deleteScreensRequest'
 import { DeleteScreensRequestData } from '../types'
-import { useRefetchWorkspaceEntityCounts } from '@modules/workspace/hooks/useRefetchWorkspaceEntityCounts'
+import { useRefetchWorkspaceStatistics } from '@modules/workspace/hooks/useRefetchWorkspaceStatistics'
 import { useConfirmationDialogStore } from '@stores/useConfirmationDialogStore'
 import { useWorkspace } from '@modules/workspace/hooks/useWorkspace'
 
@@ -19,12 +19,12 @@ export const DeleteScreenButton = ({ children }: Props) => {
     const screen = useScreen()
     const navigate = useNavigate()
     const routes = useWorkspaceRoutes()
-    const refetchEntityCounts = useRefetchWorkspaceEntityCounts()
+    const refetchStatistics = useRefetchWorkspaceStatistics()
 
     const { mutate, isPending } = useMutation({
         mutationFn: (data: DeleteScreensRequestData) => deleteScreensRequest(data),
         onSuccess: async () => {
-            refetchEntityCounts()
+            refetchStatistics()
             navigate(routes.screens)
         },
         onError: (error) => {

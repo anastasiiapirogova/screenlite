@@ -49,7 +49,7 @@ export const FileContextMenu = ({ anchorPoint, open, onClose, data }: FileContex
             
             queryClient.invalidateQueries({ queryKey: ['workspaceFolders'] })
             
-            queryClient.invalidateQueries({ queryKey: ['workspaceEntityCounts'] })
+            queryClient.invalidateQueries({ queryKey: ['workspaceStatistics'] })
         },
         onError: (error) => {
             console.log(error)

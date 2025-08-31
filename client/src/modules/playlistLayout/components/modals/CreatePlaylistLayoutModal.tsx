@@ -12,7 +12,7 @@ import { InputLabelGroup } from '@shared/ui/input/InputLabelGroup'
 import { Input } from '@shared/ui/input/Input'
 import { InputError } from '@shared/ui/input/InputError'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
-import { useRefetchWorkspaceEntityCounts } from '@modules/workspace/hooks/useRefetchWorkspaceEntityCounts'
+import { useRefetchWorkspaceStatistics } from '@modules/workspace/hooks/useRefetchWorkspaceStatistics'
 import { playlistLayoutQuery } from '@modules/playlistLayout/api/playlistLayout'
 
 export const CreatePlaylistLayoutModal = () => {
@@ -20,7 +20,7 @@ export const CreatePlaylistLayoutModal = () => {
     const routes = useWorkspaceRoutes()
     const navigate = useNavigate()
     const queryClient = useQueryClient()
-    const refetchEntityCounts = useRefetchWorkspaceEntityCounts()
+    const refetchStatistics = useRefetchWorkspaceStatistics()
 
     const {
         control,
@@ -43,7 +43,7 @@ export const CreatePlaylistLayoutModal = () => {
                 playlistLayoutId: playlistLayout.id,
                 workspaceId: workspace.id
             }).queryKey, playlistLayout)
-            refetchEntityCounts()
+            refetchStatistics()
             navigate(routes.playlistLayout(playlistLayout.id))
         },
         onError: (error) => {

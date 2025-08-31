@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import { useWorkspaceRoutes } from '@/modules/workspace/hooks/useWorkspaceRoutes'
 import { usePlaylistLayout } from '../hooks/usePlaylistLayout'
 import { deletePlaylistLayoutRequest, DeletePlaylistLayoutRequestData } from '../api/deletePlaylistLayout'
-import { useRefetchWorkspaceEntityCounts } from '@modules/workspace/hooks/useRefetchWorkspaceEntityCounts'
+import { useRefetchWorkspaceStatistics } from '@modules/workspace/hooks/useRefetchWorkspaceStatistics'
 
 type Props = {
     children: ReactElement<ButtonHTMLAttributes<HTMLButtonElement>, 'button'>
@@ -14,13 +14,13 @@ export const DeletePlaylistLayoutButton = ({ children }: Props) => {
     const layout = usePlaylistLayout()
     const navigate = useNavigate()
     const routes = useWorkspaceRoutes()
-    const refetchEntityCounts = useRefetchWorkspaceEntityCounts()
+    const refetchStatistics = useRefetchWorkspaceStatistics()
 
     const { mutate, isPending } = useMutation({
         mutationFn: (data: DeletePlaylistLayoutRequestData) => deletePlaylistLayoutRequest(data),
         onSuccess: async () => {
             navigate(routes.playlistLayouts)
-            refetchEntityCounts()
+            refetchStatistics()
         },
         onError: (error) => {
             console.log(error)

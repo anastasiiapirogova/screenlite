@@ -6,7 +6,7 @@ import { useWorkspaceRoutes } from '@/modules/workspace/hooks/useWorkspaceRoutes
 import { Select } from '@/shared/ui/Select'
 import { ModalClose } from '@shared/ui/modal/Modal'
 import { Input } from '@shared/ui/input/Input'
-import { useRefetchWorkspaceEntityCounts } from '@modules/workspace/hooks/useRefetchWorkspaceEntityCounts'
+import { useRefetchWorkspaceStatistics } from '@modules/workspace/hooks/useRefetchWorkspaceStatistics'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
 import { CreateScreenRequestData } from '@modules/screen/types'
 import { createScreenRequest } from '@modules/screen/api/requests/createScreenRequest'
@@ -21,7 +21,7 @@ export const CreateScreenModal = () => {
     const routes = useWorkspaceRoutes()
     const navigate = useNavigate()
     const queryClient = useQueryClient()
-    const refetchEntityCounts = useRefetchWorkspaceEntityCounts()
+    const refetchStatistics = useRefetchWorkspaceStatistics()
 
     const {
         control,
@@ -45,7 +45,7 @@ export const CreateScreenModal = () => {
                 screenId: screen.id,
                 workspaceId: workspace.id
             }).queryKey, screen)
-            refetchEntityCounts()
+            refetchStatistics()
             navigate(routes.screen(screen.id))
         },
         onError: (error) => {

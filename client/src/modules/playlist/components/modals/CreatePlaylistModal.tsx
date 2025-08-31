@@ -15,14 +15,14 @@ import { ModalClose } from '@shared/ui/modal/Modal'
 import { getPlaylistTypeOptions } from '@modules/playlist/utils/playlistTypes'
 import { RadioGroup } from '@shared/ui/radio/RadioGroup'
 import { handleAxiosFieldErrors } from '@shared/helpers/handleAxiosFieldErrors'
-import { useRefetchWorkspaceEntityCounts } from '@modules/workspace/hooks/useRefetchWorkspaceEntityCounts'
+import { useRefetchWorkspaceStatistics } from '@modules/workspace/hooks/useRefetchWorkspaceStatistics'
 
 export const CreatePlaylistModal = () => {
     const workspace = useWorkspace()
     const routes = useWorkspaceRoutes()
-    const navigate = useNavigate()
+    const navigate = useNavigate()  
     const setPlaylistQueryData = useSetPlaylistQueryData()
-    const refetchEntityCounts = useRefetchWorkspaceEntityCounts()
+    const refetchStatistics = useRefetchWorkspaceStatistics()
 
     const {
         control,
@@ -43,7 +43,7 @@ export const CreatePlaylistModal = () => {
         mutationFn: (data: CreatePlaylistRequestData) => createPlaylistRequest(data),
         onSuccess: async (playlist) => {
             setPlaylistQueryData(playlist.id, playlist)
-            refetchEntityCounts()
+            refetchStatistics()
             navigate(routes.playlist(playlist.id))
         },
         onError: (error) => {
