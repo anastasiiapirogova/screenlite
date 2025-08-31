@@ -4,33 +4,65 @@ import { ValidationError } from '@/shared/errors/validation.error.ts'
 
 export class SharpImageValidator implements IImageValidator {
     async validateProfilePhoto(buffer: Buffer): Promise<void> {
+        return this.validateImage(buffer, 'profilePhotoBuffer')
+    }
+
+    async validateWorkspacePicture(buffer: Buffer): Promise<void> {
+        return this.validateImage(buffer, 'workspacePictureBuffer')
+    }
+
+    private async validateImage(buffer: Buffer, fieldName: string): Promise<void> {
         try {
-            const metadata = await sharp(buffer).metadata()
+            const metadata = await this.extractMetadata(buffer)
 
-            if (!['jpeg', 'png', 'jpg', 'webp'].includes(metadata.format || '')) {
-                throw new ValidationError({
-                    profilePhoto: ['UNSUPPORTED_IMAGE_FORMAT'],
-                })
-            }
-
-            if ((metadata.width ?? 0) > 10000 || (metadata.height ?? 0) > 10000) {
-                throw new ValidationError({
-                    profilePhoto: ['IMAGE_TOO_LARGE'],
-                })
-            }
-
-            if ((metadata.width ?? 0) < 1 || (metadata.height ?? 0) < 1) {
-                throw new ValidationError({
-                    profilePhoto: ['INVALID_IMAGE_DIMENSIONS'],
-                })
-            }
+            this.validateMetadata(metadata, fieldName)
         } catch (error) {
-            if (error instanceof ValidationError) {
-                throw error
-            }
+            this.handleValidationError(error, fieldName)
+        }
+    }
+
+    private async extractMetadata(buffer: Buffer): Promise<sharp.Metadata> {
+        return sharp(buffer).metadata()
+    }
+
+    private validateMetadata(metadata: sharp.Metadata, fieldName: string): void {
+        if (!this.isSupportedFormat(metadata.format)) {
             throw new ValidationError({
-                profilePhoto: ['INVALID_IMAGE_FILE'],
+                [fieldName]: ['UNSUPPORTED_IMAGE_FORMAT']
             })
         }
+
+        if (this.isDimensionsTooLarge(metadata.width, metadata.height)) {
+            throw new ValidationError({
+                [fieldName]: ['IMAGE_TOO_LARGE']
+            })
+        }
+
+        if (this.isDimensionsInvalid(metadata.width, metadata.height)) {
+            throw new ValidationError({
+                [fieldName]: ['INVALID_IMAGE_DIMENSIONS']
+            })
+        }
+    }
+
+    private isSupportedFormat(format?: string): boolean {
+        return ['jpeg', 'png', 'jpg', 'webp'].includes(format || '')
+    }
+
+    private isDimensionsTooLarge(width?: number, height?: number): boolean {
+        return (width ?? 0) > 10000 || (height ?? 0) > 10000
+    }
+
+    private isDimensionsInvalid(width?: number, height?: number): boolean {
+        return (width ?? 0) < 1 || (height ?? 0) < 1
+    }
+
+    private handleValidationError(error: unknown, fieldName: string): void {
+        if (error instanceof ValidationError) {
+            throw error
+        }
+        throw new ValidationError({
+            [fieldName]: ['INVALID_IMAGE_FILE']
+        })
     }
 }
