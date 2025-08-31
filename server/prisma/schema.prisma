@@ -8,7 +8,7 @@ datasource db {
 
 generator client {
     provider               = "prisma-client"
-    previewFeatures        = ["strictUndefinedChecks", "driverAdapters"]
+    previewFeatures        = ["strictUndefinedChecks", "driverAdapters", "typedSql"]
     output                 = "../src/generated/prisma"
     runtime                = "nodejs"
     moduleFormat           = "esm"
