@@ -37,6 +37,10 @@ import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-reposi
 import { WorkspaceMemberService } from '@/modules/workspace-member/domain/services/workspace-member.service.ts'
 import { IWorkspaceMemberService } from '@/modules/workspace-member/domain/ports/workspace-member-service.interface.ts'
 import { workspaceMemberServiceFactory, IWorkspaceMemberServiceFactory } from '@/modules/workspace-member/domain/services/workspace-member-service.factory.ts'
+import { WorkspaceAccessService } from '@/modules/workspace/domain/services/workspace-access.service.ts'
+import { IWorkspaceAccessService } from '@/modules/workspace/domain/ports/workspace-access-service.interface.ts'
+import { PrismaWorkspaceStatisticsQuery } from '@/modules/workspace/infrastructure/queries/prisma-workspace-statistics.query.ts'
+import { IWorkspaceStatisticsQuery } from '@/modules/workspace/domain/ports/workspace-statistics-query.interface.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -59,6 +63,8 @@ declare module 'fastify' {
         workspaceMemberRepository: IWorkspaceMemberRepository
         workspaceMemberService: IWorkspaceMemberService
         workspaceMemberServiceFactory: IWorkspaceMemberServiceFactory
+        workspaceAccessService: IWorkspaceAccessService
+        workspaceStatisticsQuery: IWorkspaceStatisticsQuery
     }
 }
 
@@ -83,6 +89,8 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const workspaceRepository = new PrismaWorkspaceRepository(fastify.prisma)
     const workspaceMemberRepository = new PrismaWorkspaceMemberRepository(fastify.prisma)
     const workspaceMemberService = new WorkspaceMemberService(workspaceMemberRepository, userRepository, workspaceRepository)
+    const workspaceAccessService = new WorkspaceAccessService(workspaceMemberRepository)
+    const workspaceStatisticsQuery = new PrismaWorkspaceStatisticsQuery(fastify.prisma)
 
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
@@ -103,6 +111,8 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('workspaceMemberRepository', workspaceMemberRepository)
     fastify.decorate('workspaceMemberService', workspaceMemberService)
     fastify.decorate('workspaceMemberServiceFactory', workspaceMemberServiceFactory)
+    fastify.decorate('workspaceAccessService', workspaceAccessService)
+    fastify.decorate('workspaceStatisticsQuery', workspaceStatisticsQuery)
 }
 
 export default fp(diPlugin, {
