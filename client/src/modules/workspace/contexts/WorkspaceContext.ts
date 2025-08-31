@@ -1,4 +1,4 @@
 import { createContext } from 'react'
-import { WorkspaceWithEntityCounts } from '../types'
+import { WorkspaceWithStatistics } from '../types'
 
-export const WorkspaceContext = createContext<WorkspaceWithEntityCounts | undefined>(undefined)
+export const WorkspaceContext = createContext<WorkspaceWithStatistics | undefined>(undefined)

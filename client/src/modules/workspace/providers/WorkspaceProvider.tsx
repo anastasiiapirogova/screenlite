@@ -5,6 +5,7 @@ import { WorkspaceLoadingStatePage } from '../pages/WorkspaceLoadingStatePage'
 import { workspaceQuery } from '../api/requests/workspaceRequest'
 import { useQuery } from '@tanstack/react-query'
 import { workspaceIdQuery } from '../api/requests/workspaceIdRequest'
+import { workspaceStatisticsQuery } from '../api/requests/workspaceStatisticsRequest'
 
 export const WorkspaceProvider = () => {
     const params = useParams<{ workspaceSlug: string }>()
@@ -15,11 +16,15 @@ export const WorkspaceProvider = () => {
 
     const { data: workspace, isLoading: workspaceLoading, error: workspaceError } = useQuery(workspaceQueryConfig)
 
-    if (workspaceLoading || workspaceIdLoading) {
+    const workspaceStatisticsQueryConfig = workspaceStatisticsQuery(workspaceId)
+
+    const { data: workspaceStatistics, isLoading: workspaceStatisticsLoading, error: workspaceStatisticsError } = useQuery(workspaceStatisticsQueryConfig)
+
+    if (workspaceLoading || workspaceIdLoading || workspaceStatisticsLoading) {
         return <WorkspaceLoadingStatePage />
     }
 
-    const anyError = workspaceError || workspaceIdError
+    const anyError = workspaceError || workspaceIdError || workspaceStatisticsError
 
     if (anyError) {
         return (
@@ -32,6 +37,7 @@ export const WorkspaceProvider = () => {
 
     const contextValue = {
         ...workspace!,
+        statistics: workspaceStatistics!
     }
 
     return (

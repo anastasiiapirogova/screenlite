@@ -8,21 +8,19 @@ export type Workspace = {
 	picture: string | null
 }
 
-export type WorkspaceEntityCounts = {
-	members: number
-	playlists: number
-	screens: number
-	layouts: number
-	files: number
-	screenStatus: {
-		online: number
-		offline: number
-		notConnected: number
-	}
-	invitations: {
-		all: number
-		pending: number
-	}
+export interface WorkspaceStatistics {
+    members: number
+    playlists: number
+    screens: number
+    layouts: number
+    files: {
+        active: number
+        trash: number
+    }
+    invitations: {
+        total: number
+        pending: number
+    }
 }
 
 export type WorkspaceMembershipWithWorkspaceView = {
@@ -35,7 +33,4 @@ export type WorkspaceMembershipWithWorkspaceView = {
     }
 }
 
-// Temporary type until we update the API to return the workspace with the entity counts
-// export type WorkspaceWithEntityCounts = Workspace & { _count: WorkspaceEntityCounts } 
-
-export type WorkspaceWithEntityCounts = Workspace
+export type WorkspaceWithStatistics = Workspace & { statistics: WorkspaceStatistics } 

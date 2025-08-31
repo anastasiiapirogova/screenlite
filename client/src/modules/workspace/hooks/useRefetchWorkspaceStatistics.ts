@@ -1,13 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { workspaceEntityCountsQuery } from '../api/queries/workspaceEntityCountsQuery'
+import { workspaceStatisticsQuery } from '../api/requests/workspaceStatisticsRequest'
 import { useWorkspace } from './useWorkspace'
 
-export const useRefetchWorkspaceEntityCounts = () => {
+export const useRefetchWorkspaceStatistics = () => {
     const queryClient = useQueryClient()
     const workspace = useWorkspace()
 
     return () => {
-        const query = workspaceEntityCountsQuery(workspace.id)
+        const query = workspaceStatisticsQuery(workspace.id)
         
         queryClient.refetchQueries(query)
     }
