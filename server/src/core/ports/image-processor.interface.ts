@@ -12,9 +12,10 @@ export type ImageProcessingOptions = {
     quality?: number
     maxWidth?: number
     maxHeight?: number
+    mimeType?: string
 }
 
 export type IImageProcessor = {
     getImageMetadata(readStream: Readable | Buffer): Promise<ImageMetadata>
-    process(imageBuffer: Buffer, options?: ImageProcessingOptions): Promise<Buffer>
+    process(imageBuffer: Buffer, options?: ImageProcessingOptions): Promise<{ buffer: Buffer, mimeType: string }>
 }

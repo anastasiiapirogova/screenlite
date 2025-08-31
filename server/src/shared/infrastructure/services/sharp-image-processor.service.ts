@@ -23,7 +23,7 @@ export class SharpImageProcessor implements IImageProcessor {
     public async process(
         imageBuffer: Buffer,
         options?: ImageProcessingOptions
-    ): Promise<Buffer> {
+    ): Promise<{ buffer: Buffer, mimeType: string }> {
         let image = sharp(imageBuffer)
     
         if (options?.width || options?.height) {
@@ -44,7 +44,13 @@ export class SharpImageProcessor implements IImageProcessor {
                 quality: options?.quality ?? 80,
             })
         }
-    
-        return image.toBuffer()
+
+        const buffer = await image.toBuffer()
+        const mimeType = options?.mimeType ?? 'image/jpeg'
+        
+        return {
+            buffer,
+            mimeType,
+        }
     }
 }
