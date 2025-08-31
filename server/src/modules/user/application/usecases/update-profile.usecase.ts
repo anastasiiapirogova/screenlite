@@ -70,16 +70,16 @@ export class UpdateProfileUsecase {
 
         await imageValidator.validateProfilePhoto(photoBuffer)
 
-        const mimeType = 'image/jpeg'
-
         const processedPhoto = await imageProcessor.process(
             photoBuffer,
             ProfilePhotoSpecification.getDefault()
         )
 
-        const profilePhoto = new ProfilePhoto(processedPhoto, mimeType, user.id)
+        const { buffer, mimeType } = processedPhoto
 
-        await storage.uploadFile(profilePhoto.storageKey, processedPhoto, mimeType)
+        const profilePhoto = new ProfilePhoto(buffer, mimeType, user.id)
+
+        await storage.uploadFile(profilePhoto.storageKey, buffer, mimeType)
 
         const oldPhotoPath = user.updateProfilePhotoPath(profilePhoto.storageKey)
 
@@ -89,10 +89,10 @@ export class UpdateProfileUsecase {
         }
     }
 
-    private async scheduleCleanupJobs(oldPhotoPath: string | null) {
-        if (oldPhotoPath) {
-            await this.deps.jobProducer.enqueue('delete_profile_photo', {
-                storageKey: oldPhotoPath
+    private async scheduleCleanupJobs(fileKey: string | null) {
+        if (fileKey) {
+            await this.deps.jobProducer.enqueue('delete_file_from_storage', {
+                storageKey: fileKey
             })
         }
     }
