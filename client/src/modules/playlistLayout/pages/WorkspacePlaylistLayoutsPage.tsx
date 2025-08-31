@@ -53,7 +53,7 @@ const WorkspacePlaylistLayoutsPageHeader = () => {
 }
 
 const WorkspacePlaylistLayoutsPageList = ({ data }: { data: WorkspacePlaylistLayoutsRequestResponse }) => {
-    const { data: layouts } = data
+    const { items: layouts } = data
 
     if (!layouts.length) {
         return <div>No layouts found</div>
@@ -79,7 +79,7 @@ export const WorkspacePlaylistLayoutsPage = () => {
         filters
     }))
 
-    if (workspace._count.layouts === 0) {
+    if (workspace.statistics.layouts === 0) {
         return (
             <LayoutBodyContainer>
                 <div className='flex grow'>

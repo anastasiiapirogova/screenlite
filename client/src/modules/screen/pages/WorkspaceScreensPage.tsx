@@ -13,7 +13,7 @@ export const WorkspaceScreensPage = () => {
 
     const { visible: sidebarVisible, mounted: sidebarMounted } = useSidebarStore(s => s.getSidebar(SIDEBAR_KEY))
 
-    if (workspace._count.screens === 0) {
+    if (workspace.statistics.screens === 0) {
         return <WorkspaceScreensEmptyStatePage />
     }
 

@@ -12,9 +12,9 @@ export const WorkspaceScreensPageList = ({ data, isLoading }: { data?: Workspace
         )
     }
 
-    const { meta, data: screens } = data
+    const { meta, items: screens } = data
 
-    const pageExists = filters.page <= meta.pages
+    const pageExists = filters.page <= meta.totalPages
 
     if(!pageExists) {
         return (
