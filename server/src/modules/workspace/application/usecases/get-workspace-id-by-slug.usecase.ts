@@ -1,21 +1,19 @@
 import { NotFoundError } from '@/shared/errors/not-found.error.ts'
 import { IWorkspaceRepository } from '../../domain/ports/workspace-repository.interface.ts'
-import { IWorkspaceMemberService } from '@/modules/workspace-member/domain/ports/workspace-member-service.interface.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { WorkspacePolicy } from '../../domain/policies/workspace.policy.ts'
+import { IWorkspaceAccessService } from '../../domain/ports/workspace-access-service.interface.ts'
 
 type GetWorkspaceIdBySlugUsecaseDeps = {
     workspaceRepository: IWorkspaceRepository
-    workspaceMemberService: IWorkspaceMemberService
+    workspaceAccessService: IWorkspaceAccessService
 }
 
 export class GetWorkspaceIdBySlugUsecase {
     constructor(private readonly deps: GetWorkspaceIdBySlugUsecaseDeps) {}
 
     async execute(slug: string, authContext: AuthContext): Promise<string> {
-        const { workspaceRepository, workspaceMemberService } = this.deps
-
-        let isMember = false
+        const { workspaceRepository, workspaceAccessService } = this.deps
         
         const workspace = await workspaceRepository.findBySlug(slug)
         
@@ -23,11 +21,9 @@ export class GetWorkspaceIdBySlugUsecase {
             throw new NotFoundError('Workspace not found')
         }
 
-        if(authContext.isUserContext()) {
-            isMember = await workspaceMemberService.isMember(workspace.id, authContext.user.id)
-        }
+        const workspaceAccess = await workspaceAccessService.checkAccess(workspace.id, authContext)
 
-        WorkspacePolicy.enforceViewWorkspace(authContext, isMember)
+        WorkspacePolicy.enforceViewWorkspace(authContext, workspaceAccess)
 
         return workspace.id
     }
