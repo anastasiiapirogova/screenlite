@@ -36,4 +36,20 @@ export class Workspace {
     set slug(slug: string) {
         this._slug = new WorkspaceSlug(slug)
     }
+
+    updatePicturePath(picturePath: string) {
+        const prevPicturePath = this.picturePath
+
+        this.picturePath = picturePath
+
+        return prevPicturePath
+    }
+
+    removePicture() {
+        const prevPicturePath = this.picturePath
+
+        this.picturePath = null
+
+        return prevPicturePath
+    }
 }
