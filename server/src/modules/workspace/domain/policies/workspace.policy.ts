@@ -1,42 +1,43 @@
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
+import { WorkspaceAccess } from '../value-objects/workspace-access.vo.ts'
 
 export class WorkspacePolicy {
-    static canViewWorkspace(authContext: AuthContext, isMember: boolean): boolean {
+    static canViewWorkspace(authContext: AuthContext, workspaceAccess: WorkspaceAccess): boolean {
         if(authContext.hasAdminPermission(AdminPermissionName.WORKSPACES_VIEW)) {
             return true
         }
 
-        if(isMember) {
+        if(workspaceAccess.hasAccess) {
             return true
         }
 
         return false
     }
 
-    static enforceViewWorkspace(authContext: AuthContext, isMember: boolean): void {
-        if(!WorkspacePolicy.canViewWorkspace(authContext, isMember)) {
+    static enforceViewWorkspace(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
+        if(!WorkspacePolicy.canViewWorkspace(authContext, workspaceAccess)) {
             throw new ForbiddenError({
                 workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_WORKSPACE']
             })
         }
     }
 
-    static canSoftDeleteWorkspace(authContext: AuthContext, isMember: boolean): boolean {
+    static canSoftDeleteWorkspace(authContext: AuthContext, workspaceAccess: WorkspaceAccess): boolean {
         if(authContext.hasAdminPermission(AdminPermissionName.WORKSPACES_SOFT_DELETE)) {
             return true
         }
 
-        if(isMember) {
+        if(workspaceAccess.hasAccess) {
             return true
         }
 
         return false
     }
 
-    static enforceSoftDeleteWorkspace(authContext: AuthContext, isMember: boolean): void {
-        if(!WorkspacePolicy.canSoftDeleteWorkspace(authContext, isMember)) {
+    static enforceSoftDeleteWorkspace(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
+        if(!WorkspacePolicy.canSoftDeleteWorkspace(authContext, workspaceAccess)) {
             throw new ForbiddenError({
                 workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_SOFT_DELETE_WORKSPACE']
             })
@@ -51,6 +52,22 @@ export class WorkspacePolicy {
         if(!WorkspacePolicy.canDeleteWorkspace(authContext)) {
             throw new ForbiddenError({
                 workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_DELETE_WORKSPACE']
+            })
+        }
+    }
+
+    static canUpdateWorkspace(authContext: AuthContext, workspaceAccess: WorkspaceAccess): boolean {
+        if(authContext.hasAdminPermission(AdminPermissionName.WORKSPACES_UPDATE)) {
+            return true
+        }
+
+        return workspaceAccess.hasAccess
+    }
+
+    static enforceUpdateWorkspace(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
+        if(!WorkspacePolicy.canUpdateWorkspace(authContext, workspaceAccess)) {
+            throw new ForbiddenError({
+                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_UPDATE_WORKSPACE']
             })
         }
     }
