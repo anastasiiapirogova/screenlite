@@ -9,4 +9,5 @@ export enum AdminPermissionName {
     WORKSPACES_SOFT_DELETE = 'workspaces.soft-delete',
     WORKSPACES_DELETE = 'workspaces.delete',
     WORKSPACES_VIEW = 'workspaces.view',
+    WORKSPACES_UPDATE = 'workspaces.update',
 }
