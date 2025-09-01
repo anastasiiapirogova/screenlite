@@ -71,4 +71,20 @@ export class WorkspacePolicy {
             })
         }
     }
+
+    static canViewWorkspaceInvitations(authContext: AuthContext, workspaceAccess: WorkspaceAccess): boolean {
+        if(authContext.hasAdminPermission(AdminPermissionName.WORKSPACE_INVITATIONS_VIEW)) {
+            return true
+        }
+
+        return workspaceAccess.hasAccess
+    }
+
+    static enforceViewWorkspaceInvitations(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
+        if(!WorkspacePolicy.canViewWorkspaceInvitations(authContext, workspaceAccess)) {
+            throw new ForbiddenError({
+                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_WORKSPACE_INVITATIONS']
+            })
+        }
+    }
 }
