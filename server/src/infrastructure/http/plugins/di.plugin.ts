@@ -4,69 +4,25 @@ import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories
 import { PrismaUserCredentialRepository } from '@/modules/user/infrastructure/repositories/prisma-user-credential.repository.ts'
 import { BcryptHasher } from '@/shared/infrastructure/services/bcrypt-hasher.service.ts'
 import { PrismaUnitOfWork } from '@/infrastructure/database/prisma-unit-of-work.ts'
-import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
-import { IUserCredentialRepository } from '@/core/ports/user-credential-repository.interface.ts'
-import { IHasher } from '@/core/ports/hasher.interface.ts'
-import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { SharpImageValidator } from '@/shared/infrastructure/services/sharp-image-validator.service.ts'
 import { SharpImageProcessor } from '@/shared/infrastructure/services/sharp-image-processor.service.ts'
-import { IImageValidator } from '@/core/ports/image-validator.interface.ts'
-import { IImageProcessor } from '@/core/ports/image-processor.interface.ts'
 import { PrismaUserAdminPermissionRepository } from '@/modules/admin-permission/infrastructure/repositories/prisma-user-admin-permission.repository.ts'
-import { IUserAdminPermissionRepository } from '@/modules/admin-permission/domain/ports/user-admin-permission-repository.interface.ts'
 import { TwoFactorConfigHandlerFactory } from '@/modules/two-factor-auth/infrastructure/handlers/two-factor-config-handler.factory.ts'
 import { PrismaTwoFactorMethodRepository } from '@/modules/two-factor-auth/infrastructure/repositories/prisma-two-factor-method.repository.ts'
-import { ITwoFactorMethodRepository } from '@/modules/two-factor-auth/domain/ports/two-factor-method-repository.interface.ts'
 import { PrismaSessionRepository } from '@/modules/session/infrastructure/repositories/prisma-session.repository.ts'
-import { ISessionRepository } from '@/modules/session/domain/ports/session-repository.interface.ts'
 import { TokenGenerator } from '@/shared/infrastructure/services/token-generator.service.ts'
 import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { SessionTokenService } from '@/modules/session/domain/services/session-token.service.ts'
-import { ISessionTokenService } from '@/modules/session/domain/ports/session-token-service.interface.ts'
 import { PrismaEmailVerificationTokenRepository } from '@/modules/email-verification/infrastructure/repositories/prisma-email-verification-token.repository.ts'
-import { IEmailVerificationTokenRepository } from '@/modules/email-verification/domain/ports/email-verification-token-repository.interface.ts'
-import { ITokenGenerator } from '@/core/ports/token-generator.interface.ts'
 import { PrismaPasswordResetTokenRepository } from '@/modules/password-reset/infrastructure/repositories/prisma-password-reset-token.repository.ts'
-import { IPasswordResetTokenRepository } from '@/modules/password-reset/domain/ports/password-reset-token-repository.interface.ts'
-import { ISettingRepository } from '@/modules/setting/domain/setting-repository.interface.ts'
 import { PrismaSettingRepository } from '@/modules/setting/infrastructure/repositories/prisma-setting.repository.ts'
 import { PrismaWorkspaceRepository } from '@/modules/workspace/infrastructure/repositories/prisma-workspace.repository.ts'
-import { PrismaWorkspaceMemberRepository } from '@/modules/workspace-member/domain/infrastructure/repositories/prisma-workspace-member.repository.ts'
-import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace-repository.interface.ts'
-import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
+import { PrismaWorkspaceMemberRepository } from '@/modules/workspace-member/infrastructure/repositories/prisma-workspace-member.repository.ts'
 import { WorkspaceMemberService } from '@/modules/workspace-member/domain/services/workspace-member.service.ts'
-import { IWorkspaceMemberService } from '@/modules/workspace-member/domain/ports/workspace-member-service.interface.ts'
-import { workspaceMemberServiceFactory, IWorkspaceMemberServiceFactory } from '@/modules/workspace-member/domain/services/workspace-member-service.factory.ts'
-import { WorkspaceAccessService } from '@/modules/workspace/domain/services/workspace-access.service.ts'
-import { IWorkspaceAccessService } from '@/modules/workspace/domain/ports/workspace-access-service.interface.ts'
+import { workspaceMemberServiceFactory } from '@/modules/workspace-member/domain/services/workspace-member-service.factory.ts'
+import { WorkspaceAccessService } from '@/modules/workspace/domain/services/workspace-access.service.ts'    
 import { PrismaWorkspaceStatisticsQuery } from '@/modules/workspace/infrastructure/queries/prisma-workspace-statistics.query.ts'
-import { IWorkspaceStatisticsQuery } from '@/modules/workspace/domain/ports/workspace-statistics-query.interface.ts'
-
-declare module 'fastify' {
-    interface FastifyInstance {
-        userRepository: IUserRepository
-        userCredentialRepository: IUserCredentialRepository
-        secureHasher: IHasher
-        unitOfWork: IUnitOfWork
-        imageValidator: IImageValidator
-        imageProcessor: IImageProcessor
-        adminPermissionRepository: IUserAdminPermissionRepository
-        twoFactorConfigHandlerFactory: TwoFactorConfigHandlerFactory
-        twoFactorMethodRepository: ITwoFactorMethodRepository
-        sessionRepository: ISessionRepository
-        sessionTokenService: ISessionTokenService
-        emailVerificationTokenRepository: IEmailVerificationTokenRepository
-        tokenGenerator: ITokenGenerator
-        passwordResetTokenRepository: IPasswordResetTokenRepository
-        settingRepository: ISettingRepository
-        workspaceRepository: IWorkspaceRepository
-        workspaceMemberRepository: IWorkspaceMemberRepository
-        workspaceMemberService: IWorkspaceMemberService
-        workspaceMemberServiceFactory: IWorkspaceMemberServiceFactory
-        workspaceAccessService: IWorkspaceAccessService
-        workspaceStatisticsQuery: IWorkspaceStatisticsQuery
-    }
-}
+import { PrismaWorkspaceInvitationRepository } from '@/modules/workspace-invitation/infrastructure/repositories/prisma-workspace-invitation.repository.ts'
 
 const diPlugin: FastifyPluginAsync = async (fastify) => {
     const fastHasher = new FastHasher()
@@ -91,6 +47,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const workspaceMemberService = new WorkspaceMemberService(workspaceMemberRepository, userRepository, workspaceRepository)
     const workspaceAccessService = new WorkspaceAccessService(workspaceMemberRepository)
     const workspaceStatisticsQuery = new PrismaWorkspaceStatisticsQuery(fastify.prisma)
+    const workspaceInvitationRepository = new PrismaWorkspaceInvitationRepository(fastify.prisma)
 
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
@@ -113,6 +70,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('workspaceMemberServiceFactory', workspaceMemberServiceFactory)
     fastify.decorate('workspaceAccessService', workspaceAccessService)
     fastify.decorate('workspaceStatisticsQuery', workspaceStatisticsQuery)
+    fastify.decorate('workspaceInvitationRepository', workspaceInvitationRepository)
 }
 
 export default fp(diPlugin, {
