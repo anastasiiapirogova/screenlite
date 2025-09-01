@@ -15,7 +15,7 @@ model Workspace {
     files              File[]
     folders            Folder[]
     fileUploadSessions FileUploadSession[]
-    userInvitations    WorkspaceUserInvitation[]
+    invitations        WorkspaceInvitation[]
     screenGroups       ScreenGroup[]
     links              Link[]
     storageUsage       WorkspaceStorageUsage?
