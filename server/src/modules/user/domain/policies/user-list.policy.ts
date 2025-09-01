@@ -10,7 +10,7 @@ export class UserListPolicy {
     static enforceViewAllUsers(authContext: AuthContext): void {
         if(!UserListPolicy.canViewAllUsers(authContext)) {
             throw new ForbiddenError({
-                userId: ['YOU_CANNOT_VIEW_ALL_USERS']
+                permissions: ['YOU_CANNOT_VIEW_ALL_USERS']
             })
         }
     }
