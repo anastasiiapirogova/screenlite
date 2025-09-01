@@ -1,14 +1,12 @@
-model WorkspaceUserInvitation {
+model WorkspaceInvitation {
     id          String   @id @default(uuid())
     email       String
     status      String
     workspaceId String
-    invitorId   String?
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 
     workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-    invitor   User?     @relation(fields: [invitorId], references: [id], onDelete: SetNull)
 
     @@index([email])
     @@index([workspaceId])
