@@ -18,15 +18,19 @@ export class PrismaWorkspaceRepository implements IWorkspaceRepository {
     }
 
     async findBySlug(slug: string): Promise<Workspace | null> {
-        const data = await this.prisma.workspace.findUnique({
-            where: { slug }
+        const data = await this.prisma.workspace.findFirst({
+            where: {
+                slug: {
+                    equals: slug,
+                    mode: 'insensitive'
+                }
+            }
         })
 
         return data ? PrismaRepositoryWorkspaceMapper.toDomain(data) : null
     }
 
     async findAll(queryOptions?: WorkspacesQueryOptionsDTO): Promise<PaginationResponse<Workspace>> {
-
         const { filters, pagination } = queryOptions || {}
 
         const where: Prisma.WorkspaceWhereInput = {
