@@ -10,7 +10,7 @@ import { PrismaTwoFactorMethodRepository } from '@/modules/two-factor-auth/infra
 import { TwoFactorConfigHandlerFactory } from '@/modules/two-factor-auth/infrastructure/handlers/two-factor-config-handler.factory.ts'
 import { PrismaUserCredentialRepository } from '@/modules/user/infrastructure/repositories/prisma-user-credential.repository.ts'
 import { PrismaWorkspaceRepository } from '@/modules/workspace/infrastructure/repositories/prisma-workspace.repository.ts'
-import { PrismaWorkspaceMemberRepository } from '@/modules/workspace-member/domain/infrastructure/repositories/prisma-workspace-member.repository.ts'
+import { PrismaWorkspaceMemberRepository } from '@/modules/workspace-member/infrastructure/repositories/prisma-workspace-member.repository.ts'
 
 export class PrismaUnitOfWork implements IUnitOfWork {
     constructor(private prisma: PrismaClient) {}
