@@ -19,7 +19,6 @@ model User {
     userPreferences         UserPreferences?
     uploadedFiles           File[]
     fileUploadSessions      FileUploadSession[]
-    sentInvitations         WorkspaceUserInvitation[]
     addedLinks              Link[]
     adminPermissions        UserAdminPermission[]
     workspaceApiTokens      WorkspaceApiToken[]
