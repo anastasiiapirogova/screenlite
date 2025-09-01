@@ -33,14 +33,14 @@ SELECT (
     ) AS "filesTrash",
     (
         SELECT COUNT(*)
-        FROM "WorkspaceUserInvitation" ui
-        WHERE ui."workspaceId" = w.id
+        FROM "WorkspaceInvitation" i
+        WHERE i."workspaceId" = w.id
     ) AS "invitationsTotal",
     (
         SELECT COUNT(*)
-        FROM "WorkspaceUserInvitation" ui
-        WHERE ui."workspaceId" = w.id
-            AND ui.status = 'pending'
+        FROM "WorkspaceInvitation" i
+        WHERE i."workspaceId" = w.id
+            AND i.status = 'pending'
     ) AS "invitationsPending"
 FROM "Workspace" w
 WHERE w.id = $1;
