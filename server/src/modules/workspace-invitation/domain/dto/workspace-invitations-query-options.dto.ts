@@ -2,10 +2,10 @@ import { WorkspaceInvitationStatus } from '@/core/enums/workspace-invitation-sta
 import { PaginationParams } from '@/core/types/pagination.types.ts'
 
 export type WorkspaceInvitationsQueryOptionsDTO = {
-    filters?: {
+    filters: {
         email?: string
         status?: WorkspaceInvitationStatus[]
-        workspaceId?: string
+        workspaceId: string
     }
     pagination?: PaginationParams
 }
