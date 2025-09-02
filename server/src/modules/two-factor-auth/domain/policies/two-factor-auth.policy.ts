@@ -26,7 +26,7 @@ export class TwoFactorAuthPolicy {
         return false
     }
 
-    enforceCanViewTwoFactorMethods(): void {
+    enforceViewTwoFactorMethods(): void {
         if(!this.canViewTwoFactorMethods()) {
             throw new ForbiddenError({
                 userId: ['YOU_CANNOT_VIEW_TWO_FACTOR_METHODS_FOR_THIS_USER']
@@ -50,7 +50,7 @@ export class TwoFactorAuthPolicy {
         return this.canViewTotpSetupData()
     }
 
-    enforceCanDisableTotpMethod(): void {
+    enforceDisableTotpMethod(): void {
         if(!this.canDisableTotpMethod()) {
             throw new ForbiddenError({
                 userId: ['YOU_CANNOT_DISABLE_TOTP_METHOD_FOR_THIS_USER']
@@ -58,7 +58,7 @@ export class TwoFactorAuthPolicy {
         }
     }
 
-    enforceCanCompleteTotpSetup(): void {
+    enforceCompleteTotpSetup(): void {
         if(!this.canCompleteTotpSetup()) {
             throw new ForbiddenError({
                 userId: ['YOU_CANNOT_COMPLETE_TOTP_SETUP_FOR_THIS_USER']
@@ -66,7 +66,7 @@ export class TwoFactorAuthPolicy {
         }
     }
 
-    enforceCanViewTotpSetupData(): void {
+    enforceViewTotpSetupData(): void {
         if(!this.canViewTotpSetupData()) {
             throw new ForbiddenError({
                 userId: ['YOU_CANNOT_VIEW_TOTP_SETUP_DATA_FOR_THIS_USER']

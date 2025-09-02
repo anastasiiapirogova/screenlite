@@ -19,7 +19,7 @@ export class GetUserTwoFactorMethodsUsecase {
 
         const policy = new TwoFactorAuthPolicy(user, authContext)
 
-        policy.enforceCanViewTwoFactorMethods()
+        policy.enforceViewTwoFactorMethods()
 
         return this.twoFactorMethodRepo.findByUserId(userId)
     }

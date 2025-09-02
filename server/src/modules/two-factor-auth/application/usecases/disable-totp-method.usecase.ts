@@ -28,7 +28,7 @@ export class DisableTotpMethodUsecase {
 
         const twoFactorAuthPolicy = new TwoFactorAuthPolicy(user, authContext)
 
-        twoFactorAuthPolicy.enforceCanDisableTotpMethod()
+        twoFactorAuthPolicy.enforceDisableTotpMethod()
 
         const method = await twoFactorMethodRepo.findByUserIdAndType(userId, TwoFactorMethodType.TOTP)
 

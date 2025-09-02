@@ -40,7 +40,7 @@ export class GetTotpSetupDataUsecase {
 
         const twoFactorAuthPolicy = new TwoFactorAuthPolicy(user, authContext)
 
-        twoFactorAuthPolicy.enforceCanViewTotpSetupData()
+        twoFactorAuthPolicy.enforceViewTotpSetupData()
 
         let twoFactorMethod = await twoFactorMethodRepo.findByUserIdAndType(userId, TwoFactorMethodType.TOTP)
 
