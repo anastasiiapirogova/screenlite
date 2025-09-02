@@ -22,7 +22,7 @@ export class RequestAccountDeletionUsecase {
             })
         }
 
-        UserPolicy.enforceCanRequestAccountDeletion(userId, authContext)
+        UserPolicy.enforceRequestAccountDeletion(userId, authContext)
 
         if (user.deletionState.isDeletionRequested) {
             throw new ValidationError({

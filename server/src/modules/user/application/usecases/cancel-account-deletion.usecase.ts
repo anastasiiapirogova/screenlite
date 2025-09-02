@@ -19,7 +19,7 @@ export class CancelAccountDeletionUsecase {
             })
         }
 
-        UserPolicy.enforceCanRequestAccountDeletion(userId, dto.authContext)
+        UserPolicy.enforceRequestAccountDeletion(userId, dto.authContext)
 
         if (!user.deletionState.isDeletionRequested) {
             throw new ValidationError({

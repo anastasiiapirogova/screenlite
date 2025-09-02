@@ -26,7 +26,7 @@ export class GetUserWorkspacesUsecase {
             throw new NotFoundError('USER_NOT_FOUND')
         }
 
-        UserPolicy.enforceCanViewWorkspaces(dto.userId, dto.authContext)
+        UserPolicy.enforceViewWorkspaces(dto.userId, dto.authContext)
 
         const workspaces = await workspaceMemberRepository.findWithWorkspaceByUserId(dto.userId, dto.queryOptions)
 
