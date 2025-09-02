@@ -1,4 +1,4 @@
-import { WorkspaceMembershipWithWorkspaceView } from '@/modules/user/presentation/view-models/workspace-member-with-workspace.view.ts'
+import { WorkspaceMembershipWithWorkspaceView } from '@/modules/workspace-member/presentation/view-models/workspace-member-with-workspace.view.ts'
 import { WorkspaceMember } from '../entities/workspace-member.entity.ts'
 import { UserWorkspacesQueryOptionsDTO } from '@/modules/user/domain/dto/user-workspaces-query-options.dto.ts'
 import { PaginationResponse } from '../types/pagination.types.ts'
