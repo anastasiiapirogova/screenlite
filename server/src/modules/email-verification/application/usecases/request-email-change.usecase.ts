@@ -24,7 +24,7 @@ export class RequestEmailChangeUseCase {
     ) {}
   
     async execute(userId: string, newEmail: string) {
-        const { userRepo, tokenRepo, tokenFactory, unitOfWork, config } = this.deps
+        const { userRepo, tokenRepo, tokenFactory, unitOfWork, config, jobProducer } = this.deps
 
         const existingUser = await userRepo.findByEmail(newEmail)
 
@@ -46,7 +46,7 @@ export class RequestEmailChangeUseCase {
   
         const expires = new Date(Date.now() + timeToLive)
   
-        const { token } = await tokenFactory.create({
+        const { token, rawToken } = await tokenFactory.create({
             userId,
             type: EmailVerificationTokenType.EMAIL_CHANGE,
             expiresAt: expires,
@@ -60,10 +60,10 @@ export class RequestEmailChangeUseCase {
             await repos.emailVerificationTokenRepository.create(token)
         })
 
-        // TODO: Job is missing
-        // await jobProducer.enqueue('send_email_change_confirmation', {
-        //     email: newEmail,
-        //     token: rawToken,
-        // })
+        await jobProducer.enqueue('send_email_change_confirmation', {
+            email: newEmail,
+            token: rawToken,
+            newEmail,
+        })
     }
 }   
