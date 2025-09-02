@@ -39,15 +39,21 @@ export class ConfirmEmailChangeUseCase {
 
         const pendingEmail = user.email.pending
 
-        if(!pendingEmail) {
+        if (!pendingEmail) {
             throw new ValidationError({
                 email: ['NO_PENDING_EMAIL_FOUND'],
             })
         }
 
-        const existingUser = await userRepo.findByEmail(pendingEmail)
+        if (pendingEmail !== tokenEntity.newEmail) {
+            throw new ValidationError({
+                email: ['PENDING_EMAIL_DOES_NOT_MATCH_TOKEN_EMAIL'],
+            })
+        }
 
-        if(existingUser) {
+        const existingUser = await userRepo.findByEmail(tokenEntity.newEmail)
+
+        if (existingUser) {
             await this.handleEmailConflict(user, tokenEntity, unitOfWork)
 
             throw new ValidationError({
