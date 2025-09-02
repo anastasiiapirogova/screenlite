@@ -5,6 +5,7 @@ export class WorkspaceInvitation {
     public readonly id: string
     public readonly email: string
     private _status: WorkspaceInvitationStatus
+    public readonly initiatorId: string
     public readonly workspaceId: string
     public readonly createdAt: Date
 
@@ -12,6 +13,7 @@ export class WorkspaceInvitation {
         this.id = dto.id
         this.email = dto.email
         this._status = this.normalizeStatus(dto.status)
+        this.initiatorId = dto.initiatorId
         this.workspaceId = dto.workspaceId
         this.createdAt = dto.createdAt
     }
