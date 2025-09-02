@@ -1,7 +1,7 @@
 import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
 import { Prisma, PrismaClient, WorkspaceMember } from '@/generated/prisma/client.ts'
 import { PrismaWorkspaceMemberMapper } from '../mappers/prisma-workspace-member.mapper.ts'
-import { WorkspaceMembershipWithWorkspaceView } from '@/modules/user/presentation/view-models/workspace-member-with-workspace.view.ts'
+import { WorkspaceMembershipWithWorkspaceView } from '@/modules/workspace-member/presentation/view-models/workspace-member-with-workspace.view.ts'
 import { UserWorkspacesQueryOptionsDTO } from '@/modules/user/domain/dto/user-workspaces-query-options.dto.ts'
 import { Paginator } from '@/shared/utils/pagination.util.ts'
 import { PaginationResponse } from '@/core/types/pagination.types.ts'
