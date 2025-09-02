@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient } from '@/generated/prisma/client.ts'
 import { IWorkspaceInvitationRepository } from '../../domain/ports/workspace-invitation-repository.interface.ts'
 import { WorkspaceInvitation } from '@/core/entities/workspace-invitation.entity.ts'
-import { WorkspaceInvitationsQueryOptionsDTO } from '../../domain/dto/workspace-invitations-query-options.dto.ts'
+import { GlobalWorkspaceInvitationsQueryOptionsDTO } from '../../domain/dto/global-workspace-invitations-query-options.dto.ts'
 import { PaginationResponse } from '@/core/types/pagination.types.ts'
 import { Paginator } from '@/shared/utils/pagination.util.ts'
 import { WorkspaceInvitation as PrismaWorkspaceInvitation } from '@/generated/prisma/client.ts'
@@ -35,7 +35,7 @@ export class PrismaWorkspaceInvitationRepository implements IWorkspaceInvitation
         return invitation ? this.toDomain(invitation) : null
     }
 
-    async findAll(queryOptions: WorkspaceInvitationsQueryOptionsDTO): Promise<PaginationResponse<WorkspaceInvitation>> {
+    async findAll(queryOptions: GlobalWorkspaceInvitationsQueryOptionsDTO): Promise<PaginationResponse<WorkspaceInvitation>> {
         const { filters, pagination } = queryOptions
 
         const where: Prisma.WorkspaceInvitationWhereInput = {}
