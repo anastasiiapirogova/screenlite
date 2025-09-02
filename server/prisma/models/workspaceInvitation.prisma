@@ -1,13 +1,16 @@
 model WorkspaceInvitation {
-    id          String   @id @default(uuid())
-    email       String
-    status      String
-    workspaceId String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    id            String   @id @default(uuid())
+    email         String
+    status        String
+    workspaceId   String
+    initiatorId   String
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
 
-    workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+    initiator   Initiator @relation(fields: [initiatorId], references: [id])
 
     @@index([email])
     @@index([workspaceId])
+    @@index([initiatorId])
 }
