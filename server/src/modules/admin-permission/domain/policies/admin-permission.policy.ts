@@ -32,7 +32,7 @@ export class AdminPermissionPolicy {
         return this.hasAdminPermissions([AdminPermissionName.USERS_MANAGE_ADMIN_PERMISSIONS])
     }
 
-    enforceCanViewUserPermissions(targetUser: User): void {
+    enforceViewUserPermissions(targetUser: User): void {
         if (!this.canViewUserPermissions(targetUser)) {
             throw new ForbiddenError({
                 admin: ['CANNOT_VIEW_ADMIN_PERMISSIONS']
@@ -75,7 +75,7 @@ export class AdminPermissionPolicy {
         return false
     }
 
-    enforceCanManageUserPermissions(
+    enforceManageUserPermissions(
         targetUser: User,
         targetUserPermissions: AdminPermissionName[],
         permissionsToSet: AdminPermissionName[]

@@ -24,7 +24,7 @@ export class SetUserAdminPermissionsUseCase {
 
         const adminPermissionPolicy = new AdminPermissionPolicy(authContext)
 
-        adminPermissionPolicy.enforceCanManageUserPermissions(targetUser, currentPermissions, permissionNames) 
+        adminPermissionPolicy.enforceManageUserPermissions(targetUser, currentPermissions, permissionNames) 
         
         const permissionsToRemove = currentPermissions.filter(
             permission => !permissionNames.includes(permission)

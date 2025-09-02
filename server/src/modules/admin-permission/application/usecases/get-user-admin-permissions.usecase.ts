@@ -20,7 +20,7 @@ export class GetUserAdminPermissionsUseCase {
 
         const adminPermissionPolicy = new AdminPermissionPolicy(authContext)
         
-        adminPermissionPolicy.enforceCanViewUserPermissions(targetUser)
+        adminPermissionPolicy.enforceViewUserPermissions(targetUser)
 
         const permissions = await this.userAdminPermissionRepo.getUserPermissions(userId)
 
