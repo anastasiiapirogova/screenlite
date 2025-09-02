@@ -19,7 +19,7 @@ export class SessionListPolicy {
         return false
     }
 
-    enforceCanViewAllSessions(): void {
+    enforceViewAllSessions(): void {
         if(!this.canViewAllSessions()) {
             throw new ForbiddenError({
                 userId: ['YOU_CANNOT_VIEW_ALL_SESSIONS']
@@ -37,7 +37,7 @@ export class SessionListPolicy {
         return false
     }
 
-    enforceCanViewSessionsForUser(userId: string): void {
+    enforceViewSessionsForUser(userId: string): void {
         if(!this.canViewSessionsForUser(userId)) {
             throw new ForbiddenError({
                 userId: ['YOU_CANNOT_VIEW_SESSIONS_FOR_USER']

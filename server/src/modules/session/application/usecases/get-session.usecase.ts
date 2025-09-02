@@ -15,7 +15,7 @@ export class GetSessionUsecase {
 
         const sessionPolicy = new SessionPolicy(session, authContext)
 
-        sessionPolicy.enforceCanViewSession()
+        sessionPolicy.enforceViewSession()
 
         return session
     }

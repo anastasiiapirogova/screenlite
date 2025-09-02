@@ -14,9 +14,9 @@ export class GetSessionsUsecase {
         const sessionListPolicy = new SessionListPolicy(authContext)
 
         if(options?.filters?.userId) {
-            sessionListPolicy.enforceCanViewSessionsForUser(options.filters.userId)
+            sessionListPolicy.enforceViewSessionsForUser(options.filters.userId)
         } else {
-            sessionListPolicy.enforceCanViewAllSessions()
+            sessionListPolicy.enforceViewAllSessions()
         }
 
         const { items, meta } = await this.sessionRepository.findAll(options)

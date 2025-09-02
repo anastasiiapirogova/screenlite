@@ -22,7 +22,7 @@ export class SessionPolicy {
         return this.isSelf()
     }
 
-    enforceCanViewSession(): void {
+    enforceViewSession(): void {
         if(!this.canViewSession()) {
             throw new ForbiddenError({
                 sessionId: ['YOU_ARE_NOT_AUTHORIZED_TO_VIEW_THIS_SESSION'],
