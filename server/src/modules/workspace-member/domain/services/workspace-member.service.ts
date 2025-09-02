@@ -6,6 +6,7 @@ import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace
 import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 import { NotFoundError } from '@/shared/errors/not-found.error.ts'
 import { IWorkspaceMemberService } from '../ports/workspace-member-service.interface.ts'
+import { ValidationError } from '@/shared/errors/validation.error.ts'
 
 export class WorkspaceMemberService implements IWorkspaceMemberService {
     constructor(
@@ -29,6 +30,10 @@ export class WorkspaceMemberService implements IWorkspaceMemberService {
 
         if (!user) throw new NotFoundError(`User ${userId} not found`)
         if (!workspace) throw new NotFoundError(`Workspace ${workspaceId} not found`)
+
+        if (!workspace.state.isActive) {
+            throw new ValidationError({ workspaceId: ['WORKSPACE_IS_NOT_ACTIVE'] })
+        }
 
         const existing = await this.findMember(workspaceId, userId)
 
