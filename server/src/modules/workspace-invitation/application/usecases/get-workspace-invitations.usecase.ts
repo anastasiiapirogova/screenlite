@@ -21,9 +21,9 @@ export class GetWorkspaceInvitationsUsecase {
     async execute(dto: GetWorkspaceInvitationsDTO): Promise<PaginationResponse<WorkspaceInvitation>> {
         const { workspaceInvitationRepository, workspaceRepository, workspaceAccessService } = this.deps
 
-        const { authContext, queryOptions, filters } = dto
+        const { authContext, queryOptions } = dto
 
-        const workspace = await workspaceRepository.findById(filters.workspaceId)
+        const workspace = await workspaceRepository.findById(queryOptions.filters.workspaceId)
 
         if (!workspace) {
             throw new NotFoundError('WORKSPACE_NOT_FOUND')
@@ -31,7 +31,7 @@ export class GetWorkspaceInvitationsUsecase {
 
         const workspaceAccess = await workspaceAccessService.checkAccess(workspace.id, authContext)
 
-        WorkspacePolicy.enforceViewWorkspaceInvitations(authContext, workspaceAccess)
+        WorkspacePolicy.enforceViewInvitations(authContext, workspaceAccess)
 
         return workspaceInvitationRepository.findAll(queryOptions)
     }
