@@ -3,5 +3,6 @@ export interface WorkspaceInvitationDTO {
     email: string
     status: string
     workspaceId: string
+    initiatorId: string
     createdAt: Date
 }
