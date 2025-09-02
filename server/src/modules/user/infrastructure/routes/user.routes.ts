@@ -4,6 +4,7 @@ import { cancelAccountDeletionRoute } from './cancel-account-deletion.route.ts'
 import { updateProfileRoute } from './update-profile.route.ts'
 import { changePasswordRoute } from './change-password.route.ts'
 import { getUserWorkspacesRoute } from './get-user-workspaces.route.ts'
+import { getUserWorkspaceInvitationsRoute } from './get-user-workspace-invitations.route.ts'
 
 // Prefix: /api/users
 const userRoutes = async (fastify: FastifyInstance) => {
@@ -13,6 +14,7 @@ const userRoutes = async (fastify: FastifyInstance) => {
         updateProfileRoute(fastify),
         changePasswordRoute(fastify),
         getUserWorkspacesRoute(fastify),
+        getUserWorkspaceInvitationsRoute(fastify),
     ])
 }
 
