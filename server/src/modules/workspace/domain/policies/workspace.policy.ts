@@ -72,7 +72,7 @@ export class WorkspacePolicy {
         }
     }
 
-    static canViewWorkspaceInvitations(authContext: AuthContext, workspaceAccess: WorkspaceAccess): boolean {
+    static canViewInvitations(authContext: AuthContext, workspaceAccess: WorkspaceAccess): boolean {
         if(authContext.hasAdminPermission(AdminPermissionName.WORKSPACE_INVITATIONS_VIEW)) {
             return true
         }
@@ -80,8 +80,8 @@ export class WorkspacePolicy {
         return workspaceAccess.hasAccess
     }
 
-    static enforceViewWorkspaceInvitations(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
-        if(!WorkspacePolicy.canViewWorkspaceInvitations(authContext, workspaceAccess)) {
+    static enforceViewInvitations(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
+        if(!WorkspacePolicy.canViewInvitations(authContext, workspaceAccess)) {
             throw new ForbiddenError({
                 workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_WORKSPACE_INVITATIONS']
             })
