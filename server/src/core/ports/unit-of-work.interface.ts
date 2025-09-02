@@ -8,6 +8,7 @@ import { ITwoFactorMethodRepository } from '@/modules/two-factor-auth/domain/por
 import { IUserCredentialRepository } from './user-credential-repository.interface.ts'
 import { IWorkspaceMemberRepository } from './workspace-member-repository.interface.ts'
 import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace-repository.interface.ts'
+import { IWorkspaceInvitationRepository } from '@/modules/workspace-invitation/domain/ports/workspace-invitation-repository.interface.ts'
 
 export type IUnitOfWorkRepositories = {
     userRepository: IUserRepository
@@ -20,6 +21,7 @@ export type IUnitOfWorkRepositories = {
     userCredentialRepository: IUserCredentialRepository
     workspaceRepository: IWorkspaceRepository
     workspaceMemberRepository: IWorkspaceMemberRepository
+    workspaceInvitationRepository: IWorkspaceInvitationRepository
 }
 
 export type IUnitOfWork = {

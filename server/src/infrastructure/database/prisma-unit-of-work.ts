@@ -11,6 +11,7 @@ import { TwoFactorConfigHandlerFactory } from '@/modules/two-factor-auth/infrast
 import { PrismaUserCredentialRepository } from '@/modules/user/infrastructure/repositories/prisma-user-credential.repository.ts'
 import { PrismaWorkspaceRepository } from '@/modules/workspace/infrastructure/repositories/prisma-workspace.repository.ts'
 import { PrismaWorkspaceMemberRepository } from '@/modules/workspace-member/infrastructure/repositories/prisma-workspace-member.repository.ts'
+import { PrismaWorkspaceInvitationRepository } from '@/modules/workspace-invitation/infrastructure/repositories/prisma-workspace-invitation.repository.ts'
 
 export class PrismaUnitOfWork implements IUnitOfWork {
     constructor(private prisma: PrismaClient) {}
@@ -30,6 +31,7 @@ export class PrismaUnitOfWork implements IUnitOfWork {
                 userCredentialRepository: new PrismaUserCredentialRepository(tx),
                 workspaceRepository: new PrismaWorkspaceRepository(tx),
                 workspaceMemberRepository: new PrismaWorkspaceMemberRepository(tx),
+                workspaceInvitationRepository: new PrismaWorkspaceInvitationRepository(tx),
             }
         
             return fn(repos)
