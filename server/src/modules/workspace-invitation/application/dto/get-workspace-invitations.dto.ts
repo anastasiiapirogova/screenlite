@@ -1,7 +1,7 @@
-import { GetGlobalWorkspaceInvitationsDTO } from './get-global-workspace-invitations.dto.ts'
+import { AuthContext } from '@/core/types/auth-context.type.ts'
+import { WorkspaceInvitationsQueryOptionsDTO } from '../../domain/dto/workspace-invitations-query-options.dto.ts'
 
-export type GetWorkspaceInvitationsDTO = GetGlobalWorkspaceInvitationsDTO & {
-    filters: {
-        workspaceId: string
-    }
+export type GetWorkspaceInvitationsDTO = {
+    authContext: AuthContext
+    queryOptions: WorkspaceInvitationsQueryOptionsDTO
 }
