@@ -24,6 +24,26 @@ export class WorkspaceInvitationPolicy {
         }
     }
 
+    static canCancelWorkspaceInvitation(authContext: AuthContext, workspaceAccess: WorkspaceAccess): boolean {
+        if(authContext.hasAdminPermission(AdminPermissionName.WORKSPACE_INVITATIONS_CANCEL)) {
+            return true
+        }
+        
+        if(workspaceAccess.hasAccess) {
+            return true
+        }
+
+        return false
+    }
+
+    static enforceCancelWorkspaceInvitation(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
+        if(!WorkspaceInvitationPolicy.canCancelWorkspaceInvitation(authContext, workspaceAccess)) {
+            throw new ForbiddenError({
+                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_CANCEL_WORKSPACE_INVITATION']
+            })
+        }
+    }
+
     static canRespondToWorkspaceInvitation(authContext: AuthContext, invitationEmail: string): boolean {
         if(authContext.isUserContext()) {
             return authContext.user.email === invitationEmail
