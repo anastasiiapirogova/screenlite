@@ -4,9 +4,10 @@ export interface IWorkspaceInvitationService {
     inviteUser(params: {
         workspaceId: string
         email: string
+        initiatorId: string
     }): Promise<WorkspaceInvitation>
     
-    respondToInvitation(invitation: WorkspaceInvitation, accept: boolean, userId: string): Promise<void>
+    respondToInvitation(invitation: WorkspaceInvitation, accept: boolean, userId: string): Promise<WorkspaceInvitation>
 
-    cancelInvitation(invitation: WorkspaceInvitation): Promise<void>
+    cancelInvitation(invitation: WorkspaceInvitation): Promise<WorkspaceInvitation>
 }
