@@ -7,6 +7,7 @@ export class WorkspaceInvitationFactory {
         workspaceId: string
         email: string
         status: WorkspaceInvitationStatus
+        initiatorId: string
     }): WorkspaceInvitation {
         const id = uuid()
         const now = new Date()
@@ -17,6 +18,7 @@ export class WorkspaceInvitationFactory {
             status: props.status,
             workspaceId: props.workspaceId,
             createdAt: now,
+            initiatorId: props.initiatorId
         })
     }
 }
