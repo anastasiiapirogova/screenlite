@@ -1,11 +1,11 @@
 import { WorkspaceInvitationListPolicy } from '../../domain/policies/workspace-invitation-list.policy.ts'
 import { PaginationResponse } from '@/core/types/pagination.types.ts'
 import { GetGlobalWorkspaceInvitationsDTO } from '../dto/get-global-workspace-invitations.dto.ts'
-import { WorkspaceInvitation } from '@/core/entities/workspace-invitation.entity.ts'
-import { IWorkspaceInvitationRepository } from '../../domain/ports/workspace-invitation-repository.interface.ts'
+import { IWorkspaceInvitationsWithWorkspaceQuery } from '../../domain/ports/workspace-invitations-with-workspace-query.interface.ts'
+import { WorkspaceInvitationWithDetailsView } from '../../presentation/view-models/workspace-invitation-with-details.view.ts'
 
 type GetGlobalWorkspaceInvitationsUsecaseDeps = {
-    workspaceInvitationRepository: IWorkspaceInvitationRepository
+    workspaceInvitationsWithWorkspaceQuery: IWorkspaceInvitationsWithWorkspaceQuery
 }
 
 export class GetGlobalWorkspaceInvitationsUsecase {
@@ -13,13 +13,13 @@ export class GetGlobalWorkspaceInvitationsUsecase {
         private readonly deps: GetGlobalWorkspaceInvitationsUsecaseDeps
     ) {}
 
-    async execute(dto: GetGlobalWorkspaceInvitationsDTO): Promise<PaginationResponse<WorkspaceInvitation>> {
-        const { workspaceInvitationRepository } = this.deps
+    async execute(dto: GetGlobalWorkspaceInvitationsDTO): Promise<PaginationResponse<WorkspaceInvitationWithDetailsView>> {
+        const { workspaceInvitationsWithWorkspaceQuery } = this.deps
         
         const { authContext, queryOptions } = dto
         
         WorkspaceInvitationListPolicy.enforceViewAllWorkspaceInvitations(authContext)
 
-        return workspaceInvitationRepository.findAll(queryOptions)
+        return workspaceInvitationsWithWorkspaceQuery.getWorkspaceInvitationsWithWorkspace(queryOptions)
     }
 }
