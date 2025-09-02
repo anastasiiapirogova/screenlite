@@ -25,7 +25,7 @@ export class EmailVerificationToken {
     }
 
     isValidEmailChangeToken(): boolean {
-        return this.type === EmailVerificationTokenType.EMAIL_CHANGE && !this.isExpired()
+        return this.type === EmailVerificationTokenType.EMAIL_CHANGE && !this.isExpired() && this.newEmail !== null
     }
 
     isExpired(): boolean {
