@@ -13,4 +13,5 @@ export enum AdminPermissionName {
     WORKSPACE_INVITATIONS_VIEW = 'workspace-invitations.view',
     WORKSPACE_INVITATIONS_CREATE = 'workspace-invitations.create',
     WORKSPACE_INVITATIONS_CANCEL = 'workspace-invitations.cancel',
+    WORKSPACE_MEMBERS_VIEW = 'workspace-members.view',
 }
