@@ -7,6 +7,7 @@ import { IWorkspaceAccessService } from '@/modules/workspace/domain/ports/worksp
 import { WorkspaceInvitationPolicy } from '../../domain/policies/workspace-invitation.policy.ts'
 import { IWorkspaceInvitationService } from '../../domain/ports/workspace-invitation-service.interface.ts'
 import { IInitiatorService } from '@/modules/initiator/domain/ports/initiator-service.interface.ts'
+import { IWorkspaceInvariantsService } from '@/modules/workspace/domain/ports/workspace-invariants-service.interface.ts'
 
 type CreateWorkspaceInvitationUsecaseDeps = {
     workspaceInvitationRepository: IWorkspaceInvitationRepository
@@ -14,13 +15,14 @@ type CreateWorkspaceInvitationUsecaseDeps = {
     workspaceAccessService: IWorkspaceAccessService
     workspaceInvitationService: IWorkspaceInvitationService
     initiatorService: IInitiatorService
+    workspaceInvariantsService: IWorkspaceInvariantsService
 }
 
 export class CreateWorkspaceInvitationUsecase {
     constructor(private readonly deps: CreateWorkspaceInvitationUsecaseDeps) {}
 
     async execute(dto: CreateWorkspaceInvitationDTO) {
-        const { workspaceRepository, workspaceAccessService, workspaceInvitationService, initiatorService } = this.deps
+        const { workspaceRepository, workspaceAccessService, workspaceInvitationService, initiatorService, workspaceInvariantsService } = this.deps
 
         const { workspaceId, email, authContext } = dto
 
@@ -33,6 +35,8 @@ export class CreateWorkspaceInvitationUsecase {
         const workspaceAccess = await workspaceAccessService.checkAccess(workspace.id, authContext)
 
         WorkspaceInvitationPolicy.enforceInviteToWorkspace(authContext, workspaceAccess)
+
+        await workspaceInvariantsService.enforceWorkspaceActiveForNonAdmin(workspace, authContext)
 
         const initiator = await initiatorService.getOrCreateInitiator(authContext)
      
