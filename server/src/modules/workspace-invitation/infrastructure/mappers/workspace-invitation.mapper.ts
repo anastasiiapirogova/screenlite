@@ -8,6 +8,7 @@ export class WorkspaceInvitationMapper {
             email: workspaceInvitation.email,
             status: workspaceInvitation.status,
             workspaceId: workspaceInvitation.workspaceId,
+            initiatorId: workspaceInvitation.initiatorId,
             createdAt: workspaceInvitation.createdAt,
         }
     }
