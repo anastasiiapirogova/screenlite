@@ -22,15 +22,15 @@ export class SoftDeleteWorkspaceUsecase {
             throw new NotFoundError('Workspace not found')
         }
 
+        if (!workspace.state.isActive()) {
+            throw new ValidationError({
+                workspaceId: ['WORKSPACE_IS_NOT_ACTIVE']
+            })
+        }
+
         const workspaceAccess = await workspaceAccessService.checkAccess(workspace.id, authContext)
 
         WorkspacePolicy.enforceSoftDeleteWorkspace(authContext, workspaceAccess)
-
-        if (workspace.state.isDeleted()) {
-            throw new ValidationError({
-                workspaceId: ['WORKSPACE_ALREADY_DELETED']
-            })
-        }
 
         workspace.state.markAsDeleted()
 
