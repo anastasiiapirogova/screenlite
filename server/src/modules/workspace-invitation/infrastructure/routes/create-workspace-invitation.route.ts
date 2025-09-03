@@ -23,6 +23,8 @@ export const createWorkspaceInvitationRoute = async (fastify: FastifyInstance) =
                 workspaceAccessService: fastify.workspaceAccessService,
                 workspaceInvitationService: fastify.workspaceInvitationService,
                 workspaceRepository: fastify.workspaceRepository,
+                initiatorService: fastify.initiatorService,
+                workspaceInvariantsService: fastify.workspaceInvariantsService,
             })
 
             const invitation = await createWorkspaceInvitationUseCase.execute({
