@@ -31,29 +31,19 @@ export class ConfirmEmailChangeUseCase {
             })
         }
 
+        const tokenEmail = tokenEntity.newEmail!
+
         const user = await userRepo.findById(tokenEntity.userId)
 
         if (!user) {
             throw new NotFoundError()
         }
 
-        const pendingEmail = user.email.pending
+        this.validatePendingEmail(user, tokenEmail)
 
-        if (!pendingEmail) {
-            throw new ValidationError({
-                email: ['NO_PENDING_EMAIL_FOUND'],
-            })
-        }
+        const emailIsInUse = await this.checkIfEmailIsInUse(tokenEmail, userRepo)
 
-        if (pendingEmail !== tokenEntity.newEmail) {
-            throw new ValidationError({
-                email: ['PENDING_EMAIL_DOES_NOT_MATCH_TOKEN_EMAIL'],
-            })
-        }
-
-        const existingUser = await userRepo.findByEmail(tokenEntity.newEmail)
-
-        if (existingUser) {
+        if (emailIsInUse) {
             await this.handleEmailConflict(user, tokenEntity, unitOfWork)
 
             throw new ValidationError({
@@ -67,6 +57,20 @@ export class ConfirmEmailChangeUseCase {
             await repos.userRepository.save(user)
             await repos.emailVerificationTokenRepository.deleteAllByUserId(tokenEntity.userId)
         })
+    }
+
+    private validatePendingEmail(user: User, tokenEmail: string) {
+        if(user.email.pending !== tokenEmail) {
+            throw new ValidationError({
+                email: ['PENDING_EMAIL_DOES_NOT_MATCH_TOKEN_EMAIL'],
+            })
+        }
+    }
+
+    private async checkIfEmailIsInUse(email: string, userRepo: IUserRepository): Promise<boolean> {
+        const count = await userRepo.countByEmail(email)
+
+        return count > 0
     }
 
     private async handleEmailConflict(user: User, tokenEntity: EmailVerificationToken, unitOfWork: IUnitOfWork) {
