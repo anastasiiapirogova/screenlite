@@ -10,6 +10,7 @@ export class PrismaWorkspaceInvitationMapper {
             status: member.status as WorkspaceInvitationStatus,
             workspaceId: member.workspaceId,
             createdAt: member.createdAt,
+            initiatorId: member.initiatorId,
         })
     }
 
@@ -18,6 +19,7 @@ export class PrismaWorkspaceInvitationMapper {
             id: member.id,
             email: member.email,
             workspaceId: member.workspaceId,
+            initiatorId: member.initiatorId,
             status: member.status as WorkspaceInvitationStatus,
             createdAt: member.createdAt,
         }
