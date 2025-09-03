@@ -5,14 +5,14 @@ import { CreateWorkspaceUsecase } from '../../application/usecases/create-worksp
 import { workspaceCreationServiceFactory } from '../../domain/services/workspace-creation-service.factory.ts'
 import { WorkspaceMapper } from '../mappers/workspace.mapper.ts'
 import { workspaceMemberServiceFactory } from '@/modules/workspace-member/domain/services/workspace-member-service.factory.ts'
-import { workspaceSlugSchema } from '@/shared/schemas/workspace.schemas.ts'
+import { workspaceNameSchema, workspaceSlugSchema } from '@/shared/schemas/workspace.schemas.ts'
 
 // Prefix: /api/workspaces
 export const createWorkspaceRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/', {
         schema: {
             body: z.object({
-                name: z.string(),
+                name: workspaceNameSchema,
                 slug: workspaceSlugSchema,
             }),
         },
