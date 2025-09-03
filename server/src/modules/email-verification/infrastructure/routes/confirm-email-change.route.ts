@@ -8,6 +8,9 @@ export async function confirmEmailChangeRoute(fastify: FastifyInstance) {
         schema: {
             body: ConfirmEmailChangeSchema
         },
+        config: {
+            allowGuest: true
+        }
     }, async (request, reply) => {
         const { token } = request.body
 
