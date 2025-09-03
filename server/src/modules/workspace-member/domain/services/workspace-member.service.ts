@@ -1,4 +1,4 @@
-import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
+import { IWorkspaceMemberRepository } from '@/modules/workspace-member/domain/ports/workspace-member-repository.interface.ts'
 import { WorkspaceMember } from '@/core/entities/workspace-member.entity.ts'
 import { v4 as uuidv4 } from 'uuid'
 import { UserAlreadyIsAMemberError } from '../errors/user-already-is-a-member.error.ts'
@@ -44,8 +44,8 @@ export class WorkspaceMemberService implements IWorkspaceMemberService {
         await this.memberRepository.save(member)
     }
 
-    async removeMember(member: WorkspaceMember): Promise<void> {
-        await this.memberRepository.delete(member.id)
+    async removeMember(memberId: string): Promise<void> {
+        await this.memberRepository.delete(memberId)
     }
 
     async findMember(workspaceId: string, userId: string): Promise<WorkspaceMember | null> {
