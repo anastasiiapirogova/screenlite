@@ -7,4 +7,5 @@ export interface IUserRepository {
     findByEmail(email: string): Promise<User | null>
     findAll(queryOptions?: UsersQueryOptionsDTO): Promise<PaginationResponse<User>>
     save(user: User): Promise<void>
+    countByEmail(email: string): Promise<number>
 }
