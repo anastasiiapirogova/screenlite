@@ -19,7 +19,9 @@ export class WorkspacePolicy {
     static enforceViewWorkspace(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
         if(!WorkspacePolicy.canViewWorkspace(authContext, workspaceAccess)) {
             throw new ForbiddenError({
-                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_WORKSPACE']
+                details: {
+                    workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_WORKSPACE']
+                }
             })
         }
     }
@@ -39,7 +41,9 @@ export class WorkspacePolicy {
     static enforceSoftDeleteWorkspace(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
         if(!WorkspacePolicy.canSoftDeleteWorkspace(authContext, workspaceAccess)) {
             throw new ForbiddenError({
-                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_SOFT_DELETE_WORKSPACE']
+                details: {
+                    workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_SOFT_DELETE_WORKSPACE']
+                }
             })
         }
     }
@@ -51,7 +55,9 @@ export class WorkspacePolicy {
     static enforceDeleteWorkspace(authContext: AuthContext): void {
         if(!WorkspacePolicy.canDeleteWorkspace(authContext)) {
             throw new ForbiddenError({
-                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_DELETE_WORKSPACE']
+                details: {
+                    workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_DELETE_WORKSPACE']
+                }
             })
         }
     }
@@ -67,23 +73,9 @@ export class WorkspacePolicy {
     static enforceUpdateWorkspace(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
         if(!WorkspacePolicy.canUpdateWorkspace(authContext, workspaceAccess)) {
             throw new ForbiddenError({
-                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_UPDATE_WORKSPACE']
-            })
-        }
-    }
-
-    static canViewInvitations(authContext: AuthContext, workspaceAccess: WorkspaceAccess): boolean {
-        if(authContext.hasAdminPermission(AdminPermissionName.WORKSPACE_INVITATIONS_VIEW)) {
-            return true
-        }
-
-        return workspaceAccess.hasAccess
-    }
-
-    static enforceViewInvitations(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
-        if(!WorkspacePolicy.canViewInvitations(authContext, workspaceAccess)) {
-            throw new ForbiddenError({
-                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_WORKSPACE_INVITATIONS']
+                details: {
+                    workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_UPDATE_WORKSPACE']
+                }
             })
         }
     }
