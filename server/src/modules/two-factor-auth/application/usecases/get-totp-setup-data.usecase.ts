@@ -46,7 +46,9 @@ export class GetTotpSetupDataUsecase {
 
         if (twoFactorMethod?.enabled) {
             throw new ForbiddenError({
-                totp: ['TOTP_ALREADY_ENABLED_CANNOT_VIEW_SECRET']
+                details: {
+                    totp: ['TOTP_ALREADY_ENABLED_CANNOT_VIEW_SECRET']
+                }
             })
         }
 
@@ -77,7 +79,9 @@ export class GetTotpSetupDataUsecase {
                 } catch (error) {
                     if (error instanceof ResourceConflictError) {
                         throw new ForbiddenError({
-                            totp: ['TOTP_ALREADY_SETUP']
+                            details: {
+                                totp: ['TOTP_ALREADY_SETUP']
+                            }
                         })
                     }
 
