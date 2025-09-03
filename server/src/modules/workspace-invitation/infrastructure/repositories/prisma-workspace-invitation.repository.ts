@@ -57,7 +57,16 @@ export class PrismaWorkspaceInvitationRepository implements IWorkspaceInvitation
             where.workspaceId = filters.workspaceId
         }
 
-        const findManyFn = (skip: number, take: number) => this.prisma.workspaceInvitation.findMany({ where, skip, take })
+        const orderBy: Prisma.WorkspaceInvitationOrderByWithRelationInput = {
+            createdAt: 'desc',
+        }
+
+        const findManyFn = (skip: number, take: number) => this.prisma.workspaceInvitation.findMany({
+            where,
+            skip,
+            take,
+            orderBy
+        })
         
         const countFn = () => this.prisma.workspaceInvitation.count({ where })
 
