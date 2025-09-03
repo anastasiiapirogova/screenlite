@@ -1,10 +1,12 @@
-import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
+import { IWorkspaceMemberRepository } from '@/modules/workspace-member/domain/ports/workspace-member-repository.interface.ts'
 import { Prisma, PrismaClient, WorkspaceMember } from '@/generated/prisma/client.ts'
 import { PrismaWorkspaceMemberMapper } from '../mappers/prisma-workspace-member.mapper.ts'
 import { WorkspaceMembershipWithWorkspaceView } from '@/modules/workspace-member/presentation/view-models/workspace-member-with-workspace.view.ts'
-import { UserWorkspacesQueryOptionsDTO } from '@/modules/user/domain/dto/user-workspaces-query-options.dto.ts'
+import { WorkspaceMemberWithUserView } from '@/modules/workspace-member/presentation/view-models/workspace-member-with-user.view.ts'
+import { WorkspaceMembersQueryOptionsDTO } from '@/modules/workspace-member/domain/dto/workspace-members-query-options.dto.ts'
 import { Paginator } from '@/shared/utils/pagination.util.ts'
 import { PaginationResponse } from '@/core/types/pagination.types.ts'
+import { WorkspaceMembershipsByUserQueryOptionsDTO } from '../../domain/dto/workspace-memberships-by-user-query-options.dto.ts'
 
 export class PrismaWorkspaceMemberRepository implements IWorkspaceMemberRepository {
     constructor(private readonly prisma: PrismaClient | Prisma.TransactionClient) {}
@@ -46,7 +48,7 @@ export class PrismaWorkspaceMemberRepository implements IWorkspaceMemberReposito
         })
     }
 
-    async findWithWorkspaceByUserId(userId: string, queryOptions: UserWorkspacesQueryOptionsDTO): Promise<PaginationResponse<WorkspaceMembershipWithWorkspaceView>> {
+    async findWithWorkspaceByUserId(userId: string, queryOptions: WorkspaceMembershipsByUserQueryOptionsDTO): Promise<PaginationResponse<WorkspaceMembershipWithWorkspaceView>> {
         const { pagination } = queryOptions || {}
 
         const where: Prisma.WorkspaceMemberWhereInput = {}
@@ -95,5 +97,67 @@ export class PrismaWorkspaceMemberRepository implements IWorkspaceMemberReposito
                 userId
             }
         })
+    }
+
+    async findByWorkspace(queryOptions: WorkspaceMembersQueryOptionsDTO): Promise<PaginationResponse<WorkspaceMemberWithUserView>> {
+        const { filters, pagination } = queryOptions
+        const { workspaceId, name, email } = filters
+
+        const where: Prisma.WorkspaceMemberWhereInput = {
+            workspaceId
+        }
+
+        if (name || email) {
+            where.user = {}
+            if (name) {
+                where.user.name = {
+                    contains: name,
+                    mode: 'insensitive'
+                }
+            }
+            if (email) {
+                where.user.email = {
+                    contains: email,
+                    mode: 'insensitive'
+                }
+            }
+        }
+
+        const findManyFn = (skip: number, take: number) => {
+            return this.prisma.workspaceMember.findMany({
+                where,
+                include: {
+                    user: true
+                },
+                skip,
+                take,
+                orderBy: {
+                    user: {
+                        name: 'asc'
+                    }
+                }
+            })
+        }
+
+        const countFn = () => this.prisma.workspaceMember.count({ where })
+
+        const result = await Paginator.paginate(
+            findManyFn,
+            countFn,
+            pagination
+        )
+
+        return {
+            items: result.items.map((member) => ({
+                membershipId: member.id,
+                user: {
+                    id: member.user.id,
+                    email: member.user.email,
+                    name: member.user.name,
+                    profilePhotoPath: member.user.profilePhotoPath
+                }
+            })),
+            meta: result.meta,
+        }
     }
 }
