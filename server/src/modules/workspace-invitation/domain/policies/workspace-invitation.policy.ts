@@ -19,7 +19,9 @@ export class WorkspaceInvitationPolicy {
     static enforceInviteToWorkspace(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
         if(!WorkspaceInvitationPolicy.canInviteToWorkspace(authContext, workspaceAccess)) {
             throw new ForbiddenError({
-                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_INVITE_TO_WORKSPACE']
+                details: {
+                    workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_INVITE_TO_WORKSPACE']
+                }
             })
         }
     }
@@ -39,7 +41,9 @@ export class WorkspaceInvitationPolicy {
     static enforceCancelWorkspaceInvitation(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
         if(!WorkspaceInvitationPolicy.canCancelWorkspaceInvitation(authContext, workspaceAccess)) {
             throw new ForbiddenError({
-                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_CANCEL_WORKSPACE_INVITATION']
+                details: {
+                    workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_CANCEL_WORKSPACE_INVITATION']
+                }
             })
         }
     }
@@ -55,7 +59,9 @@ export class WorkspaceInvitationPolicy {
     static enforceRespondToWorkspaceInvitation(authContext: AuthContext, invitationEmail: string): void {
         if(!WorkspaceInvitationPolicy.canRespondToWorkspaceInvitation(authContext, invitationEmail)) {
             throw new ForbiddenError({
-                invitationEmail: ['INSUFFICIENT_PERMISSIONS_TO_ACCEPT_WORKSPACE_INVITATION']
+                details: {
+                    invitationEmail: ['INSUFFICIENT_PERMISSIONS_TO_ACCEPT_WORKSPACE_INVITATION']
+                }
             })
         }
     }
@@ -75,7 +81,9 @@ export class WorkspaceInvitationPolicy {
     static enforceViewWorkspaceInvitation(authContext: AuthContext, workspaceAccess: WorkspaceAccess): void {
         if(!WorkspaceInvitationPolicy.canViewWorkspaceInvitation(authContext, workspaceAccess)) {
             throw new ForbiddenError({
-                workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_WORKSPACE_INVITATION']
+                details: {
+                    workspaceId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_WORKSPACE_INVITATION']
+                }
             })
         }
     }
