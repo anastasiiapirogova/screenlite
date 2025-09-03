@@ -1,11 +1,10 @@
 model Initiator {
-    id String @id @default(uuid())
-    type String
-    userId String? @unique
+    id      String @id @default(uuid())
+    type    String
+    userId  String? @unique
 
-    user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-    workspaceInvitations WorkspaceInvitation[]
+    user                        User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+    createdWorkspaceInvitations WorkspaceInvitation[]
 
     @@index([userId])
     @@index([type])
