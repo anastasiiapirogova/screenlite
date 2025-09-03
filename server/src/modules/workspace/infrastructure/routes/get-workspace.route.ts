@@ -9,7 +9,7 @@ export const getWorkspaceRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().get('/:workspaceId', {
         schema: {
             params: z.object({
-                workspaceId: z.string(),
+                workspaceId: z.uuid(),
             }),
         },
         handler: async (request, reply) => {
