@@ -1,9 +1,4 @@
-export type WorkspaceInvitationUserInvitor = {
-    type: 'user'
-    id: string
-    name: string
-    profilePhotoPath: string | null
-}
+import { InitiatorDTO } from '@/shared/dto/initiator.dto.ts'
 
 export interface WorkspaceInvitationWithDetailsView {
     invitationId: string
@@ -17,5 +12,5 @@ export interface WorkspaceInvitationWithDetailsView {
         status: string
         picturePath: string | null
     }
-    invitor: WorkspaceInvitationUserInvitor | null
+    initiator: InitiatorDTO
 }
