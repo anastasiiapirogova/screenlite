@@ -28,6 +28,8 @@ import { WorkspaceInvitationService } from '@/modules/workspace-invitation/domai
 import { PrismaWorkspaceInvitationsWithWorkspaceQuery } from '@/modules/workspace-invitation/infrastructure/queries/workspace-invitations-with-workspace.query.ts'
 import { PrismaInitiatorRepository } from '@/modules/initiator/infrastructure/repositories/prisma-initiator.repository.ts'
 import { InitiatorService } from '@/modules/initiator/domain/services/initiator.service.ts'
+import { PrismaWorkspacesQuery } from '@/modules/workspace/infrastructure/queries/prisma-workspaces.query.ts'
+import { WorkspaceInvariantsService } from '@/modules/workspace/domain/services/workspace-invariants.service.ts'
 
 const diPlugin: FastifyPluginAsync = async (fastify) => {
     const fastHasher = new FastHasher()
@@ -61,8 +63,10 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const workspaceInvitationsWithWorkspaceQuery = new PrismaWorkspaceInvitationsWithWorkspaceQuery(fastify.prisma)
     const initiatorRepository = new PrismaInitiatorRepository(fastify.prisma)
     const initiatorService = new InitiatorService(initiatorRepository)
+    const workspacesQuery = new PrismaWorkspacesQuery(fastify.prisma)
+    const workspaceInvariantsService = new WorkspaceInvariantsService()
 
-    fastify.decorate('initiatorService', initiatorService)
+    fastify.decorate('workspaceInvariantsService', workspaceInvariantsService)
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
     fastify.decorate('secureHasher', secureHasher)
@@ -90,6 +94,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('workspaceInvitationsWithWorkspaceQuery', workspaceInvitationsWithWorkspaceQuery)
     fastify.decorate('initiatorRepository', initiatorRepository)
     fastify.decorate('initiatorService', initiatorService)
+    fastify.decorate('workspacesQuery', workspacesQuery)
 }
 
 export default fp(diPlugin, {

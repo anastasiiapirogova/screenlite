@@ -4,7 +4,7 @@ import { IImageValidator } from '@/core/ports/image-validator.interface.ts'
 import { ITokenGenerator } from '@/core/ports/token-generator.interface.ts'
 import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
 import { IUserCredentialRepository } from '@/core/ports/user-credential-repository.interface.ts'
-import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
+import { IWorkspaceMemberRepository } from '@/modules/workspace-member/domain/ports/workspace-member-repository.interface.ts'
 import { IUserAdminPermissionRepository } from '@/modules/admin-permission/domain/ports/user-admin-permission-repository.interface.ts'
 import { IEmailVerificationTokenRepository } from '@/modules/email-verification/domain/ports/email-verification-token-repository.interface.ts'
 import { IInitiatorRepository } from '@/modules/initiator/domain/ports/initiator-repository.interface.ts'
@@ -25,6 +25,8 @@ import { IWorkspaceMemberServiceFactory } from '@/modules/workspace-member/domai
 import { IWorkspaceAccessService } from '@/modules/workspace/domain/ports/workspace-access-service.interface.ts'
 import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace-repository.interface.ts'
 import { IWorkspaceStatisticsQuery } from '@/modules/workspace/domain/ports/workspace-statistics-query.interface.ts'
+import { IWorkspacesQuery } from '@/modules/workspace/domain/ports/workspaces-query.interface.ts'
+import { IWorkspaceInvariantsService } from '@/modules/workspace/domain/ports/workspace-invariants-service.interface.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -55,5 +57,7 @@ declare module 'fastify' {
         workspaceInvitationsWithWorkspaceQuery: IWorkspaceInvitationsWithWorkspaceQuery
         initiatorRepository: IInitiatorRepository
         initiatorService: IInitiatorService
+        workspacesQuery: IWorkspacesQuery
+        workspaceInvariantsService: IWorkspaceInvariantsService
     }
 }
