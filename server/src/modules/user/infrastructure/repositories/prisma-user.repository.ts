@@ -92,4 +92,17 @@ export class PrismaUserRepository implements IUserRepository {
             meta: result.meta,
         }
     }
+
+    async countByEmail(email: string): Promise<number> {
+        const where: Prisma.UserWhereInput = {
+            email: {
+                equals: email,
+                mode: 'insensitive',
+            }
+        }
+
+        return this.prisma.user.count({
+            where            
+        })
+    }
 }
