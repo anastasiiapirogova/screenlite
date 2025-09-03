@@ -25,7 +25,9 @@ export class SessionPolicy {
     enforceViewSession(): void {
         if(!this.canViewSession()) {
             throw new ForbiddenError({
-                sessionId: ['YOU_ARE_NOT_AUTHORIZED_TO_VIEW_THIS_SESSION'],
+                details: {
+                    sessionId: ['YOU_ARE_NOT_AUTHORIZED_TO_VIEW_THIS_SESSION'],
+                }
             })
         }
     }
