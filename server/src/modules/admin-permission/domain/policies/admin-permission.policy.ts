@@ -17,7 +17,9 @@ export class AdminPermissionPolicy {
     enforceHasPermissions(required: AdminPermissionName[]): void {
         if (!this.hasAdminPermissions(required)) {
             throw new ForbiddenError({
-                admin: ['MISSING_REQUIRED_PERMISSIONS']
+                details: {
+                    admin: ['MISSING_REQUIRED_PERMISSIONS']
+                }
             })
         }
     }
@@ -35,7 +37,9 @@ export class AdminPermissionPolicy {
     enforceViewUserPermissions(targetUser: User): void {
         if (!this.canViewUserPermissions(targetUser)) {
             throw new ForbiddenError({
-                admin: ['CANNOT_VIEW_ADMIN_PERMISSIONS']
+                details: {
+                    admin: ['CANNOT_VIEW_ADMIN_PERMISSIONS']
+                }
             })
         }
     }
@@ -82,13 +86,17 @@ export class AdminPermissionPolicy {
     ): void {
         if (!targetUser.hasAdminAccess) {
             throw new ForbiddenError({
-                user: ['TARGET_USER_IS_NOT_AN_ADMIN']
+                details: {
+                    user: ['TARGET_USER_IS_NOT_AN_ADMIN']
+                }
             })
         }
 
         if (!this.canManageUserPermissions(targetUser, targetUserPermissions, permissionsToSet)) {
             throw new ForbiddenError({
-                admin: ['CANNOT_MANAGE_UNOWNED_PERMISSIONS']
+                details: {
+                    admin: ['CANNOT_MANAGE_UNOWNED_PERMISSIONS']
+                }
             })
         }
     }
