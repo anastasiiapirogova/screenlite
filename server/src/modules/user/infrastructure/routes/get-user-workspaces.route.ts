@@ -1,9 +1,9 @@
 import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { GetUserWorkspacesDTO } from '../../application/dto/get-user-workspaces.dto.ts'
-import { GetUserWorkspacesUsecase } from '../../application/usecases/get-user-workspaces.usecase.ts'
 import { paginationSchema } from '@/shared/schemas/pagination.schema.ts'
+import { GetWorkspaceMembershipsByUserUsecase } from '@/modules/workspace-member/application/usecases/get-workspace-memberships-by-user.usecase.ts'
+import { GetWorkspaceMembershipsByUserDTO } from '@/modules/workspace-member/application/dto/get-workspace-memberships-by-user.dto.ts'
 
 // Prefix: /api/users
 export const getUserWorkspacesRoute = async (fastify: FastifyInstance) => {
@@ -21,7 +21,7 @@ export const getUserWorkspacesRoute = async (fastify: FastifyInstance) => {
             const userId = request.params.userId
             const { page, limit } = request.query
 
-            const dto: GetUserWorkspacesDTO = {
+            const dto: GetWorkspaceMembershipsByUserDTO = {
                 userId,
                 authContext: request.auth,
                 queryOptions: {
@@ -32,14 +32,14 @@ export const getUserWorkspacesRoute = async (fastify: FastifyInstance) => {
                 }
             }
 
-            const getUserWorkspaces = new GetUserWorkspacesUsecase({
+            const getUserMemberships = new GetWorkspaceMembershipsByUserUsecase({
                 userRepository: fastify.userRepository,
                 workspaceMemberRepository: fastify.workspaceMemberRepository,
             })
 
-            const workspaces = await getUserWorkspaces.execute(dto)
+            const memberships = await getUserMemberships.execute(dto)
 
-            return reply.status(200).send(workspaces)
+            return reply.status(200).send(memberships)
         }
     )
 }
