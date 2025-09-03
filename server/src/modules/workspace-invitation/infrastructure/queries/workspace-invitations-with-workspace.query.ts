@@ -4,6 +4,7 @@ import { GlobalWorkspaceInvitationsQueryOptionsDTO } from '../../domain/dto/glob
 import { PaginationResponse } from '@/core/types/pagination.types.ts'
 import { Paginator } from '@/shared/utils/pagination.util.ts'
 import { WorkspaceInvitationWithDetailsView } from '../../presentation/view-models/workspace-invitation-with-details.view.ts'
+import { WorkspaceInvitationWithDetailsMapper } from '../mappers/workspace-invitation-with-details.mapper.ts'
 
 export class PrismaWorkspaceInvitationsWithWorkspaceQuery implements IWorkspaceInvitationsWithWorkspaceQuery {
     constructor(private prisma: PrismaClient) {}
@@ -42,6 +43,9 @@ export class PrismaWorkspaceInvitationsWithWorkspaceQuery implements IWorkspaceI
             where,
             skip,
             take,
+            orderBy: {
+                createdAt: 'desc',
+            },
             include: {
                 workspace: {
                     select: {
@@ -72,20 +76,7 @@ export class PrismaWorkspaceInvitationsWithWorkspaceQuery implements IWorkspaceI
         )
 
         return {
-            items: result.items.map((invitation) => ({
-                invitationId: invitation.id,
-                email: invitation.email,
-                status: invitation.status,
-                createdAt: invitation.createdAt,
-                workspace: {
-                    id: invitation.workspace.id,
-                    name: invitation.workspace.name,
-                    slug: invitation.workspace.slug,
-                    status: invitation.workspace.status,
-                    picturePath: invitation.workspace.picturePath
-                },
-                invitor: invitation.initiator
-            })),
+            items: result.items.map((invitation) => WorkspaceInvitationWithDetailsMapper.toView(invitation)),
             meta: result.meta,
         }
     }
