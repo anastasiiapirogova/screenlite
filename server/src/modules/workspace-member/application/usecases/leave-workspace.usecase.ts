@@ -1,22 +1,21 @@
-import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
 import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace-repository.interface.ts'
 import { NotFoundError } from '@/shared/errors/not-found.error.ts'
-import { IUnitOfWork } from '@/core/ports/unit-of-work.interface.ts'
-import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
-import { IWorkspaceMemberServiceFactory } from '@/modules/workspace-member/domain/services/workspace-member-service.factory.ts'
+import { IWorkspaceMemberService } from '../../domain/ports/workspace-member-service.interface.ts'
+import { AuthContext } from '@/core/types/auth-context.type.ts'
+import { IWorkspaceAccessService } from '@/modules/workspace/domain/ports/workspace-access-service.interface.ts'
+import { WorkspaceMemberPolicy } from '../../domain/policies/workspace-member.policy.ts'
 
 type LeaveWorkspaceUsecaseDeps = {
-    workspaceMemberRepository: IWorkspaceMemberRepository
     workspaceRepository: IWorkspaceRepository
-    workspaceMemberServiceFactory: IWorkspaceMemberServiceFactory
-    unitOfWork: IUnitOfWork
+    workspaceMemberService: IWorkspaceMemberService
+    workspaceAccessService: IWorkspaceAccessService
 }
 
 export class LeaveWorkspaceUsecase {
     constructor(private readonly deps: LeaveWorkspaceUsecaseDeps) {}
 
-    async execute(userId: string, workspaceId: string): Promise<void> {
-        const { workspaceMemberRepository, workspaceRepository, workspaceMemberServiceFactory, unitOfWork } = this.deps
+    async execute(authContext: AuthContext, workspaceId: string): Promise<void> {
+        const { workspaceRepository, workspaceMemberService, workspaceAccessService } = this.deps
 
         const workspace = await workspaceRepository.findById(workspaceId)
 
@@ -24,24 +23,10 @@ export class LeaveWorkspaceUsecase {
             throw new NotFoundError(`Workspace ${workspaceId} not found`)
         }
 
-        const membership = await workspaceMemberRepository.findByWorkspaceAndUser(workspaceId, userId)
+        const workspaceAccess = await workspaceAccessService.checkAccess(workspaceId, authContext)
 
-        if (!membership) {
-            throw new ForbiddenError({
-                workspace: ['ONLY_MEMBER_CAN_LEAVE_WORKSPACE']
-            })
-        }
+        WorkspaceMemberPolicy.enforceLeaveWorkspace(workspaceAccess)
 
-        await unitOfWork.execute(async (repos) => {
-            const workspaceMemberRepository = repos.workspaceMemberRepository
-
-            const workspaceMemberService = workspaceMemberServiceFactory({
-                workspaceMemberRepository,
-                userRepository: repos.userRepository,
-                workspaceRepository: repos.workspaceRepository
-            })
-
-            await workspaceMemberService.removeMember(membership)
-        })
+        await workspaceMemberService.removeMember(workspaceAccess.member!.id)
     }
 }
