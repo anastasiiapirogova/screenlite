@@ -8,7 +8,7 @@ export const deleteWorkspaceRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().delete('/:workspaceId', {
         schema: {
             params: z.object({
-                workspaceId: z.string(),
+                workspaceId: z.uuid(),
             }),
         },
         handler: async (request, reply) => {
