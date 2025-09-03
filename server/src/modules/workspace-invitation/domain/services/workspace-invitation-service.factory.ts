@@ -2,7 +2,7 @@ import { IUserRepository } from '@/modules/user/domain/ports/user-repository.int
 import { IWorkspaceInvitationRepository } from '../ports/workspace-invitation-repository.interface.ts'
 import { WorkspaceInvitationService } from './workspace-invitation.service.ts'
 import { IWorkspaceInvitationService } from '../ports/workspace-invitation-service.interface.ts'
-import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
+import { IWorkspaceMemberRepository } from '@/modules/workspace-member/domain/ports/workspace-member-repository.interface.ts'
 
 export type IWorkspaceInvitationServiceFactory = (deps: {
     workspaceInvitationRepository: IWorkspaceInvitationRepository
