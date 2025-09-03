@@ -17,7 +17,11 @@ export class GlobalWorkspacePolicy {
 
     static enforceCreateWorkspace(authContext: AuthContext): void {
         if(!GlobalWorkspacePolicy.canCreateWorkspace(authContext)) {
-            throw new ForbiddenError({}, 'Workspace creation not allowed')
+            throw new ForbiddenError({
+                details: {
+                    userId: ['YOU_CANNOT_CREATE_WORKSPACE']
+                }
+            })
         }
     }
 }
