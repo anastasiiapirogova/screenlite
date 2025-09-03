@@ -24,7 +24,9 @@ export class UserPolicy {
     static enforceViewProfile(targetUserId: string, authContext: AuthContext): void {
         if (!this.canViewProfile(targetUserId, authContext)) {
             throw new ForbiddenError({
-                userId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_USER_PROFILE']
+                details: {
+                    userId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_USER_PROFILE']
+                }
             })
         }
     }
@@ -40,7 +42,9 @@ export class UserPolicy {
     static enforceRequestAccountDeletion(targetUserId: string, authContext: AuthContext): void {
         if (!this.canRequestAccountDeletion(targetUserId, authContext)) {
             throw new ForbiddenError({
-                userId: ['INSUFFICIENT_PERMISSIONS_TO_REQUEST_ACCOUNT_DELETION']
+                details: {
+                    userId: ['INSUFFICIENT_PERMISSIONS_TO_REQUEST_ACCOUNT_DELETION']
+                }
             })
         }
     }
@@ -52,7 +56,9 @@ export class UserPolicy {
     static enforceChangePassword(targetUserId: string, authContext: AuthContext): void {
         if (!this.canChangePassword(targetUserId, authContext)) {
             throw new ForbiddenError({
-                userId: ['INSUFFICIENT_PERMISSIONS_TO_CHANGE_USER_PASSWORD']
+                details: {
+                    userId: ['INSUFFICIENT_PERMISSIONS_TO_CHANGE_USER_PASSWORD']
+                }
             })
         }
     }
@@ -68,38 +74,9 @@ export class UserPolicy {
     static enforceUpdateProfile(targetUserId: string, authContext: AuthContext): void {
         if (!this.canUpdateProfile(targetUserId, authContext)) {
             throw new ForbiddenError({
-                userId: ['INSUFFICIENT_PERMISSIONS_TO_UPDATE_USER_PROFILE']
-            })
-        }
-    }
-    static canViewWorkspaces(targetUserId: string, authContext: AuthContext): boolean {
-        if (authContext.hasAdminPermission(AdminPermissionName.WORKSPACES_VIEW)) {
-            return true
-        }
-
-        return this.isTargetUserSelf(targetUserId, authContext)
-    }
-
-    static enforceViewWorkspaces(targetUserId: string, authContext: AuthContext): void {
-        if (!this.canViewWorkspaces(targetUserId, authContext)) {
-            throw new ForbiddenError({
-                userId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_USER_WORKSPACES']
-            })
-        }
-    }
-
-    static canViewWorkspaceInvitationsList(targetUserId: string, authContext: AuthContext): boolean {
-        if (authContext.hasAdminPermission(AdminPermissionName.WORKSPACE_INVITATIONS_VIEW)) {
-            return true
-        }
-
-        return this.isTargetUserSelf(targetUserId, authContext)
-    }
-
-    static enforceViewWorkspaceInvitationsList(targetUserId: string, authContext: AuthContext): void {
-        if (!this.canViewWorkspaceInvitationsList(targetUserId, authContext)) {
-            throw new ForbiddenError({
-                userId: ['INSUFFICIENT_PERMISSIONS_TO_VIEW_USER_WORKSPACE_INVITATIONS_LIST']
+                details: {
+                    userId: ['INSUFFICIENT_PERMISSIONS_TO_UPDATE_USER_PROFILE']
+                }
             })
         }
     }
