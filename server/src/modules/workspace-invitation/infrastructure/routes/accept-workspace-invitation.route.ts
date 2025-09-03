@@ -18,7 +18,9 @@ export const acceptWorkspaceInvitationRoute = async (fastify: FastifyInstance) =
                 workspaceInvitationRepository: fastify.workspaceInvitationRepository,
                 workspaceMemberServiceFactory: fastify.workspaceMemberServiceFactory,
                 workspaceInvitationServiceFactory: fastify.workspaceInvitationServiceFactory,
-                unitOfWork: fastify.unitOfWork
+                unitOfWork: fastify.unitOfWork,
+                workspaceInvariantsService: fastify.workspaceInvariantsService,
+                workspaceRepository: fastify.workspaceRepository,
             })
 
             await acceptWorkspaceInvitationUseCase.execute({
