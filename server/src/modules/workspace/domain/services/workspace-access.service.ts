@@ -1,4 +1,4 @@
-import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
+import { IWorkspaceMemberRepository } from '@/modules/workspace-member/domain/ports/workspace-member-repository.interface.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { IWorkspaceAccessService } from '../ports/workspace-access-service.interface.ts'
 import { WorkspaceAccess } from '../value-objects/workspace-access.vo.ts'
