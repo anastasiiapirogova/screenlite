@@ -94,9 +94,9 @@ const errorHandler: FastifyPluginAsync = async (fastify) => {
             reply.code(403).send({
                 statusCode: 403,
                 error: 'Forbidden',
-                code: 'FST_ERR_FORBIDDEN',
+                code: error.code,
                 message: error.message,
-                errors: error.details,
+                details: error.details,
             })
 
             return
