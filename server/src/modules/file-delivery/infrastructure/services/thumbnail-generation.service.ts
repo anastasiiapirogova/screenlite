@@ -42,6 +42,6 @@ export class ThumbnailGenerationService {
             quality: 80
         })
 
-        return Thumbnail.create(processedImage, 'image/webp')
+        return Thumbnail.create(processedImage.buffer, processedImage.mimeType)
     }
 }
