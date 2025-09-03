@@ -6,7 +6,7 @@ import { IUserAdminPermissionRepository } from '../../modules/admin-permission/d
 import { IUserRepository } from '../../modules/user/domain/ports/user-repository.interface.ts'
 import { ITwoFactorMethodRepository } from '@/modules/two-factor-auth/domain/ports/two-factor-method-repository.interface.ts'
 import { IUserCredentialRepository } from './user-credential-repository.interface.ts'
-import { IWorkspaceMemberRepository } from './workspace-member-repository.interface.ts'
+import { IWorkspaceMemberRepository } from '../../modules/workspace-member/domain/ports/workspace-member-repository.interface.ts'
 import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace-repository.interface.ts'
 import { IWorkspaceInvitationRepository } from '@/modules/workspace-invitation/domain/ports/workspace-invitation-repository.interface.ts'
 
