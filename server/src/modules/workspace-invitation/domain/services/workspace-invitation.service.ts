@@ -5,7 +5,7 @@ import { WorkspaceInvitation } from '@/core/entities/workspace-invitation.entity
 import { WorkspaceInvitationStatus } from '@/core/enums/workspace-invitation-status.enum.ts'
 import { WorkspaceInvitationFactory } from '@/core/factories/workspace-invitation.factory.ts'
 import { ValidationError } from '@/shared/errors/validation.error.ts'
-import { IWorkspaceMemberRepository } from '@/core/ports/workspace-member-repository.interface.ts'
+import { IWorkspaceMemberRepository } from '@/modules/workspace-member/domain/ports/workspace-member-repository.interface.ts'
 
 type WorkspaceInvitationServiceDeps = {
     workspaceInvitationRepository: IWorkspaceInvitationRepository
