@@ -32,13 +32,16 @@ export const completeTotpSetupRoute = async (fastify: FastifyInstance) => {
             twoFactorMethodRepo: fastify.twoFactorMethodRepository,
             verifyTotpCodeUsecase,
             userRepo: fastify.userRepository,
+            twoFactorMethodInvariantsService: fastify.twoFactorMethodInvariantsService,
         })
 
-        const result = await completeTotpSetupUsecase.execute(authContext, {
+        await completeTotpSetupUsecase.execute(authContext, {
             userId,
             totpCode: request.body.totpCode
         })
 
-        return reply.status(200).send(result)
+        return reply.status(200).send({
+            message: 'TOTP_SETUP_COMPLETED'
+        })
     })
 }
