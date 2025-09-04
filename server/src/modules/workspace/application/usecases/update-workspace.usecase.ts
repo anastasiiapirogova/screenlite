@@ -13,6 +13,7 @@ import { IWorkspaceAccessService } from '../../domain/ports/workspace-access-ser
 import { WorkspacePicture } from '@/core/value-objects/workspace-picture.vo.ts'
 import { Workspace } from '@/core/entities/workspace.entity.ts'
 import { WorkspacePictureSpecification } from '@/core/value-objects/workspace-picture-specification.vo.ts'
+import { IWorkspaceInvariantsService } from '../../domain/ports/workspace-invariants-service.interface.ts'
 
 type UpdateWorkspaceUsecaseDeps = {
     storage: IStorage
@@ -22,16 +23,17 @@ type UpdateWorkspaceUsecaseDeps = {
     unitOfWork: IUnitOfWork
     jobProducer: IJobProducer<AppJobRegistry>
     workspaceAccessService: IWorkspaceAccessService
+    workspaceInvariantsService: IWorkspaceInvariantsService
 }
 
 export class UpdateWorkspaceUsecase {
     constructor(private readonly deps: UpdateWorkspaceUsecaseDeps) {}
 
     async execute(data: UpdateWorkspaceDTO) {
-        const { workspaceRepository, unitOfWork, workspaceAccessService } = this.deps
-        const { pictureBuffer, name, slug, authContext, removePicture } = data
+        const { workspaceRepository, unitOfWork, workspaceAccessService, workspaceInvariantsService } = this.deps
+        const { pictureBuffer, name, slug, authContext, removePicture, workspaceId } = data
 
-        const workspace = await workspaceRepository.findBySlug(slug)
+        const workspace = await workspaceRepository.findById(workspaceId)
 
         if (!workspace) {
             throw new NotFoundError('WORKSPACE_NOT_FOUND')
@@ -40,6 +42,8 @@ export class UpdateWorkspaceUsecase {
         const workspaceAccess = await workspaceAccessService.checkAccess(workspace.id, authContext)
 
         WorkspacePolicy.enforceUpdateWorkspace(authContext, workspaceAccess)
+
+        await workspaceInvariantsService.enforceWorkspaceActiveForNonAdmin(workspace, authContext)
 
         if (slug !== workspace.slug) {
             await this.validateSlugUniqueness(slug, workspace.id)
