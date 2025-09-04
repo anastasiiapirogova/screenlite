@@ -17,7 +17,7 @@ export async function confirmEmailChangeRoute(fastify: FastifyInstance) {
         const confirmEmailChange = new ConfirmEmailChangeUseCase({
             tokenRepo: fastify.emailVerificationTokenRepository,
             userRepo: fastify.userRepository,
-            hasher: fastify.secureHasher,
+            hasher: fastify.fastHasher,
             unitOfWork: fastify.unitOfWork,
         })
 

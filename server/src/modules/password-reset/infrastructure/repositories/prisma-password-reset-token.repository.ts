@@ -22,7 +22,9 @@ export class PrismaPasswordResetTokenRepository implements IPasswordResetTokenRe
 
     async findByTokenHash(tokenHash: string): Promise<PasswordResetToken | null> {
         const passwordResetToken = await this.prisma.passwordResetToken.findUnique({
-            where: { tokenHash },
+            where: {
+                tokenHash
+            },
         })
 
         return passwordResetToken ? PrismaPasswordResetTokenMapper.toDomain(passwordResetToken) : null

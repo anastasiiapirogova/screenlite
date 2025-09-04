@@ -3,6 +3,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { GetActivePasswordResetTokenUsecase } from '../../application/usecases/get-active-password-reset-token.usecase.ts'
 
+// Prefix: /api/password-reset
 export const checkPasswordResetTokenRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/check', {
         schema: {
@@ -18,7 +19,7 @@ export const checkPasswordResetTokenRoute = async (fastify: FastifyInstance) => 
 
         const getActivePasswordResetTokenUseCase = new GetActivePasswordResetTokenUsecase({
             passwordResetTokenRepo: fastify.passwordResetTokenRepository,
-            hasher: fastify.secureHasher,
+            hasher: fastify.fastHasher,
         })
 
         const passwordResetToken = await getActivePasswordResetTokenUseCase.execute(token)

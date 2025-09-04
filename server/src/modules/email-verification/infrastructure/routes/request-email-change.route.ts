@@ -12,7 +12,7 @@ export async function requestEmailChangeRoute(fastify: FastifyInstance) {
     }, async (request, reply) => {
         const { userId, newEmail } = request.body
 
-        const tokenFactory = new EmailVerificationTokenFactory(fastify.tokenGenerator, fastify.secureHasher)
+        const tokenFactory = new EmailVerificationTokenFactory(fastify.tokenGenerator, fastify.fastHasher)
 
         const requestEmailChange = new RequestEmailChangeUseCase({
             userRepo: fastify.userRepository,

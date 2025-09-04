@@ -4,8 +4,9 @@ import z from 'zod'
 import { PasswordResetTokenFactory } from '../../domain/services/password-reset-token.factory.ts'
 import { RequestPasswordResetUsecase } from '../../application/usecases/request-password-reset.usecase.ts'
 
+// Prefix: /api/password-reset
 export const requestPasswordResetRoute = async (fastify: FastifyInstance) => {
-    fastify.withTypeProvider<ZodTypeProvider>().post('/', {
+    fastify.withTypeProvider<ZodTypeProvider>().post('/request', {
         schema: {
             body: z.object({
                 email: z.email()
@@ -16,7 +17,7 @@ export const requestPasswordResetRoute = async (fastify: FastifyInstance) => {
         }
     }, async (request, reply) => {
         const { email } = request.body
-        const passwordResetTokenFactory = new PasswordResetTokenFactory(fastify.tokenGenerator, fastify.secureHasher)
+        const passwordResetTokenFactory = new PasswordResetTokenFactory(fastify.tokenGenerator, fastify.fastHasher)
 
         const requestPasswordResetUseCase = new RequestPasswordResetUsecase({
             unitOfWork: fastify.unitOfWork,

@@ -4,6 +4,7 @@ import z from 'zod'
 import { passwordSchema } from '@/shared/schemas/user-password.schema.ts'
 import { ConfirmPasswordResetUsecase } from '../../application/usecases/confirm-password-reset.usecase.ts'
 
+// Prefix: /api/password-reset
 export const confirmPasswordResetRoute = async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().post('/confirm', {
         schema: {
@@ -22,7 +23,7 @@ export const confirmPasswordResetRoute = async (fastify: FastifyInstance) => {
             unitOfWork: fastify.unitOfWork,
             userRepo: fastify.userRepository,
             passwordResetTokenRepo: fastify.passwordResetTokenRepository,
-            hasher: fastify.secureHasher,
+            hasher: fastify.fastHasher,
             passwordHasher: fastify.secureHasher,
             userCredentialRepo: fastify.userCredentialRepository,
         })
