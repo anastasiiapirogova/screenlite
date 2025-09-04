@@ -5,20 +5,23 @@ import { ITwoFactorMethodRepository } from '../../domain/ports/two-factor-method
 import { VerifyTotpCodeUsecase } from './verify-totp-code.usecase.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { TwoFactorAuthPolicy } from '../../domain/policies/two-factor-auth.policy.ts'
+import { ITwoFactorMethodInvariantsService } from '../../domain/ports/two-factor-method-invariants-service.interface.ts'
 
 type CompleteTotpSetupUsecaseDeps = {
     userRepo: IUserRepository
     twoFactorMethodRepo: ITwoFactorMethodRepository
     verifyTotpCodeUsecase: VerifyTotpCodeUsecase
+    twoFactorMethodInvariantsService: ITwoFactorMethodInvariantsService
 }
 
 export class CompleteTotpSetupUsecase {
     constructor(private readonly deps: CompleteTotpSetupUsecaseDeps) {}
 
     async execute(authContext: AuthContext, data: CompleteTotpSetupDTO) {
+        const { userRepo, twoFactorMethodInvariantsService, twoFactorMethodRepo, verifyTotpCodeUsecase } = this.deps
         const { userId, totpCode } = data
 
-        const user = await this.deps.userRepo.findById(userId)
+        const user = await userRepo.findById(userId)
 
         if (!user) {
             throw new ValidationError({
@@ -26,18 +29,18 @@ export class CompleteTotpSetupUsecase {
             })
         }
 
-        const twoFactorAuthPolicy = new TwoFactorAuthPolicy(user, authContext)
+        TwoFactorAuthPolicy.enforceCompleteTotpSetup(userId, authContext)
 
-        twoFactorAuthPolicy.canCompleteTotpSetup()
+        await twoFactorMethodInvariantsService.enforceTotpMethodIsNotEnabled(userId)
 
-        const method = await this.deps.verifyTotpCodeUsecase.execute({
+        const method = await verifyTotpCodeUsecase.execute({
             userId,
             totpCode
         })
 
         method.enable()
 
-        await this.deps.twoFactorMethodRepo.save(method)
+        await twoFactorMethodRepo.save(method)
 
         return method
     }
