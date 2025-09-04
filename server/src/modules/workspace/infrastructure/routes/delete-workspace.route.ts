@@ -17,7 +17,8 @@ export const deleteWorkspaceRoute = async (fastify: FastifyInstance) => {
             const deleteWorkspaceUseCase = new SoftDeleteWorkspaceUsecase(
                 {
                     workspaceRepository: fastify.workspaceRepository,
-                    workspaceAccessService: fastify.workspaceAccessService
+                    workspaceAccessService: fastify.workspaceAccessService,
+                    workspaceInvariantsService: fastify.workspaceInvariantsService
                 }
             )
 
