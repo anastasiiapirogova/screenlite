@@ -27,6 +27,7 @@ import { IWorkspaceRepository } from '@/modules/workspace/domain/ports/workspace
 import { IWorkspaceStatisticsQuery } from '@/modules/workspace/domain/ports/workspace-statistics-query.interface.ts'
 import { IWorkspacesQuery } from '@/modules/workspace/domain/ports/workspaces-query.interface.ts'
 import { IWorkspaceInvariantsService } from '@/modules/workspace/domain/ports/workspace-invariants-service.interface.ts'
+import { ITwoFactorMethodInvariantsService } from '@/modules/two-factor-auth/domain/ports/two-factor-method-invariants-service.interface.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -59,5 +60,6 @@ declare module 'fastify' {
         initiatorService: IInitiatorService
         workspacesQuery: IWorkspacesQuery
         workspaceInvariantsService: IWorkspaceInvariantsService
+        twoFactorMethodInvariantsService: ITwoFactorMethodInvariantsService
     }
 }

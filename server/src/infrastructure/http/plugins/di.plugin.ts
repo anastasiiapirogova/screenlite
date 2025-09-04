@@ -30,6 +30,7 @@ import { PrismaInitiatorRepository } from '@/modules/initiator/infrastructure/re
 import { InitiatorService } from '@/modules/initiator/domain/services/initiator.service.ts'
 import { PrismaWorkspacesQuery } from '@/modules/workspace/infrastructure/queries/prisma-workspaces.query.ts'
 import { WorkspaceInvariantsService } from '@/modules/workspace/domain/services/workspace-invariants.service.ts'
+import { TwoFactorMethodInvariantsService } from '@/modules/two-factor-auth/domain/services/two-factor-method-invariants.service.ts'
 
 const diPlugin: FastifyPluginAsync = async (fastify) => {
     const fastHasher = new FastHasher()
@@ -65,6 +66,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const initiatorService = new InitiatorService(initiatorRepository)
     const workspacesQuery = new PrismaWorkspacesQuery(fastify.prisma)
     const workspaceInvariantsService = new WorkspaceInvariantsService()
+    const twoFactorMethodInvariantsService = new TwoFactorMethodInvariantsService(twoFactorMethodRepository)
 
     fastify.decorate('workspaceInvariantsService', workspaceInvariantsService)
     fastify.decorate('userRepository', userRepository)
@@ -95,6 +97,7 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('initiatorRepository', initiatorRepository)
     fastify.decorate('initiatorService', initiatorService)
     fastify.decorate('workspacesQuery', workspacesQuery)
+    fastify.decorate('twoFactorMethodInvariantsService', twoFactorMethodInvariantsService)
 }
 
 export default fp(diPlugin, {
