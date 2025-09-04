@@ -31,6 +31,13 @@ export const SYSTEM_ADMIN_PERMISSIONS_DEFINITIONS = [
         ],
     },
     {
+        name: AdminPermissionName.USERS_DISABLE_TWO_FACTOR_AUTH,
+        description: 'Disable two factor auth for users',
+        dependencies: [
+            AdminPermissionName.USERS_VIEW
+        ],
+    },
+    {
         name: AdminPermissionName.SESSIONS_VIEW,
         description: 'View sessions',
     },
