@@ -24,7 +24,8 @@ export const getWorkspaceMembersRoute = async (fastify: FastifyInstance) => {
                 {
                     workspaceRepository: fastify.workspaceRepository,
                     workspaceAccessService: fastify.workspaceAccessService,
-                    workspaceMemberRepository: fastify.workspaceMemberRepository
+                    workspaceMemberRepository: fastify.workspaceMemberRepository,
+                    workspaceInvariantsService: fastify.workspaceInvariantsService
                 }
             )
 

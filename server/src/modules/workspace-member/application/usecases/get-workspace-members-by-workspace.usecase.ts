@@ -6,18 +6,20 @@ import { PaginationResponse } from '@/core/types/pagination.types.ts'
 import { NotFoundError } from '@/shared/errors/not-found.error.ts'
 import { WorkspaceMemberListPolicy } from '../../domain/policies/workspace-member-list.policy.ts'
 import { GetWorkspaceMembersByWorkspaceDTO } from '../dto/get-workspace-members-by-workspace.dto.ts'
+import { IWorkspaceInvariantsService } from '@/modules/workspace/domain/ports/workspace-invariants-service.interface.ts'
 
 type GetWorkspaceMembersByWorkspaceUsecaseDeps = {
     workspaceMemberRepository: IWorkspaceMemberRepository
     workspaceRepository: IWorkspaceRepository
     workspaceAccessService: IWorkspaceAccessService
+    workspaceInvariantsService: IWorkspaceInvariantsService
 }
 
 export class GetWorkspaceMembersByWorkspaceUsecase {
     constructor(private readonly deps: GetWorkspaceMembersByWorkspaceUsecaseDeps) {}
 
     async execute(dto: GetWorkspaceMembersByWorkspaceDTO): Promise<PaginationResponse<WorkspaceMemberWithUserView>> {
-        const { workspaceMemberRepository, workspaceRepository, workspaceAccessService } = this.deps
+        const { workspaceMemberRepository, workspaceRepository, workspaceAccessService, workspaceInvariantsService } = this.deps
 
         const { authContext, queryOptions } = dto
         const { workspaceId } = queryOptions.filters
@@ -31,6 +33,8 @@ export class GetWorkspaceMembersByWorkspaceUsecase {
         const access = await workspaceAccessService.checkAccess(workspaceId, authContext)
 
         WorkspaceMemberListPolicy.enforceViewWorkspaceMembers(authContext, access)
+
+        await workspaceInvariantsService.enforceWorkspaceActiveForNonAdmin(workspace, authContext)
 
         return workspaceMemberRepository.findByWorkspace(queryOptions)
     }
