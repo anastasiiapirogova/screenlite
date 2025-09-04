@@ -3,6 +3,7 @@ import { TwoFactorAuthPolicy } from '../../domain/policies/two-factor-auth.polic
 import { ITwoFactorMethodRepository } from '../../domain/ports/two-factor-method-repository.interface.ts'
 import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 import { NotFoundError } from '@/shared/errors/not-found.error.ts'
+import { TwoFactorMethodMapper } from '../../infrastructure/mappers/two-factor-method-mapper.ts'
 
 export class GetUserTwoFactorMethodsUsecase {
     constructor(
@@ -13,14 +14,16 @@ export class GetUserTwoFactorMethodsUsecase {
     async execute(userId: string, authContext: AuthContext) {
         const user = await this.userRepo.findById(userId)
 
+        const mapper = new TwoFactorMethodMapper()
+
         if(!user) {
             throw new NotFoundError('USER_NOT_FOUND')
         }
 
-        const policy = new TwoFactorAuthPolicy(user, authContext)
+        TwoFactorAuthPolicy.enforceViewTwoFactorMethods(userId, authContext)
 
-        policy.enforceViewTwoFactorMethods()
+        const methods = await this.twoFactorMethodRepo.findByUserId(userId)
 
-        return this.twoFactorMethodRepo.findByUserId(userId)
+        return methods.map(mapper.toPublicDTO)
     }
 }
