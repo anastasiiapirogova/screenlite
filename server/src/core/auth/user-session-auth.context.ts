@@ -15,7 +15,7 @@ export class UserSessionAuthContext extends AbstractAuthContext {
 
     getAdminPermissions(): AdminPermissionName[] {
         if (this.user.isSuperAdmin) {
-            return SYSTEM_ADMIN_PERMISSIONS.map(p => p.name)
+            return SYSTEM_ADMIN_PERMISSIONS
         } else {
             return this._adminPermissions
         }

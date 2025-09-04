@@ -9,7 +9,7 @@ export class SystemAuthContext extends AbstractAuthContext {
     }
 
     getAdminPermissions(): AdminPermissionName[] {
-        return SYSTEM_ADMIN_PERMISSIONS.map(p => p.name)
+        return SYSTEM_ADMIN_PERMISSIONS
     }
 
     override hasAdminAccess(): boolean {

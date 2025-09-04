@@ -1,6 +1,6 @@
 import { AdminPermissionName } from '@/core/enums/admin-permission-name.enum.ts'
 
-export const SYSTEM_ADMIN_PERMISSIONS = [
+export const SYSTEM_ADMIN_PERMISSIONS_DEFINITIONS = [
     { 
         name: AdminPermissionName.SETTINGS, 
         description: 'View and edit global settings', 
@@ -58,3 +58,5 @@ export const SYSTEM_ADMIN_PERMISSIONS = [
         description: 'Cancel workspace invitations',
     },
 ] as const
+
+export const SYSTEM_ADMIN_PERMISSIONS = SYSTEM_ADMIN_PERMISSIONS_DEFINITIONS.map(definition => definition.name as AdminPermissionName)
