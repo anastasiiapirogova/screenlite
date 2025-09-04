@@ -38,19 +38,9 @@ export class GetTotpSetupDataUsecase {
             })
         }
 
-        const twoFactorAuthPolicy = new TwoFactorAuthPolicy(user, authContext)
-
-        twoFactorAuthPolicy.enforceViewTotpSetupData()
+        TwoFactorAuthPolicy.enforceViewTotpSetupData(userId, authContext)
 
         let twoFactorMethod = await twoFactorMethodRepo.findByUserIdAndType(userId, TwoFactorMethodType.TOTP)
-
-        if (twoFactorMethod?.enabled) {
-            throw new ForbiddenError({
-                details: {
-                    totp: ['TOTP_ALREADY_ENABLED_CANNOT_VIEW_SECRET']
-                }
-            })
-        }
 
         let secret: string | null = null
 
@@ -88,9 +78,18 @@ export class GetTotpSetupDataUsecase {
                     throw error
                 }
             })
-        } else {
-            secret = await encryptionService.decrypt(twoFactorMethod.config.encryptedSecret)
         }
+
+        if (twoFactorMethod.enabled) {
+            throw new ForbiddenError({
+                code: 'TOTP_ALREADY_ENABLED_CANNOT_VIEW_SECRET',
+                details: {
+                    totp: ['TOTP_ALREADY_ENABLED_CANNOT_VIEW_SECRET']
+                }
+            })
+        }
+
+        secret = await encryptionService.decrypt(twoFactorMethod.config.encryptedSecret)
 
         const url = totpService.generateQrCodeUrl(secret, user.email.current, 'Screenlite', config.totp.digits, config.totp.period, config.totp.algorithm)
 
