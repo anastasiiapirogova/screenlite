@@ -12,19 +12,19 @@ model User {
     deletedAt           DateTime?
     version             Int       @default(0)
 
-    emailVerificationTokens     EmailVerificationToken[]
-    passwordResetTokens         PasswordResetToken[]
-    sessions                    Session[]
-    workspaceMemberships        WorkspaceMember[]
-    userPreferences             UserPreferences?
-    uploadedFiles               File[]
-    fileUploadSessions          FileUploadSession[]
-    addedLinks                  Link[]
-    adminPermissions            UserAdminPermission[]
-    workspaceApiTokens          WorkspaceApiToken[]
-    adminApiTokens              AdminApiToken[]
-    twoFactorMethods            TwoFactorMethod[]
-    twoFactorRecoveryCodes      TwoFactorRecoveryCode[]
-    userCredentials             UserCredential[]
-    initiator                   Initiator?
+    emailVerificationTokens EmailVerificationToken[]
+    passwordResetTokens     PasswordResetToken[]
+    sessions                Session[]
+    workspaceMemberships    WorkspaceMember[]
+    userPreferences         UserPreferences?
+    uploadedFiles           File[]
+    fileUploadSessions      FileUploadSession[]
+    addedLinks              Link[]
+    adminPermissions        UserAdminPermission[]
+    workspaceApiTokens      WorkspaceApiToken[]
+    adminApiTokens          AdminApiToken[]
+    twoFactorMethods        TwoFactorMethod[]
+    twoFactorRecoveryCodes  TwoFactorRecoveryCode[]
+    userCredentials         UserCredential[]
+    initiator               Initiator?
 }

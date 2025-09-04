@@ -1,9 +1,7 @@
 model UserPreferences {
-    id        String   @id @default(uuid())
-    userId    String   @unique
-    locale    String   @default("en")
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id     String @id @default(uuid())
+    userId String @unique
+    locale String @default("en")
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
