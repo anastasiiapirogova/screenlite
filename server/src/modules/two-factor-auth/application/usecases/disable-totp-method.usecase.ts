@@ -1,5 +1,4 @@
 import { AuthContext } from '@/core/types/auth-context.type.ts'
-import { VerifyTotpCodeUsecase } from './verify-totp-code.usecase.ts'
 import { IUserRepository } from '@/modules/user/domain/ports/user-repository.interface.ts'
 import { ITwoFactorMethodRepository } from '../../domain/ports/two-factor-method-repository.interface.ts'
 import { ValidationError } from '@/shared/errors/validation.error.ts'
@@ -9,9 +8,10 @@ import { TwoFactorMethodType } from '@/core/enums/two-factor-method-type.enum.ts
 type DisableTotpMethodUsecaseDeps = {
     userRepo: IUserRepository
     twoFactorMethodRepo: ITwoFactorMethodRepository
-    verifyTotpCodeUsecase: VerifyTotpCodeUsecase
 }
 
+// TASK: Maybe we should also require a totp code or some other form of authentication
+// to be passed in to disable the method
 export class DisableTotpMethodUsecase {
     constructor(private readonly deps: DisableTotpMethodUsecaseDeps) {}
 
@@ -37,9 +37,5 @@ export class DisableTotpMethodUsecase {
         }
 
         await twoFactorMethodRepo.delete(method.id)
-
-        return {
-            userId,
-        }
     }
 }
