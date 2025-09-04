@@ -20,7 +20,8 @@ export const getWorkspaceRoute = async (fastify: FastifyInstance) => {
             const getWorkspaceUseCase = new GetWorkspaceUsecase(
                 {
                     workspaceRepository: fastify.workspaceRepository,
-                    workspaceAccessService: fastify.workspaceAccessService
+                    workspaceAccessService: fastify.workspaceAccessService,
+                    workspaceInvariantsService: fastify.workspaceInvariantsService
                 }
             )
 

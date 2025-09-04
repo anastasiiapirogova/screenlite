@@ -3,23 +3,27 @@ import { IWorkspaceRepository } from '../../domain/ports/workspace-repository.in
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { WorkspacePolicy } from '../../domain/policies/workspace.policy.ts'
 import { IWorkspaceAccessService } from '../../domain/ports/workspace-access-service.interface.ts'
+import { IWorkspaceInvariantsService } from '../../domain/ports/workspace-invariants-service.interface.ts'
 
 type GetWorkspaceUsecaseDeps = {
     workspaceRepository: IWorkspaceRepository
     workspaceAccessService: IWorkspaceAccessService
+    workspaceInvariantsService: IWorkspaceInvariantsService
 }
 
 export class GetWorkspaceUsecase {
     constructor(private readonly deps: GetWorkspaceUsecaseDeps) {}
 
     async execute(workspaceId: string, authContext: AuthContext) {
-        const { workspaceRepository, workspaceAccessService } = this.deps
+        const { workspaceRepository, workspaceAccessService, workspaceInvariantsService } = this.deps
 
         const workspace = await workspaceRepository.findById(workspaceId)
         
         if (!workspace) {
-            throw new NotFoundError('Workspace not found')
+            throw new NotFoundError('WORKSPACE_NOT_FOUND')
         }
+
+        await workspaceInvariantsService.enforceWorkspaceIsNotDeleted(workspace, authContext)
 
         const workspaceAccess = await workspaceAccessService.checkAccess(workspaceId, authContext)
 
