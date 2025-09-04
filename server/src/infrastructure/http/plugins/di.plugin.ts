@@ -31,6 +31,8 @@ import { InitiatorService } from '@/modules/initiator/domain/services/initiator.
 import { PrismaWorkspacesQuery } from '@/modules/workspace/infrastructure/queries/prisma-workspaces.query.ts'
 import { WorkspaceInvariantsService } from '@/modules/workspace/domain/services/workspace-invariants.service.ts'
 import { TwoFactorMethodInvariantsService } from '@/modules/two-factor-auth/domain/services/two-factor-method-invariants.service.ts'
+import { TotpSetupService } from '@/modules/two-factor-auth/domain/services/totp-setup.service.ts'
+import { TotpService } from '@/modules/two-factor-auth/infrastructure/services/totp.service.ts'
 
 const diPlugin: FastifyPluginAsync = async (fastify) => {
     const fastHasher = new FastHasher()
@@ -67,11 +69,14 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     const workspacesQuery = new PrismaWorkspacesQuery(fastify.prisma)
     const workspaceInvariantsService = new WorkspaceInvariantsService()
     const twoFactorMethodInvariantsService = new TwoFactorMethodInvariantsService(twoFactorMethodRepository)
+    const totpService = new TotpService()
+    const totpSetupService = new TotpSetupService(totpService, fastify.encryption, fastify.config)
 
     fastify.decorate('workspaceInvariantsService', workspaceInvariantsService)
     fastify.decorate('userRepository', userRepository)
     fastify.decorate('userCredentialRepository', userCredentialRepository)
     fastify.decorate('secureHasher', secureHasher)
+    fastify.decorate('fastHasher', fastHasher)
     fastify.decorate('unitOfWork', unitOfWork)
     fastify.decorate('imageValidator', imageValidator)
     fastify.decorate('imageProcessor', imageProcessor)
@@ -98,6 +103,8 @@ const diPlugin: FastifyPluginAsync = async (fastify) => {
     fastify.decorate('initiatorService', initiatorService)
     fastify.decorate('workspacesQuery', workspacesQuery)
     fastify.decorate('twoFactorMethodInvariantsService', twoFactorMethodInvariantsService)
+    fastify.decorate('totpSetupService', totpSetupService)
+    fastify.decorate('totpService', totpService)
 }
 
 export default fp(diPlugin, {

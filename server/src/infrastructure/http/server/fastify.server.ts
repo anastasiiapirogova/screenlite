@@ -56,13 +56,13 @@ export class FastifyServer {
         await this.app.register(plugins.prisma)
         await this.app.register(plugins.settings)
         await this.app.register(plugins.mail)
-        await this.app.register(plugins.auth)
         await this.app.register(plugins.errorHandler)
         await this.app.register(plugins.websocket)
-        await this.app.register(plugins.adminPermissions)
-        await this.app.register(plugins.adminAccess)
         await this.app.register(plugins.jobQueue)
         await this.app.register(plugins.di)
+        await this.app.register(plugins.auth)
+        await this.app.register(plugins.adminPermissions)
+        await this.app.register(plugins.adminAccess)
     }
 
     private async registerHooks() {

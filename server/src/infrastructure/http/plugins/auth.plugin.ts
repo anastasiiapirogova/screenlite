@@ -1,15 +1,10 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
-import { PrismaSessionRepository } from '@/modules/session/infrastructure/repositories/prisma-session.repository.ts'
-import { PrismaUserRepository } from '@/modules/user/infrastructure/repositories/prisma-user.repository.ts'
 import { BearerTokenParser } from '@/modules/auth/domain/services/bearer-token.parser.ts'
 import { SessionAuthStrategy } from '@/modules/auth/infrastructure/strategies/session-auth.strategy.ts'
 import { IAuthStrategy } from '@/modules/auth/domain/ports/auth-strategy.interface.ts'
-import { FastHasher } from '@/shared/infrastructure/services/fast-hasher.service.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { GuestAuthContext } from '@/core/auth/guest-auth.context.ts'
-import { PrismaTwoFactorMethodRepository } from '@/modules/two-factor-auth/infrastructure/repositories/prisma-two-factor-method.repository.ts'
-import { TwoFactorConfigHandlerFactory } from '@/modules/two-factor-auth/infrastructure/handlers/two-factor-config-handler.factory.ts'
 
 declare module 'fastify' {
     interface FastifyRequest {
@@ -19,10 +14,10 @@ declare module 'fastify' {
 }
 
 const authPlugin: FastifyPluginAsync = async (fastify) => {
-    const sessionRepo = new PrismaSessionRepository(fastify.prisma)
-    const userRepo = new PrismaUserRepository(fastify.prisma)
-    const twoFactorMethodRepo = new PrismaTwoFactorMethodRepository(fastify.prisma, new TwoFactorConfigHandlerFactory(fastify.prisma))
-    const hasher = new FastHasher()
+    const sessionRepo = fastify.sessionRepository
+    const userRepo = fastify.userRepository
+    const twoFactorMethodRepo = fastify.twoFactorMethodRepository
+    const hasher = fastify.fastHasher
 
     const strategies: IAuthStrategy[] = [
         new SessionAuthStrategy({ sessionRepo, userRepo, twoFactorMethodRepo, hasher }),
@@ -71,5 +66,5 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
 export default fp(authPlugin, {
     name: 'auth',
-    dependencies: ['prisma']
+    dependencies: ['prisma', 'di']
 })

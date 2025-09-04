@@ -28,12 +28,15 @@ import { IWorkspaceStatisticsQuery } from '@/modules/workspace/domain/ports/work
 import { IWorkspacesQuery } from '@/modules/workspace/domain/ports/workspaces-query.interface.ts'
 import { IWorkspaceInvariantsService } from '@/modules/workspace/domain/ports/workspace-invariants-service.interface.ts'
 import { ITwoFactorMethodInvariantsService } from '@/modules/two-factor-auth/domain/ports/two-factor-method-invariants-service.interface.ts'
+import { ITotpSetupService } from '@/modules/two-factor-auth/domain/ports/totp-setup-service.interface.ts'
+import { ITotpService } from '@/modules/two-factor-auth/domain/ports/totp-service.interface.ts'
 
 declare module 'fastify' {
     interface FastifyInstance {
         userRepository: IUserRepository
         userCredentialRepository: IUserCredentialRepository
         secureHasher: IHasher
+        fastHasher: IHasher
         unitOfWork: IUnitOfWork
         imageValidator: IImageValidator
         imageProcessor: IImageProcessor
@@ -61,5 +64,7 @@ declare module 'fastify' {
         workspacesQuery: IWorkspacesQuery
         workspaceInvariantsService: IWorkspaceInvariantsService
         twoFactorMethodInvariantsService: ITwoFactorMethodInvariantsService
+        totpSetupService: ITotpSetupService
+        totpService: ITotpService
     }
 }
