@@ -3,16 +3,19 @@ import { totpCodeSchema } from '@/shared/schemas/totp-code.schema.ts'
 import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { CompleteTotpTwoFactorAuthUsecase } from '../../application/usecases/complete-totp-two-factor-auth.usecase.ts'
 import { TotpService } from '@/modules/two-factor-auth/infrastructure/services/totp.service.ts'
+import { CompleteTotpTwoFactorAuthUsecase } from '../../application/usecases/complete-totp-two-factor-auth.usecase.ts'
 
 export const completeTotpTwoFactorAuthRoute = async (fastify: FastifyInstance) => {
-    fastify.withTypeProvider<ZodTypeProvider>().post('/two-factor-auth/totp/complete', {
+    fastify.withTypeProvider<ZodTypeProvider>().post('/totp/complete', {
         schema: {
             body: z.object({
                 totpCode: totpCodeSchema,
             }),
         },
+        config: {
+            allowSkipTwoFactorAuth: true,
+        }
     }, async (request, reply) => {
         const { totpCode } = request.body
         const authContext = request.auth
