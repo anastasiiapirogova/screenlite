@@ -5,7 +5,6 @@ import { UpdateProfileSchema } from '../schemas/update-profile.schema.ts'
 import { UpdateProfileUsecase } from '../../application/usecases/update-profile.usecase.ts'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { UserMapper } from '../mappers/user.mapper.ts'
-import { userNameSchema } from '@/shared/schemas/user.schemas.ts'
 
 // Prefix: /api/users
 export const updateProfileRoute = async (fastify: FastifyInstance) => {
@@ -18,10 +17,7 @@ export const updateProfileRoute = async (fastify: FastifyInstance) => {
             })
         }
     }, async (request, reply) => {    
-        const multipartData = await fastify.validateMultipart(request, z.object({
-            name: userNameSchema,
-            removeProfilePhoto: z.stringbool().optional()
-        }), {
+        const multipartData = await fastify.validateMultipart(request, UpdateProfileSchema.omit({ profilePhoto: true }), {
             profilePhoto: {
                 maxFileSize: 1024 * 1024 * 5,
                 optional: true
