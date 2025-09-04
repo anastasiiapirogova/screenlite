@@ -7,6 +7,7 @@ import { getWorkspaceRoute } from './get-workspace.route.ts'
 import { getWorkspaceStatisticsRoute } from './get-workspace-statistics.route.ts'
 import { getWorkspaceInvitationsRoute } from './get-workspace-invitations.route.ts'
 import { getWorkspaceMembersRoute } from './get-workspace-members.route.ts'
+import { updateWorkspaceRoute } from './update-workspace.route.ts'
 
 // Prefix: /api/workspaces
 const routes = async (fastify: FastifyInstance) => {
@@ -19,6 +20,7 @@ const routes = async (fastify: FastifyInstance) => {
         getWorkspaceStatisticsRoute(fastify),
         getWorkspaceInvitationsRoute(fastify),
         getWorkspaceMembersRoute(fastify),
+        updateWorkspaceRoute(fastify),
     ])
 }
 
