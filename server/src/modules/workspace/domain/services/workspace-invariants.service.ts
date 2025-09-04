@@ -2,6 +2,7 @@ import { Workspace } from '@/core/entities/workspace.entity.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
 import { IWorkspaceInvariantsService } from '../ports/workspace-invariants-service.interface.ts'
+import { NotFoundError } from '@/shared/errors/not-found.error.ts'
 
 export class WorkspaceInvariantsService implements IWorkspaceInvariantsService {
     constructor() {}
@@ -32,6 +33,19 @@ export class WorkspaceInvariantsService implements IWorkspaceInvariantsService {
                 message: 'Workspace is inactive',
                 details: { workspaceId: workspace.id }
             })
+        }
+    }
+
+    async enforceWorkspaceIsNotDeleted(
+        workspace: Workspace,
+        authContext: AuthContext,
+    ): Promise<void> {
+        if (authContext.hasAdminAccess()) {
+            return
+        }
+
+        if (workspace.state.isDeleted()) {
+            throw new NotFoundError('WORKSPACE_NOT_FOUND')
         }
     }
 }

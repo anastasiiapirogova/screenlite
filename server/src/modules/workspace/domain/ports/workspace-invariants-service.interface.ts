@@ -10,4 +10,9 @@ export interface IWorkspaceInvariantsService {
     enforceWorkspaceActive(
         workspace: Workspace,
     ): Promise<void>
+
+    enforceWorkspaceIsNotDeleted(
+        workspace: Workspace,
+        authContext: AuthContext,
+    ): Promise<void>
 }
