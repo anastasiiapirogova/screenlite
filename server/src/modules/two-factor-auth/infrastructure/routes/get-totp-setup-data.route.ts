@@ -1,6 +1,5 @@
 import { FastifyInstance } from 'fastify'
 import { GetTotpSetupDataUsecase } from '../../application/usecases/get-totp-setup-data.usecase.ts'
-import { TotpService } from '../services/totp.service.ts'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { TotpConfigMapper } from '../mappers/totp-config.mapper.ts'
@@ -20,11 +19,12 @@ export const getTotpSetupDataRoute = async (fastify: FastifyInstance) => {
 
         const getTotpSetupDataUsecase = new GetTotpSetupDataUsecase({
             twoFactorMethodRepo: fastify.twoFactorMethodRepository,
-            totpService: new TotpService(),
+            totpService: fastify.totpService,
             config: fastify.config,
             encryptionService: fastify.encryption,
             userRepo: fastify.userRepository,
             unitOfWork: fastify.unitOfWork,
+            totpSetupService: fastify.totpSetupService,
         })
 
         const mapper = new TotpConfigMapper()
