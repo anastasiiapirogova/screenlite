@@ -18,7 +18,8 @@ export const getWorkspaceIdBySlugRoute = async (fastify: FastifyInstance) => {
             const getWorkspaceIdBySlugUseCase = new GetWorkspaceIdBySlugUsecase(
                 {
                     workspaceRepository: fastify.workspaceRepository,
-                    workspaceAccessService: fastify.workspaceAccessService
+                    workspaceAccessService: fastify.workspaceAccessService,
+                    workspaceInvariantsService: fastify.workspaceInvariantsService
                 }
             )
 
