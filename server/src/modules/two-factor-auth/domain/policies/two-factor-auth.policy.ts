@@ -1,33 +1,23 @@
-import { User } from '@/core/entities/user.entity.ts'
 import { ForbiddenError } from '@/shared/errors/forbidden.error.ts'
 import { AuthContext } from '@/core/types/auth-context.type.ts'
 
 export class TwoFactorAuthPolicy {
-    constructor(
-        private readonly user: User,
-        private readonly authContext: AuthContext
-    ) {}
-
-    private isSelf(): boolean {
-        if(this.authContext.isUserContext()) {
-            const authUser = this.authContext.user
-
-            return authUser.id === this.user.id
+    private static isTargetUserSelf(targetUserId: string, authContext: AuthContext): boolean {
+        if (!authContext.isUserContext()) {
+            return false
         }
 
-        return false
+        const authenticatedUser = authContext.user
+
+        return authenticatedUser.id === targetUserId
     }
 
-    canViewTwoFactorMethods(): boolean {
-        if(this.isSelf()) {
-            return true
-        }
-        
-        return false
+    static canViewTwoFactorMethods(targetUserId: string, authContext: AuthContext): boolean {
+        return this.isTargetUserSelf(targetUserId, authContext)
     }
 
-    enforceViewTwoFactorMethods(): void {
-        if(!this.canViewTwoFactorMethods()) {
+    static enforceViewTwoFactorMethods(targetUserId: string, authContext: AuthContext): void {
+        if (!this.canViewTwoFactorMethods(targetUserId, authContext)) {
             throw new ForbiddenError({
                 details: {
                     userId: ['YOU_CANNOT_VIEW_TWO_FACTOR_METHODS_FOR_THIS_USER']
@@ -36,24 +26,20 @@ export class TwoFactorAuthPolicy {
         }
     }
 
-    canViewTotpSetupData(): boolean {
-        if(this.isSelf()) {
-            return true
-        }
-
-        return false
+    static canViewTotpSetupData(targetUserId: string, authContext: AuthContext): boolean {
+        return this.isTargetUserSelf(targetUserId, authContext)
     }
 
-    canCompleteTotpSetup(): boolean {
-        return this.canViewTotpSetupData()
+    static canCompleteTotpSetup(targetUserId: string, authContext: AuthContext): boolean {
+        return this.canViewTotpSetupData(targetUserId, authContext)
     }
 
-    canDisableTotpMethod(): boolean {
-        return this.canViewTotpSetupData()
+    static canDisableTotpMethod(targetUserId: string, authContext: AuthContext): boolean {
+        return this.canViewTotpSetupData(targetUserId, authContext)
     }
 
-    enforceDisableTotpMethod(): void {
-        if(!this.canDisableTotpMethod()) {
+    static enforceDisableTotpMethod(targetUserId: string, authContext: AuthContext): void {
+        if (!this.canDisableTotpMethod(targetUserId, authContext)) {
             throw new ForbiddenError({
                 details: {
                     userId: ['YOU_CANNOT_DISABLE_TOTP_METHOD_FOR_THIS_USER']
@@ -62,8 +48,8 @@ export class TwoFactorAuthPolicy {
         }
     }
 
-    enforceCompleteTotpSetup(): void {
-        if(!this.canCompleteTotpSetup()) {
+    static enforceCompleteTotpSetup(targetUserId: string, authContext: AuthContext): void {
+        if (!this.canCompleteTotpSetup(targetUserId, authContext)) {
             throw new ForbiddenError({
                 details: {
                     userId: ['YOU_CANNOT_COMPLETE_TOTP_SETUP_FOR_THIS_USER']
@@ -72,8 +58,8 @@ export class TwoFactorAuthPolicy {
         }
     }
 
-    enforceViewTotpSetupData(): void {
-        if(!this.canViewTotpSetupData()) {
+    static enforceViewTotpSetupData(targetUserId: string, authContext: AuthContext): void {
+        if (!this.canViewTotpSetupData(targetUserId, authContext)) {
             throw new ForbiddenError({
                 details: {
                     userId: ['YOU_CANNOT_VIEW_TOTP_SETUP_DATA_FOR_THIS_USER']
