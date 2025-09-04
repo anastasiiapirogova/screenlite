@@ -12,14 +12,23 @@ export const SYSTEM_ADMIN_PERMISSIONS_DEFINITIONS = [
     {
         name: AdminPermissionName.USERS_EDIT,
         description: 'Edit users',
+        dependencies: [
+            AdminPermissionName.USERS_VIEW
+        ],
     },
     {
         name: AdminPermissionName.USERS_DELETE,
         description: 'Delete users',
+        dependencies: [
+            AdminPermissionName.USERS_VIEW
+        ],
     },
     {
         name: AdminPermissionName.USERS_MANAGE_ADMIN_PERMISSIONS,
         description: 'Manage user admin permissions',
+        dependencies: [
+            AdminPermissionName.USERS_VIEW
+        ],
     },
     {
         name: AdminPermissionName.SESSIONS_VIEW,
@@ -28,14 +37,23 @@ export const SYSTEM_ADMIN_PERMISSIONS_DEFINITIONS = [
     {
         name: AdminPermissionName.WORKSPACES_CREATE,
         description: 'Create workspaces',
+        dependencies: [
+            AdminPermissionName.WORKSPACES_VIEW
+        ],
     },
     {
         name: AdminPermissionName.WORKSPACES_SOFT_DELETE,
         description: 'Soft delete workspaces',
+        dependencies: [
+            AdminPermissionName.WORKSPACES_VIEW
+        ],
     },
     {
         name: AdminPermissionName.WORKSPACES_DELETE,
         description: 'Delete workspaces',
+        dependencies: [
+            AdminPermissionName.WORKSPACES_VIEW
+        ],
     },
     {
         name: AdminPermissionName.WORKSPACES_VIEW,
@@ -44,6 +62,9 @@ export const SYSTEM_ADMIN_PERMISSIONS_DEFINITIONS = [
     {
         name: AdminPermissionName.WORKSPACES_UPDATE,
         description: 'Update workspaces',
+        dependencies: [
+            AdminPermissionName.WORKSPACES_VIEW
+        ],
     },
     {
         name: AdminPermissionName.WORKSPACE_INVITATIONS_VIEW,
@@ -52,10 +73,16 @@ export const SYSTEM_ADMIN_PERMISSIONS_DEFINITIONS = [
     {
         name: AdminPermissionName.WORKSPACE_INVITATIONS_CREATE,
         description: 'Create workspace invitations',
+        dependencies: [
+            AdminPermissionName.WORKSPACE_INVITATIONS_VIEW
+        ],
     },
     {
         name: AdminPermissionName.WORKSPACE_INVITATIONS_CANCEL,
         description: 'Cancel workspace invitations',
+        dependencies: [
+            AdminPermissionName.WORKSPACE_INVITATIONS_VIEW
+        ],
     },
 ] as const
 
